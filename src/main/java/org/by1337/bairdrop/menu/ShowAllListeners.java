@@ -70,7 +70,7 @@ public class ShowAllListeners implements Listener {
             List<String> lore = new ArrayList<>(Config.getList("mat-change-arrow-lore"));
             lore.replaceAll(Message::messageBuilder);
             im.setLore(lore);
-            im.getPersistentDataContainer().set(NamespacedKey.fromString("event"), PersistentDataType.STRING, "uewjdskj3248jdskfzjke432kjdnfxjs");//page
+            im.getPersistentDataContainer().set(NamespacedKey.fromString("event"), PersistentDataType.STRING, "page swipe");//page
             itemStack.setItemMeta(im);
             inventory.setItem(53, itemStack);
         }
@@ -123,7 +123,6 @@ public class ShowAllListeners implements Listener {
                 StringBuilder sb = new StringBuilder();
                 String[] args = s.split(" ");
                 int len = 0;
-                boolean close = false;
                 for(String word : args){
                     len += word.length() + 1;
                     if(len >= 50 ){
@@ -145,9 +144,6 @@ public class ShowAllListeners implements Listener {
         }
         lore = formattedLore;
 
-//        lore.replaceAll(airDrop::replaceInternalPlaceholder);
-//        lore.replaceAll(airDrop::colored);
-//        lore.replaceAll(Message::messageBuilder);
 
         List<String> nweLore = new ArrayList<>();
         lore.replaceAll(s -> s.replace("\\n", "%split%"));
@@ -161,7 +157,6 @@ public class ShowAllListeners implements Listener {
         nweLore.replaceAll(airDrop::replaceInternalPlaceholder);
         nweLore.replaceAll(AirManager::colored);
         nweLore.replaceAll(Message::messageBuilder);
-        // nweLore.addAll(Arrays.stream(str.split("%split%")).toList());
 
         im.setLore(nweLore);
         itemStack.setItemMeta(im);
@@ -188,7 +183,7 @@ public class ShowAllListeners implements Listener {
                 generate();
                 return;
             }
-            if (key.equals("uewjdskj3248jdskfzjke432kjdnfxjs")) {//page
+            if (key.equals("page swipe")) {//page
                 if (e.getClick() == ClickType.LEFT) {
                     page++;
                     e.setCancelled(true);

@@ -72,7 +72,7 @@ public class CustomCraft {
                 return;
             BAirDrop.internalListeners.get(listener).execute(pl, null, false, Events.CRAFT_ITEM);
         } catch (StackOverflowError e) {
-            Message.error("Было вызвано слишком много слушателей!");
+            Message.error(Config.getMessage("too-many-call"));
         }
     }
 

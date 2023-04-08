@@ -60,9 +60,6 @@ public class ExecuteCommands {
                     continue;
             if (bossBar(command, pl))
                 continue;
-           // pl.closeInventory();
-           // pl.getInventory().setItem();
-
             if (airDrop != null) {
                 if (command.contains("[CALL-")) {
                     String str = command.replace("[CALL-", "").replace("]", "");
@@ -80,17 +77,17 @@ public class ExecuteCommands {
                             }
                         }
                     } catch (NumberFormatException e) {
-                        Message.error(String.format("Не число было введено в [NEAR-PLAYERS=<>]. %s", command));
+                        Message.error(String.format(Config.getMessage("near-error-1"), command));
                     } catch (NullPointerException e) {
-                        Message.error(String.format("Аир дроп ещё не сгенерировал локацию. %s", command));
+                        Message.error(String.format(Config.getMessage("loc-is-null-command"), command));
                     } catch (ArrayIndexOutOfBoundsException e) {
-                        Message.error(String.format("Не достаточно аргументов было введено в [NEAR-PLAYERS=<>]. %s", command));
+                        Message.error(String.format(Config.getMessage("few-args-command"), command));
                     }
                     continue;
                 }
             }
 
-            Message.error(String.format("Неизвестная команда или данный тип ивента не поддерживает эту команду. %s", command));
+            Message.error(String.format(Config.getMessage("unknown-command"), command));
         }
     }
 
@@ -128,9 +125,6 @@ public class ExecuteCommands {
                     }
                     command = command.replace(String.format("{player-get-item-%s}.getPDC.get=\"%s\"", slot, oldKey),
                             item.getItemMeta().getPersistentDataContainer().getOrDefault(NamespacedKey.fromString(key), PersistentDataType.STRING, "")
-//                            item.getItemMeta().getPersistentDataContainer().has(NamespacedKey.fromString(key), PersistentDataType.STRING) ?
-//                                     :
-//                                    ""
                     );
                     return command;
                 }
@@ -192,7 +186,7 @@ public class ExecuteCommands {
             //String[] args = command.split(",");
             String[] args = command.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
             if (args.length < 4) {
-                Message.error("&cНедостаточно аргументов при создании босс бара!");
+                Message.error(Config.getMessage("boss-bar-few-args"));
                 Message.error(Arrays.toString(args));
                 return true;
             }
@@ -220,21 +214,21 @@ public class ExecuteCommands {
                     }
                 }
             } catch (IllegalArgumentException e) {
-                Message.error("Неверный тип BarColor или BarStyle");
-                Message.error("Босс бар не создан");
+                Message.error(Config.getMessage("bar-error"));
+                Message.error(Config.getMessage("boss-bar-not-created"));
                 Message.error(Arrays.toString(args));
                 Message.error(e.getLocalizedMessage());
                 return true;
             }
             if (title == null || name == null || barColor == null || barStyle == null) {
-                Message.error("Босс бар не создан");
-                Message.error("недостаточно аргументов");
+                Message.error(Config.getMessage("boss-bar-not-created"));
+                Message.error(Config.getMessage("boss-bar-few-args"));
                 return true;
             }
             BossBar bossBar = Bukkit.createBossBar(Message.messageBuilder(title), barColor, barStyle);
             bossBarAddParam(bossBar, args, pl);
             if (Message.bossBars.containsKey(name)) {
-                Message.warning("Босс бар " + name + " уже был создан!");
+                Message.warning(String.format(Config.getMessage("boss-bar-already-created"), name));
                 Message.bossBars.get(name).removeAll();
             }
             Message.bossBars.put(name, bossBar);
@@ -245,7 +239,7 @@ public class ExecuteCommands {
             command = command.replace("[BOSSBAR]", "");
             int quoteCount = command.replaceAll("[^\"]", "").length();
             if (quoteCount % 2 != 0) {
-                Message.error("Неверный формат строки: не все кавычки закрыты. " + command);
+                Message.error(String.format(Config.getMessage("boss-bar-error-command"), command));
                 return true;
             } else {
                 StringBuilder result = new StringBuilder();
@@ -265,7 +259,7 @@ public class ExecuteCommands {
             // String[] args = command.split(",");
             String[] args = command.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
             if (args.length < 1) {
-                Message.error("&cНедостаточно аргументов при создании босс бара!");
+                Message.error(Config.getMessage("boss-bar-few-args"));
                 return true;
             }
             String name = null;
@@ -275,8 +269,8 @@ public class ExecuteCommands {
                     continue;
                 }
             if (name == null) {
-                Message.error("Босс бар не изменён");
-                Message.error("недостаточно аргументов");
+                Message.error(Config.getMessage("bar-error"));
+                Message.error(Config.getMessage("boss-bar-not-created"));
                 Message.error(Arrays.toString(args));
                 return true;
 
@@ -294,7 +288,7 @@ public class ExecuteCommands {
             command = command.replace("[REMOVE_BOSSBAR]", "");
             int quoteCount = command.replaceAll("[^\"]", "").length();
             if (quoteCount % 2 != 0) {
-                Message.error("Неверный формат строки: не все кавычки закрыты. " + command);
+                Message.error(String.format(Config.getMessage("boss-bar-error-command"), command));
                 return true;
             } else {
                 StringBuilder result = new StringBuilder();
