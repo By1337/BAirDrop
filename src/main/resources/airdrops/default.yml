@@ -1,0 +1,62 @@
+#https://by1337-developers.gitbook.io/bairdrop/rukovodstvo/nastroiki-airdropov
+air-name: '&7Обычный сундук'
+inv-name: 'test'
+chest-inventory-size: 54
+air-id: 'default'
+air-spawn-world: world
+air-spawn-radius-min: -2000
+air-spawn-radius-max: 2000
+air-radius-protect: 15
+spawn-chance: 50
+timeToStart: 2
+use-pre-generated-locations: false
+search-before-start: 1
+stop-when-empty: false
+flatness-check: true
+use-static-loc: false
+static-location:
+  world: world
+  x: 0
+  y: 0
+  z: 0
+generator-settings: default
+air-holo-to-start:
+  - '{air-name}'
+  - '&aДо появления &f{time-to-start} сек'
+air-holo:
+  - '{air-name}'
+  - '&cЗакрыт!'
+  - '&aДо открытия &f{time-to-open} сек'
+air-holo-open:
+  - '{air-name}'
+  - '&aОткрыт'
+air-holo-click-wait:
+  - '{air-name}'
+  - '&7Нажмите для активации'
+
+holo-offsets:
+  x: 0.5
+  y: 2.5
+  z: 0.5
+
+openingTime: 1
+start-countdown-after-click: false
+time-stop-event-must-go: false
+time-stop-event: 1
+chest-material-locked: RESPAWN_ANCHOR
+chest-material-unlocked: CHEST
+min-online-players: 1
+random-slot: false
+signed-events:
+  - chest-closed
+  - spawn-particle
+  - alert-start
+  - spawn-summoner-alert
+  - ACTIVATE
+  - alert-4
+  - alert
+  - alert-5
+  - alert-end
+  - end
+  - alert-open
+  - spawn-summoner

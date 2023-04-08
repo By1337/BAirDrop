@@ -1,0 +1,73 @@
+name: BAirDrop
+version: '${project.version}'
+main: org.by1337.bairdrop.BAirDrop
+api-version: 1.16
+authors: [ By1337 ]
+depend: [PlaceholderAPI, DecentHolograms, WorldGuard, WorldEdit]
+description: event airdrop
+commands:
+  bairdrop:
+    description: Standart Command
+    aliases: [bair]
+    usage: Usage /bair help
+permissions:
+  bair.*:
+    description: All cmd
+    default: op
+    children:
+      bair.tp: true
+      bair.reload: true
+      bair.create: true
+      bair.edit: true
+      bair.menu: true
+      bair.chance: true
+      bair.start: true
+      bair.stop: true
+      bair.listeners: true
+      bair.generate: true
+      bair.get: true
+      bair.delete: true
+      bair.clone: true
+      bair.compass: true
+  bair.tp:
+    description: /bair tp <id>
+    default: op
+  bair.reload:
+    description: /bair reload
+    default: op
+  bair.create:
+    description: /bair create <id>
+    default: op
+  bair.edit:
+    description: /bair edit <id>
+    default: op
+  bair.menu:
+    description: /bair menu <id>
+    default: op
+  bair.chance:
+    description: /bair chance <id>
+    default: op
+  bair.start:
+    description: /bair start <id>
+    default: op
+  bair.stop:
+    description: /bair stop <id>
+    default: op
+  bair.listeners:
+    description: /bair listeners <id>
+    default: op
+  bair.generate:
+    description: /bair generate <id> <timings> <count>
+    default: op
+  bair.get:
+    description: /bair get <item>
+    default: op
+  bair.delete:
+    description: /bair delete <id>
+    default: op
+  bair.clone:
+    description: /bair clone <id> <new id>
+    default: op
+  bair.compass:
+    description: /bair compass <player> <amount>
+    default: op

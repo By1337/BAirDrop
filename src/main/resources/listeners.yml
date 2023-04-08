@@ -1,0 +1,201 @@
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~СПИСОК ИВЕНТОВ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#                     CLICK_CLOSE - клик по-закрытому аирдропу                       #
+#                     CLICK_OPEN - клик по-открытому аирдропу                        #
+#                        TIMER - вызывается каждую секунду                           #
+#                      START_EVENT - когда аирдроп спавнится                         #
+#                       END_EVENT - когда аирдроп пропадает                          #
+#                    UNLOCK_EVENT - когда аирдроп открывается                        #
+#               FIRST_OPEN - когда кто-то первый открывает аирдроп                   #
+#               SUMMONER - когда кто-то вызывает аирдроп                             #
+#ACTIVATE - когда аирдроп активируется (вызывается если start-countdown-after-click = true)#
+#   STOP_WHEN_EMPTY - вызывается когда аирдроп, заканчивается из-за опустошения       #
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~СПИСОК ПРОВЕРОК~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#   NUMERICAL_CHECK - числовая проверка. Например, input '{time-to-open} == 60'      #
+#   LOGICAL_CHECK - логическая проверка. Например, input '{airdrop-is-open}'         #
+#        STRING_CHECK - сравнение строк. Например input '{airdrop-is-open} == true'  #
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ВНУТРЕННИЕ ПЛЕЙСХОЛДЕРЫ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# https://by1337-developers.gitbook.io/bairdrop/rukovodstvo/iventy/pleiskholdery
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ЧИСЛОВЫЕ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#                                NUMERICAL_CHECK                                     #
+#               {time-to-open} - время в секундах до открытия                        #
+#          {time-to-start} - время в секундах до появления аирдропа                  #
+#          {time-to-end} - время в секундах до завершения аирдропа                   #
+#                      == если числа равны (10 == 10)                                #
+#                     != если числа не равны (10 != 9)                               #
+#                 > если первое число больше второго (10 > 9)                        #
+#                 < если первое число меньше второго (9 < 10)                        #
+#         >= если первое число больше или равно второму (10 >= 10)                   #
+#         <= если первое число меньше или равно второму (10 <= 10)                   #
+#   % остаток от деления (10 % 10 == 0) 10 / 10 = 1.0 значит в остатке 0             #
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ЛОГИЧЕСКИЕ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#                                LOGICAL_CHECK                                       #
+#                    {it-was-open} - Был ли аирдроп открыт                           #
+#                   {airdrop-is-open} - true если аирдроп открыт                     #
+#                   {airdrop-is-start} - true если аирдроп заспавнился               #
+#https://by1337-developers.gitbook.io/bairdrop/~/changes/ldAVEfIMEzVGltwa1rvo/rukovodstvo/iventy
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Сравнение строк~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                                    STRING_CHECK                                    #
+#                             == - если строки равны                                 #
+#                           != - если строки не равны                                #
+#                        contains если строка содержит                               #
+#                      !contains если строка не содержит                             #
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~КОМАНДЫ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#                   [MESSAGE] - Отправить игроку сообщение                           #
+#                  [MESSAGE_ALL] - Отправить всем сообщение                          #
+#        [TITLE] - Отправить игроку title (текст посередине экрана)                 #
+#    [TITLE_ALL] - Отправить всем игрокам  title (текст посередине экрана)          #
+#         [ACTIONBAR] - Отправить игроку actionbar (текст над хот баром)              #
+#        [ACTIONBAR_ALL] - Отправить всем actionbar (текст над хот баром)             #
+#                 [CONSOLE] - Выполнить команду от имени консоли                     #
+#                  [PLAYER] - Выполнить команду от имени игрока                      #
+#                        [SOUND] - проигрывает звук игроку                            #
+#                       [SOUND_ALL] - проигрывает звук всем                           #
+#  [EFFECT_START-<NAME>-<придумать id>] - спавнит эффект на месте появления аирдропа # [EFFECT_START-<NAME>-<id>]
+#                     [EFFECT_STOP-<id>] - Останавливает эффект                      #
+#     [EFFECT_STOP_ALL] - Останавливает все эффекты заспавненые аирдропом            #
+#         [SET_MATERIAL_<MATERIAL>] - устанавливает материал пирдропу                #
+#                 [SCHEMATICS_PASTE-<name>] - спавнит схематику                      #
+#                   [SCHEMATICS_REMOVE] - удаляет схематику                          #
+#        [SET_TIME_START-<time>] - установить время до старта в секундах             #
+#      [SET_TIME_UNLOCK-<time>] - установить время до открытия в секундах            #
+#          [SET_TIME_END-<time>] - установить время до конца в секундах              #
+#                     [SET_REGION] - установить регион                               #
+#                [SET_HOLO_TIME_TO_START] - заспвнить надпись
+#
+######################################################################################
+listeners:
+  anim:
+    description: '&fАнимация'  # Описание
+    event: 'TIMER'  # Выполнение при каждом срабатывании таймера
+    requirement: # Условия выполнения задачи
+      check-1:
+        type: 'NUMERICAL_CHECK'  # Проверка числа
+        input: '{time-to-open} % 2 == 0'  # Оставляем только чётные значения
+      check-2:
+        type: 'LOGICAL_CHECK'  # Проверка логического выражения
+        input: '{!airdrop-is-open}'  # Аирдроп не должен быть открыт
+      check-3:
+        type: 'LOGICAL_CHECK'  # Проверка логического выражения
+        input: '{airdrop-is-start}'  # Аирдроп должен быть запущен
+    commands:
+      - '[SET_MATERIAL_LIME_WOOL]'  # Устанавливаем материал Лаймовой шерсти
+    deny-commands: # Если в requirement хотя бы одна проверка не пройдёт
+      - '[CALL-anim-2]'  # Вызываем слушатель anim-2
+
+  anim-2:
+    description: '&fАнимация'  # Описание
+    event: 'NONE'  # Не вызываемый ивент
+    requirement: # Условия выполнения задачи
+      check-1:
+        type: 'LOGICAL_CHECK'  # Проверка логического выражения
+        input: '{!airdrop-is-open}'  # Аирдроп не должен быть открыт
+      check-2:
+        type: 'LOGICAL_CHECK'  # Проверка логического выражения
+        input: '{airdrop-is-start}'  # Аирдроп должен быть запущен
+    commands:
+      - '[SET_MATERIAL_RED_WOOL]'  # Устанавливаем материал Красной шерсти
+
+
+
+  ACTIVATE:
+    description: '&fСообщение об активации аирдропа%split%&fТакже запускает эффект'
+    event: 'ACTIVATE'
+    commands:
+      - '[MESSAGE_ALL] &7Игрок &6%player_name% &7активировал {air-name}'
+      - '[MESSAGE] {air-name} &aактивирован!'
+      - '[EFFECT_START-ef=5=1-ef_circle]'
+      - '[TITLE_ALL] &aTitle
+      [SUB_TITLE_ALL] &aSubtitle'
+
+  chest-closed:
+    description: '&fОтправляет игроку сообщение что аирдроп закрыт'
+    event: 'CLICK_CLOSE'
+    commands:
+      - '[MESSAGE] {air-name} &cзакрыт!'
+
+  alert:
+    description: '&fОтправляет всем сообщение о начале аирдропа'
+    event: 'START_EVENT'
+    commands:
+      - '[MESSAGE_ALL] {air-name}&7 появился! На координатах &6{x}&7,&6{y}&7,&6{z}'
+      - '[TITLE_ALL] {air-name}&7 появился!'
+
+  spawn-summoner:
+    description: '&aСпавнит партиклы если аирдроп вызвал игрок'
+    event: 'SUMMONER'
+    requirement:
+      check-1:
+        type: 'STRING_CHECK'
+        input: '{use-player-location} == true'
+    commands:
+      - '[SET_MATERIAL_SOUL_CAMPFIRE]'
+      - '[SET_REGION]'
+      - '[EFFECT_START-ef=3-ef_helix]'
+      - '[EFFECT_START-ef=6-ef_rnd]'
+      - '[SET_HOLO_TIME_TO_START]'
+
+  spawn-summoner-alert:
+    description: '&aСОтпраляет сообщение о том что игрок вызвал аирдроп'
+    event: 'SUMMONER'
+    commands:
+      - '[MESSAGE_ALL] &7Игрок &6%player_name% &7Вызвал {air-name}&7!'
+      - '[SET_TIME_START-31]' #Устанавливаем до старта 31 секунда
+
+  spawn-particle:
+    description: '&fСпавнит партиклы'
+    event: 'START_EVENT'
+    requirement:
+      check-1:
+        type: 'STRING_CHECK'
+        input: '{use-player-location} == false' # если аирдроп был вызван игроком то отработает другой ивент
+    commands:
+      - '[EFFECT_START-ef=3-ef_helix]'
+      - '[EFFECT_START-ef=6-ef_rnd]'
+
+  alert-start:
+    description: '&fСообщение о начале через 30сек'
+    event: 'TIMER'
+    requirement:
+      check-1:
+        type: 'NUMERICAL_CHECK'
+        input: '{time-to-start} == 30'
+    commands:
+      - '[MESSAGE_ALL] {air-name}&7 появится через 30 секунд!'
+
+  alert-open:
+    description: '&fСообщение об открытии'
+    event: 'UNLOCK_EVENT'
+    commands:
+      - '[MESSAGE_ALL] {air-name}&7 открыт!'
+
+  alert-end:
+    description: '&fСообщение об окончании'
+    event: 'END_EVENT'
+    commands:
+      - '[MESSAGE_ALL] {air-name}&7 окончен!'
+
+  alert-5:
+    description: '&fСообщение о открытии за 5 сек'
+    event: 'TIMER'
+    requirement:
+      check-1:
+        type: 'NUMERICAL_CHECK'
+        input: '{time-to-open} == 5'
+    commands:
+      - '[MESSAGE_ALL] {air-name}&7 откроется через 5 сек'
+
+  alert-4:
+    description: '&fСообщение о открытии за 10 сек'
+    event: 'TIMER'
+    requirement:
+      check-1:
+        type: 'NUMERICAL_CHECK'
+        input: '{time-to-open} == 10'
+    commands:
+      - '[MESSAGE_ALL] {air-name}&7 откроется через 10 сек'
+
+  end:
+    description: '&fСтопает все эффекты'
+    event: 'END_EVENT'
+    commands:
+      - '[EFFECT_STOP_ALL]'

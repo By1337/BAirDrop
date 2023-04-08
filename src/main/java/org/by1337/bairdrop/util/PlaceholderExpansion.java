@@ -1,0 +1,131 @@
+package org.by1337.bairdrop.util;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.OfflinePlayer;
+import org.by1337.bairdrop.AirDrop;
+import org.by1337.bairdrop.BAirDrop;
+import org.by1337.bairdrop.ConfigManager.Config;
+import org.jetbrains.annotations.NotNull;
+
+public class PlaceholderExpansion extends me.clip.placeholderapi.expansion.PlaceholderExpansion{
+    @Override
+    public @NotNull String getAuthor() {
+        return "By1337";
+    }
+
+    @Override
+    public @NotNull String getIdentifier() {
+        return "BAirDrop";
+    }
+
+    @Override
+    public @NotNull String getVersion() {
+        return "1.0.4";
+    }
+
+    @Override
+    public boolean persist() {
+        return true;
+    }
+    @Override
+    public String onRequest(OfflinePlayer player, String params) {// %bairdrop_test% = test %bairdrop_time_to_open_<air id>%
+        if(params.contains("time_to_open_")){ //%bairdrop_time_to_open_<air id>%
+            String[] args = params.split("_");
+            if(args.length != 4) return "error";
+            AirDrop airDrop = BAirDrop.airDrops.getOrDefault(args[3], null);
+            if(airDrop == null) return "error";
+            return airDrop.getTimeToOpen() + "";
+        }
+            if(params.equals("time_start")){ //%bairdrop_time_start%
+            if(BAirDrop.globalTimer == null)
+                return "-1";
+            int time = 0;
+            time += BAirDrop.globalTimer.getTimeToStart();
+            if(BAirDrop.globalTimer.getAir() != null)
+                time += BAirDrop.globalTimer.getAir().getTimeToStart();
+            return time + "";
+        }
+        if(params.equals("time_start_format")){ //%bairdrop_time_start_format%
+            if(BAirDrop.globalTimer == null)
+                return AirManager.getTimeToNexAirdrop();
+            int time = 0;
+            time += BAirDrop.globalTimer.getTimeToStart();
+            if(BAirDrop.globalTimer.getAir() != null)
+                time += BAirDrop.globalTimer.getAir().getTimeToStart();
+            return AirManager.getFormat(time);
+        }
+        if(params.equals("near")){ //%bairdrop_near%
+            if(player == null) return "";
+            AirDrop airDrop = null;
+            int dist = 0;
+            for(AirDrop air : BAirDrop.airDrops.values()){
+                if(!air.isAirDropStarted()) continue;
+                if(dist > player.getPlayer().getLocation().distance(air.getAirLoc()) || airDrop == null){
+                    dist = (int) player.getPlayer().getLocation().distance(air.getAirLoc());
+                    airDrop = air;
+                }
+            }
+            if(airDrop == null)
+                return Config.getMessage("air-near-none");
+            return Message.messageBuilder(airDrop.replaceInternalPlaceholder(Config.getMessage("air-near").replace("{dist}", dist + "")));
+        }
+        if(params.contains("time_to_start_")){ //%bairdrop_time_to_start_<air id>%
+            String[] args = params.split("_");
+            if(args.length != 4) return "error";
+            AirDrop airDrop = BAirDrop.airDrops.getOrDefault(args[3], null);
+            if(airDrop == null) return "error";
+            return airDrop.getTimeToStart() + "";
+        }
+        if(params.contains("time_to_end_")){ //%bairdrop_time_to_end_<air id>%
+            String[] args = params.split("_");
+            if(args.length != 4) return "error";
+            AirDrop airDrop = BAirDrop.airDrops.getOrDefault(args[3], null);
+            if(airDrop == null) return "error";
+            return airDrop.getTimeStop() + "";
+        }
+        if(params.contains("air_name_")){ //%bairdrop_air_name_<air id>%
+            String[] args = params.split("_");
+            if(args.length != 3) return "error";
+            AirDrop airDrop = BAirDrop.airDrops.getOrDefault(args[2], null);
+            if(airDrop == null) return "error";
+            return airDrop.getAirName();
+        }
+        if(params.contains("x_")){ //%bairdrop_x_<air id>%
+            String[] args = params.split("_");
+            if(args.length != 2) return "error";
+            AirDrop airDrop = BAirDrop.airDrops.getOrDefault(args[1], null);
+            if(airDrop == null) return "error";
+            if(airDrop.getAirLoc() == null){
+                if(airDrop.getFutureLocation() == null){
+                    return "?";
+                }else return (airDrop.getFutureLocation().getX() + "").replace(".0", "");
+            }else return (airDrop.getAirLoc().getX() + "").replace(".0", "");
+        }
+        if(params.contains("y_")){ //%bairdrop_y_<air id>%
+            String[] args = params.split("_");
+            if(args.length != 2) return "error";
+            AirDrop airDrop = BAirDrop.airDrops.getOrDefault(args[1], null);
+            if(airDrop == null) return "error";
+            if(airDrop.getAirLoc() == null){
+                if(airDrop.getFutureLocation() == null){
+                    return "?";
+                }else return (airDrop.getFutureLocation().getY() + "").replace(".0", "");
+            }else return (airDrop.getAirLoc().getY() + "").replace(".0", "");
+        }
+        if(params.contains("z_")){ //%bairdrop_z_<air id>%
+            String[] args = params.split("_");
+            if(args.length != 2) return "error";
+            AirDrop airDrop = BAirDrop.airDrops.getOrDefault(args[1], null);
+            if(airDrop == null) return "error";
+            if(airDrop.getAirLoc() == null){
+                if(airDrop.getFutureLocation() == null){
+                    return "?";
+                }else return (airDrop.getFutureLocation().getZ() + "").replace(".0", "");
+            }else return (airDrop.getAirLoc().getZ() + "").replace(".0", "");
+        }
+        return null;
+    }
+
+
+}

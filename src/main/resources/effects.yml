@@ -1,0 +1,215 @@
+#Вы можете заспанить эффект до появления аирдропа но локация должна быть сгенерирована заранее! за это отвечает параметр search-before-start
+effects:
+  ef=1: #имя эффекта. Запрещены (., -)
+    type: CIRCLE #тип эффекта.
+    ticks: 36000 #время жизни в тиках (я предполагаю что вы будете отключать эффект через ивент, но если вы забудете это сделать то эфект сам отключится через 36000 тиков (30 минут)) увеличите ели надо
+    timeUpdate: 10 #как часто в тиках спавнить новые партиклы
+    radius: 1.5 #радиус круга
+    count: 0 #количество партиклов ставьте 0 чтобы партиклы не разлетались, или можете поиграться с этим и получить необычный эффект
+    viewDistance: 30 #с какого расстояния будут видны партиклы
+    step: 0.05 #расстояние между партиклами, напрямую влияет на их количество!
+    offset-x: 0.5 #смещение по координатам
+    offset-y: 0.3
+    offset-z: 0.5
+    number-of-steps: 6.5 #влияет на количество партиклов  6.5 / 0.05 = 130 заспавненых партиклов (number-of-steps / step)
+    particle: REDSTONE
+    #only REDSTONE# #Для партиклов "REDSTONE" необходимо указывать цвет и размер
+    size: 3
+    color-rgb-r: 0
+    color-rgb-g: 255
+    color-rgb-b: 255
+  ef=2:
+    type: CIRCLE
+    ticks: 36000
+    timeUpdate: 10
+    radius: 2
+    count: 0
+    viewDistance: 30
+    step: 0.05
+    offset-x: 0.5
+    offset-y: 0.7
+    offset-z: 0.5
+    number-of-steps: 6.5
+    particle: REDSTONE
+    #only REDSTONE#
+    size: 3
+    color-rgb-r: 255
+    color-rgb-g: 0
+    color-rgb-b: 255
+
+  ef=3:
+    type: HELIX
+    ticks: 36000
+    timeUpdate: 15
+    radius: 1
+    count: 0
+    viewDistance: 30
+    step: 0.05
+    height: 30
+    offset-x: 0.5
+    offset-y: 0.7
+    offset-z: 0.5
+    particle: REDSTONE
+    #only REDSTONE# #Для партиклов "REDSTONE" необходимо указывать цвет и размер
+    size: 3
+    color-rgb-r: 255
+    color-rgb-g: 0
+    color-rgb-b: 255
+
+  ef=4:
+    type: PARTICLE_EXPLOSION
+    ticks: 1
+    timeUpdate: 1
+    radius: 1
+    count: 10
+    viewDistance: 30
+    step: 0.05
+    height: 5
+    offset-x: 0.5
+    offset-y: 0.7
+    offset-z: 0.5
+    particle: TOTEM
+    particle2: FIREWORKS_SPARK
+    particle3: FLAME
+    particle4: DRAGON_BREATH
+    particle5: SMOKE_NORMAL
+    #only REDSTONE# #Для партиклов "REDSTONE" необходимо указывать цвет и размер
+    size: 3
+    color-rgb-r: 255
+    color-rgb-g: 0
+    color-rgb-b: 255
+
+    color-rgb-r2: 255
+    color-rgb-g2: 0
+    color-rgb-b2: 255
+
+    color-rgb-r3: 153
+    color-rgb-g3: 51
+    color-rgb-b3: 255
+
+    color-rgb-r4: 0
+    color-rgb-g4: 255
+    color-rgb-b4: 0
+
+    color-rgb-r5: 0
+    color-rgb-g5: 204
+    color-rgb-b5: 255
+
+  ef=5:
+    type: EXPANDING_CIRCLE #тип эффекта.
+    ticks: 36000
+    timeUpdate: 4
+    radius: 1.5 #начальный радиус
+    end-radius: 7 #конечный радиус
+    step-radius: 0.3 #на сколько увеличивать промежуточный радиус за timeUpdate
+    count: 0
+    viewDistance: 30
+    step: 0.05
+    offset-x: 0.5
+    offset-y: 0.7
+    offset-z: 0.5
+    number-of-steps: 6.5
+    particle: FLAME
+    #only REDSTONE# #Для партиклов "REDSTONE" необходимо указывать цвет и размер
+    size: 3
+    color-rgb-r: 0
+    color-rgb-g: 255
+    color-rgb-b: 255
+
+  ef=5=1:
+    type: EXPANDING_CIRCLE #тип эффекта.
+    ticks: 36000
+    timeUpdate: 4
+    radius: 1.5 #начальный радиус
+    end-radius: 7 #конечный радиус
+    step-radius: 0.3 #на сколько увеличивать промежуточный радиус за timeUpdate
+    count: 0
+    viewDistance: 30
+    step: 0.05
+    offset-x: 0.5
+    offset-y: 0.7
+    offset-z: 0.5
+    number-of-steps: 6.5
+    particle: SOUL_FIRE_FLAME
+    #only REDSTONE# #Для партиклов "REDSTONE" необходимо указывать цвет и размер
+    size: 3
+    color-rgb-r: 0
+    color-rgb-g: 255
+    color-rgb-b: 255
+
+  ef=6:
+    type: RANDOM_PARTICLE #Не поддерживается REDSTONE
+    ticks: 36000
+    timeUpdate: 2 #как часто в тиках спавнить новые партиклы
+    radius: 7 #радиус спавна
+    count: 0
+    viewDistance: 30
+    particle: #Можно добавлять неограниченное количество партиклов. Если в списке 10 штук, то за timeUpdate заспанится 10 партиклов
+      - FLAME
+      - PORTAL
+      - FALLING_OBSIDIAN_TEAR
+      - SOUL_FIRE_FLAME
+      - ENCHANTMENT_TABLE
+      - TOTEM
+  ef=7:
+    type: SPAWN_GUARD
+    ticks: 1
+    timeUpdate: 1
+    radius: 5
+    count: 5
+    name: '&cХранитель'
+    heal: 40
+
+  ef=8:
+    type: FIREWORK
+    ticks: 36000
+    timeUpdate: 2
+    start-height: 1
+    end-height: 10
+    step-height: 0.5
+    offset-x: 0.5
+    offset-y: 0.7
+    offset-z: 0.5
+    colors: #r:g:b
+      - 255:0:127
+      - 0:255:127
+      - 127:0:127
+      - 0:0:127
+      - 137:0:127
+      - 64:0:127
+
+  ef=9:
+    type: TORUS
+    ticks: 36000
+    timeUpdate: 15
+    inner-radius: 1
+    outer-radius: 3
+    count: 25
+    step: 2
+    offset-x: 0.5
+    offset-y: 0.7
+    offset-z: 0.5
+    particle: REDSTONE
+    #only REDSTONE# #Для партиклов "REDSTONE" необходимо указывать цвет и размер
+    size: 3
+    color-rgb-r: 255
+    color-rgb-g: 0
+    color-rgb-b: 255
+  ef=10:
+    type: WRITHING_HELIX
+    ticks: 36000
+    timeUpdate: 1
+    radius: 1
+    count: 0
+    viewDistance: 30
+    step: 0.05
+    height: 15
+    offset-x: 0.5
+    offset-y: 0.7
+    offset-z: 0.5
+    particle: REDSTONE
+    #only REDSTONE# #Для партиклов "REDSTONE" необходимо указывать цвет и размер
+    size: 0.5
+    color-rgb-r: 255
+    color-rgb-g: 0
+    color-rgb-b: 255

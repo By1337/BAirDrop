@@ -1,0 +1,80 @@
+geyser: false #ставьте true если у вас установлен гейзер
+max-experience-pre-generated-location: 50 #Максимальное количество попыток подобрать заранее сгенерированную локацию
+License: 'key'
+beta-mode: true
+settings:
+  world-guard-flags: #Флаги WorldGuard config.yml
+    allow-flags: #разрешённые
+      - use
+      - pvp
+      - chest-access
+    deny-flags: #запрещённые
+      - creeper-explosion
+      - tnt
+      - fire-spread
+      - lava-fire
+      - other-explosion
+
+#При включении обратный отсчёт у всех аирдропов будет выключен
+#Раз в time минут плагин будет включать обратный отсчёт до старта у случайного аирдропа
+#При этом в summoner при clone: false никак не будет влиять на этот таймер
+#Все аирдропы призванные глобальным таймером являются клонами
+#чуть инфы плейсхолдер %bairdrop_time_start% возвращает время до старта global_timer_to_start + airdrop_to_start, но аирдроп может быть не найден тогда вернётся global_timer_to_start что будет не точным, обычной таймер сразу выбирает аирдроп
+global-time:
+  enable: false
+  time: 90
+
+summoner-сooldown: 1200 #В тиках
+summoner:
+  item-1:
+    material: SOUL_CAMPFIRE
+    nbt:
+    name: '&aМаяк призыва аирдропа'
+    lore:
+      - '&7line 1'
+      - '&7line 2'
+    airdrop: RANDOM
+    clone: true #клонировать ли аирдроп, если true то все призывные аирдропы будут клонами
+    use-player-location: true #спавнить аирдроп на место призыва
+    check-up-blocks: false # проверять блоки над аирдропом
+    flatness-check: false #проверка ровности
+    call: [ ] # сюда можно добавить имена слушателей, которые вызовутся, добавлять также как в lore
+  item-2:
+    material: SOUL_CAMPFIRE
+    nbt:
+    name: '&aМаяк призыва аирдропа'
+    lore:
+      - '&7line 1'
+      - '&7line 2'
+    airdrop: RANDOM
+    clone: true
+    flatness-check: false
+    use-player-location: false
+    call: [ ]
+
+
+custom-crafts:
+  enable: false
+  crafts:
+    craft-1:
+      summoner: item-1
+      ingredients:
+        A: DIAMOND
+        B: BEDROCK
+      slots:
+        top: 'AAA'
+        middle: 'ABA'
+        bottom: 'AAA'
+
+
+compass:
+  material: COMPASS
+  nbt:
+  item-name: '&aКомпас'
+  item-lore: '&7Указывает путь до ближайшего аирдропа'
+  line-max-distance: 10
+  particle-step: 0.2
+  particle-color: '255:0:0' #r:g:b
+  particle-size: 3
+  message-not-found: '&cСейчас нет активных аирдропов! &7ближайший через %bairdrop_time_start_format%'
+
