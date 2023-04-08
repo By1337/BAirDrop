@@ -254,9 +254,7 @@ public class ExecuteCommands {
                     result.append(c);
                 }
                 command = result.toString();
-                // System.out.println(result.toString());
             }
-            // String[] args = command.split(",");
             String[] args = command.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
             if (args.length < 1) {
                 Message.error(Config.getMessage("boss-bar-few-args"));
@@ -635,12 +633,6 @@ public class ExecuteCommands {
     }
 
     public static void execute(AirDrop airDrop, MenuItem menuItem, InventoryClickEvent e) {
-        if (AirManager.var3 == AirManager.var4) {//todo
-            Message.error("§cОшибка лицензии");
-            Message.error("§cПлагин выключен!");
-            Bukkit.getScheduler().cancelTasks(instance);
-            Bukkit.getPluginManager().disablePlugin(instance);
-        }
         if (e.getClick() == ClickType.LEFT)
             menuCommand(menuItem.getLEFT_COMMANDS(), airDrop, (Player) e.getWhoClicked());
         if (e.getClick() == ClickType.RIGHT)

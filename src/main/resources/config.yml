@@ -1,9 +1,8 @@
 geyser: false #ставьте true если у вас установлен гейзер
 max-experience-pre-generated-location: 50 #Максимальное количество попыток подобрать заранее сгенерированную локацию
-License: 'key'
-beta-mode: true
+License: ''
 settings:
-  world-guard-flags: #Флаги WorldGuard config.yml
+  world-guard-flags: #Флаги WorldGuard
     allow-flags: #разрешённые
       - use
       - pvp
@@ -19,7 +18,6 @@ settings:
 #Раз в time минут плагин будет включать обратный отсчёт до старта у случайного аирдропа
 #При этом в summoner при clone: false никак не будет влиять на этот таймер
 #Все аирдропы призванные глобальным таймером являются клонами
-#чуть инфы плейсхолдер %bairdrop_time_start% возвращает время до старта global_timer_to_start + airdrop_to_start, но аирдроп может быть не найден тогда вернётся global_timer_to_start что будет не точным, обычной таймер сразу выбирает аирдроп
 global-time:
   enable: false
   time: 90
@@ -38,6 +36,7 @@ summoner:
     use-player-location: true #спавнить аирдроп на место призыва
     check-up-blocks: false # проверять блоки над аирдропом
     flatness-check: false #проверка ровности
+    ignore-region: false
     call: [ ] # сюда можно добавить имена слушателей, которые вызовутся, добавлять также как в lore
   item-2:
     material: SOUL_CAMPFIRE
@@ -50,6 +49,8 @@ summoner:
     clone: true
     flatness-check: false
     use-player-location: false
+    check-up-blocks: false
+    ignore-region: false
     call: [ ]
 
 
@@ -71,10 +72,38 @@ compass:
   material: COMPASS
   nbt:
   item-name: '&aКомпас'
-  item-lore: '&7Указывает путь до ближайшего аирдропа'
+  item-lore:
+    - '&7Указывает путь до ближайшего аирдропа'
   line-max-distance: 10
   particle-step: 0.2
   particle-color: '255:0:0' #r:g:b
   particle-size: 3
   message-not-found: '&cСейчас нет активных аирдропов! &7ближайший через %bairdrop_time_start_format%'
+
+
+
+auto-enchant:
+  enable: false
+  en1:
+    material: NETHERITE_PICKAXE
+    efficiency:
+      chance: 70
+      min-level: 2
+      max-level: 5
+    fortune:
+      chance: 30
+      min-level: 1
+      max-level: 2
+    conflict-enchant:
+      - silk_touch
+  en2:
+    material: NETHERITE_PICKAXE
+    silk_touch:
+      chance: 70
+      min-level: 1
+      max-level: 1
+    conflict-enchant:
+      - fortune
+      - efficiency
+
 

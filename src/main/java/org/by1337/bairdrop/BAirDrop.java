@@ -94,7 +94,6 @@ public final class BAirDrop extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // getServer().removeRecipe(new NamespacedKey(instance, "test"));
         if (!Config.isLoaded)
             return;
         long x = System.currentTimeMillis();
@@ -135,8 +134,6 @@ public final class BAirDrop extends JavaPlugin {
         Config.getAirDrops().clear();
 
         instance.reloadConfig();
-//        disableMessages = getConfig().getBoolean("disable-message");
-//        maxEnchantmentLevel = getConfig().getInt("max-enchantment-level");
         compass.loadItem();
         GeneratorLoc.locations.clear();
         summoner.Load();

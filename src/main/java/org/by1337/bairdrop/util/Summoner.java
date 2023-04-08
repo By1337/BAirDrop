@@ -46,6 +46,7 @@ public class Summoner implements Listener {
             boolean usePlayerLocation = BAirDrop.instance.getConfig().getBoolean(String.format("summoner.%s.use-player-location", key));
             boolean flatnessCheck = BAirDrop.instance.getConfig().getBoolean(String.format("summoner.%s.flatness-check", key));
             boolean checkUpBlocks = BAirDrop.instance.getConfig().getBoolean(String.format("summoner.%s.check-up-blocks", key));
+            boolean ignoreRegion = BAirDrop.instance.getConfig().getBoolean(String.format("summoner.%s.ignore-region", key));
 
             try {
                 if (material.contains("basehead-"))
@@ -70,7 +71,7 @@ public class Summoner implements Listener {
             im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
           //  im.addEnchant(Enchantment.ARROW_DAMAGE)
             item.setItemMeta(im);
-            items.put(key, new SummonerItem(item, airdrop, clone, usePlayerLocation, flatnessCheck, checkUpBlocks, call));
+            items.put(key, new SummonerItem(item, airdrop, clone, usePlayerLocation, flatnessCheck, checkUpBlocks, call, ignoreRegion));
         }
     }
 

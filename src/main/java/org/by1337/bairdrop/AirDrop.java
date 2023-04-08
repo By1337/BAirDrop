@@ -482,11 +482,24 @@ public class AirDrop {
             for (int x = 0; x < inv.getSize(); x++) {
                 if (list.isEmpty()) break;
                 Items items1 = list.get(ThreadLocalRandom.current().nextInt(list.size()));
+                ItemStack itemStack = items1.getItem();
                 if (ThreadLocalRandom.current().nextInt(0, 100) <= items1.getChance()) {
-                    if (rndItems)
-                        inv.setItem(getEmptyRandomSlot(), items1.getItem());
-                    else
-                        inv.setItem(x, items1.getItem());
+                    if(!EnchantMaterial.materialHashMap.isEmpty()){
+                        for(String str : EnchantMaterial.materialHashMap.keySet()){
+                            EnchantMaterial em = EnchantMaterial.materialHashMap.get(str);
+                            if(em.getMaterial() == itemStack.getType()){
+                                itemStack = em.enchant(itemStack);
+                            }
+                        }
+
+                    }
+
+                    if (rndItems) {
+                        inv.setItem(getEmptyRandomSlot(), itemStack);
+                    }
+                    else {
+                        inv.setItem(x, itemStack);
+                    }
                 }
                 list.remove(items1);
             }

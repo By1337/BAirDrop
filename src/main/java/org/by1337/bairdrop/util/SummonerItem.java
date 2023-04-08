@@ -1,30 +1,26 @@
 package org.by1337.bairdrop.util;
 
-import eu.decentsoftware.holograms.api.utils.scheduler.S;
-import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import javax.print.DocFlavor;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.ConfigManager.Config;
-import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.BAirDrop;
 public class SummonerItem {
     final ItemStack item;
     final String airdrop;
     final boolean clone;
     final boolean usePlayerLocation;
+    final boolean ignoreRegion;
     final boolean flatnessCheck;
     final boolean checkUpBlocks;
     List<String> call;
 
-    public SummonerItem(ItemStack item, String airdrop, boolean clone, boolean usePlayerLocation, boolean flatnessCheck, boolean checkUpBlocks, List<String> call) {
+    public SummonerItem(ItemStack item, String airdrop, boolean clone, boolean usePlayerLocation, boolean flatnessCheck, boolean checkUpBlocks, List<String> call, boolean ignoreRegion) {
         this.item = item;
         this.airdrop = airdrop;
         this.clone = clone;
@@ -32,6 +28,7 @@ public class SummonerItem {
         this.flatnessCheck = flatnessCheck;
         this.checkUpBlocks = checkUpBlocks;
         this.call = call;
+        this.ignoreRegion = ignoreRegion;
     }
 
     public boolean isUsePlayerLocation() {
@@ -85,7 +82,7 @@ public class SummonerItem {
             return null;
         }
        // Message.debug("1");
-        if (usePlayerLocation) {
+        if (usePlayerLocation && !ignoreRegion) {
             if (!LocationGeneration.isRegionEmpty(BAirDrop.airDrops.get(key), location)) {
                 Message.sendMsg(pl, Config.getMessage("region-overlapping"));
                 pl.setCooldown(getItem().getType(), 40);
@@ -126,12 +123,9 @@ public class SummonerItem {
                 return null;
             }
         }
-      //  Message.debug("call all");
         for(String str : call)
             air.callListener(str, pl, Events.NONE);
-     //   Message.debug(" air.setSUMMONER(true);");
         air.setSUMMONER(true);
-     //   Message.debug("return air;");
         return air;
     }
 }

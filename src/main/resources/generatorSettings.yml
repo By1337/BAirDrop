@@ -1,6 +1,6 @@
 black-List-biome:
   - OCEAN
-black-List: #generatorSettings.yml
+black-List:
   - AIR
   - LAVA
   - WATER

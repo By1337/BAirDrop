@@ -1,6 +1,5 @@
 package org.by1337.bairdrop.util;
 
-import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -13,9 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
-import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.ConfigManager.Config;
-import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.BAirDrop;
 public class CustomCraft {
     private final String id;

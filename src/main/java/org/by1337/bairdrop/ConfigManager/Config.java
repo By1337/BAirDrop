@@ -1,8 +1,10 @@
 package org.by1337.bairdrop.ConfigManager;
 
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.menu.util.MenuItem;
 import org.by1337.bairdrop.util.*;
@@ -112,6 +114,7 @@ public class Config {
         LoadLocations();
         LoadEffect(effects);
         RegionManager.LoadFlags();
+        LoadEnchant();
         if (instance.getConfig().getBoolean("custom-crafts.enable"))
             LoadCustomCraft();
         isLoaded = true;
@@ -219,19 +222,59 @@ public class Config {
             }
         }
     }
+    private static void LoadEnchant(){
+     //   Message.error(Enchantment.DIG_SPEED.getName());
+        if(!instance.getConfig().getBoolean("auto-enchant.enable")) return;
+        for(String id : instance.getConfig().getConfigurationSection("auto-enchant").getKeys(false)){
+            if(id.equals("enable")) continue;
+
+            if(instance.getConfig().getConfigurationSection("auto-enchant." + id) == null) continue;
+            Material material1 = Material.DIRT;
+            try {
+                material1  = Material.valueOf(instance.getConfig().getString(String.format("auto-enchant.%s.material", id)));
+            }catch (IllegalArgumentException e){
+                e.printStackTrace();
+            }
+
+
+            List<EnchantInfo> enchantInfos = new ArrayList<>();
+            List<Enchantment> conflictEnchantments = new ArrayList<>();
+            for(String enchant : instance.getConfig().getConfigurationSection("auto-enchant." + id).getKeys(false)){
+                if(enchant.equals("material")) continue;
+                try {
+                    if(enchant.equals("conflict-enchant")){
+                        for(String str : instance.getConfig().getStringList(String.format("auto-enchant.%s.%s", id, enchant))){
+                            Enchantment enchantment = Objects.requireNonNull(Enchantment.getByKey(NamespacedKey.fromString("minecraft:" + str)));
+                            conflictEnchantments.add(enchantment);
+                        }
+                        continue;
+                    }
+                    Enchantment enchantment = Objects.requireNonNull(Enchantment.getByKey(NamespacedKey.fromString( "minecraft:" + enchant)));
+                    int chance = instance.getConfig().getInt(String.format("auto-enchant.%s.%s.chance", id, enchant));
+                    int minLevel = instance.getConfig().getInt(String.format("auto-enchant.%s.%s.min-level", id, enchant));
+                    int maxLevel = instance.getConfig().getInt(String.format("auto-enchant.%s.%s.max-level", id, enchant));
+                    enchantInfos.add(new EnchantInfo(chance, minLevel, maxLevel, enchantment));
+                }catch (NullPointerException e){
+                    e.printStackTrace();
+                }
+            }
+            EnchantMaterial.materialHashMap.put(id, new EnchantMaterial(material1, conflictEnchantments, enchantInfos));
+        }
+    }
     public static String getMessage(String path) {
         if (message.getString(path) == null) {
-            if(getMessageFromPlugin(path) == null){
+            String MessageFromPlugin = getMessageFromPlugin(path);
+            if(MessageFromPlugin == null){
                 Message.error(path + " <- this path does not exist!");
                 return Message.messageBuilder("&cСообщения с таким пути нет!, There are no messages with this path!");
             }else{
-                message.set(path, getMessageFromPlugin(path));
+                message.set(path, MessageFromPlugin);
                 try {
                     message.save(fileMessage);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                return Message.messageBuilder(getMessageFromPlugin(path));
+                return Message.messageBuilder(MessageFromPlugin);
             }
 
         }
