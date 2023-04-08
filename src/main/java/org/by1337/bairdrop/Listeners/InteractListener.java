@@ -34,7 +34,6 @@ public class InteractListener implements Listener {
                 return;
             }
             if(airDrop.isStartCountdownAfterClick() && !airDrop.isPressed()){
-              //  Message.sendMsg(pl, Config.getMessage("activate"));
                 airDrop.setPressed(true);
                 airDrop.setTimeStop(airDrop.getTimeToStopCons() * 60);
                 airDrop.event(Events.ACTIVATE, pl);

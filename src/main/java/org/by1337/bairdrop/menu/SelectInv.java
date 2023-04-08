@@ -17,6 +17,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
+import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.util.BaseHeadHook;
 import org.by1337.bairdrop.util.Items;
 import org.by1337.bairdrop.util.Message;
@@ -56,7 +57,7 @@ public class SelectInv implements Listener {
                 else
                     itemStack = BaseHeadHook.getItem("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDNhOWEwNzFiNDI4M2M3NTYyNjg3NWM3YmFmZDBlZWYxM2IzZGZmNThhZDk2ODBhMTY1Mjg4YTcxNzFjNTYzNSJ9fX0=");
                 ItemMeta im = itemStack.getItemMeta();
-                im.setLore(List.of(Message.messageBuilder("&aЛкм редактировать этот список"), Message.messageBuilder("&7Предметов: " + airDrop.getListItems().get(inv).size())));
+                im.setLore(List.of(Message.messageBuilder(Config.getMessage("edit-list")), Message.messageBuilder( String.format(Config.getMessage("list-size"), airDrop.getListItems().get(inv).size()))));
                 im.getPersistentDataContainer().set(NamespacedKey.fromString("inv"), PersistentDataType.STRING, inv);
                 im.setDisplayName(Message.messageBuilder("&7" + inv));
                 itemStack.setItemMeta(im);
@@ -66,8 +67,7 @@ public class SelectInv implements Listener {
         }
         ItemStack itemStack = BaseHeadHook.getItem("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWEyZDg5MWM2YWU5ZjZiYWEwNDBkNzM2YWI4NGQ0ODM0NGJiNmI3MGQ3ZjFhMjgwZGQxMmNiYWM0ZDc3NyJ9fX0=");
         ItemMeta im = itemStack.getItemMeta();
-        //im.setLore(List.of(Message.messageBuilder("&aСоздать новый")));
-        im.setDisplayName(Message.messageBuilder("&aСоздать новый"));
+        im.setDisplayName(Message.messageBuilder(Config.getMessage("create-new-list")));
         im.getPersistentDataContainer().set(NamespacedKey.fromString("inv"), PersistentDataType.STRING, "add");
         itemStack.setItemMeta(im);
         this.inv.setItem(53, itemStack);

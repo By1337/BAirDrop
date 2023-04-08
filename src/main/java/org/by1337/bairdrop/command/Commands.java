@@ -20,6 +20,7 @@ import org.by1337.bairdrop.util.Events;
 import org.by1337.bairdrop.util.GeneratorLoc;
 import org.by1337.bairdrop.util.Message;
 import org.jetbrains.annotations.NotNull;
+import org.w3c.dom.css.CSSStyleRule;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -33,13 +34,6 @@ public class Commands implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (sender instanceof Player pl) {
-
-            if (!var3 && ThreadLocalRandom.current().nextInt(0, 10) == 2) {//todo
-                Message.error("§cОшибка лицензии");
-                Message.error("§cПлагин выключен!");
-                Bukkit.getScheduler().cancelTasks(instance);
-                Bukkit.getPluginManager().disablePlugin(instance);
-            }
             if (args.length == 0) {
                 Message.sendMsg(pl, Config.getMessage("few-arguments"));
                 return true;
@@ -49,36 +43,6 @@ public class Commands implements CommandExecutor {
                 Sound sound = soundIterator.next();
                 if (sound == Sound.EVENT_RAID_HORN)
                     break;
-                //  Message.sendMsg(pl, "&f" + sound);
-            }
-            if (args[0].equals("test")) {
-                long time = System.currentTimeMillis();
-                String str = "";
-                for(int x = 0; x < 5000; x++){
-                    str = airDrops.get("default").replaceInternalPlaceholder("\"{time-to-open} , {time-to-start} , {time-to-end} , {time-to-open-format} , {time-to-start-format} , {time-to-end-format} , {rnd-1} , {rnd-10} , {rnd-50} , {rnd-100} , {airdrop-is-open} , {airdrop-is-start} , {it-was-open} , {use-pre-generated-locations} , {time-stop-event-must-go} , {use-static-loc} , {flatness-check} , {!airdrop-is-open} , {!airdrop-is-start} , {!it-was-open} , {!use-pre-generated-locations} , {!time-stop-event-must-go} , {!use-static-loc} , {!flatness-check} , {summoner} , {id} , {world} , {air-name} , {inv-name} , {spawn-min} , {spawn-max} , {air-protect} , {search-before-start} , {min-online-players} , {material-locked} , {material-unlocked} , {world-loc} , {start-countdown-after-click} , {time-to-start-cons} , {search-before-start-cons} , {time-to-open-cons} , {time-to-end-cons} , {time-to-end-cons} , {clone} , {!clone} , {stopWhenEmpty} , {use-player-location} , {global-timer}\"");
-                }
-                Message.sendMsg(pl, str);
-                Message.sendMsg(pl, "&cИтог: " + (System.currentTimeMillis() - time));
-                Message.error("Итог: " + (System.currentTimeMillis() - time));
-
-            }
-            if (args[0].equals("info")) {
-                ItemStack itemStack = pl.getInventory().getItemInMainHand();
-                if(itemStack.getItemMeta() == null){
-                    Message.sendMsg(pl, "&cУ предмета нет ItemMeta!");
-                    return true;
-                }
-                PersistentDataContainer pdc = itemStack.getItemMeta().getPersistentDataContainer();
-                Message.sendMsg(pl, "&7Материал: " + itemStack.getType());
-                Message.sendMsg(pl, "&7PDC Ключи: " + pdc.getKeys());
-                for(NamespacedKey key  : pdc.getKeys()){
-
-               //     Object value = pdc.get(key, PersistentDataType);
-                 //   pdc.getAdapterContext()
-                   // Message.sendMsg(pl, "&7PDC Ключ: " + key.getKey() + " = " + value);
-                }
-
-                return true;
             }
             if (args[0].equals("compass")) {
                 if (!pl.hasPermission("bair.compass")) {
@@ -159,19 +123,23 @@ public class Commands implements CommandExecutor {
                     }
                     if (player.getInventory().firstEmpty() == -1) {
                         player.getLocation().getWorld().dropItem(player.getLocation(), item);
-                        Message.sendMsg(pl,"{PP} &fИгроку " + player.getName() + " был выдан " + args[1] + " x" + amount);
+                        Message.sendMsg(pl, String.format(Config.getMessage("get-item"), player.getName(), args[1], amount));
+                       // Message.sendMsg(pl,"{PP} &fИгроку " + player.getName() + " был выдан " + args[1] + " x" + amount);
                     } else {
                         player.getInventory().addItem(item);
-                        Message.sendMsg(pl,"{PP} &fИгроку " + player.getName() + " был выдан " + args[1] + " x" + amount);
+                        Message.sendMsg(pl, String.format(Config.getMessage("get-item"), player.getName(), args[1], amount));
+                       // Message.sendMsg(pl,"{PP} &fИгроку " + player.getName() + " был выдан " + args[1] + " x" + amount);
                     }
                     return true;
                 }
                 if (pl.getInventory().firstEmpty() == -1) {
                     pl.getLocation().getWorld().dropItem(pl.getLocation(), BAirDrop.summoner.getItems().get(args[1]).getItem());
-                    Message.sendMsg(pl,"{PP} &fИгроку " + pl.getName() + " был выдан " + args[1] + " x1");
+                    Message.sendMsg(pl, String.format(Config.getMessage("get-item"), pl.getName(), args[1], 1));
+                   // Message.sendMsg(pl,"{PP} &fИгроку " + pl.getName() + " был выдан " + args[1] + " x1");
                 } else {
                     pl.getInventory().addItem(BAirDrop.summoner.getItems().get(args[1]).getItem());
-                    Message.sendMsg(pl,"{PP} &fИгроку " + pl.getName() + " был выдан " + args[1] + " x1");
+                    Message.sendMsg(pl, String.format(Config.getMessage("get-item"), pl.getName(), args[1], 1));
+                   // Message.sendMsg(pl,"{PP} &fИгроку " + pl.getName() + " был выдан " + args[1] + " x1");
                 }
                 return true;
             }
@@ -266,7 +234,7 @@ public class Commands implements CommandExecutor {
             }
 
 
-            if (args[0].equals("clone")) {////bair clone <air> <newId> -temp
+            if (args[0].equals("clone")) {
                 if (!pl.hasPermission("bair.clone")) {
                     Message.sendMsg(pl, Config.getMessage("no-prem"));
                     return true;
@@ -287,7 +255,7 @@ public class Commands implements CommandExecutor {
                     if (!air.isClone())
                         air.createFile();
                     airDrops.put(air.getAirId(), air);
-                    Message.sendMsg(pl, "&aАирдроп создан!");
+                    Message.sendMsg(pl, Config.getMessage("airdrop-crated"));
                 } else {
                     Message.sendMsg(pl, String.format(Config.getMessage("unknown-airdrop"), args[1]));
                 }
@@ -462,7 +430,7 @@ public class Commands implements CommandExecutor {
                     if (!air.isClone())
                         air.createFile();
                     airDrops.put(air.getAirId(), air);
-                    Message.logger("&aАирдроп создан!");
+                    Message.logger(Config.getMessage("airdrop-crated"));
                     return true;
                 } else {
                     Message.logger(String.format(Config.getMessage("unknown-airdrop"), args[1]));
@@ -521,16 +489,17 @@ public class Commands implements CommandExecutor {
                     }
                     Player player = Bukkit.getPlayer(args[2]);
                     if (player == null) {
-                        Message.logger("{PP} &cНеизвестный игрок!");
+                        Message.logger(Config.getMessage("unknown-player"));
                         return true;
                     }
                     if (player.getInventory().firstEmpty() == -1) {
                         player.getLocation().getWorld().dropItem(player.getLocation(), item);
-
-                        Message.logger("{PP} &fИгроку " + player.getName() + " был выдан " + args[1] + " x" + amount);
+                        Message.logger(String.format(Config.getMessage("get-item"), player.getName(), args[1], amount));
+                      //  Message.logger("{PP} &fИгроку " + player.getName() + " был выдан " + args[1] + " x" + amount);
                     } else {
                         player.getInventory().addItem(item);
-                        Message.logger("{PP} &fИгроку " + player.getName() + " был выдан " + args[1] + " x" + amount);
+                        Message.logger(String.format(Config.getMessage("get-item"), player.getName(), args[1], amount));
+                       // Message.logger("{PP} &fИгроку " + player.getName() + " был выдан " + args[1] + " x" + amount);
                     }
                     return true;
                 }
@@ -548,7 +517,7 @@ public class Commands implements CommandExecutor {
                     e.printStackTrace();
                 }
                 if (player == null) {
-                    Message.logger("&cНеизвестный игрок!");
+                    Message.logger(Config.getMessage("unknown-player"));
                     return true;
                 }
 

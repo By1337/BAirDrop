@@ -59,7 +59,7 @@ public class AirDrop {
     private Material materialLocked;
     private Material materialUnlocked;
     //  private List<Items> ListItems = new ArrayList<>();
-    private HashMap<String, List<Items>> ListItems = new HashMap<>();
+    private final HashMap<String, List<Items>> ListItems = new HashMap<>();
     // private TreeMap
     private boolean airLocked = true;
     private Inventory inv;
@@ -82,7 +82,7 @@ public class AirDrop {
     private boolean flatnessCheck;
     private Location staticLocation;
     private boolean useStaticLoc;
-    private HashMap<String, IEffect> activeEffects = new HashMap<>();
+    private final HashMap<String, IEffect> activeEffects = new HashMap<>();
     private int attemptsToPick;
     private int chance;
     private boolean countTheTime;
@@ -105,9 +105,6 @@ public class AirDrop {
     private boolean rndItems;
     private boolean hideInCompleter;
 
-    //todo защита от низкого тпс
-    //todo догенерирование локаций
-    //todo отказ спавнится при отсуцвии локаций
     AirDrop(FileConfiguration fileConfiguration, File airdropFile) {
         try {
             this.airdropFile = airdropFile;
@@ -120,7 +117,7 @@ public class AirDrop {
                 double x = fileConfiguration.getDouble("static-location.x");
                 double y = fileConfiguration.getDouble("static-location.y");
                 double z = fileConfiguration.getDouble("static-location.z");
-                World world1 = Bukkit.getWorld(fileConfiguration.getString("static-location.world") == null ? "world" : fileConfiguration.getString("static-location.world"));
+                World world1 = Bukkit.getWorld(fileConfiguration.getString("static-location.world") == null ? "world" : Objects.requireNonNull(fileConfiguration.getString("static-location.world")));
                 if (world1 == null) {
                     Message.error("Ошибка мира в аирдропе " + airId + " статическая локация не загружена!");
                 } else {
@@ -135,7 +132,7 @@ public class AirDrop {
 
             AirName = fileConfiguration.getString("air-name");
             invSize = fileConfiguration.getInt("chest-inventory-size");
-            world = Bukkit.getWorld(fileConfiguration.getString("air-spawn-world"));
+            world = Bukkit.getWorld(Objects.requireNonNull(fileConfiguration.getString("air-spawn-world")));
             spawnMin = fileConfiguration.getInt("air-spawn-radius-min");
             spawnMax = fileConfiguration.getInt("air-spawn-radius-max");
             airProtect = fileConfiguration.getInt("air-radius-protect");
@@ -685,8 +682,6 @@ public class AirDrop {
 
         if (sb.indexOf("{time-to-end-cons}") != -1)
             sb.replace(sb.indexOf("{time-to-end-cons}"), sb.indexOf("{time-to-end-cons}") + 18, String.valueOf(timeToStopCons));
-        //   if (sb.indexOf("{time-to-end-cons}") != -1)
-        //    sb.replace(sb.indexOf("{time-to-end-cons}"), sb.indexOf("{time-to-end-cons}") + 18, String.valueOf(timeToStopCons));
 
         if (sb.indexOf("{clone}") != -1)
             sb.replace(sb.indexOf("{clone}"), sb.indexOf("{clone}") + 7, String.valueOf(isClone()));
@@ -972,10 +967,6 @@ public class AirDrop {
         return airDropStarted;
     }
 
-    public void setAirDropStarted(boolean airDropStarted) {
-        this.airDropStarted = airDropStarted;
-    }
-
     public void getEditorItemsInventory(Inventory inv, String invName) {
         for (Items items : getListItems().getOrDefault(invName, new ArrayList<>())) {
             ItemStack itemStack = items.getItem();
@@ -1153,7 +1144,8 @@ public class AirDrop {
      */
     public void schematicsRemoveAll() {
         if (editSession != null) {
-            EditSession newEditSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(editSession.getWorld(), -1, null, null);
+            EditSession newEditSession = WorldEdit.getInstance().newEditSession(editSession.getWorld());
+           // EditSession newEditSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(editSession.getWorld(), -1, null, null);
             editSession.undo(newEditSession);
             editSession.close();
             editSession = null;
@@ -1279,7 +1271,7 @@ public class AirDrop {
     }
 
     /**
-     * при установки на true аир будет приминят оффсеты к holoTimeToStart
+     * при установке на true аир будет приминят оффсеты к holoTimeToStart
      */
     public void setHoloTimeToStartMinusOffsets(boolean holoTimeToStartMinusOffsets) {
         this.holoTimeToStartMinusOffsets = holoTimeToStartMinusOffsets;

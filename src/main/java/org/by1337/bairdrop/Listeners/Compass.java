@@ -97,13 +97,10 @@ public class Compass implements Listener {
         String name = Objects.requireNonNull(BAirDrop.instance.getConfig().getString("compass.item-name"));
         String nbt = BAirDrop.instance.getConfig().getString("compass.nbt");
         String messageNotFound = Objects.requireNonNull(BAirDrop.instance.getConfig().getString("compass.message-not-found"));
-     //   List<String> flags = BAirDrop.instance.getConfig().getStringList("compass.item-flag");
-     //   List<String> enchants = BAirDrop.instance.getConfig().getStringList("compass.item-enchants");
         List<String> lore = BAirDrop.instance.getConfig().getStringList("compass.item-lore");
         double lineMaxDistance = BAirDrop.instance.getConfig().getDouble("compass.line-max-distance");
         double particleStep = BAirDrop.instance.getConfig().getDouble("compass.particle-step");
         double size = BAirDrop.instance.getConfig().getDouble("compass.particle-size");
-     //   double cooldown = BAirDrop.instance.getConfig().getDouble("compass.cooldown"); //todo cooldown
         Color color = RGBHelper.getColorWithRgb(Objects.requireNonNull(BAirDrop.instance.getConfig().getString("compass.particle-color")));
         itemStack = new ItemStack(Material.valueOf(mat));
         ItemMeta im = itemStack.getItemMeta();
@@ -116,12 +113,8 @@ public class Compass implements Listener {
         this.distanceBetweenPoints = particleStep;
         lore.replaceAll(Message::messageBuilder);
         im.setLore(lore);
-       // for(String flag : flags)
-         //   im.addItemFlags(ItemFlag.valueOf(flag));
         im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-       // for(String enchant : enchants)
-        //    im.addEnchant(Enchantment.getByKey(NamespacedKey.fromString(enchant)), 1, false);
         im.addEnchant(Enchantment.ARROW_DAMAGE, 1, false);
         im.getPersistentDataContainer().set(NamespacedKey.fromString("compass_bairdrop"), PersistentDataType.STRING, "true");
         itemStack.setItemMeta(im);

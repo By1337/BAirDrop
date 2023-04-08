@@ -6,8 +6,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.menu.util.MenuItem;
 import org.by1337.bairdrop.util.*;
+import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
+import java.io.*;
 import java.util.*;
 
 import static org.by1337.bairdrop.BAirDrop.instance;
@@ -111,7 +112,7 @@ public class Config {
         LoadLocations();
         LoadEffect(effects);
         RegionManager.LoadFlags();
-        if(instance.getConfig().getBoolean("custom-crafts.enable"))
+        if (instance.getConfig().getBoolean("custom-crafts.enable"))
             LoadCustomCraft();
         isLoaded = true;
 
@@ -144,17 +145,17 @@ public class Config {
 
     private static void LoadCustomCraft() {
         if (instance.getConfig().getConfigurationSection("custom-crafts.crafts") == null) {
-              Message.error("Список крафтов пуст!");
+            Message.error("Список крафтов пуст!");
             return;
         }
         main:
         for (String key : instance.getConfig().getConfigurationSection("custom-crafts.crafts").getKeys(false)) {
             try {
                 String summoner = Objects.requireNonNull(instance.getConfig().getString(String.format("custom-crafts.crafts.%s.summoner", key)));
-                if(!BAirDrop.summoner.getItems().containsKey(summoner)){
+                if (!BAirDrop.summoner.getItems().containsKey(summoner)) {
                     Message.error(summoner + " Неизвестный предмет!");
                     Message.error(String.format("Крафт %s был пропущен", key));
-                    continue ;
+                    continue;
                 }
                 String top = Objects.requireNonNull(instance.getConfig().getString(String.format("custom-crafts.crafts.%s.slots.top", key)));
                 String middle = Objects.requireNonNull(instance.getConfig().getString(String.format("custom-crafts.crafts.%s.slots.middle", key)));
@@ -181,9 +182,9 @@ public class Config {
                     }
                 }
                 BAirDrop.crafts.put(key, new CustomCraft(key, summoner, call, ingredients, top, middle, bottom));
-            }catch (NullPointerException e){
+            } catch (NullPointerException e) {
                 Message.error(String.format("Ошибка загрузки крафта! %s", key));
-            }catch (Exception e){
+            } catch (Exception e) {
                 Message.error("Произошла ошибка при загрузке крафта! " + key);
             }
         }
@@ -218,13 +219,49 @@ public class Config {
             }
         }
     }
-
     public static String getMessage(String path) {
         if (message.getString(path) == null) {
-            Message.error(path + " <- this path does not exist!");
-            return Message.messageBuilder("&cСообщения с таким пути нет!, There are no messages with this path!");
+            if(getMessageFromPlugin(path) == null){
+                Message.error(path + " <- this path does not exist!");
+                return Message.messageBuilder("&cСообщения с таким пути нет!, There are no messages with this path!");
+            }else{
+                message.set(path, getMessageFromPlugin(path));
+                try {
+                    message.save(fileMessage);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return Message.messageBuilder(getMessageFromPlugin(path));
+            }
+
         }
         return Message.messageBuilder(message.getString(path));
+    }
+    @Nullable
+    public static String getMessageFromPlugin(String path) {
+        InputStream resourceStream = instance.getResource("message.yml");
+        if (resourceStream == null) {
+            return null;
+        }
+        File tempFile;
+        try {
+            tempFile = File.createTempFile("message", ".yml");
+        } catch (IOException e) {
+            return null;
+        }
+        try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = resourceStream.read(buffer)) != -1) {
+                fos.write(buffer, 0, bytesRead);
+            }
+        } catch (IOException e) {
+            return null;
+        }
+
+        FileConfiguration config = YamlConfiguration.loadConfiguration(tempFile);
+        tempFile.delete();
+        return config.getString(path);
     }
 
     public static List<String> getList(String path) {

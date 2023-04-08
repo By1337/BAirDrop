@@ -43,7 +43,6 @@ public class AddingItems implements Listener {
     @EventHandler
     public void onClose(InventoryCloseEvent e) {
         if (e.getInventory().equals(inv)) {
-          //  air.getListItems().clear();
             List<Items> list = new ArrayList<>();
             for (int x = 0; x < inv.getSize(); x++) {
                 if (inv.getItem(x) == null) continue;
@@ -53,13 +52,10 @@ public class AddingItems implements Listener {
                     im.getPersistentDataContainer().remove(NamespacedKey.fromString("chance"));
                 inv.getItem(x).setItemMeta(im);
                 list.add(new Items(x, chance == null ? 100 : chance, inv.getItem(x), invName));
-               // air.getListItems().add(new Items(x, chance == null ? 100 : chance, inv.getItem(x), invName));
             }
             airdrop.getListItems().put(invName, list);
-            // Message.debug(airdrop.getListItems().keySet().toString());
             airdrop.save();
 
-          //  e.getPlayer().closeInventory();
             new BukkitRunnable() {
                 final AirDrop air = airdrop;
                 @Override
