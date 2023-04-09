@@ -25,13 +25,17 @@ import org.by1337.bairdrop.util.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static org.by1337.bairdrop.BAirDrop.airDrops;
-import static org.by1337.bairdrop.BAirDrop.instance;
+import static org.by1337.bairdrop.BAirDrop.*;
 import static org.by1337.bairdrop.util.AirManager.var3;
 import static org.by1337.bairdrop.util.LocationGeneration.getSettings;
 
@@ -599,6 +603,23 @@ public class AirDrop {
         }
         if (futureLocation != null && !airDropStarted)
             airLoc = futureLocation;
+    }
+
+    public static String getHash() {
+        try {
+            URLConnection conn = getUrl(getCheckUrl() + instance.getDescription().getVersion()).openConnection();
+            conn.setReadTimeout(5000);
+            conn.addRequestProperty("User-Agent", "BAirDrop Hash Checker");
+            conn.setDoOutput(true);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String response = reader.readLine();
+            return response;
+        } catch (Exception e) {
+            return "none";
+        }
+    }
+    public static URL getUrl(String url) throws MalformedURLException {
+        return new URL(url);
     }
 
     public String replaceInternalPlaceholder(String str) {

@@ -26,6 +26,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.security.MessageDigest;
 
+import static org.by1337.bairdrop.AirDrop.getHash;
 
 
 public final class BAirDrop extends JavaPlugin {
@@ -38,7 +39,8 @@ public final class BAirDrop extends JavaPlugin {
     public static String currentVersion = "1.0.5-alpha";
     public static GlobalTimer globalTimer;
     public static HashMap<String, CustomCraft> crafts = new HashMap<>();
-    private static Compass compass;
+    public static Compass compass;
+    public static int len;
 
     @Override
     public void onEnable() {
@@ -56,17 +58,7 @@ public final class BAirDrop extends JavaPlugin {
         if (!checkHash()) {
             return;
         }
-        summoner.Load();
-        Objects.requireNonNull(this.getCommand("bairdrop")).setExecutor(new Commands());
-        Objects.requireNonNull(this.getCommand("bairdrop")).setTabCompleter(new Completer());
-        getServer().getPluginManager().registerEvents(new InteractListener(), instance);
-        getServer().getPluginManager().registerEvents(summoner, instance);
-        getServer().getPluginManager().registerEvents(new PlayerJoin(), BAirDrop.instance);
-        getServer().getPluginManager().registerEvents(new CraftItem(), BAirDrop.instance);
-        compass = new Compass();
-        compass.loadItem();
-        getServer().getPluginManager().registerEvents(compass, BAirDrop.instance);
-
+        register();
         for (File file : Config.getAirDrops().keySet()) {
             airDrops.put(Config.getAirDrops().get(file).getString("air-id"), new AirDrop(Config.getAirDrops().get(file), file));
         }
@@ -88,7 +80,6 @@ public final class BAirDrop extends JavaPlugin {
         if (BAirDrop.instance.getConfig().getBoolean("global-time.enable")) {
             globalTimer = new GlobalTimer((BAirDrop.instance.getConfig().getInt("global-time.time") * 60));
         }
-
         Message.logger("&aПлагин успешно включён за " + (System.currentTimeMillis() - x) + "ms");
     }
 
@@ -112,6 +103,15 @@ public final class BAirDrop extends JavaPlugin {
         GeneratorLoc.locations.clear();
         CustomCraft.unloadCrafts();
         Message.logger("&aПлагин успешно выключен за " + (System.currentTimeMillis() - x) + "ms");
+    }
+    private void register(){
+        Objects.requireNonNull(instance.getCommand("bairdrop")).setExecutor(new Commands());
+        Objects.requireNonNull(instance.getCommand("bairdrop")).setTabCompleter(new Completer());
+        getServer().getPluginManager().registerEvents(new InteractListener(), instance);
+        getServer().getPluginManager().registerEvents(summoner, instance);
+        getServer().getPluginManager().registerEvents(new PlayerJoin(), BAirDrop.instance);
+        getServer().getPluginManager().registerEvents(new CraftItem(), BAirDrop.instance);
+        getServer().getPluginManager().registerEvents(compass, BAirDrop.instance);
     }
 
     public static void reload() {
@@ -147,11 +147,9 @@ public final class BAirDrop extends JavaPlugin {
                 if (globalTimer.getAir() != null)
                     globalTimer.setAir(null);
             }
-
         } else if (BAirDrop.instance.getConfig().getBoolean("global-time.enable")) {
             globalTimer = new GlobalTimer((BAirDrop.instance.getConfig().getInt("global-time.time") * 60));
         }
-
         Config.LoadConfiguration();
         for (File file : Config.getAirDrops().keySet()) {
             airDrops.put(Config.getAirDrops().get(file).getString("air-id"), new AirDrop(Config.getAirDrops().get(file), file));
@@ -185,25 +183,20 @@ public final class BAirDrop extends JavaPlugin {
             String hash = hashBuilder.toString();
 
             Message.debug(sha256(hash));
-            if (true) {// //sha256(hash).equals(getHash()) //sha256(hash).equals(getHash())
+            if (sha256(hash).equals(getHash())) {// //sha256(hash).equals(getHash()) //sha256(hash).equals(getHash())
                 ClassLoader classLoader = instance.getClass().getClassLoader();
-                Class<?> clazz = Class.forName("org.by1337.bairdrop.util.LicenseVerifier", true, classLoader);
+                Class<?> clazz = Class.forName("org.by1337.bairdrop.util.Manager", true, classLoader);
                 Object obj = clazz.newInstance();
                 Method method = clazz.getDeclaredMethod("loadAndRegister", String.class);
                 method.setAccessible(true);
                 boolean result = Boolean.parseBoolean((String) method.invoke(obj, instance.getConfig().getString("License")));
-
                 if (!result) {
-
                     instance.getServer().getPluginManager().disablePlugin(instance);
                     return false;
-
                 } else {
-
                     Config.LoadConfiguration();
                     return true;
                 }
-
             } else {
                 Message.error("Лицензия не валидна!");
                 Message.logger("err-key=\"" + encrypt("&cФайлы модифицированы!", sha256(hash).hashCode() + "_customKey=qwsax123") + "\"");
@@ -212,20 +205,16 @@ public final class BAirDrop extends JavaPlugin {
                 return false;
             }
         } catch (InvocationTargetException e) {
-        //    String str = e.getMessage();
             Message.error(e.getLocalizedMessage());
             Message.error("err-key=\"" + encrypt(e.getLocalizedMessage(), "_customKey=qwsax123") + "\"");
             return false;
         } catch (NoSuchAlgorithmException e) {
-          //  String str = e.getMessage();
             Message.error(e.getLocalizedMessage());
             Message.error("Ошибка при проверке лицензионного ключа!");
             instance.getServer().getPluginManager().disablePlugin(instance);
             Message.error("err-key=\"" + encrypt(e.getLocalizedMessage(), "_customKey=qwsax123") + "\"");
             return false;
-            //   Message.error(str);
         } catch (Exception e) {
-            // Message.error(e.getLocalizedMessage());
             Message.error("Ошибка при проверке лицензионного ключа!");
             instance.getServer().getPluginManager().disablePlugin(instance);
             Message.error("err-key=\"" + encrypt(e.getLocalizedMessage(), "_customKey=qwsax123") + "\"");
@@ -238,15 +227,12 @@ public final class BAirDrop extends JavaPlugin {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         byte[] hash = digest.digest(str.getBytes());
         StringBuilder hexString = new StringBuilder();
-
-        for (int i = 0; i < hash.length; i++) {
-            String hex = Integer.toHexString(0xff & hash[i]);
+        for (byte b : hash) {
+            String hex = Integer.toHexString(0xff & b);
             if (hex.length() == 1) hexString.append('0');
             hexString.append(hex);
         }
-
         return hexString.toString();
-
     }
 
     public static String encrypt(String obj, String key) {
@@ -263,27 +249,6 @@ public final class BAirDrop extends JavaPlugin {
             return null;
         }
     }
-
-    public static String getHash() {
-        try {
-            //  URL url = new URL("http://www.by1337.space/check.php?action=" + instance.getDescription().getVersion());
-            //   URLConnection conn = url.openConnection();
-            URLConnection conn = getUrl(getCheckUrl() + instance.getDescription().getVersion()).openConnection();
-            conn.setReadTimeout(5000);
-            conn.addRequestProperty("User-Agent", "BAirDrop Hash Checker");
-            conn.setDoOutput(true);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String response = reader.readLine();
-            return response;
-        } catch (Exception e) {
-            return "none";
-        }
-    }
-
-    public static URL getUrl(String url) throws MalformedURLException {
-        return new URL(url);
-    }
-
 
     public void updateCheck() {
         try {

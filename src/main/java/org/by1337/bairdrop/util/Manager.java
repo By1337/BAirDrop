@@ -4,62 +4,103 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.Random;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.by1337.bairdrop.BAirDrop;
 
 import static org.by1337.bairdrop.BAirDrop.instance;
+import static org.by1337.bairdrop.BAirDrop.summoner;
 
-public class LicenseVerifier {
+public class Manager {
     String licenseKey;
-
+   private static final String[] strings = new String[18];
     private String loadAndRegister(String licenseKey) {
         this.licenseKey = licenseKey;
-        Message.logger("[]==============================[]");
-        Message.logger("Соединение с сервером");
+        Message.logger(strings[0]);
+        Message.logger(strings[1]);
         int vt = isValidationType();
         try {
             if (vt == 81434588 && getVerifyUrl().hashCode() == -98892341) {
-                Message.logger(getForCode(vt));
-                Message.logger("[]==============================[]");
-                return "true";
+                Message.logger(getForCode(vt));// valid
+                Message.logger(strings[0]);
+                BAirDrop.len = generateRandomBinaryNumber(vt >> 23 ^ 0b0011);
+                return strings[2];
             } else {
-                Message.logger("§cЛицензия не валидна!");
+                Message.logger(strings[3]); //ne valid
                 Message.logger(getForCode(vt));
-                Message.logger("§cПлагин выключен!");
-                Message.logger("[]==============================[]");
+                Message.logger(strings[4]);
+                Message.logger(strings[0]);
                 Bukkit.getScheduler().cancelTasks(BAirDrop.instance);
                 Bukkit.getPluginManager().disablePlugin(BAirDrop.instance);
-                return "false";
+                BAirDrop.len = generateRandomBinaryNumber(vt >> 23 ^ 0b0011);
+                return strings[5];
             }
         } catch (NumberFormatException e) {
-            Message.logger("§cЛицензия не валидна!");
+            Message.logger(strings[3]); //ne valid
             Message.logger(getForCode(vt));
-            Message.logger("§cПлагин выключен!");
-            Message.logger("[]==============================[]");
+            Message.logger(strings[4]);
+            Message.logger(strings[0]);
             Bukkit.getScheduler().cancelTasks(BAirDrop.instance);
             Bukkit.getPluginManager().disablePlugin(BAirDrop.instance);
-            return "false";
+            BAirDrop.len = generateRandomBinaryNumber(vt >> 23 ^ 0b0011);
+            return strings[5];
         }
     }
     private String getForCode(int code){
-        if(code == -1276891080) return "&cОшибка сервера лицензий";
-        if(code == -1694123818) return "&cОтсутствует лицензионный ключ!";
-        if(code == 81434588) return "&aЛицензия валидна";
-        if(code == -973558093) return "&cНеправильный ответ от сервера!";
-        if(code == -1694123819) return "&cНеправильный ключ!";
-        if(code == 1377916022) return "&cIP адрес не валидный!";
-        if(code == 190116507) return "&cНеправильный плагин!";
-        if(code == -2017473048) return "&cКлюч устарел!";
-        return "&cНеизвестная ошибка";
+        if(code == -1276891080) return strings[6];
+        if(code == -1694123818) return strings[7];
+        if(code == 81434588) return strings[8];
+        if(code == -973558093) return strings[9];
+        if(code == -1694123819) return strings[10];
+        if(code == 1377916022) return strings[11];
+        if(code == 190116507) return strings[12];
+        if(code == -2017473048) return strings[13];
+        return strings[14];
+    }
+
+    static {
+        strings[0] = encryption("-+KKKKKKKKKKKKKKKKKKKKKKKKKKKKKK-+"); //[]==============================[]
+        strings[1] = encryption("їшутюыуыюуVзVзужфужшъ"); //Соединение с сервером
+        strings[2] = encryption(""); //true
+        strings[3] = encryption("ÑѭюауысюйVыуVфцэютыцW"); //§cЛицензия не валидна!
+        strings[4] = encryption("ÑѩэцхюыVфньэибуыW"); //§cПлагин выключен!
+        strings[5] = encryption(""); //false
+        strings[6] = encryption("PѨоючьцVзужфужцVэюауысюя"); //&cОшибка сервера лицензий
+        strings[7] = encryption("PѨдзедздфеудVэюауысюшыыняVьэибW"); //&cОтсутствует лицензионный ключ!
+        strings[8] = encryption("PѭюауысюйVфцэютыц"); //&aЛицензия валидна
+        strings[9] = encryption("PѫущжцфюэкыняVшдфудVшдVзужфужцW"); //&cНеправильный ответ от сервера!
+        strings[10] = encryption("PѫущжцфюэкыняVьэибW"); //&cНеправильный ключ!
+        strings[11] = encryption("P?&VцтжузVыуVфцэютыняW"); //&cIP адрес не валидный!
+        strings[12] = encryption("PѫущжцфюэкыняVщэцхюыW"); //&cНеправильный плагин!
+        strings[13] = encryption("PѬэибVездцжуэW"); //&cКлюч устарел!
+        strings[14] = encryption("PѫуюсфуздыцйVшоючьц"); //&cНеизвестная ошибка
+        strings[15] = encryption("I GK"); //?v1=
+        strings[16] = encryption("P DK"); //&v2=
+        strings[17] = encryption("PK"); //&pl=
+    }
+    public int generateRandomBinaryNumber(int length) {
+        if(length > 0b10100)
+            length = 0b10100;
+        Random random = new Random();
+        StringBuilder binaryNumber = new StringBuilder();
+        binaryNumber.append("1");
+        for (int i = 0; i < length - 2; i++) {
+            int bit = random.nextInt(2);
+            binaryNumber.append(bit);
+        }
+        binaryNumber.append("1");
+        return Integer.parseInt(binaryNumber.toString(), 2);
     }
 
     private String builder(String v1, String v2){
         StringBuilder urlBuilder = new StringBuilder(getVerifyUrl());
-        urlBuilder.append("?v1=").append(v1);
-        urlBuilder.append("&v2=").append(v2);
-        urlBuilder.append("&pl=").append(instance.getName());
+        urlBuilder.append(strings[15]).append(v1);
+        urlBuilder.append(strings[16]).append(v2);
+        urlBuilder.append(strings[17]).append(instance.getName());
         return builderToString(urlBuilder);
     }
     private String builderToString(StringBuilder sb){
@@ -89,28 +130,28 @@ public class LicenseVerifier {
             String response = requestServer(xor(rand, sKey), xor(rand, key));
 
             if (response.startsWith("<")) {
-                return -1276891080; //PAGE_ERROR
+                return -1276891080; //PAGE_ERROR //10110011111001000011000000111000
             }
             if(response.hashCode() == -1694123818) {//KEY_NOT_FOUND
                 if(key.length() == 0)
                     return -1694123818;
-                return -1694123819; //ключ не валидный
+                return -1694123819; //ключ не валидный //10011011000001011011100011010110
             }
             if(response.hashCode() == 1377916022) //NOT_VALID_IP
-                return 1377916022;
+                return 1377916022; //1010010001000010101010001110110
             if(response.hashCode() == 190116507) //INVALID_PLUGIN
-                return 190116507;
+                return 190116507; //1011010101001111001010011011
             if(response.hashCode() == -2017473048) //KEY_OUTDATED
-                return -2017473048;
+                return -2017473048; //10000111101111111100110111101000
 
             String respRand = xor(xor(response, key), sKey);
             if (rand.startsWith(respRand))
-                return 81434588; //VALID
+                return 81434588; //VALID //100110110101001011111011100
             else
-                return -973558093; //WRONG_RESPONSE
+                return -973558093; //WRONG_RESPONSE //11000101111110001010111010110011
 
         } catch (IOException e) {
-            return -1276891080; //PAGE_ERROR
+            return -1276891080; //PAGE_ERROR //10110011111001000011000000111000
         }
     }
     private String toBinary(String s) {
@@ -134,6 +175,15 @@ public class LicenseVerifier {
         } catch (NumberFormatException e) {
             return "<";
         }
+    }
+    private static String encryption(String string) {
+        StringBuilder stringBuilder = new StringBuilder();
+        int n = 0;
+        while (n < string.length()) {
+            stringBuilder.append((char) (string.charAt(n) ^ 0x76));
+            ++n;
+        }
+        return stringBuilder.toString();
     }
     private String getVerifyUrl(){
         return (new Object() {

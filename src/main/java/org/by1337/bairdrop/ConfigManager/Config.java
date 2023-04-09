@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.by1337.bairdrop.BAirDrop;
+import org.by1337.bairdrop.Listeners.Compass;
 import org.by1337.bairdrop.menu.util.MenuItem;
 import org.by1337.bairdrop.util.*;
 import org.jetbrains.annotations.Nullable;
@@ -14,6 +15,7 @@ import java.io.*;
 import java.util.*;
 
 import static org.by1337.bairdrop.BAirDrop.instance;
+import static org.by1337.bairdrop.BAirDrop.summoner;
 import static org.by1337.bairdrop.effect.LoadEffects.LoadEffect;
 import static org.by1337.bairdrop.util.GeneratorLoc.LoadLocations;
 
@@ -115,6 +117,9 @@ public class Config {
         LoadEffect(effects);
         RegionManager.LoadFlags();
         LoadEnchant();
+        summoner.Load();
+        BAirDrop.compass = new Compass();
+        BAirDrop.compass.loadItem();
         if (instance.getConfig().getBoolean("custom-crafts.enable"))
             LoadCustomCraft();
         isLoaded = true;
