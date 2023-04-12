@@ -18,16 +18,21 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.Listeners.SetStaticLocation;
 import org.by1337.bairdrop.Listeners.util.ListenChat;
 import org.by1337.bairdrop.menu.*;
 import org.by1337.bairdrop.menu.util.MenuItem;
+import org.by1337.bairdrop.scripts.Manager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.bukkit.Bukkit.*;
@@ -41,15 +46,28 @@ import org.by1337.bairdrop.BAirDrop;
 
 public class ExecuteCommands {
     public static void runListenerCommands(String[] commands, @Nullable Player pl, @Nullable AirDrop airDrop, Events events) {
-        for (String command : commands) {
+        for (String command : commands) {// [RUN_JS=nameJs] param("1"=123, "2"=123)
             if (airDrop != null)
                 command = airDrop.replaceInternalPlaceholder(command);
             command = Message.setPlaceholders(pl, command);
             if (command.contains("[math#"))
                 command = InternalListener.math(command, airDrop, pl);
-            if(command.contains("{player-get-item-") && pl != null)
+            if (command.contains("{player-get-item-") && pl != null)
                 command = setPlayerPlaceholder(pl, command);
 
+//            ItemStack itemStack = pl.getInventory().getItem(39);
+//            ItemMeta itemMeta = itemStack.getItemMeta();
+//            if(itemMeta instanceof Damageable){
+//                int damage = ((Damageable) itemMeta).getDamage();
+//                ((Damageable) itemMeta).setDamage(damage - 50);
+//                ((Damageable) itemMeta).
+//            }
+
+
+
+
+            if(runJsCommand(pl, airDrop, command))
+                continue;
             if (pl != null)
                 if (execPlayerCommands(pl, command))
                     continue;
@@ -89,6 +107,84 @@ public class ExecuteCommands {
 
             Message.error(String.format(Config.getMessage("unknown-command"), command));
         }
+    }
+
+    public static boolean runJsCommand(@Nullable Player pl, @Nullable AirDrop airDrop, String command) {
+        // [RUN_JS=nameJs] param(1=123, 2=123)-scheduler
+        long x = System.currentTimeMillis();
+        if(command.contains("[RUN_JS")){
+            if(command.contains("-scheduler")){
+                command = command.replace("-scheduler", "");
+                String preCmd = command;
+                new BukkitRunnable() {
+                    String finalCommand = preCmd;
+                    @Override
+                    public void run() {
+                        try {
+                            if (finalCommand.contains("[RUN_JS=")) {
+                                finalCommand = finalCommand.replace(" ", "");
+                                String jsName = finalCommand.split("RUN_JS=")[1].split("]")[0];
+                                if (!Config.scripts.containsKey(jsName)) {
+                                    Message.error(String.format("%s Неизвестный скрипт!", jsName));
+                                }
+                                HashMap<String, Object> map = new HashMap<>();
+                                if (finalCommand.contains("param(")) {
+                                    String param = finalCommand.split("param")[1];
+                                    param = param.replace("(", "").replace(")", "");
+                                    String[] args = param.split(",");
+                                    for (String str : args) {
+                                        Object scriptParam = null;
+                                        if (str.split("=")[1].equals("player"))
+                                            scriptParam = pl;
+                                        else if (str.split("=")[1].equals("airDrop"))
+                                            scriptParam = airDrop;
+                                        else scriptParam = str.split("=")[1];
+                                        map.put(str.split("=")[0], scriptParam);
+                                    }
+                                }
+                                Manager.runJsScript(jsName, map);
+                            }
+                        }catch (ArrayIndexOutOfBoundsException | NullPointerException e){
+                            e.printStackTrace();
+                        }
+                        cancel();
+                    }
+                }.runTaskLater(instance, 0);
+                Message.debug("&7" + command + "&7 был выполнен за "  + (System.currentTimeMillis() - x));
+                return true;
+            }else {
+                try {
+                    if (command.contains("[RUN_JS=")) {
+                        command = command.replace(" ", "");
+                        String jsName = command.split("RUN_JS=")[1].split("]")[0];
+                        if (!Config.scripts.containsKey(jsName)) {
+                            Message.error(String.format("%s Неизвестный скрипт!", jsName));
+                        }
+                        HashMap<String, Object> map = new HashMap<>();
+                        if (command.contains("param(")) {
+                            String param = command.split("param")[1];
+                            param = param.replace("(", "").replace(")", "");
+                            String[] args = param.split(",");
+                            for (String str : args) {
+                                Object scriptParam = null;
+                                if (str.split("=")[1].equals("player"))
+                                    scriptParam = pl;
+                                else if (str.split("=")[1].equals("airDrop"))
+                                    scriptParam = airDrop;
+                                else scriptParam = str.split("=")[1];
+                                map.put(str.split("=")[0], scriptParam);
+                            }
+                        }
+                        Manager.runJsScript(jsName, map);
+                        Message.debug("&7" + command + "&7 был выполнен за "  + (System.currentTimeMillis() - x));
+                        return true;
+                    }
+                }catch (ArrayIndexOutOfBoundsException | NullPointerException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return false;
     }
 
     public static String setPlayerPlaceholder(Player pl, String command) {
@@ -149,11 +245,11 @@ public class ExecuteCommands {
 //                    );
 //                    return command;
 //                }
-            }catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 Message.error("{player-get-item-<slot>} <slot> должен быть числом!");
-            }catch (ArrayIndexOutOfBoundsException e){
+            } catch (ArrayIndexOutOfBoundsException e) {
                 Message.error("{player-get-item-<slot>} Не достаточно аргументов!");
-            }catch (NullPointerException e){
+            } catch (NullPointerException e) {
                 e.printStackTrace();
             }
         }
@@ -588,9 +684,9 @@ public class ExecuteCommands {
                 int slot = Integer.parseInt(command.split("ITEM-")[1].split("=")[0]);
                 Material material = Material.valueOf(command.split("=")[1].replace("]", ""));
                 pl.getInventory().setItem(slot, new ItemStack(material));
-            }catch (ArrayIndexOutOfBoundsException e){
+            } catch (ArrayIndexOutOfBoundsException e) {
                 Message.error("Не материал! [PLAYER-SET-ITEM-<slot>=<material>]" + command);
-            }catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 Message.error("Недостаточно аргументов! [PLAYER-SET-ITEM-<slot>=<material>]" + command);
             }
             return true;
@@ -648,7 +744,10 @@ public class ExecuteCommands {
     }
 
     private static void menuCommand(List<String> commands, AirDrop airDrop, Player pl) {
+        Message.debug(airDrop.getAirId());
+        Message.debug(commands.toString());
         commands.replaceAll(airDrop::replaceInternalPlaceholder);
+        Message.debug(commands.toString());
         for (String str : commands) {
             // Message.logger(str);
             if (str.equalsIgnoreCase("[!airdropstarted]")) {
@@ -689,7 +788,7 @@ public class ExecuteCommands {
             }
             if (str.equalsIgnoreCase("[teleport]")) {
                 if (airDrop.isAirDropStarted()) {
-                    pl.teleport(airDrop.getAirLoc());
+                    pl.teleport(airDrop.getAnyLoc());
                     pl.closeInventory();
                 }
             }

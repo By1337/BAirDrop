@@ -6,7 +6,7 @@
 
     <groupId>org.by1337</groupId>
     <artifactId>BAirDrop</artifactId>
-    <version>1.0.5-alpha</version>
+    <version>1.0.6-beta</version>
     <packaging>jar</packaging>
 
     <name>BAirDrop</name>
@@ -27,6 +27,8 @@
                     <source>16</source>
                     <target>16</target>
                 </configuration>
+
+
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -44,6 +46,7 @@
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
         <resources>
             <resource>
@@ -121,7 +124,12 @@
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20090211</version>
+            <version>20230227</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mozilla</groupId>
+            <artifactId>rhino</artifactId>
+            <version>1.7.14</version>
         </dependency>
     </dependencies>
 </project>

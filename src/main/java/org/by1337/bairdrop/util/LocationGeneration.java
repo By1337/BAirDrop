@@ -11,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,14 +24,16 @@ import java.util.concurrent.ThreadLocalRandom;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.ConfigManager.Config;
-import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.BAirDrop;
+
+import static org.by1337.bairdrop.ConfigManager.Config.getGeneratorSettings;
+
 public class LocationGeneration {
     private static final HashMap<String, Long> cd = new HashMap<>();
 
     @Nullable
     public static synchronized Location getPreLocation(@NotNull AirDrop airDrop) {
-        if (GeneratorLoc.locations.getOrDefault(airDrop.getWorld().getName(), new ArrayList<>()).isEmpty()) {
+        if (GeneratorLoc.locs.getOrDefault(airDrop.getAirId(), new ArrayList<>()).isEmpty()) {
             if (cd.getOrDefault(airDrop.getAirId() + "001", 0L) < System.currentTimeMillis()) {
                 Message.warning(String.format(Config.getMessage("locations-are-absent"), airDrop.getWorld().getName()));
                 Message.warning(Config.getMessage("attempt-use-static-loc"));
@@ -73,7 +76,8 @@ public class LocationGeneration {
 
         return null;
     }
-    public static String getWorldKeyByWorld(World world){
+
+    public static String getWorldKeyByWorld(World world) {
         String worldType = String.valueOf(world.getEnvironment());
         if (worldType.equals("THE_END"))
             return "world-THE_END";
@@ -86,23 +90,24 @@ public class LocationGeneration {
     private static Location getLocationNORMAL(@NotNull Location location, AirDrop airDrop) {
         double y2 = location.getWorld().getHighestBlockAt(location).getLocation().getY();
         location.setY(y2);
-        if (Config.getGeneratorSettings().getStringList("black-List").contains(String.valueOf(location.getBlock().getType()))) {
+        if (!checkMaxY(location, airDrop, "world-NORMAL.max-y"))
+            return null;
+        if (isBiomeInBlackList(location)) return null;
+        if (getGeneratorSettings().getStringList("black-List").contains(String.valueOf(location.getBlock().getType()))) {
             return null;
         }
-        location.add(getSettings(airDrop.getGeneratorSettings(), "world-NORMAL.offsets.x"),
-                getSettings(airDrop.getGeneratorSettings(), "world-NORMAL.offsets.y"),
-                getSettings(airDrop.getGeneratorSettings(), "world-NORMAL.offsets.z"));
-        if (isBiomeInBlackList(location)) return null;
+        location.add(getOffsets(airDrop));
         if (isRegionEmpty(airDrop, location))
-            if (checkMaxY(location, airDrop, "world-NORMAL.max-y"))
-                if (airDrop.isFlatnessCheck()) {
-                    if (checkForEvenness(location, airDrop))
-                        return location;
-                    return null;
-                } else return location;
+
+            if (airDrop.isFlatnessCheck()) {
+                if (checkForEvenness(location, airDrop))
+                    return location;
+                return null;
+            } else return location;
 
         return null;
     }
+
 
     @Nullable
     private static Location getLocationNETHER(@NotNull Location location, AirDrop airDrop) {
@@ -118,28 +123,24 @@ public class LocationGeneration {
         for (int y = getSettings(airDrop.getGeneratorSettings(), "world-NETHER.start-y"); y > getSettings(airDrop.getGeneratorSettings(), "world-NETHER.end-y"); y--) {
             loc.setY(y);
             if (!loc.getBlock().getType().isAir())
-                if (!Config.getGeneratorSettings().getStringList("black-List").contains(String.valueOf(loc.getBlock().getType()))) {
+                if (!getGeneratorSettings().getStringList("black-List").contains(String.valueOf(loc.getBlock().getType()))) {
                     if (upBlockIsAir) {
                         if (isRegionEmpty(airDrop, location)) {
                             if (checkMaxY(location, airDrop, "world-NETHER.max-y")) {
                                 if (airDrop.isFlatnessCheck()) {
                                     if (checkForEvenness(loc, airDrop)) {
-                                        return loc.add(getSettings(airDrop.getGeneratorSettings(), "world-NETHER.offsets.x"),
-                                                getSettings(airDrop.getGeneratorSettings(), "world-NETHER.offsets.y"),
-                                                getSettings(airDrop.getGeneratorSettings(), "world-NETHER.offsets.z"));
+                                        return loc.add(getOffsets(airDrop));
                                     } else {
                                         return null;
                                     }
 
                                 } else
-                                    return loc.add(getSettings(airDrop.getGeneratorSettings(), "world-NETHER.offsets.x"),
-                                            getSettings(airDrop.getGeneratorSettings(), "world-NETHER.offsets.y"),
-                                            getSettings(airDrop.getGeneratorSettings(), "world-NETHER.offsets.z"));
+                                    return loc.add(getOffsets(airDrop));
                             }
                         }
                     }
                 }
-            upBlockIsAir = loc.getBlock().getType().isAir() || Config.getGeneratorSettings().getStringList("ignored-blocks").contains(String.valueOf(location.getBlock().getType()));
+            upBlockIsAir = loc.getBlock().getType().isAir() || getGeneratorSettings().getStringList("ignored-blocks").contains(String.valueOf(location.getBlock().getType()));
         }
         return null;
     }
@@ -150,28 +151,27 @@ public class LocationGeneration {
         location.setY(getSettings(airDrop.getGeneratorSettings(), "world-THE_END.start-y"));
         if (!location.getBlock().isEmpty()) {
             location.setY(location.getWorld().getHighestBlockYAt(location));
-            if (Config.getGeneratorSettings().getStringList("black-List").contains(String.valueOf(location.getBlock().getType()))) {
+            if (getGeneratorSettings().getStringList("black-List").contains(String.valueOf(location.getBlock().getType()))) {
                 return null;
             }
-
-            location.add(getSettings(airDrop.getGeneratorSettings(), "world-THE_END.offsets.x"),
-                    getSettings(airDrop.getGeneratorSettings(), "world-THE_END.offsets.y"),
-                    getSettings(airDrop.getGeneratorSettings(), "world-THE_END.offsets.z"));
+            if (!checkMaxY(location, airDrop, "world-THE_END.max-y"))
+                return null;
+            location.add(getOffsets(airDrop));
             if (isRegionEmpty(airDrop, location)) {
                 if (!isBiomeInBlackList(location))
-                    if (checkMaxY(location, airDrop, "world-THE_END.max-y"))
-                        if (airDrop.isFlatnessCheck()) {
-                            if (checkForEvenness(location, airDrop)) {
 
-                                return location;
-                            } else {
-
-                                return null;
-                            }
-                        } else {
+                    if (airDrop.isFlatnessCheck()) {
+                        if (checkForEvenness(location, airDrop)) {
 
                             return location;
+                        } else {
+
+                            return null;
                         }
+                    } else {
+
+                        return location;
+                    }
             }
         }
 
@@ -187,7 +187,7 @@ public class LocationGeneration {
             for (int x = getSettings(airDrop.getGeneratorSettings(), "check-for-evenness.poz.start-x"); x < getSettings(airDrop.getGeneratorSettings(), "check-for-evenness.poz.end-x"); x++) {
                 for (int z = getSettings(airDrop.getGeneratorSettings(), "check-for-evenness.poz.start-z"); z < getSettings(airDrop.getGeneratorSettings(), "check-for-evenness.poz.end-z"); z++) {
                     if (x == 0 && y == 0 && z == 0) continue;
-                    if (!location.clone().add(x, y, z).getBlock().isEmpty() && !Config.getGeneratorSettings().getStringList("ignored-blocks").contains(String.valueOf(location.clone().add(x, y, z).getBlock().getType())))
+                    if (!location.clone().add(x, y, z).getBlock().isEmpty() && !getGeneratorSettings().getStringList("ignored-blocks").contains(String.valueOf(location.clone().add(x, y, z).getBlock().getType())))
                         return false;
                 }
             }
@@ -208,56 +208,46 @@ public class LocationGeneration {
             return null;
         }
         airDrop.setAttemptsToPick(airDrop.getAttemptsToPick() + 1);
-        int locX = ThreadLocalRandom.current().nextInt(GeneratorLoc.locations.getOrDefault(airDrop.getWorld().getName(), new ArrayList<>()).size());
 
-        Location loc = GeneratorLoc.locations.get(airDrop.getWorld().getName()).get(locX);
-
-        if (loc.getWorld() == null) {
-            GeneratorLoc.locations.get(airDrop.getWorld().getName()).remove(locX);
+        Location loc = GeneratorLoc.getLocationForAirDrop(airDrop);
+        if (loc == null) {
+            Message.error(String.format(Config.getMessage("gen-loc-is-null"), airDrop.getAirId()));
+            return null;
+        }
+        if (loc.clone().add(-getOffsets(airDrop).getX(), -getOffsets(airDrop).getY(), -getOffsets(airDrop).getZ()).getBlock().isEmpty()) {
+            GeneratorLoc.removeLoc(loc, airDrop);
             Message.logger(String.format(Config.getMessage("location-isn-t-relevant"), loc.getWorld(), loc.getX(), loc.getY(), loc.getZ()));
             if (airDrop.getEditAirMenu() != null)
                 airDrop.getEditAirMenu().menuGenerate("usePreGeneratedLocations");
             return null;
         }
         if (isBiomeInBlackList(loc)) {
-            GeneratorLoc.locations.get(airDrop.getWorld().getName()).remove(locX);
+            GeneratorLoc.removeLoc(loc, airDrop);
             Message.logger(String.format(Config.getMessage("location-isn-t-relevant"), loc.getWorld(), loc.getX(), loc.getY(), loc.getZ()));
             if (airDrop.getEditAirMenu() != null)
                 airDrop.getEditAirMenu().menuGenerate("usePreGeneratedLocations");
             return null;
         }
         if (!isRegionEmpty(airDrop, loc)) {
-            GeneratorLoc.locations.get(airDrop.getWorld().getName()).remove(locX);
+            GeneratorLoc.removeLoc(loc, airDrop);
             Message.logger(String.format(Config.getMessage("location-isn-t-relevant"), loc.getWorld(), loc.getX(), loc.getY(), loc.getZ()));
             if (airDrop.getEditAirMenu() != null)
                 airDrop.getEditAirMenu().menuGenerate("usePreGeneratedLocations");
             return null;
         }
-        if(getBlock(loc, airDrop).isEmpty())
-            return null;
         return loc;
     }
-    public static Block getBlock(Location loc, AirDrop airDrop){
-        if (loc.getWorld().getEnvironment().toString().equals("NORMAL"))
-           return loc.clone().add(0, 0, 0).add(-getSettings(airDrop.getGeneratorSettings(), "world-NORMAL.offsets.x"),
-                    -getSettings(airDrop.getGeneratorSettings(), "world-NORMAL.offsets.y"),
-                    -getSettings(airDrop.getGeneratorSettings(), "world-NORMAL.offsets.z")).getBlock();
 
-
-        if (loc.getWorld().getEnvironment().toString().equals("NETHER"))
-            return loc.clone().add(0, 0, 0).add(-getSettings(airDrop.getGeneratorSettings(), "world-NETHER.offsets.x"),
-                    -getSettings(airDrop.getGeneratorSettings(), "world-NETHER.offsets.y"),
-                    -getSettings(airDrop.getGeneratorSettings(), "world-NETHER.offsets.z")).getBlock();
-
-        if (loc.getWorld().getEnvironment().toString().equals("THE_END"))
-            return loc.clone().add(0, 0, 0).add(-getSettings(airDrop.getGeneratorSettings(), "world-THE_END.offsets.x"),
-                    -getSettings(airDrop.getGeneratorSettings(), "world-THE_END.offsets.y"),
-                    -getSettings(airDrop.getGeneratorSettings(), "world-THE_END.offsets.z")).getBlock();
-        return loc.getBlock();
+    @Nullable
+    public static Block getBlock(AirDrop airDrop) {
+        if (airDrop.getAnyLoc() != null)
+            return airDrop.getAnyLoc().add(-getOffsets(airDrop).getX(), -getOffsets(airDrop).getY(), -getOffsets(airDrop).getZ()).getBlock();
+        return null;
     }
+
     public static boolean isBiomeInBlackList(@NotNull Location location) {
         Biome bom = location.getWorld().getBiome((int) location.getX(), (int) location.getY(), (int) location.getZ());
-        return Config.getGeneratorSettings().getStringList("black-List-biome").contains(String.valueOf(bom));
+        return getGeneratorSettings().getStringList("black-List-biome").contains(String.valueOf(bom));
     }
 
     public static String getBiome(@NotNull Location location) {
@@ -295,7 +285,15 @@ public class LocationGeneration {
         }
     }
 
+    @NotNull
+    public static Vector getOffsets(AirDrop airDrop) {
+        return new Vector(
+                getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.x", getWorldKeyByWorld(airDrop.getWorld()))),
+                getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.y", getWorldKeyByWorld(airDrop.getWorld()))),
+                getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.z", getWorldKeyByWorld(airDrop.getWorld()))));
+    }
+
     public static int getSettings(String genS, String patch) {
-        return Config.getGeneratorSettings().getInt(String.format("settings.%s.%s", genS, patch));
+        return getGeneratorSettings().getInt(String.format("settings.%s.%s", genS, patch));
     }
 }

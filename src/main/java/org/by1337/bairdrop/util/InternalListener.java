@@ -167,11 +167,14 @@ public class InternalListener {
 
     }
     private boolean STRING_CHECK(String req, @Nullable AirDrop airDrop, @Nullable Player pl){
+      //  pl.hasPotionEffect()
         if(airDrop != null)
             req = airDrop.replaceInternalPlaceholder(req);
         req = Message.setPlaceholders(pl, req);
         if (req.contains("[math#"))
             req = InternalListener.math(req, airDrop, pl);
+        if(req.contains("{player-get") && pl != null)
+            req = ExecuteCommands.setPlayerPlaceholder(pl, req);
         String[] args = req.split(" ");
         if (args[1].equals("=="))
             return args[0].equals(args[2]);

@@ -1,11 +1,10 @@
 package org.by1337.bairdrop.util;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.Random;
 import java.util.UUID;
 
@@ -13,77 +12,80 @@ import org.bukkit.Bukkit;
 import org.by1337.bairdrop.BAirDrop;
 
 import static org.by1337.bairdrop.BAirDrop.instance;
-import static org.by1337.bairdrop.BAirDrop.summoner;
 
 public class Manager {
-    String licenseKey;
-   private static final String[] strings = new String[18];
-    private String loadAndRegister(String licenseKey) {
-        this.licenseKey = licenseKey;
+    String string;//licenseKey
+    private static final String[] strings = new String[18];
+
+    private String manager(String s) {//loadAndRegister
+        this.string = s;
         Message.logger(strings[0]);
         Message.logger(strings[1]);
-        int vt = isValidationType();
+        int vt = isIs();
+        //  Message.error(vt + "");
         try {
-            if (vt == 81434588 && getVerifyUrl().hashCode() == -98892341) {
-                Message.logger(getForCode(vt));// valid
+            if (vt == 0b100110110101001011111011100 && getGet().hashCode() == -98892341) {
+                Message.logger(infoCode(vt));// valid
                 Message.logger(strings[0]);
-                BAirDrop.len = generateRandomBinaryNumber(vt >> 23 ^ 0b0011);
+                BAirDrop.len = getInt(vt >> 23 ^ 0b0011);
                 return strings[2];
             } else {
                 Message.logger(strings[3]); //ne valid
-                Message.logger(getForCode(vt));
+                Message.logger(infoCode(vt));
                 Message.logger(strings[4]);
                 Message.logger(strings[0]);
                 Bukkit.getScheduler().cancelTasks(BAirDrop.instance);
                 Bukkit.getPluginManager().disablePlugin(BAirDrop.instance);
-                BAirDrop.len = generateRandomBinaryNumber(vt >> 23 ^ 0b0011);
+                BAirDrop.len = getInt(vt >> 23 ^ 0b0011);
                 return strings[5];
             }
         } catch (NumberFormatException e) {
             Message.logger(strings[3]); //ne valid
-            Message.logger(getForCode(vt));
+            Message.logger(infoCode(vt));
             Message.logger(strings[4]);
             Message.logger(strings[0]);
             Bukkit.getScheduler().cancelTasks(BAirDrop.instance);
             Bukkit.getPluginManager().disablePlugin(BAirDrop.instance);
-            BAirDrop.len = generateRandomBinaryNumber(vt >> 23 ^ 0b0011);
+            BAirDrop.len = getInt(vt >> 23 ^ 0b0011);
             return strings[5];
         }
     }
-    private String getForCode(int code){
-        if(code == -1276891080) return strings[6];
-        if(code == -1694123818) return strings[7];
-        if(code == 81434588) return strings[8];
-        if(code == -973558093) return strings[9];
-        if(code == -1694123819) return strings[10];
-        if(code == 1377916022) return strings[11];
-        if(code == 190116507) return strings[12];
-        if(code == -2017473048) return strings[13];
+
+    private String infoCode(int code) {//getForCode
+        if (code == 0b10110011111001000011000000111000) return strings[6];
+        if (code == 0b1100100111110100100011100101010) return strings[7];
+        if (code == 0b100110110101001011111011100) return strings[8];
+        if (code == 0b11000101111110001010111010110011) return strings[9];
+        if (code == 0b10011011000001011011100011010110) return strings[10];
+        if (code == 0b1010010001000010101010001110110) return strings[11];
+        if (code == 0b1011010101001111001010011011) return strings[12];
+        if (code == 0b10000111101111111100110111101000) return strings[13];
         return strings[14];
     }
 
     static {
-        strings[0] = encryption("-+KKKKKKKKKKKKKKKKKKKKKKKKKKKKKK-+"); //[]==============================[]
-        strings[1] = encryption("їшутюыуыюуVзVзужфужшъ"); //Соединение с сервером
-        strings[2] = encryption(""); //true
-        strings[3] = encryption("ÑѭюауысюйVыуVфцэютыцW"); //§cЛицензия не валидна!
-        strings[4] = encryption("ÑѩэцхюыVфньэибуыW"); //§cПлагин выключен!
-        strings[5] = encryption(""); //false
-        strings[6] = encryption("PѨоючьцVзужфужцVэюауысюя"); //&cОшибка сервера лицензий
-        strings[7] = encryption("PѨдзедздфеудVэюауысюшыыняVьэибW"); //&cОтсутствует лицензионный ключ!
-        strings[8] = encryption("PѭюауысюйVфцэютыц"); //&aЛицензия валидна
-        strings[9] = encryption("PѫущжцфюэкыняVшдфудVшдVзужфужцW"); //&cНеправильный ответ от сервера!
-        strings[10] = encryption("PѫущжцфюэкыняVьэибW"); //&cНеправильный ключ!
-        strings[11] = encryption("P?&VцтжузVыуVфцэютыняW"); //&cIP адрес не валидный!
-        strings[12] = encryption("PѫущжцфюэкыняVщэцхюыW"); //&cНеправильный плагин!
-        strings[13] = encryption("PѬэибVездцжуэW"); //&cКлюч устарел!
-        strings[14] = encryption("PѫуюсфуздыцйVшоючьц"); //&cНеизвестная ошибка
-        strings[15] = encryption("I GK"); //?v1=
-        strings[16] = encryption("P DK"); //&v2=
-        strings[17] = encryption("PK"); //&pl=
+        strings[0] = By1337("-+KKKKKKKKKKKKKKKKKKKKKKKKKKKKKK-+"); //[]==============================[]
+        strings[1] = By1337("їшутюыуыюуVзVзужфужшъ"); //Соединение с сервером
+        strings[2] = By1337(""); //true
+        strings[3] = By1337("ÑѭюауысюйVыуVфцэютыцW"); //§cЛицензия не валидна!
+        strings[4] = By1337("ÑѩэцхюыVфньэибуыW"); //§cПлагин выключен!
+        strings[5] = By1337(""); //false
+        strings[6] = By1337("PѨоючьцVзужфужцVэюауысюя"); //&cОшибка сервера лицензий
+        strings[7] = By1337("PѨдзедздфеудVэюауысюшыыняVьэибW"); //&cОтсутствует лицензионный ключ!
+        strings[8] = By1337("PѭюауысюйVфцэютыц"); //&aЛицензия валидна
+        strings[9] = By1337("PѫущжцфюэкыняVшдфудVшдVзужфужцW"); //&cНеправильный ответ от сервера!
+        strings[10] = By1337("PѫущжцфюэкыняVьэибW"); //&cНеправильный ключ!
+        strings[11] = By1337("P?&VцтжузVыуVфцэютыняW"); //&cIP адрес не валидный!
+        strings[12] = By1337("PѫущжцфюэкыняVщэцхюыW"); //&cНеправильный плагин!
+        strings[13] = By1337("PѬэибVездцжуэW"); //&cКлюч устарел!
+        strings[14] = By1337("PѫуюсфуздыцйVшоючьц"); //&cНеизвестная ошибка
+        strings[15] = By1337("I GK"); //?v1=
+        strings[16] = By1337("P DK"); //&v2=
+        strings[17] = By1337("PK"); //&pl=
     }
-    public int generateRandomBinaryNumber(int length) {
-        if(length > 0b10100)
+
+    public int getInt(int length) {//generateRandomBinaryNumber
+        if (length > 0b10100)
             length = 0b10100;
         Random random = new Random();
         StringBuilder binaryNumber = new StringBuilder();
@@ -96,19 +98,22 @@ public class Manager {
         return Integer.parseInt(binaryNumber.toString(), 2);
     }
 
-    private String builder(String v1, String v2){
-        StringBuilder urlBuilder = new StringBuilder(getVerifyUrl());
-        urlBuilder.append(strings[15]).append(v1);
-        urlBuilder.append(strings[16]).append(v2);
-        urlBuilder.append(strings[17]).append(instance.getName());
+    private String builder(String v1, String v2) {
+        StringBuilder urlBuilder = new StringBuilder(getGet());
+        urlBuilder.append(strings[15].toLowerCase()).append(v1);
+        urlBuilder.append(strings[16].toLowerCase()).append(v2);
+        urlBuilder.append(strings[17].toLowerCase()).append(instance.getName());
         return builderToString(urlBuilder);
     }
-    private String builderToString(StringBuilder sb){
+
+    private String builderToString(StringBuilder sb) {
         return sb.toString();
     }
-    private String requestServer(String v1, String v2) throws IOException {
+
+    private String Universal(String v1, String v2) throws IOException {//requestServer
         URL url = new URL(builder(v1, v2));
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setReadTimeout(5000);
         con.setRequestMethod("GET");
         con.setRequestProperty("User-Agent", "Mozilla/5.0");
         try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
@@ -121,40 +126,44 @@ public class Manager {
             return builderToString(response);
         }
     }
-    public int isValidationType() {
-        String rand = toBinary(UUID.randomUUID().toString());
-        String sKey = toBinary("2APZ5JCR2nuIapCO7eT04knQ");
-        String key = toBinary(licenseKey);
+
+    public int isIs() {//isValidationType
+        String rand = toS(UUID.randomUUID().toString());
+        String sKey = toS("2APZ5JCR2nuIapCO7eT04knQ");
+        String key = toS(string);
 
         try {
-            String response = requestServer(xor(rand, sKey), xor(rand, key));
+            String response = Universal(up(rand, sKey), up(rand, key));
+            //  Message.error(response);
 
             if (response.startsWith("<")) {
-                return -1276891080; //PAGE_ERROR //10110011111001000011000000111000
+                return 0b10110011111001000011000000111000; //PAGE_ERROR //10110011111001000011000000111000
             }
-            if(response.hashCode() == -1694123818) {//KEY_NOT_FOUND
-                if(key.length() == 0)
-                    return -1694123818;
-                return -1694123819; //ключ не валидный //10011011000001011011100011010110
+            if (response.hashCode() == 0b10011011000001011011100011010110) {//KEY_NOT_FOUND
+                if (key.length() == 0)
+                    return 0b1100100111110100100011100101010;
+                return 0b10011011000001011011100011010110; //ключ не валидный //10011011000001011011100011010110
             }
-            if(response.hashCode() == 1377916022) //NOT_VALID_IP
-                return 1377916022; //1010010001000010101010001110110
-            if(response.hashCode() == 190116507) //INVALID_PLUGIN
-                return 190116507; //1011010101001111001010011011
-            if(response.hashCode() == -2017473048) //KEY_OUTDATED
-                return -2017473048; //10000111101111111100110111101000
+            if (response.hashCode() == 0b1010010001000010101010001110110) //NOT_VALID_IP
+                return 0b1010010001000010101010001110110; //1010010001000010101010001110110
+            if (response.hashCode() == 0b1011010101001111001010011011) //INVALID_PLUGIN
+                return 0b1011010101001111001010011011; //1011010101001111001010011011
+            if (response.hashCode() == 0b10000111101111111100110111101000) //KEY_OUTDATED
+                return 0b10000111101111111100110111101000; //10000111101111111100110111101000
 
-            String respRand = xor(xor(response, key), sKey);
+            String respRand = up(up(response, key), sKey);
             if (rand.startsWith(respRand))
-                return 81434588; //VALID //100110110101001011111011100
+                return 0b100110110101001011111011100; //VALID //100110110101001011111011100
             else
-                return -973558093; //WRONG_RESPONSE //11000101111110001010111010110011
+                return 0b11000101111110001010111010110011; //WRONG_RESPONSE //11000101111110001010111010110011
 
         } catch (IOException e) {
-            return -1276891080; //PAGE_ERROR //10110011111001000011000000111000
+            //  e.printStackTrace();
+            return 0b10110011111001000011000000111000; //PAGE_ERROR //10110011111001000011000000111000
         }
     }
-    private String toBinary(String s) {
+
+    private String toS(String s) {//toBinary
         byte[] bytes = s.getBytes();
         StringBuilder binary = new StringBuilder();
         for (byte b : bytes) {
@@ -166,7 +175,8 @@ public class Manager {
         }
         return binary.toString();
     }
-    public static String xor(String s1, String s2) {
+
+    public static String up(String s1, String s2) {//xor
         try {
             StringBuilder result = new StringBuilder();
             for (int i = 0; i < (Math.min(s1.length(), s2.length())); i++)
@@ -176,7 +186,8 @@ public class Manager {
             return "<";
         }
     }
-    private static String encryption(String string) {
+
+    private static String By1337(String string) {//encryption
         StringBuilder stringBuilder = new StringBuilder();
         int n = 0;
         while (n < string.length()) {
@@ -185,7 +196,8 @@ public class Manager {
         }
         return stringBuilder.toString();
     }
-    private String getVerifyUrl(){
+
+    private String getGet() {//getVerifyUrl
         return (new Object() {
             int t;
 

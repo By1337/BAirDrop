@@ -15,17 +15,17 @@ import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.BAirDrop;
 public class MenuItem {
     public static HashMap<String, MenuItem> menuItemHashMap = new HashMap<>();
-    String tag;
-    String name;
-    List<String> lore;
-    int slot;
-    List<String> LEFT_COMMANDS;
-    List<String> SHIFT_LEFT_COMMANDS;
-    List<String> RIGHT_COMMANDS;
-    List<String> SHIFT_RIGHT_COMMANDS;
-    List<String> MIDDLE_COMMANDS;
-    List<String> DROP_COMMANDS;
-    String material;
+    private final String tag;
+    private final String name;
+    private final List<String> lore;
+    private final int slot;
+    private final List<String> LEFT_COMMANDS;
+    private final List<String> SHIFT_LEFT_COMMANDS;
+    private final List<String> RIGHT_COMMANDS;
+    private final List<String> SHIFT_RIGHT_COMMANDS;
+    private final List<String> MIDDLE_COMMANDS;
+    private final List<String> DROP_COMMANDS;
+    private final String material;
 
     public MenuItem(@NotNull String tag, String name, List<String> lore, int slot, List<String> LEFT_COMMANDS, List<String> SHIFT_LEFT_COMMANDS, List<String> RIGHT_COMMANDS, List<String> SHIFT_RIGHT_COMMANDS, List<String> MIDDLE_COMMANDS, List<String> DROP_COMMANDS, String material) {
         this.tag = tag;
@@ -74,26 +74,26 @@ public class MenuItem {
     }
 
     public List<String> getLEFT_COMMANDS() {
-        return LEFT_COMMANDS;
+        return new ArrayList<>(LEFT_COMMANDS);
     }
 
     public List<String> getSHIFT_LEFT_COMMANDS() {
-        return SHIFT_LEFT_COMMANDS;
+        return new ArrayList<>(SHIFT_LEFT_COMMANDS);
     }
 
     public List<String> getRIGHT_COMMANDS() {
-        return RIGHT_COMMANDS;
+        return new ArrayList<>(RIGHT_COMMANDS);
     }
 
     public List<String> getSHIFT_RIGHT_COMMANDS() {
-        return SHIFT_RIGHT_COMMANDS;
+        return new ArrayList<>(SHIFT_RIGHT_COMMANDS);
     }
 
     public List<String> getMIDDLE_COMMANDS() {
-        return MIDDLE_COMMANDS;
+        return new ArrayList<>(MIDDLE_COMMANDS);
     }
 
     public List<String> getDROP_COMMANDS() {
-        return DROP_COMMANDS;
+        return new ArrayList<>(DROP_COMMANDS);
     }
 }

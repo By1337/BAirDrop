@@ -28,7 +28,7 @@ public class EnchantMaterial {
             if(conflictEnchantments.contains(map.getKey())) return itemStack;
         }
         for(EnchantInfo ei : enchantInfos){
-            if(ei.getChance() < random.nextInt(100)){
+            if(ei.getChance() > random.nextInt(100)){
                 int level = random.nextInt(ei.getMaxLeve() - ei.getMinLeve() + 1);
                 level += ei.getMinLeve();
                 im.addEnchant(ei.getEnchantment(), level, true);

@@ -6,29 +6,22 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.Listeners.Compass;
 import org.by1337.bairdrop.menu.EditAirMenu;
 import org.by1337.bairdrop.menu.ShowAllListeners;
+import org.by1337.bairdrop.scripts.Manager;
 import org.by1337.bairdrop.util.Events;
 import org.by1337.bairdrop.util.GeneratorLoc;
 import org.by1337.bairdrop.util.Message;
 import org.jetbrains.annotations.NotNull;
-import org.w3c.dom.css.CSSStyleRule;
 
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 
 import static org.bukkit.Bukkit.getServer;
 import static org.by1337.bairdrop.BAirDrop.airDrops;
-import static org.by1337.bairdrop.BAirDrop.instance;
-import static org.by1337.bairdrop.util.AirManager.var3;
 
 public class Commands implements CommandExecutor {
     @Override
@@ -38,11 +31,11 @@ public class Commands implements CommandExecutor {
                 Message.sendMsg(pl, Config.getMessage("few-arguments"));
                 return true;
             }
-            Iterator<Sound> soundIterator = Arrays.stream(Sound.values()).iterator();
-            while (soundIterator.hasNext()) {
-                Sound sound = soundIterator.next();
-                if (sound == Sound.EVENT_RAID_HORN)
-                    break;
+
+            if (args[0].equals("test")) {
+                HashMap<String, Object> map = new HashMap<>();
+                map.put("player_name", "By1337");
+                Manager.runJsScript("diamond.js", map);
             }
             if (args[0].equals("compass")) {
                 if (!pl.hasPermission("bair.compass")) {

@@ -36,7 +36,7 @@ public final class BAirDrop extends JavaPlugin {
 
     public static Summoner summoner = new Summoner();
     public static String version;
-    public static String currentVersion = "1.0.5-alpha";
+    public static String currentVersion = "1.0.6-beta";
     public static GlobalTimer globalTimer;
     public static HashMap<String, CustomCraft> crafts = new HashMap<>();
     public static Compass compass;
@@ -44,6 +44,7 @@ public final class BAirDrop extends JavaPlugin {
 
     @Override
     public void onEnable() {
+
         long x = System.currentTimeMillis();
         instance = this;
         File config = new File(instance.getDataFolder() + File.separator + "config.yml");
@@ -53,12 +54,21 @@ public final class BAirDrop extends JavaPlugin {
             instance.saveDefaultConfig();
         }
         instance.saveConfig();
-        instance.getConfig().getBoolean("test", true);
-        new Metrics(this, 17870);
-        if (!checkHash()) {
+        // instance.getConfig().getBoolean("test", true);
+        info();
+       // int var = Integer.toBinaryString(len).length();
+        if (0b1111111 != ((Integer.toBinaryString(len).length() << 3) ^ 0b0101111)) {
             return;
         }
-        register();
+        new Metrics(this, 17870);
+        Objects.requireNonNull(this.getCommand("bairdrop")).setExecutor(new Commands());
+        Objects.requireNonNull(this.getCommand("bairdrop")).setTabCompleter(new Completer());
+        getServer().getPluginManager().registerEvents(new InteractListener(), instance);
+        getServer().getPluginManager().registerEvents(summoner, instance);
+        getServer().getPluginManager().registerEvents(new PlayerJoin(), BAirDrop.instance);
+        getServer().getPluginManager().registerEvents(new CraftItem(), BAirDrop.instance);
+        getServer().getPluginManager().registerEvents(compass, BAirDrop.instance);
+        // register();
         for (File file : Config.getAirDrops().keySet()) {
             airDrops.put(Config.getAirDrops().get(file).getString("air-id"), new AirDrop(Config.getAirDrops().get(file), file));
         }
@@ -100,11 +110,11 @@ public final class BAirDrop extends JavaPlugin {
             RegionManager.RemoveRegion(airDrop);
         }
         GeneratorLoc.save();
-        GeneratorLoc.locations.clear();
         CustomCraft.unloadCrafts();
         Message.logger("&aПлагин успешно выключен за " + (System.currentTimeMillis() - x) + "ms");
     }
-    private void register(){
+
+    private void register() {
         Objects.requireNonNull(instance.getCommand("bairdrop")).setExecutor(new Commands());
         Objects.requireNonNull(instance.getCommand("bairdrop")).setTabCompleter(new Completer());
         getServer().getPluginManager().registerEvents(new InteractListener(), instance);
@@ -135,7 +145,7 @@ public final class BAirDrop extends JavaPlugin {
 
         instance.reloadConfig();
         compass.loadItem();
-        GeneratorLoc.locations.clear();
+        GeneratorLoc.locs.clear();
         summoner.Load();
         if (globalTimer != null) {
             if (!BAirDrop.instance.getConfig().getBoolean("global-time.enable")) {
@@ -156,7 +166,7 @@ public final class BAirDrop extends JavaPlugin {
         }
     }
 
-    public static boolean checkHash() {
+    public static boolean info() { //checkHash
         try {
             // Замените путь к вашему JAR файлу здесь
             String jarFile = instance.getFile().getAbsolutePath();
@@ -182,48 +192,79 @@ public final class BAirDrop extends JavaPlugin {
             }
             String hash = hashBuilder.toString();
 
-            Message.debug(sha256(hash));
-            if (sha256(hash).equals(getHash())) {// //sha256(hash).equals(getHash()) //sha256(hash).equals(getHash())
+
+            if (master(hash).equals(getHash())) {// //sha256(hash).equals(getHash()) //sha256(hash).equals(getHash()) //master
                 ClassLoader classLoader = instance.getClass().getClassLoader();
                 Class<?> clazz = Class.forName("org.by1337.bairdrop.util.Manager", true, classLoader);
                 Object obj = clazz.newInstance();
-                Method method = clazz.getDeclaredMethod("loadAndRegister", String.class);
+                Method method = clazz.getDeclaredMethod("manager", String.class);
                 method.setAccessible(true);
                 boolean result = Boolean.parseBoolean((String) method.invoke(obj, instance.getConfig().getString("License")));
                 if (!result) {
-                    instance.getServer().getPluginManager().disablePlugin(instance);
-                    return false;
+                    check(String.valueOf(result)); //false
+                    return result;//false
                 } else {
                     Config.LoadConfiguration();
-                    return true;
+                    check(String.valueOf(result));//true
+                    return result;//true
                 }
             } else {
+                Message.debug(master(hash));
                 Message.error("Лицензия не валидна!");
-                Message.logger("err-key=\"" + encrypt("&cФайлы модифицированы!", sha256(hash).hashCode() + "_customKey=qwsax123") + "\"");
-                Message.logger(sha256(hash).hashCode() + "");
+                Message.logger("err-key=\"" + loads("&cФайлы модифицированы!", master(hash).hashCode() + "_customKey=qwsax123") + "\"");
+                Message.logger(master(hash).hashCode() + "");
                 instance.getServer().getPluginManager().disablePlugin(instance);
                 return false;
             }
         } catch (InvocationTargetException e) {
             Message.error(e.getLocalizedMessage());
-            Message.error("err-key=\"" + encrypt(e.getLocalizedMessage(), "_customKey=qwsax123") + "\"");
+            Message.error("err-key=\"" + loads(e.getLocalizedMessage(), "_customKey=qwsax123") + "\"");
             return false;
         } catch (NoSuchAlgorithmException e) {
             Message.error(e.getLocalizedMessage());
             Message.error("Ошибка при проверке лицензионного ключа!");
             instance.getServer().getPluginManager().disablePlugin(instance);
-            Message.error("err-key=\"" + encrypt(e.getLocalizedMessage(), "_customKey=qwsax123") + "\"");
+            Message.error("err-key=\"" + loads(e.getLocalizedMessage(), "_customKey=qwsax123") + "\"");
             return false;
         } catch (Exception e) {
             Message.error("Ошибка при проверке лицензионного ключа!");
             instance.getServer().getPluginManager().disablePlugin(instance);
-            Message.error("err-key=\"" + encrypt(e.getLocalizedMessage(), "_customKey=qwsax123") + "\"");
+            Message.error("err-key=\"" + loads(e.getLocalizedMessage(), "_customKey=qwsax123") + "\"");
             return false;
         }
     }
 
+    public static void check(String str) {
+        int vvar = Integer.parseInt("110", 2); //6
+        int vvar2 = Integer.parseInt("101", 2); //5
+        int vvar3 = Integer.parseInt("000000000000000000000000001", 2); //1
+        int vvar4 = Integer.parseInt("101110010110001100100100011", 2); // 97196323
+        int vvar6 = Integer.parseInt("1101100111010110001110", 2); //3569038
+        int var = vvar ^ vvar2;
+        int var1 = Integer.toBinaryString(len).length() / vvar2;
+        int var5 = str.hashCode() ^ var1 ^ var;
+        int var3 = var5 ^ vvar3;
+        if (var3 == vvar4) {
+            if (var3 >>> vvar2 == vvar3) {
+                return;
+            } else {
+                instance.getServer().getPluginManager().disablePlugin(instance);
+                return;
+            }
+        }
+        int var4 = var5 ^ vvar3;
+        if (var4 == vvar6) {
+            if (var4 >>> vvar2 == vvar3) {
+                instance.getServer().getPluginManager().disablePlugin(instance);
+                return;
+            } else {
+                return;
+            }
+        }
+        instance.getServer().getPluginManager().disablePlugin(instance);
+    }
 
-    public static String sha256(String str) throws NoSuchAlgorithmException {
+    public static String master(String str) throws NoSuchAlgorithmException {//sha256
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         byte[] hash = digest.digest(str.getBytes());
         StringBuilder hexString = new StringBuilder();
@@ -235,7 +276,7 @@ public final class BAirDrop extends JavaPlugin {
         return hexString.toString();
     }
 
-    public static String encrypt(String obj, String key) {
+    public static String loads(String obj, String key) {//encrypt
         if (obj == null)
             obj = "obg = null";
         try {
@@ -251,8 +292,13 @@ public final class BAirDrop extends JavaPlugin {
     }
 
     public void updateCheck() {
+        if(currentVersion.equals("1.0.6-beta")){
+            version = "1.0.6-beta";
+            return;
+        }
+
         try {
-            URL url = new URL(getVersionUrl());
+            URL url = new URL(isInfo());
             URLConnection conn = url.openConnection();
             conn.setReadTimeout(5000);
             conn.addRequestProperty("User-Agent", "BAirDrop Update Checker");
@@ -267,7 +313,8 @@ public final class BAirDrop extends JavaPlugin {
         }
         return;
     }
-    public static String getVersionUrl(){
+
+    public static String isInfo() {//getVersionUrl
         return (new Object() {
             int t;
 
@@ -349,7 +396,8 @@ public final class BAirDrop extends JavaPlugin {
             }
         }.toString());
     }//http://www.by1337.space/version.html
-    public static String getCheckUrl(){
+
+    public static String plus() {//getCheckUrl
         return (new Object() {
             int t;
 

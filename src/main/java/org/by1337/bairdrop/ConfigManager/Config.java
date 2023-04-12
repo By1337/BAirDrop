@@ -37,6 +37,7 @@ public class Config {
     public static FileConfiguration message;
     static File fileMessage;
     public static boolean isLoaded;
+    public static HashMap<String, File> scripts = new HashMap<>();
 
     public static void LoadConfiguration() {
         fileMenu = new File(instance.getDataFolder() + File.separator + "menu.yml");
@@ -103,7 +104,16 @@ public class Config {
             dir.mkdir();
             instance.saveResource("airdrops" + File.separator + "default.yml", true);
         }
-
+        File dir2 = new File(instance.getDataFolder() + File.separator + "scripts");//diamond.js
+        if (!dir2.exists()) {
+            dir2.mkdir();
+            instance.saveResource("scripts" + File.separator + "diamond.js", true);
+        }
+        scripts.clear();
+        for (File script : Arrays.stream(Objects.requireNonNull(dir2.listFiles())).toList()) {
+            scripts.put(script.getName(), script);
+            Message.debug("load " + script.getName());
+        }
 
         for (File airFile : Arrays.stream(Objects.requireNonNull(dir.listFiles())).toList()) {
             Message.debug("load " + airFile.getAbsolutePath());
@@ -228,7 +238,7 @@ public class Config {
         }
     }
     private static void LoadEnchant(){
-     //   Message.error(Enchantment.DIG_SPEED.getName());
+        EnchantMaterial.materialHashMap.clear();
         if(!instance.getConfig().getBoolean("auto-enchant.enable")) return;
         for(String id : instance.getConfig().getConfigurationSection("auto-enchant").getKeys(false)){
             if(id.equals("enable")) continue;

@@ -21,8 +21,6 @@ import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.BAirDrop;
 public class AirManager {
-    public static boolean var3 = true; //todo false
-    public static boolean var4 = false; //todo true
     @Nullable
     public static AirDrop getAirDropForLocation(@NotNull Location location) {
         for (AirDrop airDrop : BAirDrop.airDrops.values()) {

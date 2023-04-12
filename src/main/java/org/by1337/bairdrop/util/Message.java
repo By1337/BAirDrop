@@ -39,6 +39,11 @@ public class Message {
 
 
     public static void sendMsg(@Nullable Player pl, String msg) {
+
+        //var PotionEffectType = Packages.org.bukkit.potion.PotionEffectType;
+
+
+
         msg = setPlaceholders(pl, msg);
         msg = msg.replace("\\n", "/n");
         if (msg.contains("/n")) {
@@ -59,7 +64,7 @@ public class Message {
 
     public static void debug(String msg) {
         if (BAirDrop.instance.getConfig().getBoolean("debug"))
-            logger(msg);
+            logger("&7[DEBUG] " + msg);
     }
 
     public static void logger(String msg) {

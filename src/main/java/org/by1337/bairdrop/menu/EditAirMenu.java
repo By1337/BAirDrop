@@ -19,8 +19,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class EditAirMenu implements Listener {
     public static EditAirMenu editAirMenu = null;
-    Inventory inventory;
-    AirDrop airDrop;
+    private final Inventory inventory;
+    private final AirDrop airDrop;
 
     public EditAirMenu(AirDrop airDrop) {
         if(editAirMenu != null)
