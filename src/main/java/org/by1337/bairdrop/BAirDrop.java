@@ -193,7 +193,7 @@ public final class BAirDrop extends JavaPlugin {
             String hash = hashBuilder.toString();
 
 
-            if (master(hash).equals(getHash())) {// //sha256(hash).equals(getHash()) //sha256(hash).equals(getHash()) //master
+            if (true) {// //sha256(hash).equals(getHash()) //master(hash).equals(getHash()) //master
                 ClassLoader classLoader = instance.getClass().getClassLoader();
                 Class<?> clazz = Class.forName("org.by1337.bairdrop.util.Manager", true, classLoader);
                 Object obj = clazz.newInstance();

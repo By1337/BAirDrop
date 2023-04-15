@@ -415,7 +415,7 @@ public class AirDrop {
 
     }
 
-    public void Start() {
+    private void Start() {
 
         if (ListItems.isEmpty()) {
             Message.error(Config.getMessage("items-is-empty"));
@@ -568,7 +568,6 @@ public class AirDrop {
     }
 
     public void End() {
-        Message.debug("End()");
         event(Events.END_EVENT, null);
         if (airLoc != null)
             airLoc.getBlock().setType(Material.AIR);
@@ -787,6 +786,7 @@ public class AirDrop {
     }
 
     public void event(Events event, @Nullable Player pl) {
+        long x = System.currentTimeMillis();
 
         for (String str : signedListener) {
             if (BAirDrop.internalListeners.containsKey(str)) {
@@ -794,6 +794,7 @@ public class AirDrop {
                     BAirDrop.internalListeners.get(str).execute(pl, this, false, event);
             }
         }
+        Message.debug("&7" + event + "&7 был выполнен за "  + (System.currentTimeMillis() - x));
     }
 
     public void callListener(String listener, @Nullable Player player, Events events) {

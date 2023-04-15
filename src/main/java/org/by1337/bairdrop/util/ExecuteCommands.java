@@ -13,14 +13,17 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.Listeners.SetStaticLocation;
@@ -31,11 +34,13 @@ import org.by1337.bairdrop.scripts.Manager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import static org.bukkit.Bukkit.*;
+import static org.by1337.bairdrop.BAirDrop.info;
 import static org.by1337.bairdrop.BAirDrop.instance;
 import static org.by1337.bairdrop.util.LocationGeneration.getSettings;
 
@@ -45,8 +50,8 @@ import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.BAirDrop;
 
 public class ExecuteCommands {
-    public static void runListenerCommands(String[] commands, @Nullable Player pl, @Nullable AirDrop airDrop, Events events) {
-        for (String command : commands) {// [RUN_JS=nameJs] param("1"=123, "2"=123)
+    public void runListenerCommands(String[] commands, @Nullable Player pl, @Nullable AirDrop airDrop, Events events) {
+        for (String command : commands) {
             if (airDrop != null)
                 command = airDrop.replaceInternalPlaceholder(command);
             command = Message.setPlaceholders(pl, command);
@@ -54,19 +59,10 @@ public class ExecuteCommands {
                 command = InternalListener.math(command, airDrop, pl);
             if (command.contains("{player-get-item-") && pl != null)
                 command = setPlayerPlaceholder(pl, command);
-
-//            ItemStack itemStack = pl.getInventory().getItem(39);
-//            ItemMeta itemMeta = itemStack.getItemMeta();
-//            if(itemMeta instanceof Damageable){
-//                int damage = ((Damageable) itemMeta).getDamage();
-//                ((Damageable) itemMeta).setDamage(damage - 50);
-//                ((Damageable) itemMeta).
-//            }
-
-
-
-
-            if(runJsCommand(pl, airDrop, command))
+            if(command.equalsIgnoreCase("[SCHEDULER]") || command.equalsIgnoreCase("[ASYNC]")){
+                continue;
+            }
+            if(runJsCommand(pl, airDrop, command)) //
                 continue;
             if (pl != null)
                 if (execPlayerCommands(pl, command))
@@ -109,7 +105,7 @@ public class ExecuteCommands {
         }
     }
 
-    public static boolean runJsCommand(@Nullable Player pl, @Nullable AirDrop airDrop, String command) {
+    public boolean runJsCommand(@Nullable Player pl, @Nullable AirDrop airDrop, String command) {
         // [RUN_JS=nameJs] param(1=123, 2=123)-scheduler
         long x = System.currentTimeMillis();
         if(command.contains("[RUN_JS")){
@@ -142,7 +138,8 @@ public class ExecuteCommands {
                                         map.put(str.split("=")[0], scriptParam);
                                     }
                                 }
-                                Manager.runJsScript(jsName, map);
+                                Manager manager = new Manager();
+                                manager.runJsScript(jsName, map);
                             }
                         }catch (ArrayIndexOutOfBoundsException | NullPointerException e){
                             e.printStackTrace();
@@ -175,7 +172,8 @@ public class ExecuteCommands {
                                 map.put(str.split("=")[0], scriptParam);
                             }
                         }
-                        Manager.runJsScript(jsName, map);
+                        Manager manager = new Manager();
+                        manager.runJsScript(jsName, map);
                         Message.debug("&7" + command + "&7 был выполнен за "  + (System.currentTimeMillis() - x));
                         return true;
                     }
@@ -224,27 +222,6 @@ public class ExecuteCommands {
                     );
                     return command;
                 }
-//                if (command.contains(".getPDC.set")) {
-//
-//                    String key = command.split(".getPDC.set=\"key=")[1].split(",")[0];
-//                    String value = command.split(String.format(".getPDC.set=\"key=%s, value=", key))[1].split("\"")[0];
-//
-//                    if (key == null) throw new NullPointerException("getPDC.set=\"key=key\" key is null!");
-//                    if (value == null) throw new NullPointerException("getPDC.set=\"value=value\" value is null!");
-//                    String oldKey = key;
-//                    key = key.replace(" ", "_");
-//                    key = key.toLowerCase();
-//
-//                    if (item == null || item.getItemMeta() == null) {
-//                        if (item == null) throw new NullPointerException("getPDC.set item is null!");
-//                    }
-//                    command = command.replace(String.format("{player-get-item-%s}.getPDC.get=\"%s\"", slot, oldKey),
-//                            item.getItemMeta().getPersistentDataContainer().has(NamespacedKey.fromString(key), PersistentDataType.STRING) ?
-//                                    item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString(key), PersistentDataType.STRING) :
-//                                    ""
-//                    );
-//                    return command;
-//                }
             } catch (NumberFormatException e) {
                 Message.error("{player-get-item-<slot>} <slot> должен быть числом!");
             } catch (ArrayIndexOutOfBoundsException e) {
@@ -256,7 +233,7 @@ public class ExecuteCommands {
         return command;
     }
 
-    public static boolean bossBar(String command, @Nullable Player pl) {
+    public boolean bossBar(String command, @Nullable Player pl) {
         if (command.contains("[NEW_BOSSBAR]")) {
             command = command.replace("[NEW_BOSSBAR]", "");
             int quoteCount = command.replaceAll("[^\"]", "").length();
@@ -428,7 +405,7 @@ public class ExecuteCommands {
         return false;
     }
 
-    public static void bossBarAddParam(BossBar bossBar, String[] args, @Nullable Player pl) {
+    public void bossBarAddParam(BossBar bossBar, String[] args, @Nullable Player pl) {
         try {
             for (String key : args) {
                 if (key.contains("setTitle")) {
@@ -492,7 +469,7 @@ public class ExecuteCommands {
         }
     }
 
-    public static boolean executeAirdropCommand(@NotNull AirDrop airDrop, String command) {
+    public boolean executeAirdropCommand(@NotNull AirDrop airDrop, String command) {
         if (command.contains("[EFFECT_START-")) {
             String[] args = command.split("-");
             if (args.length != 3) {
@@ -624,7 +601,7 @@ public class ExecuteCommands {
         return false;
     }
 
-    public static boolean execPlayerNullCommand(String command) {
+    public boolean execPlayerNullCommand(String command) {
         if (command.contains("[ERROR]")) {
             String str = command.replace("[ERROR]", "");
             Message.error(str);
@@ -674,7 +651,7 @@ public class ExecuteCommands {
         return false;
     }
 
-    public static boolean execPlayerCommands(@NotNull Player pl, String command) {//(
+    public boolean execPlayerCommands(@NotNull Player pl, String command) {//(
         if (command.equalsIgnoreCase("[PLAYER-CLOSE-INVENTORY]")) {
             pl.closeInventory();
             return true;
@@ -744,10 +721,10 @@ public class ExecuteCommands {
     }
 
     private static void menuCommand(List<String> commands, AirDrop airDrop, Player pl) {
-        Message.debug(airDrop.getAirId());
-        Message.debug(commands.toString());
+        //Message.debug(airDrop.getAirId());
+        //Message.debug(commands.toString());
         commands.replaceAll(airDrop::replaceInternalPlaceholder);
-        Message.debug(commands.toString());
+        //Message.debug(commands.toString());
         for (String str : commands) {
             // Message.logger(str);
             if (str.equalsIgnoreCase("[!airdropstarted]")) {

@@ -39,11 +39,6 @@ public class Message {
 
 
     public static void sendMsg(@Nullable Player pl, String msg) {
-
-        //var PotionEffectType = Packages.org.bukkit.potion.PotionEffectType;
-
-
-
         msg = setPlaceholders(pl, msg);
         msg = msg.replace("\\n", "/n");
         if (msg.contains("/n")) {

@@ -31,12 +31,6 @@ public class Commands implements CommandExecutor {
                 Message.sendMsg(pl, Config.getMessage("few-arguments"));
                 return true;
             }
-
-            if (args[0].equals("test")) {
-                HashMap<String, Object> map = new HashMap<>();
-                map.put("player_name", "By1337");
-                Manager.runJsScript("diamond.js", map);
-            }
             if (args[0].equals("compass")) {
                 if (!pl.hasPermission("bair.compass")) {
                     Message.sendMsg(pl, Config.getMessage("no-prem"));

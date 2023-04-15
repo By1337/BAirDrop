@@ -36,7 +36,7 @@ public class GeneratorLoc {
          //   locs.put(airDrop.getAirId(), new ArrayList<>());
         isStarted = true;
         Message.sendMsg(pl, Config.getMessage("generator-start"));
-        Message.debug(airDrop.getAirId());
+        //Message.debug(airDrop.getAirId());
         new BukkitRunnable() {
             int count1 = count;
             int fail = 0;
