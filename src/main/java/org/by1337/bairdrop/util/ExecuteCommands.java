@@ -147,7 +147,7 @@ public class ExecuteCommands {
                         cancel();
                     }
                 }.runTaskLater(instance, 0);
-                Message.debug("&7" + command + "&7 был выполнен за "  + (System.currentTimeMillis() - x));
+                Message.debug("&7" + command + "&7 был выполнен за "  + (System.currentTimeMillis() - x), LogLevel.MEDIUM);
                 return true;
             }else {
                 try {
@@ -174,7 +174,7 @@ public class ExecuteCommands {
                         }
                         Manager manager = new Manager();
                         manager.runJsScript(jsName, map);
-                        Message.debug("&7" + command + "&7 был выполнен за "  + (System.currentTimeMillis() - x));
+                        Message.debug("&7" + command + "&7 был выполнен за "  + (System.currentTimeMillis() - x), LogLevel.MEDIUM);
                         return true;
                     }
                 }catch (ArrayIndexOutOfBoundsException | NullPointerException e){

@@ -5,10 +5,6 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
-import org.bukkit.advancement.Advancement;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarFlag;
-import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Entity;
@@ -22,12 +18,8 @@ import java.util.regex.Pattern;
 
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.by1337.bairdrop.BAirDrop;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.plaf.synth.SynthTextAreaUI;
 
 
 public class Message {
@@ -49,12 +41,20 @@ public class Message {
                 for (String str : msg.split("/n"))
                     pl.sendMessage(messageBuilder(str));
 
-        } else{
+        } else {
             if (pl == null)
                 logger(msg);
             else
                 pl.sendMessage(messageBuilder(msg));
         }
+    }
+
+    public static void debug(String msg, LogLevel logLevel) {
+        if (BAirDrop.logLevel.getLvl() >= logLevel.getLvl()) {
+            if (BAirDrop.instance.getConfig().getBoolean("debug"))
+                logger("&7[DEBUG] " + msg);
+        }
+
     }
 
     public static void debug(String msg) {
@@ -156,9 +156,11 @@ public class Message {
             Message.error("Неизвестный звук! '" + sound + "'");
         }
     }
+
     public static void sendSound(Player pl, Sound sound) {
-            pl.playSound(pl.getLocation(), sound, 1, 1);
+        pl.playSound(pl.getLocation(), sound, 1, 1);
     }
+
     public static void sendAllSound(String sound) {
         try {
             Sound.valueOf(sound);

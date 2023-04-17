@@ -68,7 +68,7 @@ public class Config {
         for (File shemFile : Arrays.stream(Objects.requireNonNull(shemDir.listFiles())).toList()) {
             if (shemFile.getAbsolutePath().equals(fileSchemConf.getAbsolutePath()))
                 continue;
-            Message.debug("load schematics" + shemFile.getAbsolutePath());
+            Message.debug("load schematics" + shemFile.getAbsolutePath(), LogLevel.LOW);
             Schematics.put(shemFile.getName(), shemFile);
         }
 
@@ -112,11 +112,11 @@ public class Config {
         scripts.clear();
         for (File script : Arrays.stream(Objects.requireNonNull(dir2.listFiles())).toList()) {
             scripts.put(script.getName(), script);
-            Message.debug("load " + script.getName());
+            Message.debug("load " + script.getName(), LogLevel.LOW);
         }
 
         for (File airFile : Arrays.stream(Objects.requireNonNull(dir.listFiles())).toList()) {
-            Message.debug("load " + airFile.getAbsolutePath());
+            Message.debug("load " + airFile.getAbsolutePath(), LogLevel.LOW);
             FileConfiguration fc = YamlConfiguration.loadConfiguration(airFile);
             airDrops.put(airFile, fc);
         }

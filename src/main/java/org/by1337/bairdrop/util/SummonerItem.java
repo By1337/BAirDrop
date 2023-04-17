@@ -91,7 +91,8 @@ public class SummonerItem {
         }
       //  Message.debug("2");
         if(flatnessCheck){
-            if(!LocationGeneration.checkForEvenness(location.clone().add(0, 1, 0), BAirDrop.airDrops.get(key))){
+
+            if(!new LocationGeneration().checkForEvenness(location.clone().add(0, 1, 0), BAirDrop.airDrops.get(key))){
                 Message.sendMsg(pl, Config.getMessage("flatness-check-fail"));
                 pl.setCooldown(getItem().getType(), 40);
                 return null;

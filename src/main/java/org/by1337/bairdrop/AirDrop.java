@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 import org.by1337.bairdrop.Hologram.HologramManager;
 import org.by1337.bairdrop.effect.EffectFactory;
@@ -103,8 +104,10 @@ public class AirDrop {
     private boolean SUMMONER;
     private boolean rndItems;
     private boolean hideInCompleter;
+    private AirDrop airDropInstance;
 
     AirDrop(FileConfiguration fileConfiguration, File airdropFile) {
+        airDropInstance = this;
         try {
             this.airdropFile = airdropFile;
             this.fileConfiguration = fileConfiguration;
@@ -205,6 +208,7 @@ public class AirDrop {
     }
 
     public AirDrop(String id) {
+        airDropInstance = this;
         try {
             airId = id;
             createFile();
@@ -467,10 +471,10 @@ public class AirDrop {
             if (key != null)
                 for (Items items : ListItems.get(key)) {
                     ItemStack itemStack = items.getItem();
-                    if(!EnchantMaterial.materialHashMap.isEmpty()){
-                        for(String str : EnchantMaterial.materialHashMap.keySet()){
+                    if (!EnchantMaterial.materialHashMap.isEmpty()) {
+                        for (String str : EnchantMaterial.materialHashMap.keySet()) {
                             EnchantMaterial em = EnchantMaterial.materialHashMap.get(str);
-                            if(em.getMaterial() == itemStack.getType()){
+                            if (em.getMaterial() == itemStack.getType()) {
                                 itemStack = em.enchant(itemStack);
                             }
                         }
@@ -492,10 +496,10 @@ public class AirDrop {
                 Items items1 = list.get(ThreadLocalRandom.current().nextInt(list.size()));
                 ItemStack itemStack = items1.getItem();
                 if (ThreadLocalRandom.current().nextInt(0, 100) <= items1.getChance()) {
-                    if(!EnchantMaterial.materialHashMap.isEmpty()){
-                        for(String str : EnchantMaterial.materialHashMap.keySet()){
+                    if (!EnchantMaterial.materialHashMap.isEmpty()) {
+                        for (String str : EnchantMaterial.materialHashMap.keySet()) {
                             EnchantMaterial em = EnchantMaterial.materialHashMap.get(str);
-                            if(em.getMaterial() == itemStack.getType()){
+                            if (em.getMaterial() == itemStack.getType()) {
                                 itemStack = em.enchant(itemStack);
                             }
                         }
@@ -503,8 +507,7 @@ public class AirDrop {
 
                     if (rndItems) {
                         inv.setItem(getEmptyRandomSlot(), itemStack);
-                    }
-                    else {
+                    } else {
                         inv.setItem(x, itemStack);
                     }
                 }
@@ -596,17 +599,37 @@ public class AirDrop {
         SUMMONER = false;
     }
 
+    private BukkitTask bukkitTask = null;
+
     private void locationSearch() {
-        if (futureLocation == null) {
-            if (usePreGeneratedLocations)
-                futureLocation = LocationGeneration.getPreLocation(this);
-            else
-                futureLocation = LocationGeneration.getLocation(this, false);
-        }
-        if (futureLocation != null && !airDropStarted)
+        if (futureLocation != null && !airDropStarted) {
             airLoc = futureLocation;
+            return;
+        }
+        if (bukkitTask == null || bukkitTask.isCancelled()) {
+            bukkitTask = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    try {
+                        LocationGeneration locationGeneration = new LocationGeneration();
+                        if (futureLocation == null) {
+                            if (usePreGeneratedLocations)
+                                futureLocation = locationGeneration.getPreLocation(airDropInstance);
+                            else
+                                futureLocation = locationGeneration.getLocation(airDropInstance, false);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    airDropInstance.setBukkitTask(null);
+                }
+            }.runTaskAsynchronously(instance);
+        }
     }
 
+    public synchronized void setBukkitTask(BukkitTask bukkitTask) {
+        this.bukkitTask = bukkitTask;
+    }
     public static String getHash() {
         try {
             URLConnection conn = getUrl(plus() + instance.getDescription().getVersion()).openConnection();
@@ -620,6 +643,7 @@ public class AirDrop {
             return "none";
         }
     }
+
     public static URL getUrl(String url) throws MalformedURLException {
         return new URL(url);
     }
@@ -746,30 +770,30 @@ public class AirDrop {
             if (sb.indexOf("{stat-z}") != -1)
                 sb.replace(sb.indexOf("{stat-z}"), sb.indexOf("{stat-z}") + 8, (staticLocation.getZ() + "").replace(".0", ""));
         }
-       // if (airLoc == null) {
-            if (getAnyLoc() == null) {
-                if (sb.indexOf("{x}") != -1)
-                    sb.replace(sb.indexOf("{x}"), sb.indexOf("{x}") + 3, "?");
-                if (sb.indexOf("{y}") != -1)
-                    sb.replace(sb.indexOf("{y}"), sb.indexOf("{y}") + 3, "?");
-                if (sb.indexOf("{z}") != -1)
-                    sb.replace(sb.indexOf("{z}"), sb.indexOf("{z}") + 3, "?");
-                if (sb.indexOf("{biome}") != -1)
-                    sb.replace(sb.indexOf("{biome}"), sb.indexOf("{biome}") + 7, "NONE");
-                if (sb.indexOf("{GET_BLOCK_MATERIAL}") != -1)
-                    sb.replace(sb.indexOf("{GET_BLOCK_MATERIAL}"), sb.indexOf("{GET_BLOCK_MATERIAL}") + 20, "AIR");
-            } else {
-                if (sb.indexOf("{x}") != -1)
-                    sb.replace(sb.indexOf("{x}"), sb.indexOf("{x}") + 3, (getAnyLoc().getX() + "").replace(".0", ""));
-                if (sb.indexOf("{y}") != -1)
-                    sb.replace(sb.indexOf("{y}"), sb.indexOf("{y}") + 3, (getAnyLoc().getY() + "").replace(".0", ""));
-                if (sb.indexOf("{z}") != -1)
-                    sb.replace(sb.indexOf("{z}"), sb.indexOf("{z}") + 3, (getAnyLoc().getZ() + "").replace(".0", ""));
-                if (sb.indexOf("{biome}") != -1)
-                    sb.replace(sb.indexOf("{biome}"), sb.indexOf("{biome}") + 7, LocationGeneration.getBiome(getAnyLoc()));
-                if (sb.indexOf("{GET_BLOCK_MATERIAL}") != -1)
-                    sb.replace(sb.indexOf("{GET_BLOCK_MATERIAL}"), sb.indexOf("{GET_BLOCK_MATERIAL}") + 20, String.valueOf(LocationGeneration.getBlock(this).getType()));
-            }
+        // if (airLoc == null) {
+        if (getAnyLoc() == null) {
+            if (sb.indexOf("{x}") != -1)
+                sb.replace(sb.indexOf("{x}"), sb.indexOf("{x}") + 3, "?");
+            if (sb.indexOf("{y}") != -1)
+                sb.replace(sb.indexOf("{y}"), sb.indexOf("{y}") + 3, "?");
+            if (sb.indexOf("{z}") != -1)
+                sb.replace(sb.indexOf("{z}"), sb.indexOf("{z}") + 3, "?");
+            if (sb.indexOf("{biome}") != -1)
+                sb.replace(sb.indexOf("{biome}"), sb.indexOf("{biome}") + 7, "NONE");
+            if (sb.indexOf("{GET_BLOCK_MATERIAL}") != -1)
+                sb.replace(sb.indexOf("{GET_BLOCK_MATERIAL}"), sb.indexOf("{GET_BLOCK_MATERIAL}") + 20, "AIR");
+        } else {
+            if (sb.indexOf("{x}") != -1)
+                sb.replace(sb.indexOf("{x}"), sb.indexOf("{x}") + 3, (getAnyLoc().getX() + "").replace(".0", ""));
+            if (sb.indexOf("{y}") != -1)
+                sb.replace(sb.indexOf("{y}"), sb.indexOf("{y}") + 3, (getAnyLoc().getY() + "").replace(".0", ""));
+            if (sb.indexOf("{z}") != -1)
+                sb.replace(sb.indexOf("{z}"), sb.indexOf("{z}") + 3, (getAnyLoc().getZ() + "").replace(".0", ""));
+            if (sb.indexOf("{biome}") != -1)
+                sb.replace(sb.indexOf("{biome}"), sb.indexOf("{biome}") + 7, LocationGeneration.getBiome(getAnyLoc()));
+            if (sb.indexOf("{GET_BLOCK_MATERIAL}") != -1)
+                sb.replace(sb.indexOf("{GET_BLOCK_MATERIAL}"), sb.indexOf("{GET_BLOCK_MATERIAL}") + 20, String.valueOf(LocationGeneration.getBlock(this).getType()));
+        }
 //        } else {
 //            if (sb.indexOf("{biome}") != -1)
 //                sb.replace(sb.indexOf("{biome}"), sb.indexOf("{biome}") + 7, LocationGeneration.getBiome(airLoc));
@@ -794,7 +818,7 @@ public class AirDrop {
                     BAirDrop.internalListeners.get(str).execute(pl, this, false, event);
             }
         }
-        Message.debug("&7" + event + "&7 был выполнен за "  + (System.currentTimeMillis() - x));
+        Message.debug("&7" + event + "&7 был выполнен за " + (System.currentTimeMillis() - x) + "ms", LogLevel.MEDIUM);
     }
 
     public void callListener(String listener, @Nullable Player player, Events events) {
@@ -1183,7 +1207,7 @@ public class AirDrop {
     public void schematicsRemoveAll() {
         if (editSession != null) {
             EditSession newEditSession = WorldEdit.getInstance().newEditSession(editSession.getWorld());
-           // EditSession newEditSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(editSession.getWorld(), -1, null, null);
+            // EditSession newEditSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(editSession.getWorld(), -1, null, null);
             editSession.undo(newEditSession);
             editSession.close();
             editSession = null;

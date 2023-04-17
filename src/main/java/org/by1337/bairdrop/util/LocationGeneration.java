@@ -30,12 +30,14 @@ import static org.by1337.bairdrop.ConfigManager.Config.getGeneratorSettings;
 
 public class LocationGeneration {
     private static final HashMap<String, Long> cd = new HashMap<>();
+    private World world;
 
     @Nullable
-    public static synchronized Location getPreLocation(@NotNull AirDrop airDrop) {
+    public Location getPreLocation(@NotNull AirDrop airDrop) {
+        world = airDrop.getWorld();
         if (GeneratorLoc.locs.getOrDefault(airDrop.getAirId(), new ArrayList<>()).isEmpty()) {
             if (cd.getOrDefault(airDrop.getAirId() + "001", 0L) < System.currentTimeMillis()) {
-                Message.warning(String.format(Config.getMessage("locations-are-absent"), airDrop.getWorld().getName()));
+                Message.warning(String.format(Config.getMessage("locations-are-absent"), world.getName()));
                 Message.warning(Config.getMessage("attempt-use-static-loc"));
                 cd.put(airDrop.getAirId() + "001", System.currentTimeMillis() + 150000L);//скажем что это error 001
             }
@@ -47,12 +49,14 @@ public class LocationGeneration {
     }
 
     @Nullable
-    public static synchronized Location getLocation(@NotNull AirDrop airDrop, boolean isGenerator) {
+    public Location getLocation(@NotNull AirDrop airDrop, boolean isGenerator) {
+        world = airDrop.getWorld();
         double x = ThreadLocalRandom.current().nextLong(airDrop.getSpawnMin(), airDrop.getSpawnMax());
         double y = 100;
         double z = ThreadLocalRandom.current().nextLong(airDrop.getSpawnMin(), airDrop.getSpawnMax());
-        Location loc1 = new Location(airDrop.getWorld(), x, y, z);
-        String worldType = String.valueOf(airDrop.getWorld().getEnvironment());
+
+        Location loc1 = new Location(world, x, y, z);
+        String worldType = String.valueOf(world.getEnvironment());
         if (worldType.equals("NORMAL"))
             return getLocationNORMAL(loc1, airDrop);
         if (worldType.equals("THE_END"))
@@ -66,7 +70,7 @@ public class LocationGeneration {
         }
         if (worldType.equals("CUSTOM")) {
             if (cd.getOrDefault(airDrop.getAirId() + "003", 0L) < System.currentTimeMillis()) {
-                Message.warning(String.format(Config.getMessage("unknown-world-type"), airDrop.getWorld().getName()));
+                Message.warning(String.format(Config.getMessage("unknown-world-type"), world.getName()));
                 cd.put(airDrop.getAirId() + "003", System.currentTimeMillis() + 150000L); //а это 003
             }
             return getLocationNORMAL(loc1, airDrop);
@@ -87,7 +91,7 @@ public class LocationGeneration {
     }
 
     @Nullable
-    private static Location getLocationNORMAL(@NotNull Location location, AirDrop airDrop) {
+    private Location getLocationNORMAL(@NotNull Location location, AirDrop airDrop) {
         double y2 = location.getWorld().getHighestBlockAt(location).getLocation().getY();
         location.setY(y2);
         if (!checkMaxY(location, airDrop, "world-NORMAL.max-y"))
@@ -110,7 +114,7 @@ public class LocationGeneration {
 
 
     @Nullable
-    private static Location getLocationNETHER(@NotNull Location location, AirDrop airDrop) {
+    private Location getLocationNETHER(@NotNull Location location, AirDrop airDrop) {
         Location loc = location.clone();
         loc.setY(getSettings(airDrop.getGeneratorSettings(), "world-NETHER.check-lava"));
         if (loc.getBlock().getType() == Material.LAVA)
@@ -146,7 +150,7 @@ public class LocationGeneration {
     }
 
     @Nullable
-    private static Location getLocationTHE_END(@NotNull Location location, AirDrop airDrop) {
+    private Location getLocationTHE_END(@NotNull Location location, AirDrop airDrop) {
 
         location.setY(getSettings(airDrop.getGeneratorSettings(), "world-THE_END.start-y"));
         if (!location.getBlock().isEmpty()) {
@@ -178,11 +182,11 @@ public class LocationGeneration {
         return null;
     }
 
-    private static boolean checkMaxY(@NotNull Location location, AirDrop airDrop, String path) {
+    private boolean checkMaxY(@NotNull Location location, AirDrop airDrop, String path) {
         return getSettings(airDrop.getGeneratorSettings(), path) >= location.getY();
     }
 
-    public static boolean checkForEvenness(@NotNull Location location, AirDrop airDrop) {
+    public boolean checkForEvenness(@NotNull Location location, AirDrop airDrop) {
         for (int y = getSettings(airDrop.getGeneratorSettings(), "check-for-evenness.poz.start-y"); y < getSettings(airDrop.getGeneratorSettings(), "check-for-evenness.poz.end-y"); y++) {
             for (int x = getSettings(airDrop.getGeneratorSettings(), "check-for-evenness.poz.start-x"); x < getSettings(airDrop.getGeneratorSettings(), "check-for-evenness.poz.end-x"); x++) {
                 for (int z = getSettings(airDrop.getGeneratorSettings(), "check-for-evenness.poz.start-z"); z < getSettings(airDrop.getGeneratorSettings(), "check-for-evenness.poz.end-z"); z++) {
@@ -196,7 +200,7 @@ public class LocationGeneration {
     }
 
     @Nullable
-    public static synchronized Location PreGeneratedLocations(AirDrop airDrop) {
+    public Location PreGeneratedLocations(AirDrop airDrop) {
         if (airDrop.getAttemptsToPick() >= BAirDrop.instance.getConfig().getInt("max-experience-pre-generated-location")) {
             if (cd.getOrDefault(airDrop.getAirId() + "004", 0L) < System.currentTimeMillis()) {
                 Message.error(Config.getMessage("search-location-limit"));
@@ -245,7 +249,7 @@ public class LocationGeneration {
         return null;
     }
 
-    public static boolean isBiomeInBlackList(@NotNull Location location) {
+    public boolean isBiomeInBlackList(@NotNull Location location) {
         Biome bom = location.getWorld().getBiome((int) location.getX(), (int) location.getY(), (int) location.getZ());
         return getGeneratorSettings().getStringList("black-List-biome").contains(String.valueOf(bom));
     }

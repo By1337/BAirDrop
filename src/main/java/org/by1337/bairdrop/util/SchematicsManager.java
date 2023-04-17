@@ -45,7 +45,7 @@ public class SchematicsManager {
             );
             boolean ignoreAirBlocks = Config.getSchemConf().getBoolean(String.format("schematics.%s.ignore-air-blocks", name));
             String file = Config.getSchemConf().getString(String.format("schematics.%s.file", name));
-            Message.debug("paste " + file);
+            Message.debug("paste " + file, LogLevel.LOW);
 
             if (!Config.Schematics.containsKey(file)) throw new IllegalArgumentException();
             File schem = Config.Schematics.get(file);

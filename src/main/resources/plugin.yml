@@ -29,6 +29,10 @@ permissions:
       bair.delete: true
       bair.clone: true
       bair.compass: true
+      bair.js: true
+  bair.js:
+    description: /bair js
+    default: op
   bair.tp:
     description: /bair tp <id>
     default: op

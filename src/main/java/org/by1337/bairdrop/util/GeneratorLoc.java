@@ -24,6 +24,7 @@ public class GeneratorLoc {
             Message.sendMsg(pl, Config.getMessage("generator-not-started"));
             return;
         }
+        Message.sendMsg(pl, Config.getMessage("generator-stop"));
         isStarted = false;
     }
 
@@ -32,11 +33,8 @@ public class GeneratorLoc {
             Message.sendMsg(pl, Config.getMessage("generator-already-launched"));
             return;
         }
-        //if(!locs.containsKey(airDrop.getAirId()))
-         //   locs.put(airDrop.getAirId(), new ArrayList<>());
         isStarted = true;
         Message.sendMsg(pl, Config.getMessage("generator-start"));
-        //Message.debug(airDrop.getAirId());
         new BukkitRunnable() {
             int count1 = count;
             int fail = 0;
@@ -44,15 +42,11 @@ public class GeneratorLoc {
 
             @Override
             public void run() {
-                Location loc = LocationGeneration.getLocation(finalAirDrop, true);
+                LocationGeneration locationGeneration = new LocationGeneration();
+                Location loc = locationGeneration.getLocation(finalAirDrop, true);
+              //  Message.debug("loc == null =  " + (loc == null));
                 fail++;
                 if (loc != null) {
-
-//                    GenLoc genLoc = new GenLoc(loc, LocationGeneration.getOffsets(airDrop), airDrop.getAirId());
-//                    List<GenLoc> gll =  locs.getOrDefault(airDrop.getAirId(), new ArrayList<>());
-//                    gll.add(genLoc);
-//                    locs.put(airDrop.getAirId(),gll);
-
                     GenLoc genLoc = new GenLoc(loc, LocationGeneration.getOffsets(finalAirDrop), finalAirDrop.getAirId());
                     String airId = finalAirDrop.getAirId();
                     List<GenLoc> existingValues = locs.get(airId);
@@ -63,31 +57,13 @@ public class GeneratorLoc {
                         locs.put(airId, newValues);
                         System.out.println("Добавлен новый ключ " + airId + " со значением " + genLoc);
                     } else {
-                        // Если ключ уже есть в мапе, проверяем, есть ли уже такое значение в списке
-                        boolean valueExists = false;
-                        for (GenLoc existingValue : existingValues) {
-                            if (existingValue.equals(genLoc)) {
-                                valueExists = true;
-                                break;
-                            }
-                        }
-                        if (!valueExists) {
-                            // Если значение еще не существует в списке, добавляем его
                             existingValues.add(genLoc);
                             locs.put(airId, existingValues);
                             System.out.println("Обновлен ключ " + airId + " (количество элементов: " + existingValues.size() + ")");
-                        } else {
-                            // Если значение уже есть в списке, ничего не делаем
-                            System.out.println("Значение " + genLoc + " уже есть в списке для ключа " + airId);
-                        }
                     }
-
-
-
                     count1--;
                     Message.sendMsg(pl, String.format(Config.getMessage("generator"), count1));
 
-                    // save();
                     if (finalAirDrop.getEditAirMenu() != null)
                         finalAirDrop.getEditAirMenu().menuGenerate("usePreGeneratedLocations");
                     loc = null;
@@ -100,6 +76,7 @@ public class GeneratorLoc {
                     Message.sendMsg(pl, Config.getMessage("generator-good"));
                     GeneratorLoc.save();
                     cancel();
+                    return;
                 }
                 if (!isStarted) {
                     Message.sendMsg(pl, Config.getMessage("generator-stop"));
@@ -107,7 +84,7 @@ public class GeneratorLoc {
                     cancel();
                 }
             }
-        }.runTaskTimer(BAirDrop.instance, timings, timings);
+        }.runTaskTimerAsynchronously(BAirDrop.instance, timings, timings);
     }
 
     public static void save() {

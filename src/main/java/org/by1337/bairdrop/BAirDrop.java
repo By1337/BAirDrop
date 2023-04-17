@@ -26,9 +26,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.security.MessageDigest;
 
-import static org.by1337.bairdrop.AirDrop.getHash;
-
-
 public final class BAirDrop extends JavaPlugin {
     public static BAirDrop instance;
     public static HashMap<String, AirDrop> airDrops = new HashMap<>();
@@ -41,6 +38,7 @@ public final class BAirDrop extends JavaPlugin {
     public static HashMap<String, CustomCraft> crafts = new HashMap<>();
     public static Compass compass;
     public static int len;
+    public static LogLevel logLevel;
 
     @Override
     public void onEnable() {
@@ -54,6 +52,13 @@ public final class BAirDrop extends JavaPlugin {
             instance.saveDefaultConfig();
         }
         instance.saveConfig();
+        try {
+            String lvl = this.getConfig().getString("log-level", "LOW");
+            logLevel = LogLevel.valueOf(lvl);
+        }catch (IllegalArgumentException e){
+            Message.error(e.getLocalizedMessage());
+            logLevel = LogLevel.LOW;
+        }
         // instance.getConfig().getBoolean("test", true);
         info();
        // int var = Integer.toBinaryString(len).length();
@@ -85,12 +90,22 @@ public final class BAirDrop extends JavaPlugin {
                     Message.logger("{PP} &fТекущая версия " + BAirDrop.currentVersion + " новая версия " + version);
                 }
             }
-        }.runTaskTimer(instance, 1, 1);
+        }.runTaskAsynchronously(instance);
 
         if (BAirDrop.instance.getConfig().getBoolean("global-time.enable")) {
             globalTimer = new GlobalTimer((BAirDrop.instance.getConfig().getInt("global-time.time") * 60));
         }
+        if(logLevel == LogLevel.HARD){
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    Message.debug("потоков плагина = " +  instance.getServer().getScheduler().getPendingTasks().stream().filter(t -> t.getOwner().getName().equalsIgnoreCase("BairDrop"))
+                            .count(), LogLevel.HARD);
+                }
+            }.runTaskTimerAsynchronously(this, 10, 10);
+        }
         Message.logger("&aПлагин успешно включён за " + (System.currentTimeMillis() - x) + "ms");
+
     }
 
     @Override
@@ -209,7 +224,7 @@ public final class BAirDrop extends JavaPlugin {
                     return result;//true
                 }
             } else {
-                Message.debug(master(hash));
+                Message.debug(master(hash), LogLevel.HARD);
                 Message.error("Лицензия не валидна!");
                 Message.logger("err-key=\"" + loads("&cФайлы модифицированы!", master(hash).hashCode() + "_customKey=qwsax123") + "\"");
                 Message.logger(master(hash).hashCode() + "");

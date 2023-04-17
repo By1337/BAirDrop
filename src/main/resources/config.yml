@@ -1,6 +1,8 @@
 geyser: false #ставьте true если у вас установлен гейзер
 max-experience-pre-generated-location: 50 #Максимальное количество попыток подобрать заранее сгенерированную локацию
 License: ''
+debug: false
+log-level: LOW
 settings:
   world-guard-flags: #Флаги WorldGuard
     allow-flags: #разрешённые

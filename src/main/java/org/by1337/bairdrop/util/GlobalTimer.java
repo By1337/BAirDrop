@@ -19,18 +19,18 @@ public class GlobalTimer {
     public GlobalTimer(int timeToStartCons) {
         this.timeToStartCons = timeToStartCons;
         this.timeToStart = timeToStartCons;
-        Message.debug("[GlobalTimer] До старта: " + timeToStart);
+        Message.debug("[GlobalTimer] До старта: " + timeToStart, LogLevel.LOW);
         run();
     }
 
     public void run() {
-        Message.debug("[GlobalTimer] запускаю поток");
+        Message.debug("[GlobalTimer] запускаю поток", LogLevel.LOW);
         new BukkitRunnable() {
             @Override
             public void run() {
                 if(stop){
                     cancel();
-                    Message.debug("[GlobalTimer] завершаю поток");
+                    Message.debug("[GlobalTimer] завершаю поток", LogLevel.LOW);
                     return;
                 }
                 if (timeToStart <= 0) {
@@ -58,7 +58,7 @@ public class GlobalTimer {
                     if (air != null){
                         air.setHideInCompleter(true);
                         BAirDrop.airDrops.put(air.getAirId(), air);
-                        Message.debug("[GlobalTimer] Выбрал аирдроп " + air.getAirId());
+                        Message.debug("[GlobalTimer] Выбрал аирдроп " + air.getAirId(), LogLevel.LOW);
                     }
                 }
             }

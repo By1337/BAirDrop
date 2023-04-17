@@ -6,6 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.ConfigManager.Config;
@@ -22,6 +23,7 @@ import java.util.*;
 
 import static org.bukkit.Bukkit.getServer;
 import static org.by1337.bairdrop.BAirDrop.airDrops;
+import static org.by1337.bairdrop.BAirDrop.instance;
 
 public class Commands implements CommandExecutor {
     @Override
@@ -55,6 +57,27 @@ public class Commands implements CommandExecutor {
                     player.getLocation().getWorld().dropItem(pl.getLocation(), compass);
                 else
                     player.getInventory().addItem(compass);
+                return true;
+            }
+            if (args[0].equals("js")) { // /bair js fire.js <player name>
+                if (!pl.hasPermission("bair.js")) {
+                    Message.sendMsg(pl, Config.getMessage("no-prem"));
+                    return true;
+                }
+                Player player = pl;
+                if(args.length == 3){
+                    player = Bukkit.getPlayer(args[2]) == null ? pl : Bukkit.getPlayer(args[2]);
+                }
+                Player finalPlayer = player;
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        HashMap<String, Object> map = new HashMap<>();
+                        map.put("player", finalPlayer);
+                        Manager manager = new Manager();
+                        manager.runJsScript(args[1], map);
+                    }
+                }.runTask(instance);
                 return true;
             }
             if (args[0].equals("delete")) {
@@ -490,6 +513,23 @@ public class Commands implements CommandExecutor {
                     }
                     return true;
                 }
+                return true;
+            }
+            if (args[0].equals("js")) { // /bair js fire.js <player name>
+                Player player = null;
+                if(args.length == 3){
+                    player = Bukkit.getPlayer(args[2]);
+                }
+                Player finalPlayer = player;
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        HashMap<String, Object> map = new HashMap<>();
+                        map.put("player", finalPlayer);
+                        Manager manager = new Manager();
+                        manager.runJsScript(args[1], map);
+                    }
+                }.runTask(instance);
                 return true;
             }
             if (args[0].equals("compass")) {
