@@ -26,7 +26,7 @@ public class RandomParticle implements IEffect {
     List<Particle> particle = new ArrayList<>();
     double radius;
     int count;
-    int viewDistance;
+    //int viewDistance;
     FileConfiguration cs;
     Location loc;
     String name;
@@ -42,7 +42,7 @@ public class RandomParticle implements IEffect {
 
         radius = cs.getDouble(String.format("effects.%s.radius", name));
         count = cs.getInt(String.format("effects.%s.count", name));
-        viewDistance = cs.getInt(String.format("effects.%s.viewDistance", name));
+        //viewDistance = cs.getInt(String.format("effects.%s.viewDistance", name));
 
     }
 
@@ -84,11 +84,9 @@ public class RandomParticle implements IEffect {
                     double x = ThreadLocalRandom.current().nextDouble(-radius, radius);
                     double y = ThreadLocalRandom.current().nextDouble(radius);
                     double z = ThreadLocalRandom.current().nextDouble(-radius, radius);
-                    for (Entity entity : loc.getWorld().getNearbyEntities(loc, viewDistance, viewDistance, viewDistance)) {
-                        if (entity instanceof Player p) {
-                                p.spawnParticle(pr, loc.clone().add(x, y, z), count);
-                        }
-                    }
+
+                    loc.getWorld().spawnParticle(pr, loc.clone().add(x, y, z), count);
+
                 }
                 if (!isActive())
                     cancel();
@@ -100,7 +98,7 @@ public class RandomParticle implements IEffect {
                     }
                 }
             }
-        }.runTaskTimer(BAirDrop.instance, timeUpdate, timeUpdate);
+        }.runTaskTimerAsynchronously(BAirDrop.instance, timeUpdate, timeUpdate);
     }
 
     @Override

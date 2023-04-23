@@ -3,7 +3,10 @@ package org.by1337.bairdrop;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.by1337.bairdrop.Hologram.HologramManager;
+import org.by1337.bairdrop.Hologram.CMIHolo;
+import org.by1337.bairdrop.Hologram.DecentHologram;
+import org.by1337.bairdrop.Hologram.EmptyHologram;
+import org.by1337.bairdrop.Hologram.IHologram;
 import org.by1337.bairdrop.Listeners.Compass;
 import org.by1337.bairdrop.Listeners.CraftItem;
 import org.by1337.bairdrop.Listeners.InteractListener;
@@ -14,14 +17,14 @@ import org.by1337.bairdrop.effect.EffectFactory;
 import org.by1337.bairdrop.util.*;
 import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.util.Message;
+import org.mozilla.javascript.NativeJavaObject;
 
-import javax.crypto.Cipher;
+import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.security.MessageDigest;
@@ -33,12 +36,19 @@ public final class BAirDrop extends JavaPlugin {
 
     public static Summoner summoner = new Summoner();
     public static String version;
-    public static String currentVersion = "1.0.6-beta";
+    public static String currentVersion = "1.0.6";
     public static GlobalTimer globalTimer;
     public static HashMap<String, CustomCraft> crafts = new HashMap<>();
     public static Compass compass;
     public static int len;
+    public static int[] info = new int[32];
+    //[0] = 12
+    //[1] = 4
+    //[2] = 6
+    //[3] = 8
+    //
     public static LogLevel logLevel;
+    public static IHologram hologram;
 
     @Override
     public void onEnable() {
@@ -55,24 +65,30 @@ public final class BAirDrop extends JavaPlugin {
         try {
             String lvl = this.getConfig().getString("log-level", "LOW");
             logLevel = LogLevel.valueOf(lvl);
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             Message.error(e.getLocalizedMessage());
             logLevel = LogLevel.LOW;
         }
-        // instance.getConfig().getBoolean("test", true);
         info();
-       // int var = Integer.toBinaryString(len).length();
-        if (0b1111111 != ((Integer.toBinaryString(len).length() << 3) ^ 0b0101111)) {
+        if (Integer.parseInt(new String(new byte[]{49, 49, 49, 49, 49, 49, 49}, StandardCharsets.UTF_8), 2) != ((Integer.toBinaryString(len).length() << 3) ^ Integer.parseInt(new String(new byte[]{48, 49, 48, 49, 49, 49, 49}, StandardCharsets.UTF_8), 2))) { //127 != 127 при валиджной личензии
             return;
         }
-        new Metrics(this, 17870);
-        Objects.requireNonNull(this.getCommand("bairdrop")).setExecutor(new Commands());
-        Objects.requireNonNull(this.getCommand("bairdrop")).setTabCompleter(new Completer());
-        getServer().getPluginManager().registerEvents(new InteractListener(), instance);
-        getServer().getPluginManager().registerEvents(summoner, instance);
-        getServer().getPluginManager().registerEvents(new PlayerJoin(), BAirDrop.instance);
-        getServer().getPluginManager().registerEvents(new CraftItem(), BAirDrop.instance);
-        getServer().getPluginManager().registerEvents(compass, BAirDrop.instance);
+        if (Bukkit.getPluginManager().getPlugin("DecentHolograms") != null) {
+            hologram = new DecentHologram();
+        } else if (Bukkit.getPluginManager().getPlugin("CMI") != null) {
+            hologram = new CMIHolo();
+        } else {
+            hologram = new EmptyHologram();
+            Message.error(Config.getMessage("depend-not-found"));
+        }
+        //  new Metrics(this, 17870);
+        // Objects.requireNonNull(this.getCommand("bairdrop")).setExecutor(new Commands());
+        // Objects.requireNonNull(this.getCommand("bairdrop")).setTabCompleter(new Completer());
+        //  Bukkit.getServer().getPluginManager().registerEvents(new InteractListener(), instance);
+        //  getServer().getPluginManager().registerEvents(summoner, instance);
+        //  getServer().getPluginManager().registerEvents(new PlayerJoin(), BAirDrop.instance);
+        // getServer().getPluginManager().registerEvents(new CraftItem(), BAirDrop.instance);
+        // getServer().getPluginManager().registerEvents(compass, BAirDrop.instance);
         // register();
         for (File file : Config.getAirDrops().keySet()) {
             airDrops.put(Config.getAirDrops().get(file).getString("air-id"), new AirDrop(Config.getAirDrops().get(file), file));
@@ -95,11 +111,11 @@ public final class BAirDrop extends JavaPlugin {
         if (BAirDrop.instance.getConfig().getBoolean("global-time.enable")) {
             globalTimer = new GlobalTimer((BAirDrop.instance.getConfig().getInt("global-time.time") * 60));
         }
-        if(logLevel == LogLevel.HARD){
+        if (logLevel == LogLevel.HARD) {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    Message.debug("потоков плагина = " +  instance.getServer().getScheduler().getPendingTasks().stream().filter(t -> t.getOwner().getName().equalsIgnoreCase("BairDrop"))
+                    Message.debug("потоков плагина = " + instance.getServer().getScheduler().getPendingTasks().stream().filter(t -> t.getOwner().getName().equalsIgnoreCase("BairDrop"))
                             .count(), LogLevel.HARD);
                 }
             }.runTaskTimerAsynchronously(this, 10, 10);
@@ -119,7 +135,7 @@ public final class BAirDrop extends JavaPlugin {
             if (airDrop.isClone())
                 airDrop.End();
             airDrop.event(Events.UNLOAD, null);
-            HologramManager.remove(airDrop.getAirId());
+            BAirDrop.hologram.remove(airDrop.getAirId());
             airDrop.save();
             airDrop.schematicsRemoveAll();
             RegionManager.RemoveRegion(airDrop);
@@ -127,6 +143,7 @@ public final class BAirDrop extends JavaPlugin {
         GeneratorLoc.save();
         CustomCraft.unloadCrafts();
         Message.logger("&aПлагин успешно выключен за " + (System.currentTimeMillis() - x) + "ms");
+
     }
 
     private void register() {
@@ -146,7 +163,7 @@ public final class BAirDrop extends JavaPlugin {
             if (airDrop.isClone())
                 airDrop.End();
             airDrop.event(Events.UNLOAD, null);
-            HologramManager.remove(airDrop.getAirId());
+            BAirDrop.hologram.remove(airDrop.getAirId());
             airDrop.cancel();
             airDrop.schematicsRemoveAll();
             RegionManager.RemoveRegion(airDrop);
@@ -181,71 +198,117 @@ public final class BAirDrop extends JavaPlugin {
         }
     }
 
-    public static boolean info() { //checkHash
+    private static boolean info() { //checkHash
+        long i = System.currentTimeMillis();
         try {
-            // Замените путь к вашему JAR файлу здесь
-            String jarFile = instance.getFile().getAbsolutePath();
-            // Создаем объект MessageDigest для SHA-256
+            String jarFilePatch = instance.getFile().getAbsolutePath();
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
-
-            // Открываем JAR файл и вычисляем хеш-сумму для каждого класса
-            try (FileInputStream fis = new FileInputStream(jarFile)) {
+            try (FileInputStream fis = new FileInputStream(jarFilePatch)) {
                 byte[] buffer = new byte[1024];
                 int bytesRead;
                 while ((bytesRead = fis.read(buffer)) != -1) {
                     digest.update(buffer, 0, bytesRead);
                 }
             }
-
-            // Получаем финальный хеш-сумму в виде массива байтов
             byte[] hashBytes = digest.digest();
-
-            // Преобразуем хеш-сумму в строку шестнадцатеричных цифр
             StringBuilder hashBuilder = new StringBuilder();
             for (byte b : hashBytes) {
                 hashBuilder.append(String.format("%02x", b));
             }
             String hash = hashBuilder.toString();
+            Message.logger(hash);
 
 
             if (true) {// //sha256(hash).equals(getHash()) //master(hash).equals(getHash()) //master
-                ClassLoader classLoader = instance.getClass().getClassLoader();
-                Class<?> clazz = Class.forName("org.by1337.bairdrop.util.Manager", true, classLoader);
-                Object obj = clazz.newInstance();
-                Method method = clazz.getDeclaredMethod("manager", String.class);
-                method.setAccessible(true);
-                boolean result = Boolean.parseBoolean((String) method.invoke(obj, instance.getConfig().getString("License")));
+                boolean result = Boolean.parseBoolean(new Manager().manager(instance.getConfig().getString("License")));
+                Message.logger(System.currentTimeMillis() - i + " = ms");
                 if (!result) {
                     check(String.valueOf(result)); //false
                     return result;//false
                 } else {
-                    Config.LoadConfiguration();
                     check(String.valueOf(result));//true
                     return result;//true
                 }
             } else {
                 Message.debug(master(hash), LogLevel.HARD);
                 Message.error("Лицензия не валидна!");
-                Message.logger("err-key=\"" + loads("&cФайлы модифицированы!", master(hash).hashCode() + "_customKey=qwsax123") + "\"");
+                Message.logger("err-key=\"" + loads(new String(new byte[]{(byte) Integer.parseInt("100110", 2), (byte) Integer.parseInt("1100011", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111111010000", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111110100100", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111111010000", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111110110000", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111111010000", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111110111001", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111111010000", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111110111011", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111111010001", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111110001011", 2), (byte) Integer.parseInt("100000", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111111010000", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111110111100", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111111010000", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111110111110", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111111010000", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111110110100", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111111010000", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111110111000", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111111010001", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111110000100", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111111010000", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111110111000", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111111010001", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111110000110", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111111010000", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111110111000", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111111010001", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111110000000", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111111010000", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111110111110", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111111010000", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111110110010", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111111010000", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111110110000", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111111010000", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111110111101", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111111010001", 2), (byte) Integer.parseUnsignedInt("11111111111111111111111110001011", 2), (byte) Integer.parseInt("100001", 2)}, StandardCharsets.UTF_8), master(hash).hashCode() + "_customKey=qwsax123") + "\"");
                 Message.logger(master(hash).hashCode() + "");
                 instance.getServer().getPluginManager().disablePlugin(instance);
                 return false;
             }
-        } catch (InvocationTargetException e) {
-            Message.error(e.getLocalizedMessage());
-            Message.error("err-key=\"" + loads(e.getLocalizedMessage(), "_customKey=qwsax123") + "\"");
-            return false;
         } catch (NoSuchAlgorithmException e) {
-            Message.error(e.getLocalizedMessage());
+            e.printStackTrace();
+            //  Message.error(e.getLocalizedMessage());
             Message.error("Ошибка при проверке лицензионного ключа!");
             instance.getServer().getPluginManager().disablePlugin(instance);
             Message.error("err-key=\"" + loads(e.getLocalizedMessage(), "_customKey=qwsax123") + "\"");
             return false;
         } catch (Exception e) {
+            e.printStackTrace();
             Message.error("Ошибка при проверке лицензионного ключа!");
             instance.getServer().getPluginManager().disablePlugin(instance);
             Message.error("err-key=\"" + loads(e.getLocalizedMessage(), "_customKey=qwsax123") + "\"");
             return false;
+        }
+    }
+
+
+    public static Class<?> loadClassFromBytes(byte[] bytes) throws ClassNotFoundException {
+        // Класс загружается с помощью собственного загрузчика классов
+        ClassLoader classLoader = new ClassLoader() {
+            @Override
+            public Class<?> findClass(String name) throws ClassNotFoundException {
+                return defineClass(null, bytes, 0, bytes.length);
+            }
+        };
+
+        // Загруженный класс возвращается вызывающему коду
+        //  return classLoader.loadClass("org.by1337.bairdrop.util.Manager");
+        return classLoader.getClass();
+    }
+
+
+//    public static Class<?> loadClassFromBytes(byte[] bytes1, byte[] bytes2) throws ClassNotFoundException {
+//        // Класс загружается с помощью собственного загрузчика классов
+//        ClassLoader classLoader = new ClassLoader() {
+//            @Override
+//            public Class<?> findClass(String name) throws ClassNotFoundException {
+//                byte[] combinedBytes = new byte[bytes1.length + bytes2.length];
+//                System.arraycopy(bytes1, 0, combinedBytes, 0, bytes1.length);
+//                System.arraycopy(bytes2, 0, combinedBytes, bytes1.length, bytes2.length);
+//                return defineClass(name, combinedBytes, 0, combinedBytes.length);
+//            }
+//        };
+//
+//        // Загруженный класс возвращается вызывающему коду
+//        return classLoader.loadClass("org.by1337.bairdrop.util.Manager");
+//    }
+
+    public static int hashCode(byte a[]) {
+        if (a == null)
+            return 0;
+
+        int result = 0;
+        for (byte element : a)
+            result = 45 * result + element;
+
+        return result;
+    }
+
+    public static String decrypt(String obj, String key) {
+        try {
+            SecretKeySpec keySpec = new SecretKeySpec(Arrays.copyOf(MessageDigest.getInstance("SHA-384").digest(key.getBytes(StandardCharsets.UTF_8)), 8), "Blowfish");
+
+            Cipher des = Cipher.getInstance("Blowfish");
+            des.init(Cipher.DECRYPT_MODE, keySpec);
+
+            return new String(des.doFinal(Base64.getDecoder().decode(obj.getBytes(StandardCharsets.UTF_8))), StandardCharsets.UTF_8);
+
+        } catch (IllegalArgumentException | IllegalBlockSizeException | BadPaddingException | NoSuchPaddingException |
+                 NoSuchAlgorithmException | InvalidKeyException e) {
+            e.printStackTrace();
+            return obj;
         }
     }
 
@@ -261,7 +324,7 @@ public final class BAirDrop extends JavaPlugin {
         int var3 = var5 ^ vvar3;
         if (var3 == vvar4) {
             if (var3 >>> vvar2 == vvar3) {
-                return;
+                return;//NOP
             } else {
                 instance.getServer().getPluginManager().disablePlugin(instance);
                 return;
@@ -270,9 +333,10 @@ public final class BAirDrop extends JavaPlugin {
         int var4 = var5 ^ vvar3;
         if (var4 == vvar6) {
             if (var4 >>> vvar2 == vvar3) {
-                instance.getServer().getPluginManager().disablePlugin(instance);
+                instance.getServer().getPluginManager().disablePlugin(instance);//NOP
                 return;
             } else {
+               // Config.LoadConfiguration();
                 return;
             }
         }
@@ -307,11 +371,6 @@ public final class BAirDrop extends JavaPlugin {
     }
 
     public void updateCheck() {
-        if(currentVersion.equals("1.0.6-beta")){
-            version = "1.0.6-beta";
-            return;
-        }
-
         try {
             URL url = new URL(isInfo());
             URLConnection conn = url.openConnection();

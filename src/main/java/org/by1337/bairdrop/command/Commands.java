@@ -75,7 +75,7 @@ public class Commands implements CommandExecutor {
                         HashMap<String, Object> map = new HashMap<>();
                         map.put("player", finalPlayer);
                         Manager manager = new Manager();
-                        manager.runJsScript(args[1], map);
+                        Message.logger((String) manager.runJsScript(args[1], map));
                     }
                 }.runTask(instance);
                 return true;

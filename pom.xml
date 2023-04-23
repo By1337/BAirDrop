@@ -6,7 +6,7 @@
 
     <groupId>org.by1337</groupId>
     <artifactId>BAirDrop</artifactId>
-    <version>1.0.6-beta</version>
+    <version>1.0.6</version>
     <packaging>jar</packaging>
 
     <name>BAirDrop</name>
@@ -85,6 +85,20 @@
     </repositories>
 
     <dependencies>
+        <dependency>
+            <groupId>com.Zrips.CMI</groupId>
+            <artifactId>CMI</artifactId>
+            <version>9.3.1.5</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/CMI-API9.3.1.5.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>net.Zrips.CMILib</groupId>
+            <artifactId>CMILib</artifactId>
+            <version>1.2.5.3</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/CMILib1.2.5.3.jar</systemPath>
+        </dependency>
         <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>

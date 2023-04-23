@@ -250,8 +250,6 @@ public class Config {
             }catch (IllegalArgumentException e){
                 e.printStackTrace();
             }
-
-
             List<EnchantInfo> enchantInfos = new ArrayList<>();
             List<Enchantment> conflictEnchantments = new ArrayList<>();
             for(String enchant : instance.getConfig().getConfigurationSection("auto-enchant." + id).getKeys(false)){

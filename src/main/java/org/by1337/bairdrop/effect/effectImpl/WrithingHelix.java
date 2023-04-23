@@ -17,11 +17,12 @@ import java.util.Objects;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.BAirDrop;
+
 public class WrithingHelix implements IEffect {
     double radius; //
     double height;
     double step; //
-    int viewDistance; //
+    //int viewDistance; //
     Location loc;
     Color color;
     double size;
@@ -35,7 +36,7 @@ public class WrithingHelix implements IEffect {
     FileConfiguration cs;
     AirDrop airDrop;
 
-    public WrithingHelix(FileConfiguration cs, String name) throws NullPointerException, IllegalArgumentException{
+    public WrithingHelix(FileConfiguration cs, String name) throws NullPointerException, IllegalArgumentException {
         this.name = name;
         this.cs = cs;
         ticks = cs.getInt(String.format("effects.%s.ticks", name));
@@ -45,7 +46,7 @@ public class WrithingHelix implements IEffect {
         radius = cs.getDouble(String.format("effects.%s.radius", name));
         height = cs.getDouble(String.format("effects.%s.height", name));
         count = cs.getInt(String.format("effects.%s.count", name));
-        viewDistance = cs.getInt(String.format("effects.%s.viewDistance", name));
+        //viewDistance = cs.getInt(String.format("effects.%s.viewDistance", name));
         step = cs.getDouble(String.format("effects.%s.step", name));
         offsets = new Vector(
                 cs.getDouble(String.format("effects.%s.offset-x", name)),
@@ -58,6 +59,7 @@ public class WrithingHelix implements IEffect {
                 cs.getInt(String.format("effects.%s.color-rgb-r", name)));
 
     }
+
     @Override
     public void Start(AirDrop airDrop) {
         this.airDrop = airDrop;
@@ -86,14 +88,12 @@ public class WrithingHelix implements IEffect {
                 for (double y = 0; y <= height; y += step) {
                     double x = radius * Math.cos(y);
                     double z = radius * Math.sin(y + angle); // add angle to y
-                    for (Entity entity : loc.getWorld().getNearbyEntities(loc, viewDistance, viewDistance, viewDistance)) {
-                        if (entity instanceof Player p) {
-                            if (particle.name().equals("REDSTONE"))
-                                p.spawnParticle(particle, loc.clone().add(offsets).add(x, y, z), count, new org.bukkit.Particle.DustOptions(color, (float) size));
-                            else
-                                p.spawnParticle(particle, loc.clone().add(offsets).add(x, y, z), count);
-                        }
-                    }
+
+                    if (particle.name().equals("REDSTONE"))
+                        loc.getWorld().spawnParticle(particle, loc.clone().add(offsets).add(x, y, z), count, new org.bukkit.Particle.DustOptions(color, (float) size));
+                    else
+                        loc.getWorld().spawnParticle(particle, loc.clone().add(offsets).add(x, y, z), count);
+
                 }
                 angle += 0.1; // increase angle for the next iteration
                 if (!isActive())
@@ -106,9 +106,8 @@ public class WrithingHelix implements IEffect {
                     }
                 }
             }
-        }.runTaskTimer(BAirDrop.instance, timeUpdate, timeUpdate);
+        }.runTaskTimerAsynchronously(BAirDrop.instance, timeUpdate, timeUpdate);
     }
-
 
 
     @Override
@@ -129,7 +128,7 @@ public class WrithingHelix implements IEffect {
     @Override
     public IEffect clone() {
 
-            return new WrithingHelix(cs, name);
+        return new WrithingHelix(cs, name);
 
     }
 

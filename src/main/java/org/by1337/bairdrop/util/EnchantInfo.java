@@ -1,10 +1,6 @@
 package org.by1337.bairdrop.util;
 
-import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-
-import java.util.HashMap;
-
 
 public class EnchantInfo {
     private final int chance;

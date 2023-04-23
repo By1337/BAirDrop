@@ -177,5 +177,8 @@ public class Message {
             message = message.replace(m.group(), ChatColor.of(m.group(1)).toString());
         return ChatColor.translateAlternateColorCodes('&', message);
     }
+    public static String toS(String s){
+        return String.valueOf(s);
+    }
 
 }

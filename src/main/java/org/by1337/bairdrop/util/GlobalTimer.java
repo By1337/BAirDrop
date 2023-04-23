@@ -62,7 +62,7 @@ public class GlobalTimer {
                     }
                 }
             }
-        }.runTaskTimer(BAirDrop.instance, 20, 20);
+        }.runTaskTimerAsynchronously(BAirDrop.instance, 20, 20);
     }
 
     @Nullable

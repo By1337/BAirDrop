@@ -3,8 +3,10 @@ package org.by1337.bairdrop.util;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,6 +34,22 @@ public class InternalListener {
 
     public void execute(@Nullable Player pl, @Nullable AirDrop airDrop, boolean ignoredRequirement, Events event) {
         if (Arrays.stream(commands).toList().contains("[SCHEDULER]") || Arrays.stream(denyCommands).toList().contains("[SCHEDULER]")) {
+            int time = 0;//[LATER-600]
+            List<String> list = new ArrayList<>();
+            list.add(Arrays.toString(commands));
+            list.add(Arrays.toString(denyCommands));
+            Pattern laterPattern = Pattern.compile("\\[LATER-(\\d+)\\]");
+            for (String str : list) {
+                Matcher matcher = laterPattern.matcher(str);
+                if (matcher.find()) {
+                    try {
+                        time = Integer.parseInt(matcher.group(1));
+                        break;
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
             new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -44,10 +62,26 @@ public class InternalListener {
                         executeCommands.runListenerCommands(denyCommands, pl, airDrop, event);
                     }
                 }
-            }.runTaskLater(BAirDrop.instance, 0);
+            }.runTaskLater(BAirDrop.instance, time);
             return;
         }
         if (Arrays.stream(commands).toList().contains("[ASYNC]") || Arrays.stream(denyCommands).toList().contains("[ASYNC]")) {
+            int time = 0;
+            List<String> list = new ArrayList<>();
+            list.add(Arrays.toString(commands));
+            list.add(Arrays.toString(denyCommands));
+            Pattern laterPattern = Pattern.compile("\\[LATER-(\\d+)\\]");
+            for (String str : list) {
+                Matcher matcher = laterPattern.matcher(str);
+                if (matcher.find()) {
+                    try {
+                        time = Integer.parseInt(matcher.group(1));
+                        break;
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
             new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -64,7 +98,7 @@ public class InternalListener {
                         Message.error(e.getLocalizedMessage());
                     }
                 }
-            }.runTaskAsynchronously(BAirDrop.instance);
+            }.runTaskLaterAsynchronously(BAirDrop.instance, time);
             return;
         }
         ExecuteCommands executeCommands = new ExecuteCommands();
@@ -284,9 +318,7 @@ public class InternalListener {
                     }
                 }
                 org.by1337.bairdrop.scripts.Manager manager = new Manager();
-                String out = (String) manager.runJsScript(jsName, map);
-
-                return out;
+                return (String) manager.runJsScript(jsName, map);
             }
         } catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
             e.printStackTrace();

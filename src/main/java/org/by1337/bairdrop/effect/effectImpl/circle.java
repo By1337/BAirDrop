@@ -23,7 +23,7 @@ public class circle implements IEffect {
     Particle particle;
     double radius;
     int count;
-    int viewDistance;
+    //int viewDistance;
     double step;
     Vector offsets;
     double numberOfSteps;
@@ -33,16 +33,16 @@ public class circle implements IEffect {
     Location loc;
     String name;
 
-    public circle(FileConfiguration cs, String name) throws NullPointerException, IllegalArgumentException{
+    public circle(FileConfiguration cs, String name) throws NullPointerException, IllegalArgumentException {
         this.cs = cs;
         ticks = cs.getInt(String.format("effects.%s.ticks", name));
         timeUpdate = cs.getInt(String.format("effects.%s.timeUpdate", name));
-            particle = Objects.requireNonNull(Particle.valueOf(cs.getString(String.format("effects.%s.particle", name))));
-            this.name = name;
+        particle = Objects.requireNonNull(Particle.valueOf(cs.getString(String.format("effects.%s.particle", name))));
+        this.name = name;
 
         radius = cs.getDouble(String.format("effects.%s.radius", name));
         count = cs.getInt(String.format("effects.%s.count", name));
-        viewDistance = cs.getInt(String.format("effects.%s.viewDistance", name));
+        //viewDistance = cs.getInt(String.format("effects.%s.viewDistance", name));
         step = cs.getDouble(String.format("effects.%s.step", name));
         offsets = new Vector(
                 cs.getDouble(String.format("effects.%s.offset-x", name)),
@@ -94,15 +94,12 @@ public class circle implements IEffect {
                 for (double y = 0; y <= numberOfSteps; y += step) {
                     double x = radius * Math.cos(y);
                     double z = radius * Math.sin(y);
-                    for (Entity entity : loc.getWorld().getNearbyEntities(loc, viewDistance, viewDistance, viewDistance)) {
-                        if (entity instanceof Player p) {
 
-                            if (particle.name().equals("REDSTONE"))
-                                p.spawnParticle(particle, loc.clone().add(offsets).add(x, 0, z), count, new org.bukkit.Particle.DustOptions(color, (float) size));
-                            else
-                                p.spawnParticle(particle, loc.clone().add(offsets).add(x, 0, z), count);
-                        }
-                    }
+                    if (particle.name().equals("REDSTONE"))
+                        loc.getWorld().spawnParticle(particle, loc.clone().add(offsets).add(x, 0, z), count, new org.bukkit.Particle.DustOptions(color, (float) size));
+                    else
+                        loc.getWorld().spawnParticle(particle, loc.clone().add(offsets).add(x, 0, z), count);
+
 
                 }
                 if (!isActive())
@@ -115,7 +112,7 @@ public class circle implements IEffect {
                     }
                 }
             }
-        }.runTaskTimer(BAirDrop.instance, timeUpdate, timeUpdate);
+        }.runTaskTimerAsynchronously(BAirDrop.instance, timeUpdate, timeUpdate);
     }
 
     @Override
@@ -131,7 +128,7 @@ public class circle implements IEffect {
     @Override
     public IEffect clone() {
 
-            return new circle(cs, name);
+        return new circle(cs, name);
 
     }
 }

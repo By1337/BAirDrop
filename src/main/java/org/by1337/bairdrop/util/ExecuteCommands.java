@@ -23,6 +23,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.by1337.bairdrop.AirDrop;
@@ -40,7 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static org.bukkit.Bukkit.*;
-import static org.by1337.bairdrop.BAirDrop.info;
+
 import static org.by1337.bairdrop.BAirDrop.instance;
 import static org.by1337.bairdrop.util.LocationGeneration.getSettings;
 
@@ -59,7 +60,7 @@ public class ExecuteCommands {
                 command = InternalListener.math(command, airDrop, pl);
             if (command.contains("{player-get-item-") && pl != null)
                 command = setPlayerPlaceholder(pl, command);
-            if(command.equalsIgnoreCase("[SCHEDULER]") || command.equalsIgnoreCase("[ASYNC]")){
+            if(command.equalsIgnoreCase("[SCHEDULER]") || command.equalsIgnoreCase("[ASYNC]") || command.contains("[LATER-")){
                 continue;
             }
             if(runJsCommand(pl, airDrop, command)) //
@@ -104,9 +105,7 @@ public class ExecuteCommands {
             Message.error(String.format(Config.getMessage("unknown-command"), command));
         }
     }
-
     public boolean runJsCommand(@Nullable Player pl, @Nullable AirDrop airDrop, String command) {
-        // [RUN_JS=nameJs] param(1=123, 2=123)-scheduler
         long x = System.currentTimeMillis();
         if(command.contains("[RUN_JS")){
             if(command.contains("-scheduler")){
@@ -184,7 +183,6 @@ public class ExecuteCommands {
         }
         return false;
     }
-
     public static String setPlayerPlaceholder(Player pl, String command) {
         if (command.contains("{player-get-item-")) {
             try {

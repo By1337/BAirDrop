@@ -1,7 +1,6 @@
 package org.by1337.bairdrop.util;
 
 import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -9,15 +8,11 @@ import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
-import com.sk89q.worldedit.extent.inventory.BlockBag;
 import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.io.File;
@@ -25,13 +20,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.ConfigManager.Config;
-import org.by1337.bairdrop.util.Message;
-import org.by1337.bairdrop.BAirDrop;
+
+import javax.annotation.concurrent.NotThreadSafe;
+
+@NotThreadSafe
 public class SchematicsManager {
+
     public static void PasteSchematics(String name, AirDrop airDrop) {
-        //   new BukkitRunnable() {
-        //      @Override
-        //   public void run() {
         try {
             if (airDrop.getEditSession() != null) {
                 Message.error(Config.getMessage("schem-limit"));
@@ -61,8 +56,6 @@ public class SchematicsManager {
                 loc = airDrop.getFutureLocation();
             if (loc == null)
                 throw new NullPointerException();
-            //   Block block = loc.getBlock();
-            //   loc.getBlock().setType(Material.AIR);
             com.sk89q.worldedit.world.World adaptedWorld = BukkitAdapter.adapt(loc.getWorld());
 
             EditSession editSession = WorldEdit.getInstance().newEditSession(adaptedWorld);
@@ -75,13 +68,9 @@ public class SchematicsManager {
 
             airDrop.setEditSession(editSession);
             editSession.getBlockBag();
-            //  loc.getBlock().setType(block.getType());
-            //   loc.getBlock().setBlockData(block.getBlockData());
         } catch (IOException | WorldEditException | IllegalArgumentException | NullPointerException e) {
             e.printStackTrace();
         }
-        //   }
-        //  }.runTaskLater(BAirDrop.instance, 0);
     }
 
 }

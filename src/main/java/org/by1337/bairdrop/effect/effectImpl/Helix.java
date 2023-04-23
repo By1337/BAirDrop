@@ -21,7 +21,7 @@ public class Helix implements IEffect {
     double radius; //
     double height;
     double step; //
-    int viewDistance; //
+    //int viewDistance; //
     Location loc;
     Color color;
     double size;
@@ -45,7 +45,7 @@ public class Helix implements IEffect {
         radius = cs.getDouble(String.format("effects.%s.radius", name));
         height = cs.getDouble(String.format("effects.%s.height", name));
         count = cs.getInt(String.format("effects.%s.count", name));
-        viewDistance = cs.getInt(String.format("effects.%s.viewDistance", name));
+        //viewDistance = cs.getInt(String.format("effects.%s.viewDistance", name));
         step = cs.getDouble(String.format("effects.%s.step", name));
         offsets = new Vector(
                 cs.getDouble(String.format("effects.%s.offset-x", name)),
@@ -83,14 +83,12 @@ public class Helix implements IEffect {
                 for (double y = 0; y <= height; y += step) {
                     double x = radius * Math.cos(y);
                     double z = radius * Math.sin(y);
-                    for (Entity entity : loc.getWorld().getNearbyEntities(loc, viewDistance, viewDistance, viewDistance)) {
-                        if (entity instanceof Player p) {
+
                             if (particle.name().equals("REDSTONE"))
-                                p.spawnParticle(particle, loc.clone().add(offsets).add(x, y, z), count, new org.bukkit.Particle.DustOptions(color, (float) size));
+                                loc.getWorld().spawnParticle(particle, loc.clone().add(offsets).add(x, y, z), count, new org.bukkit.Particle.DustOptions(color, (float) size));
                             else
-                                p.spawnParticle(particle, loc.clone().add(offsets).add(x, y, z), count);
-                        }
-                    }
+                                loc.getWorld().spawnParticle(particle, loc.clone().add(offsets).add(x, y, z), count);
+
                 }
                 if (!isActive())
                     cancel();
@@ -104,7 +102,7 @@ public class Helix implements IEffect {
 
             }
 
-        }.runTaskTimer(BAirDrop.instance, timeUpdate, timeUpdate);
+        }.runTaskTimerAsynchronously(BAirDrop.instance, timeUpdate, timeUpdate);
     }
 
 

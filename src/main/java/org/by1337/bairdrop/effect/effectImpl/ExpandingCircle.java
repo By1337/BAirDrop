@@ -26,7 +26,7 @@ public class ExpandingCircle implements IEffect {
     double endRadius;
     double stepRadius;
     int count;
-    int viewDistance;
+    //int viewDistance;
     double step;
     Vector offsets;
     double numberOfSteps;
@@ -48,7 +48,7 @@ public class ExpandingCircle implements IEffect {
         stepRadius = cs.getDouble(String.format("effects.%s.step-radius", name));
 
         count = cs.getInt(String.format("effects.%s.count", name));
-        viewDistance = cs.getInt(String.format("effects.%s.viewDistance", name));
+        //viewDistance = cs.getInt(String.format("effects.%s.viewDistance", name));
         step = cs.getDouble(String.format("effects.%s.step", name));
         offsets = new Vector(
                 cs.getDouble(String.format("effects.%s.offset-x", name)),
@@ -89,14 +89,12 @@ public class ExpandingCircle implements IEffect {
                 for (double y = 0; y <= numberOfSteps; y += step) {
                     double x = radius * Math.cos(y);
                     double z = radius * Math.sin(y);
-                    for (Entity entity : loc.getWorld().getNearbyEntities(loc, viewDistance, viewDistance, viewDistance)) {
-                        if (entity instanceof Player p) {
+
                             if (particle.name().equals("REDSTONE"))
-                                p.spawnParticle(particle, loc.clone().add(offsets).add(x, 0, z), count, new org.bukkit.Particle.DustOptions(color, (float) size));
+                                loc.getWorld().spawnParticle(particle, loc.clone().add(offsets).add(x, 0, z), count, new org.bukkit.Particle.DustOptions(color, (float) size));
                             else
-                                p.spawnParticle(particle, loc.clone().add(offsets).add(x, 0, z), count);
-                        }
-                    }
+                                loc.getWorld().spawnParticle(particle, loc.clone().add(offsets).add(x, 0, z), count);
+
 
                 }
                 if (!isActive())
@@ -112,7 +110,7 @@ public class ExpandingCircle implements IEffect {
                 if (radius >= endRadius)
                     active = false;
             }
-        }.runTaskTimer(BAirDrop.instance, timeUpdate, timeUpdate);
+        }.runTaskTimerAsynchronously(BAirDrop.instance, timeUpdate, timeUpdate);
     }
 
     @Override

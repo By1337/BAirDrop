@@ -15,6 +15,7 @@ import java.util.Objects;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.BAirDrop;
+@Deprecated
 public class particleExplosion implements IEffect {
     double radius; //
     double height;

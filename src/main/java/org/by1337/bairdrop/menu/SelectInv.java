@@ -1,6 +1,5 @@
 package org.by1337.bairdrop.menu;
 
-import eu.decentsoftware.holograms.api.utils.scheduler.S;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;

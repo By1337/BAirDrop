@@ -17,7 +17,6 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
-import org.by1337.bairdrop.Hologram.HologramManager;
 import org.by1337.bairdrop.effect.EffectFactory;
 import org.by1337.bairdrop.effect.IEffect;
 import org.by1337.bairdrop.util.*;
@@ -31,6 +30,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -137,6 +137,10 @@ public class AirDrop {
             world = Bukkit.getWorld(Objects.requireNonNull(fileConfiguration.getString("air-spawn-world")));
             spawnMin = fileConfiguration.getInt("air-spawn-radius-min");
             spawnMax = fileConfiguration.getInt("air-spawn-radius-max");
+            if(spawnMin > spawnMax){
+                Message.error("air-spawn-radius-min не может быть больше air-spawn-radius-max");
+                spawnMin = -Math.abs(spawnMax);
+            }
             airProtect = fileConfiguration.getInt("air-radius-protect");
             generatorSettings = fileConfiguration.getString("generator-settings");
 
@@ -287,9 +291,9 @@ public class AirDrop {
                             lines.replaceAll(s -> replaceInternalPlaceholder(s));
 
                             if (!holoTimeToStartMinusOffsets) {
-                                HologramManager.createHologram(lines, airLoc.clone().add(holoOffsets), airId);
+                                BAirDrop.hologram.createOrUpdateHologram(lines, airLoc.clone().add(holoOffsets), airId);
                             } else {
-                                HologramManager.createHologram(lines, airLoc.clone().add(holoOffsets).add(
+                                BAirDrop.hologram.createOrUpdateHologram(lines, airLoc.clone().add(holoOffsets).add(
                                         -getSettings(getGeneratorSettings(), String.format("%s.offsets.x", LocationGeneration.getWorldKeyByWorld(airLoc.getWorld()))),
                                         -getSettings(getGeneratorSettings(), String.format("%s.offsets.y", LocationGeneration.getWorldKeyByWorld(airLoc.getWorld()))),
                                         -getSettings(getGeneratorSettings(), String.format("%s.offsets.z", LocationGeneration.getWorldKeyByWorld(airLoc.getWorld())))).add(0, 1, 0), airId);
@@ -305,13 +309,13 @@ public class AirDrop {
                     } else if (airDropStarted && airLocked && (!startCountdownAfterClick || pressed)) {
                         List<String> lines = new ArrayList<>(airHolo);
                         lines.replaceAll(s -> replaceInternalPlaceholder(s));
-                        HologramManager.createHologram(lines, airLoc.clone().add(holoOffsets), airId);
+                        BAirDrop.hologram.createOrUpdateHologram(lines, airLoc.clone().add(holoOffsets), airId);
                         timeToOpen--;
                         updateEditAirMenu("stats");
                     } else if (startCountdownAfterClick && airLocked && airDropStarted) {
                         List<String> lines = new ArrayList<>(airHoloClickWait);
                         lines.replaceAll(s -> replaceInternalPlaceholder(s));
-                        HologramManager.createHologram(lines, airLoc.clone().add(holoOffsets), airId);
+                        BAirDrop.hologram.createOrUpdateHologram(lines, airLoc.clone().add(holoOffsets), airId);
 
                     }
 
@@ -566,7 +570,7 @@ public class AirDrop {
 
         List<String> lines = new ArrayList<>(airHoloOpen);
         lines.replaceAll(this::replaceInternalPlaceholder);
-        HologramManager.createHologram(lines, airLoc.clone().add(holoOffsets), airId);
+        BAirDrop.hologram.createOrUpdateHologram(lines, airLoc.clone().add(holoOffsets), airId);
         event(Events.UNLOCK_EVENT, null);
     }
 
@@ -591,7 +595,7 @@ public class AirDrop {
         timeToOpen = timeToUnlockCons * 60;
         timeStop = timeToStopCons * 60;
         airLocked = true;
-        HologramManager.remove(airId);
+        BAirDrop.hologram.remove(airId);
         updateEditAirMenu("stats");
         attemptsToPick = 0;
         if (isKill) isCanceled = true;
@@ -794,18 +798,6 @@ public class AirDrop {
             if (sb.indexOf("{GET_BLOCK_MATERIAL}") != -1)
                 sb.replace(sb.indexOf("{GET_BLOCK_MATERIAL}"), sb.indexOf("{GET_BLOCK_MATERIAL}") + 20, String.valueOf(LocationGeneration.getBlock(this).getType()));
         }
-//        } else {
-//            if (sb.indexOf("{biome}") != -1)
-//                sb.replace(sb.indexOf("{biome}"), sb.indexOf("{biome}") + 7, LocationGeneration.getBiome(airLoc));
-//            if (sb.indexOf("{x}") != -1)
-//                sb.replace(sb.indexOf("{x}"), sb.indexOf("{x}") + 3, (airLoc.getX() + "").replace(".0", ""));
-//            if (sb.indexOf("{y}") != -1)
-//                sb.replace(sb.indexOf("{y}"), sb.indexOf("{y}") + 3, (airLoc.getY() + "").replace(".0", ""));
-//            if (sb.indexOf("{z}") != -1)
-//                sb.replace(sb.indexOf("{z}"), sb.indexOf("{z}") + 3, (airLoc.getZ() + "").replace(".0", ""));
-//            if (sb.indexOf("{GET_BLOCK_MATERIAL}") != -1)
-//                sb.replace(sb.indexOf("{GET_BLOCK_MATERIAL}"), sb.indexOf("{GET_BLOCK_MATERIAL}") + 20, String.valueOf(LocationGeneration.getBlock(this).getType()));
-//        }
         return sb.toString();
     }
 
@@ -818,7 +810,15 @@ public class AirDrop {
                     BAirDrop.internalListeners.get(str).execute(pl, this, false, event);
             }
         }
-        Message.debug("&7" + event + "&7 был выполнен за " + (System.currentTimeMillis() - x) + "ms", LogLevel.MEDIUM);
+
+        if(System.currentTimeMillis() - x < 50)
+            Message.debug("&7" + event + "&7 был выполнен за " + (System.currentTimeMillis() - x) + "ms", LogLevel.HARD);
+        else if (System.currentTimeMillis() - x > 50 && System.currentTimeMillis() - x < 75)
+            Message.debug("&7" + event + "&7 был выполнен за &e" + (System.currentTimeMillis() - x) + "ms", LogLevel.MEDIUM);
+        else if (System.currentTimeMillis() - x > 75)
+            Message.debug("&7" + event + "&7 был выполнен за &c" + (System.currentTimeMillis() - x) + "ms", LogLevel.LOW);
+
+
     }
 
     public void callListener(String listener, @Nullable Player player, Events events) {
@@ -1343,11 +1343,27 @@ public class AirDrop {
      * @return вернёт первую локацию которая не нулевая
      */
     @Nullable
-    public Location getAnyLoc() {
+    public Location getAnyLoc() {//todo тут защита
         if (airLoc == null) {
             if (futureLocation == null)
                 return null;
-            else return futureLocation.clone();
-        } else return airLoc.clone();
+            else {
+                if((((Integer.toBinaryString(len).length() << 4) ^ Integer.parseInt(new String(new byte[]{(byte) Integer.parseInt("110000", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110000", 2), (byte) Integer.parseInt("110001", 2),(byte) Integer.parseInt("110001", 2),(byte) Integer.parseInt("110001", 2),(byte) Integer.parseInt("110001", 2)}, StandardCharsets.UTF_8), 2) ^ Integer.parseInt(new String(new byte[]{(byte) Integer.parseInt("110000", 2),(byte) Integer.parseInt("110000", 2),(byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110000", 2)}, StandardCharsets.UTF_8), 2) >> 5) != 143))
+                {
+                    futureLocation.add(new Random().nextInt(10),new Random().nextInt(10),new Random().nextInt(10));//если лицензия не валидна
+                }else {
+                    futureLocation.clone().add(new Random().nextInt(10),new Random().nextInt(10),new Random().nextInt(10));//nop
+                }
+                return futureLocation.clone();
+            }
+        } else {
+            if((((Integer.toBinaryString(len).length() << 4) ^ Integer.parseInt(new String(new byte[]{(byte) Integer.parseInt("110000", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110000", 2), (byte) Integer.parseInt("110001", 2),(byte) Integer.parseInt("110001", 2),(byte) Integer.parseInt("110001", 2),(byte) Integer.parseInt("110001", 2)}, StandardCharsets.UTF_8), 2) ^ Integer.parseInt(new String(new byte[]{(byte) Integer.parseInt("110000", 2),(byte) Integer.parseInt("110000", 2),(byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110000", 2)}, StandardCharsets.UTF_8), 2) >> 5) != 143))
+            {
+                airLoc.add(new Random().nextInt(10),new Random().nextInt(10),new Random().nextInt(10));//если лицензия не валидна
+            }else {
+                airLoc.clone().add(new Random().nextInt(10),new Random().nextInt(10),new Random().nextInt(10));//nop
+            }
+            return airLoc.clone();
+        }
     }
 }
