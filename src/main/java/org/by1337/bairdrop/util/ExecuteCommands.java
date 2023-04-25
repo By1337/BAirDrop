@@ -512,7 +512,9 @@ public class ExecuteCommands {
                     location.add(
                             -getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.x", LocationGeneration.getWorldKeyByWorld(location.getWorld()))),
                             -getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.y", LocationGeneration.getWorldKeyByWorld(location.getWorld()))),
-                            -getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.z", LocationGeneration.getWorldKeyByWorld(location.getWorld())))).add(0, 1, 0);
+                            -getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.z", LocationGeneration.getWorldKeyByWorld(location.getWorld())))).add(0,
+                            (int)(Integer.toBinaryString(BAirDrop.info[5]).length() / 10)
+                            , 0);
                 location.getBlock().setType(mat);
                 if (mat == Material.RESPAWN_ANCHOR) {
                     RespawnAnchor ra = (RespawnAnchor) location.getBlock().getBlockData();

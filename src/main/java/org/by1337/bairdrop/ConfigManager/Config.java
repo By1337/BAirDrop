@@ -46,6 +46,7 @@ public class Config {
         }
         menu = YamlConfiguration.loadConfiguration(fileMenu);
 
+
         fileGeneratorSettings = new File(instance.getDataFolder() + File.separator + "generatorSettings.yml");
         if (!fileGeneratorSettings.exists()) {
             instance.saveResource("generatorSettings.yml", true);

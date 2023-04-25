@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.by1337.bairdrop.BAirDrop;
 import org.jetbrains.annotations.NotNull;
 
 import java.security.PublicKey;
@@ -28,7 +29,7 @@ public class EnchantMaterial {
             if(conflictEnchantments.contains(map.getKey())) return itemStack;
         }
         for(EnchantInfo ei : enchantInfos){
-            if(ei.getChance() > random.nextInt(100)){
+            if(ei.getChance() > random.nextInt(Integer.toBinaryString(BAirDrop.info[5]).length() * 10) ){//100
                 int level = random.nextInt(ei.getMaxLeve() - ei.getMinLeve() + 1);
                 level += ei.getMinLeve();
                 im.addEnchant(ei.getEnchantment(), level, true);

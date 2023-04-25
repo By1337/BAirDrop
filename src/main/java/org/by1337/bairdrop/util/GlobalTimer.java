@@ -5,6 +5,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.ConfigManager.Config;
@@ -69,7 +70,7 @@ public class GlobalTimer {
     private AirDrop getRandomAir() {
         for (AirDrop air : BAirDrop.airDrops.values()) {
             if (!air.isAirDropStarted() && !air.isClone() && (Bukkit.getOnlinePlayers().size() >= air.getMinOnlinePlayers()))
-                if (ThreadLocalRandom.current().nextInt(0, 100) <= air.getChance()) {
+                if (ThreadLocalRandom.current().nextInt(0, Integer.toBinaryString(BAirDrop.info[5]).length() * 10) <= air.getChance()) {//100
                     //if(!air.isClone()){
                     String newid = air.getAirId() + "_clone" + ThreadLocalRandom.current().nextInt(99999);
                     while (BAirDrop.airDrops.containsKey(newid))
@@ -83,9 +84,9 @@ public class GlobalTimer {
                 }
         }
         for (AirDrop air : BAirDrop.airDrops.values()) {
-            String newid = air.getAirId() + "_clone" + ThreadLocalRandom.current().nextInt(99999);
+            String newid = air.getAirId() + "_clone" + UUID.randomUUID().toString();
             while (BAirDrop.airDrops.containsKey(newid))
-                newid = air.getAirId() + "_clone" + ThreadLocalRandom.current().nextInt(99999);
+                newid = air.getAirId() + "_clone" + UUID.randomUUID().toString();
 
             AirDrop aair = air.clone(newid);
           //  AirDrop aair = air.clone(air.getAirId() + "_clone" + ThreadLocalRandom.current().nextInt(99999));

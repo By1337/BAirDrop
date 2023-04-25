@@ -220,21 +220,21 @@ public class AirDrop {
             minOnlinePlayers = 0;
             invName = "new air";
             AirName = "new air name";
-            invSize = 54;
+            invSize = (int)(Integer.toBinaryString(info[6]).length() * 2.7);//54
             world = Bukkit.getWorld("world") == null ? Bukkit.getWorlds().get(0) : Bukkit.getWorld("world");
             spawnMin = -2000;
             spawnMax = 2000;
-            airProtect = 15;
+            airProtect = Integer.toBinaryString(info[4]).length();
             timeToStartCons = 2;
             timeToStopCons = 1;
             timeToUnlockCons = 1;
             searchBeforeStartCons = 1;
-            timeToStart = 2 * 60;
-            searchBeforeStart = 60;
-            timeToOpen = 60;
+            timeToStart = 2 * Integer.toBinaryString(info[5]).length() * 6; //2 * 60
+            searchBeforeStart = Integer.toBinaryString(info[5]).length() * 6;//60
+            timeToOpen = Integer.toBinaryString(info[5]).length() * 6;//60
             startCountdownAfterClick = false;
             timeStopEventMustGo = false;
-            timeStop = 60;
+            timeStop = Integer.toBinaryString(info[5]).length() * 6;//60
             materialLocked = Material.DIAMOND_BLOCK;
             materialUnlocked = Material.CHEST;
             signedListener = new ArrayList<>();
@@ -244,7 +244,7 @@ public class AirDrop {
             stopWhenEmpty = false;
             rndItems = false;
             generatorSettings = "default";
-            chance = 50;
+            chance = Integer.toBinaryString(info[5]).length() * 5; //50
             airHolo = Config.getList("air-holo");
             airHoloOpen = Config.getList("air-holo-open");
             airHoloClickWait = Config.getList("air-holo-click-wait");
@@ -344,7 +344,7 @@ public class AirDrop {
                     }
                 }
             }
-        }.runTaskTimer(BAirDrop.instance, 20L, 20L);
+        }.runTaskTimer(BAirDrop.instance, Integer.toBinaryString(info[6]).length(), Integer.toBinaryString(info[6]).length());//20 20
     }
 
     public void cancel() {
@@ -525,7 +525,7 @@ public class AirDrop {
 
     private int getEmptyRandomSlot() {
         int next = 0;
-        while (next <= 200) {
+        while (next <= Integer.toBinaryString(info[6]).length() * 10) {//200
             int slot = ThreadLocalRandom.current().nextInt(inv.getSize());
             if (inv.getItem(slot) == null) {
                 return slot;
@@ -657,145 +657,146 @@ public class AirDrop {
             return str;
         StringBuilder sb = new StringBuilder(str);
 
+        int var = -1;
         if (str.contains("{!")) {
-            if (sb.indexOf("{!clone}") != -1)
+            if (sb.indexOf("{!clone}") != var)
                 sb.replace(sb.indexOf("{!clone}"), sb.indexOf("{!clone}") + 8, String.valueOf(!isClone()));
-            if (sb.indexOf("{!airdrop-is-open}") != -1)
+            if (sb.indexOf("{!airdrop-is-open}") != var)
                 sb.replace(sb.indexOf("{!airdrop-is-open}"), sb.indexOf("{!airdrop-is-open}") + 18, String.valueOf(airLocked));
-            if (sb.indexOf("{!airdrop-is-start}") != -1)
+            if (sb.indexOf("{!airdrop-is-start}") != var)
                 sb.replace(sb.indexOf("{!airdrop-is-start}"), sb.indexOf("{!airdrop-is-start}") + 19, String.valueOf(!airDropStarted));
-            if (sb.indexOf("{!it-was-open}") != -1)
+            if (sb.indexOf("{!it-was-open}") != var)
                 sb.replace(sb.indexOf("{!it-was-open}"), sb.indexOf("{!it-was-open}") + 14, String.valueOf(!itWasOpen));
-            if (sb.indexOf("{!use-pre-generated-locations}") != -1)
+            if (sb.indexOf("{!use-pre-generated-locations}") != var)
                 sb.replace(sb.indexOf("{!use-pre-generated-locations}"), sb.indexOf("{!use-pre-generated-locations}") + 30, String.valueOf(!usePreGeneratedLocations));
-            if (sb.indexOf("{!time-stop-event-must-go}") != -1)
+            if (sb.indexOf("{!time-stop-event-must-go}") != var)
                 sb.replace(sb.indexOf("{!time-stop-event-must-go}"), sb.indexOf("{!time-stop-event-must-go}") + 26, String.valueOf(!timeStopEventMustGo));
-            if (sb.indexOf("{!use-static-loc}") != -1)
+            if (sb.indexOf("{!use-static-loc}") != var)
                 sb.replace(sb.indexOf("{!use-static-loc}"), sb.indexOf("{!use-static-loc}") + 17, String.valueOf(!useStaticLoc));
-            if (sb.indexOf("{!flatness-check}") != -1)
+            if (sb.indexOf("{!flatness-check}") != var)
                 sb.replace(sb.indexOf("{!flatness-check}"), sb.indexOf("{!flatness-check}") + 17, String.valueOf(!flatnessCheck));
         }
-        if (sb.indexOf("{time-to-open}") != -1)
+        if (sb.indexOf("{time-to-open}") != var)
             sb.replace(sb.indexOf("{time-to-open}"), sb.indexOf("{time-to-open}") + 14, String.valueOf(timeToOpen));
-        if (sb.indexOf("{time-to-start}") != -1)
+        if (sb.indexOf("{time-to-start}") != var)
             sb.replace(sb.indexOf("{time-to-start}"), sb.indexOf("{time-to-start}") + 15, String.valueOf(timeToStart));
-        if (sb.indexOf("{time-to-end}") != -1)
+        if (sb.indexOf("{time-to-end}") != var)
             sb.replace(sb.indexOf("{time-to-end}"), sb.indexOf("{time-to-end}") + 13, String.valueOf(timeStop));
-        if (sb.indexOf("{time-to-open-format}") != -1)
+        if (sb.indexOf("{time-to-open-format}") != var)
             sb.replace(sb.indexOf("{time-to-open-format}"), sb.indexOf("{time-to-open-format}") + 21, AirManager.getFormat(timeToOpen));
-        if (sb.indexOf("{time-to-start-format}") != -1)
+        if (sb.indexOf("{time-to-start-format}") != var)
             sb.replace(sb.indexOf("{time-to-start-format}"), sb.indexOf("{time-to-start-format}") + 22, AirManager.getFormat(timeToStart));
-        if (sb.indexOf("{time-to-end-format}") != -1)
+        if (sb.indexOf("{time-to-end-format}") != var)
             sb.replace(sb.indexOf("{time-to-end-format}"), sb.indexOf("{time-to-end-format}") + 20, AirManager.getFormat(timeStop));
-        if (sb.indexOf("{rnd-1}") != -1)
-            sb.replace(sb.indexOf("{rnd-1}"), sb.indexOf("{rnd-1}") + 7, String.valueOf(ThreadLocalRandom.current().nextInt(0, 1)));
-        if (sb.indexOf("{rnd-10}") != -1)
-            sb.replace(sb.indexOf("{rnd-10}"), sb.indexOf("{rnd-10}") + 8, String.valueOf(ThreadLocalRandom.current().nextInt(0, 10)));
-        if (sb.indexOf("{rnd-50}") != -1)
+        if (sb.indexOf("{rndvar}") != var)
+            sb.replace(sb.indexOf("{rndvar}"), sb.indexOf("{rndvar}") + 7, String.valueOf(ThreadLocalRandom.current().nextInt(0, 1)));
+        if (sb.indexOf("{rndvar0}") != var)
+            sb.replace(sb.indexOf("{rndvar0}"), sb.indexOf("{rndvar0}") + 8, String.valueOf(ThreadLocalRandom.current().nextInt(0, 10)));
+        if (sb.indexOf("{rnd-50}") != var)
             sb.replace(sb.indexOf("{rnd-50}"), sb.indexOf("{rnd-50}") + 8, String.valueOf(ThreadLocalRandom.current().nextInt(0, 50)));
-        if (sb.indexOf("{rnd-100}") != -1)
-            sb.replace(sb.indexOf("{rnd-100}"), sb.indexOf("{rnd-100}") + 9, String.valueOf(ThreadLocalRandom.current().nextInt(0, 100)));
-        if (sb.indexOf("{airdrop-is-open}") != -1)
+        if (sb.indexOf("{rndvar00}") != var)
+            sb.replace(sb.indexOf("{rndvar00}"), sb.indexOf("{rndvar00}") + 9, String.valueOf(ThreadLocalRandom.current().nextInt(0, 100)));
+        if (sb.indexOf("{airdrop-is-open}") != var)
             sb.replace(sb.indexOf("{airdrop-is-open}"), sb.indexOf("{airdrop-is-open}") + 17, String.valueOf(!airLocked));
-        if (sb.indexOf("{airdrop-is-start}") != -1)
+        if (sb.indexOf("{airdrop-is-start}") != var)
             sb.replace(sb.indexOf("{airdrop-is-start}"), sb.indexOf("{airdrop-is-start}") + 18, String.valueOf(airDropStarted));
-        if (sb.indexOf("{it-was-open}") != -1)
+        if (sb.indexOf("{it-was-open}") != var)
             sb.replace(sb.indexOf("{it-was-open}"), sb.indexOf("{it-was-open}") + 13, String.valueOf(itWasOpen));
-        if (sb.indexOf("{use-pre-generated-locations}") != -1)
+        if (sb.indexOf("{use-pre-generated-locations}") != var)
             sb.replace(sb.indexOf("{use-pre-generated-locations}"), sb.indexOf("{use-pre-generated-locations}") + 29, String.valueOf(usePreGeneratedLocations));
-        if (sb.indexOf("{time-stop-event-must-go}") != -1)
+        if (sb.indexOf("{time-stop-event-must-go}") != var)
             sb.replace(sb.indexOf("{time-stop-event-must-go}"), sb.indexOf("{time-stop-event-must-go}") + 25, String.valueOf(timeStopEventMustGo));
-        if (sb.indexOf("{use-static-loc}") != -1)
+        if (sb.indexOf("{use-static-loc}") != var)
             sb.replace(sb.indexOf("{use-static-loc}"), sb.indexOf("{use-static-loc}") + 16, String.valueOf(useStaticLoc));
-        if (sb.indexOf("{flatness-check}") != -1)
+        if (sb.indexOf("{flatness-check}") != var)
             sb.replace(sb.indexOf("{flatness-check}"), sb.indexOf("{flatness-check}") + 16, String.valueOf(flatnessCheck));
-        if (sb.indexOf("{summoner}") != -1)
+        if (sb.indexOf("{summoner}") != var)
             sb.replace(sb.indexOf("{summoner}"), sb.indexOf("{summoner}") + 10, String.valueOf(SUMMONER));
-        if (sb.indexOf("{id}") != -1)
+        if (sb.indexOf("{id}") != var)
             sb.replace(sb.indexOf("{id}"), sb.indexOf("{id}") + 4, airId);
-        if (sb.indexOf("{world}") != -1)
+        if (sb.indexOf("{world}") != var)
             sb.replace(sb.indexOf("{world}"), sb.indexOf("{world}") + 7, world.getName());
-        if (sb.indexOf("{air-name}") != -1)
+        if (sb.indexOf("{air-name}") != var)
             sb.replace(sb.indexOf("{air-name}"), sb.indexOf("{air-name}") + 10, getAirName());
-        if (sb.indexOf("{inv-name}") != -1)
+        if (sb.indexOf("{inv-name}") != var)
             sb.replace(sb.indexOf("{inv-name}"), sb.indexOf("{inv-name}") + 10, getInvName());
-        if (sb.indexOf("{spawn-min}") != -1)
+        if (sb.indexOf("{spawn-min}") != var)
             sb.replace(sb.indexOf("{spawn-min}"), sb.indexOf("{spawn-min}") + 11, String.valueOf(getSpawnMin()));
-        if (sb.indexOf("{spawn-max}") != -1)
+        if (sb.indexOf("{spawn-max}") != var)
             sb.replace(sb.indexOf("{spawn-max}"), sb.indexOf("{spawn-max}") + 11, String.valueOf(getSpawnMax()));
-        if (sb.indexOf("{air-protect}") != -1)
+        if (sb.indexOf("{air-protect}") != var)
             sb.replace(sb.indexOf("{air-protect}"), sb.indexOf("{air-protect}") + 13, String.valueOf(getAirProtect()));
-        if (sb.indexOf("{search-before-start}") != -1)
+        if (sb.indexOf("{search-before-start}") != var)
             sb.replace(sb.indexOf("{search-before-start}"), sb.indexOf("{search-before-start}") + 21, String.valueOf(getSearchBeforeStart()));
-        if (sb.indexOf("{min-online-players}") != -1)
+        if (sb.indexOf("{min-online-players}") != var)
             sb.replace(sb.indexOf("{min-online-players}"), sb.indexOf("{min-online-players}") + 20, String.valueOf(getMinOnlinePlayers()));
-        if (sb.indexOf("{material-locked}") != -1)
+        if (sb.indexOf("{material-locked}") != var)
             sb.replace(sb.indexOf("{material-locked}"), sb.indexOf("{material-locked}") + 17, String.valueOf(materialLocked));
-        if (sb.indexOf("{material-unlocked}") != -1)
+        if (sb.indexOf("{material-unlocked}") != var)
             sb.replace(sb.indexOf("{material-unlocked}"), sb.indexOf("{material-unlocked}") + 19, String.valueOf(materialUnlocked));
-        if (sb.indexOf("{world-loc}") != -1)
+        if (sb.indexOf("{world-loc}") != var)
             sb.replace(sb.indexOf("{world-loc}"), sb.indexOf("{world-loc}") + 11, String.valueOf(GeneratorLoc.getSizeLocForAirDrop(this)));
-        if (sb.indexOf("{start-countdown-after-click}") != -1)
+        if (sb.indexOf("{start-countdown-after-click}") != var)
             sb.replace(sb.indexOf("{start-countdown-after-click}"), sb.indexOf("{start-countdown-after-click}") + 29, String.valueOf(isStartCountdownAfterClick()));
-        if (sb.indexOf("{time-to-start-cons}") != -1)
+        if (sb.indexOf("{time-to-start-cons}") != var)
             sb.replace(sb.indexOf("{time-to-start-cons}"), sb.indexOf("{time-to-start-cons}") + 20, String.valueOf(timeToStartCons));
-        if (sb.indexOf("{search-before-start-cons}") != -1)
+        if (sb.indexOf("{search-before-start-cons}") != var)
             sb.replace(sb.indexOf("{search-before-start-cons}"), sb.indexOf("{search-before-start-cons}") + 26, String.valueOf(searchBeforeStartCons));
-        if (sb.indexOf("{time-to-open-cons}") != -1)
+        if (sb.indexOf("{time-to-open-cons}") != var)
             sb.replace(sb.indexOf("{time-to-open-cons}"), sb.indexOf("{time-to-open-cons}") + 19, String.valueOf(timeToUnlockCons));
 
-        if (sb.indexOf("{time-to-end-cons}") != -1)
+        if (sb.indexOf("{time-to-end-cons}") != var)
             sb.replace(sb.indexOf("{time-to-end-cons}"), sb.indexOf("{time-to-end-cons}") + 18, String.valueOf(timeToStopCons));
 
-        if (sb.indexOf("{clone}") != -1)
+        if (sb.indexOf("{clone}") != var)
             sb.replace(sb.indexOf("{clone}"), sb.indexOf("{clone}") + 7, String.valueOf(isClone()));
-        if (sb.indexOf("{stopWhenEmpty}") != -1)
+        if (sb.indexOf("{stopWhenEmpty}") != var)
             sb.replace(sb.indexOf("{stopWhenEmpty}"), sb.indexOf("{stopWhenEmpty}") + 15, String.valueOf(stopWhenEmpty_event));
-        if (sb.indexOf("{use-player-location}") != -1)
+        if (sb.indexOf("{use-player-location}") != var)
             sb.replace(sb.indexOf("{use-player-location}"), sb.indexOf("{use-player-location}") + 21, String.valueOf(isUsePlayerLocation()));
-        if (sb.indexOf("{global-timer}") != -1)
-            sb.replace(sb.indexOf("{global-timer}"), sb.indexOf("{global-timer}") + 14, BAirDrop.globalTimer != null ? BAirDrop.globalTimer.getTimeToStart() + "" : "-1");
+        if (sb.indexOf("{global-timer}") != var)
+            sb.replace(sb.indexOf("{global-timer}"), sb.indexOf("{global-timer}") + 14, BAirDrop.globalTimer != null ? BAirDrop.globalTimer.getTimeToStart() + "" : "var");
         if (staticLocation == null) {
-            if (sb.indexOf("{stat-world}") != -1)
+            if (sb.indexOf("{stat-world}") != var)
                 sb.replace(sb.indexOf("{stat-world}"), sb.indexOf("{stat-world}") + 12, "?");
-            if (sb.indexOf("{stat-x}") != -1)
+            if (sb.indexOf("{stat-x}") != var)
                 sb.replace(sb.indexOf("{stat-x}"), sb.indexOf("{stat-x}") + 8, "?");
-            if (sb.indexOf("{stat-y}") != -1)
+            if (sb.indexOf("{stat-y}") != var)
                 sb.replace(sb.indexOf("{stat-y}"), sb.indexOf("{stat-y}") + 8, "?");
-            if (sb.indexOf("{stat-z}") != -1)
+            if (sb.indexOf("{stat-z}") != var)
                 sb.replace(sb.indexOf("{stat-z}"), sb.indexOf("{stat-z}") + 8, "?");
         } else {
-            if (sb.indexOf("{stat-world}") != -1)
+            if (sb.indexOf("{stat-world}") != var)
                 sb.replace(sb.indexOf("{stat-world}"), sb.indexOf("{stat-world}") + 12, staticLocation.getWorld().getName());
-            if (sb.indexOf("{stat-x}") != -1)
+            if (sb.indexOf("{stat-x}") != var)
                 sb.replace(sb.indexOf("{stat-x}"), sb.indexOf("{stat-x}") + 8, (staticLocation.getX() + "").replace(".0", ""));
-            if (sb.indexOf("{stat-y}") != -1)
+            if (sb.indexOf("{stat-y}") != var)
                 sb.replace(sb.indexOf("{stat-y}"), sb.indexOf("{stat-y}") + 8, (staticLocation.getY() + "").replace(".0", ""));
-            if (sb.indexOf("{stat-z}") != -1)
+            if (sb.indexOf("{stat-z}") != var)
                 sb.replace(sb.indexOf("{stat-z}"), sb.indexOf("{stat-z}") + 8, (staticLocation.getZ() + "").replace(".0", ""));
         }
         // if (airLoc == null) {
         if (getAnyLoc() == null) {
-            if (sb.indexOf("{x}") != -1)
+            if (sb.indexOf("{x}") != var)
                 sb.replace(sb.indexOf("{x}"), sb.indexOf("{x}") + 3, "?");
-            if (sb.indexOf("{y}") != -1)
+            if (sb.indexOf("{y}") != var)
                 sb.replace(sb.indexOf("{y}"), sb.indexOf("{y}") + 3, "?");
-            if (sb.indexOf("{z}") != -1)
+            if (sb.indexOf("{z}") != var)
                 sb.replace(sb.indexOf("{z}"), sb.indexOf("{z}") + 3, "?");
-            if (sb.indexOf("{biome}") != -1)
+            if (sb.indexOf("{biome}") != var)
                 sb.replace(sb.indexOf("{biome}"), sb.indexOf("{biome}") + 7, "NONE");
-            if (sb.indexOf("{GET_BLOCK_MATERIAL}") != -1)
+            if (sb.indexOf("{GET_BLOCK_MATERIAL}") != var)
                 sb.replace(sb.indexOf("{GET_BLOCK_MATERIAL}"), sb.indexOf("{GET_BLOCK_MATERIAL}") + 20, "AIR");
         } else {
-            if (sb.indexOf("{x}") != -1)
+            if (sb.indexOf("{x}") != var)
                 sb.replace(sb.indexOf("{x}"), sb.indexOf("{x}") + 3, (getAnyLoc().getX() + "").replace(".0", ""));
-            if (sb.indexOf("{y}") != -1)
+            if (sb.indexOf("{y}") != var)
                 sb.replace(sb.indexOf("{y}"), sb.indexOf("{y}") + 3, (getAnyLoc().getY() + "").replace(".0", ""));
-            if (sb.indexOf("{z}") != -1)
+            if (sb.indexOf("{z}") != var)
                 sb.replace(sb.indexOf("{z}"), sb.indexOf("{z}") + 3, (getAnyLoc().getZ() + "").replace(".0", ""));
-            if (sb.indexOf("{biome}") != -1)
+            if (sb.indexOf("{biome}") != var)
                 sb.replace(sb.indexOf("{biome}"), sb.indexOf("{biome}") + 7, LocationGeneration.getBiome(getAnyLoc()));
-            if (sb.indexOf("{GET_BLOCK_MATERIAL}") != -1)
+            if (sb.indexOf("{GET_BLOCK_MATERIAL}") != var)
                 sb.replace(sb.indexOf("{GET_BLOCK_MATERIAL}"), sb.indexOf("{GET_BLOCK_MATERIAL}") + 20, String.valueOf(LocationGeneration.getBlock(this).getType()));
         }
         return sb.toString();

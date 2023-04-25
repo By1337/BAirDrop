@@ -54,12 +54,16 @@ public class Message {
             if (BAirDrop.instance.getConfig().getBoolean("debug"))
                 logger("&7[DEBUG] " + msg);
         }
-
     }
 
+    /**
+     * use debug(String msg, LogLevel logLevel)
+     * or logger(String msg)
+     */
+    @Deprecated
     public static void debug(String msg) {
         if (BAirDrop.instance.getConfig().getBoolean("debug"))
-            logger("&7[DEBUG] " + msg);
+            logger("&7[&eDeprecated &7DEBUG] " + msg);
     }
 
     public static void logger(String msg) {
@@ -129,7 +133,7 @@ public class Message {
             sendMsg(pl, msg);
 
     }
-
+    @Deprecated
     public static void sendAllNear(String msg, Location loc) {
         for (Entity entity : Objects.requireNonNull(loc.getWorld()).getNearbyEntities(loc, 10, 10, 10)) {
             if (entity instanceof Player) {
@@ -163,7 +167,7 @@ public class Message {
 
     public static void sendAllSound(String sound) {
         try {
-            Sound.valueOf(sound);
+            //   Sound.valueOf(sound);
             for (Player pl : Bukkit.getOnlinePlayers())
                 sendSound(pl, sound);
         } catch (IllegalArgumentException e) {
@@ -177,8 +181,4 @@ public class Message {
             message = message.replace(m.group(), ChatColor.of(m.group(1)).toString());
         return ChatColor.translateAlternateColorCodes('&', message);
     }
-    public static String toS(String s){
-        return String.valueOf(s);
-    }
-
 }

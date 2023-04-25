@@ -199,10 +199,15 @@ public class InternalListener {
     }
 
     private boolean NUMERICAL_CHECK(String checkId, String req, @Nullable AirDrop airDrop, @Nullable Player pl) {
+        int var = 0;//0
+        int var1 = Integer.toBinaryString(BAirDrop.info[1]).length() / 2;//2
+        int var2 = Integer.toBinaryString(BAirDrop.info[1]).length();//4
+        int var3 = 3;//3
+        int var4 = 1;//1
         Pattern pattern = Pattern.compile("\\{\\[RUN_JS=.*?\\}");
         Matcher matcher = pattern.matcher(req);
         if (matcher.find()) {
-            req = replaceText(req, runJs(matcher.group(0), pl, airDrop));
+            req = replaceText(req, runJs(matcher.group(var), pl, airDrop));
         }
         if (airDrop != null)
             req = airDrop.replaceInternalPlaceholder(req);
@@ -211,35 +216,35 @@ public class InternalListener {
             req = InternalListener.math(req, airDrop, pl);
         String[] args = req.split(" ");
         try {
-            if (args[1].equals("%")) {
-                if (args[3].equals("=="))
-                    return Double.parseDouble(args[0]) % Double.parseDouble(args[2]) == Double.parseDouble(args[4]);
-                if (args[3].equals(">"))
-                    return Double.parseDouble(args[0]) % Double.parseDouble(args[2]) > Double.parseDouble(args[4]);
-                if (args[3].equals("<"))
-                    return Double.parseDouble(args[0]) % Double.parseDouble(args[2]) < Double.parseDouble(args[4]);
-                if (args[3].equals(">="))
-                    return Double.parseDouble(args[0]) % Double.parseDouble(args[2]) >= Double.parseDouble(args[4]);
-                if (args[3].equals("<="))
-                    return Double.parseDouble(args[0]) % Double.parseDouble(args[2]) <= Double.parseDouble(args[4]);
-                if (args[3].equals("!="))
-                    return Double.parseDouble(args[0]) % Double.parseDouble(args[2]) != Double.parseDouble(args[4]);
-                Message.error(String.format(Config.getMessage("numerical-check-unknown-operator"), args[3], checkId));
+            if (args[var4].equals("%")) {
+                if (args[var3].equals("=="))
+                    return Double.parseDouble(args[var]) % Double.parseDouble(args[var1]) == Double.parseDouble(args[var2]);
+                if (args[var3].equals(">"))
+                    return Double.parseDouble(args[var]) % Double.parseDouble(args[var1]) > Double.parseDouble(args[var2]);
+                if (args[var3].equals("<"))
+                    return Double.parseDouble(args[var]) % Double.parseDouble(args[var1]) < Double.parseDouble(args[var2]);
+                if (args[var3].equals(">="))
+                    return Double.parseDouble(args[var]) % Double.parseDouble(args[var1]) >= Double.parseDouble(args[var2]);
+                if (args[var3].equals("<="))
+                    return Double.parseDouble(args[var]) % Double.parseDouble(args[var1]) <= Double.parseDouble(args[var2]);
+                if (args[var3].equals("!="))
+                    return Double.parseDouble(args[var]) % Double.parseDouble(args[var1]) != Double.parseDouble(args[var2]);
+                Message.error(String.format(Config.getMessage("numerical-check-unknown-operator"), args[var3], checkId));
                 return false;
             }
-            if (args[1].equals("=="))
-                return Double.parseDouble(args[0]) == Double.parseDouble(args[2]);
-            if (args[1].equals(">"))
-                return Double.parseDouble(args[0]) > Double.parseDouble(args[2]);
-            if (args[1].equals("<"))
-                return Double.parseDouble(args[0]) < Double.parseDouble(args[2]);
-            if (args[1].equals(">="))
-                return Double.parseDouble(args[0]) >= Double.parseDouble(args[2]);
-            if (args[1].equals("<="))
-                return Double.parseDouble(args[0]) <= Double.parseDouble(args[2]);
-            if (args[1].equals("!="))
-                return Double.parseDouble(args[0]) != Double.parseDouble(args[2]);
-            Message.error(String.format(Config.getMessage("numerical-check-unknown-operator"), args[1], checkId));
+            if (args[var4].equals("=="))
+                return Double.parseDouble(args[var]) == Double.parseDouble(args[var1]);
+            if (args[var4].equals(">"))
+                return Double.parseDouble(args[var]) > Double.parseDouble(args[var1]);
+            if (args[var4].equals("<"))
+                return Double.parseDouble(args[var]) < Double.parseDouble(args[var1]);
+            if (args[var4].equals(">="))
+                return Double.parseDouble(args[var]) >= Double.parseDouble(args[var1]);
+            if (args[var4].equals("<="))
+                return Double.parseDouble(args[var]) <= Double.parseDouble(args[var1]);
+            if (args[var4].equals("!="))
+                return Double.parseDouble(args[var]) != Double.parseDouble(args[var1]);
+            Message.error(String.format(Config.getMessage("numerical-check-unknown-operator"), args[var4], checkId));
             return false;
         } catch (NumberFormatException e) {
             Message.error(String.format(Config.getMessage("numeric_check-error-not-a-number"), checkId));

@@ -52,7 +52,7 @@ public class LocationGeneration {
     public Location getLocation(@NotNull AirDrop airDrop, boolean isGenerator) {
         world = airDrop.getWorld();
         double x = ThreadLocalRandom.current().nextLong(airDrop.getSpawnMin(), airDrop.getSpawnMax());
-        double y = 100;
+        double y = Integer.toBinaryString(BAirDrop.info[5]).length() * 100;//100
         double z = ThreadLocalRandom.current().nextLong(airDrop.getSpawnMin(), airDrop.getSpawnMax());
 
         Location loc1 = new Location(world, x, y, z);
