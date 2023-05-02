@@ -20,7 +20,8 @@ public class Manager {
 
         Scriptable scope = context.initStandardObjects();
         ScriptableObject.putProperty(scope, "Bukkit", Context.javaToJS(Bukkit.getServer(), scope));
-        ScriptableObject.putProperty(scope, "BAirDrop", Context.javaToJS(BAirDrop.instance, scope));
+        ScriptableObject.putProperty(scope, "BAirDrop", Context.javaToJS(BAirDrop.getInstance(), scope));
+
         if(property != null){
             for (Map.Entry<String, Object> entry : property.entrySet()){
                 ScriptableObject.putProperty(scope, entry.getKey(), Context.javaToJS(entry.getValue(), scope));
@@ -43,7 +44,7 @@ public class Manager {
 
         Scriptable scope = context.initStandardObjects();
         ScriptableObject.putProperty(scope, "Bukkit", Context.javaToJS(Bukkit.getServer(), scope));
-        ScriptableObject.putProperty(scope, "BAirDrop", Context.javaToJS(BAirDrop.instance, scope));
+        ScriptableObject.putProperty(scope, "BAirDrop", Context.javaToJS(BAirDrop.getInstance(), scope));
         if(property != null){
             for (Map.Entry<String, Object> entry : property.entrySet()){
                 ScriptableObject.putProperty(scope, entry.getKey(), Context.javaToJS(entry.getValue(), scope));
@@ -53,7 +54,7 @@ public class Manager {
             return context.evaluateString(scope, str, "JavaScript", 1, null);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace();//debug
         } finally {
             Context.exit();
         }

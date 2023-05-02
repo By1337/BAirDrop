@@ -14,7 +14,7 @@ import org.by1337.bairdrop.Listeners.Compass;
 import org.by1337.bairdrop.menu.EditAirMenu;
 import org.by1337.bairdrop.menu.ShowAllListeners;
 import org.by1337.bairdrop.scripts.Manager;
-import org.by1337.bairdrop.util.Events;
+import org.by1337.bairdrop.util.Event;
 import org.by1337.bairdrop.util.GeneratorLoc;
 import org.by1337.bairdrop.util.Message;
 import org.jetbrains.annotations.NotNull;
@@ -22,15 +22,25 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 import static org.bukkit.Bukkit.getServer;
-import static org.by1337.bairdrop.BAirDrop.airDrops;
-import static org.by1337.bairdrop.BAirDrop.instance;
+import static org.by1337.bairdrop.BAirDrop.*;
 
 public class Commands implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        BAirDrop.Log(sender.getName() +  " use command: " + Arrays.toString(args));
         if (sender instanceof Player pl) {
             if (args.length == 0) {
                 Message.sendMsg(pl, Config.getMessage("few-arguments"));
+                return true;
+            }
+            if (args[0].equals("help")) {
+                if (!pl.hasPermission("bair.help")) {
+                    Message.sendMsg(pl, Config.getMessage("no-prem"));
+                    return true;
+                }
+                for(String str : Config.getList("help-list")){
+                    Message.sendMsg(pl, str);
+                }
                 return true;
             }
             if (args[0].equals("compass")) {
@@ -64,8 +74,15 @@ public class Commands implements CommandExecutor {
                     Message.sendMsg(pl, Config.getMessage("no-prem"));
                     return true;
                 }
+                if (args.length < 2) {
+                    Message.sendMsg(pl, Config.getMessage("few-arguments"));
+                    return true;
+                }
+                if(!Config.scripts.containsKey(args[1])){
+                    Message.sendMsg(pl, String.format(Config.getMessage("unknown-script"), args[1]));
+                }
                 Player player = pl;
-                if(args.length == 3){
+                if (args.length == 3) {
                     player = Bukkit.getPlayer(args[2]) == null ? pl : Bukkit.getPlayer(args[2]);
                 }
                 Player finalPlayer = player;
@@ -75,9 +92,9 @@ public class Commands implements CommandExecutor {
                         HashMap<String, Object> map = new HashMap<>();
                         map.put("player", finalPlayer);
                         Manager manager = new Manager();
-                        Message.logger((String) manager.runJsScript(args[1], map));
+                        manager.runJsScript(args[1], map);
                     }
-                }.runTask(instance);
+                }.runTask(getInstance());
                 return true;
             }
             if (args[0].equals("delete")) {
@@ -90,7 +107,7 @@ public class Commands implements CommandExecutor {
                     return true;
                 }
                 if (BAirDrop.airDrops.containsKey(args[1])) {
-                    airDrops.get(args[1]).event(Events.UNLOAD, null);
+                    airDrops.get(args[1]).event(Event.UNLOAD, null);
                     if (!airDrops.get(args[1]).Delete())
                         Message.sendMsg(pl, Config.getMessage("delete-fail"));
                     else
@@ -102,7 +119,7 @@ public class Commands implements CommandExecutor {
                 }
                 return true;
             }
-            if (args[0].equals("get")) {//bair get item name count
+            if (args[0].equals("get")) {
                 if (args.length == 1) {
                     Message.sendMsg(pl, Config.getMessage("few-arguments"));
                     return true;
@@ -121,7 +138,7 @@ public class Commands implements CommandExecutor {
                     int amount = 1;
                     if (args.length == 4) {
                         try {
-                             amount = Integer.parseInt(args[3]);
+                            amount = Integer.parseInt(args[3]);
                             item.setAmount(amount);
                         } catch (NumberFormatException e) {
                             item.setAmount(1);
@@ -134,22 +151,22 @@ public class Commands implements CommandExecutor {
                     if (player.getInventory().firstEmpty() == -1) {
                         player.getLocation().getWorld().dropItem(player.getLocation(), item);
                         Message.sendMsg(pl, String.format(Config.getMessage("get-item"), player.getName(), args[1], amount));
-                       // Message.sendMsg(pl,"{PP} &fИгроку " + player.getName() + " был выдан " + args[1] + " x" + amount);
+                        // Message.sendMsg(pl,"{PP} &fИгроку " + player.getName() + " был выдан " + args[1] + " x" + amount);
                     } else {
                         player.getInventory().addItem(item);
                         Message.sendMsg(pl, String.format(Config.getMessage("get-item"), player.getName(), args[1], amount));
-                       // Message.sendMsg(pl,"{PP} &fИгроку " + player.getName() + " был выдан " + args[1] + " x" + amount);
+                        // Message.sendMsg(pl,"{PP} &fИгроку " + player.getName() + " был выдан " + args[1] + " x" + amount);
                     }
                     return true;
                 }
                 if (pl.getInventory().firstEmpty() == -1) {
                     pl.getLocation().getWorld().dropItem(pl.getLocation(), BAirDrop.summoner.getItems().get(args[1]).getItem());
                     Message.sendMsg(pl, String.format(Config.getMessage("get-item"), pl.getName(), args[1], 1));
-                   // Message.sendMsg(pl,"{PP} &fИгроку " + pl.getName() + " был выдан " + args[1] + " x1");
+                    // Message.sendMsg(pl,"{PP} &fИгроку " + pl.getName() + " был выдан " + args[1] + " x1");
                 } else {
                     pl.getInventory().addItem(BAirDrop.summoner.getItems().get(args[1]).getItem());
                     Message.sendMsg(pl, String.format(Config.getMessage("get-item"), pl.getName(), args[1], 1));
-                   // Message.sendMsg(pl,"{PP} &fИгроку " + pl.getName() + " был выдан " + args[1] + " x1");
+                    // Message.sendMsg(pl,"{PP} &fИгроку " + pl.getName() + " был выдан " + args[1] + " x1");
                 }
                 return true;
             }
@@ -178,7 +195,7 @@ public class Commands implements CommandExecutor {
                         BAirDrop.airDrops.get(args[1]).getEditAirMenu().unReg();
                     }
                     EditAirMenu em = new EditAirMenu(BAirDrop.airDrops.get(args[1]));
-                    getServer().getPluginManager().registerEvents(em, BAirDrop.instance);
+                    getServer().getPluginManager().registerEvents(em, BAirDrop.getInstance());
                     BAirDrop.airDrops.get(args[1]).setEditAirMenu(em);
                     pl.openInventory(em.getInventory());
 
@@ -306,7 +323,7 @@ public class Commands implements CommandExecutor {
                 }
                 if (BAirDrop.airDrops.containsKey(args[1])) {
                     ShowAllListeners sae = new ShowAllListeners(BAirDrop.airDrops.get(args[1]));
-                    getServer().getPluginManager().registerEvents(sae, BAirDrop.instance);
+                    getServer().getPluginManager().registerEvents(sae, BAirDrop.getInstance());
 
                     pl.openInventory(sae.getInventory());
                 } else {
@@ -360,7 +377,7 @@ public class Commands implements CommandExecutor {
                     return true;
                 }
                 if (BAirDrop.airDrops.containsKey(args[1])) {
-                    airDrops.get(args[1]).event(Events.UNLOAD, null);
+                    airDrops.get(args[1]).event(Event.UNLOAD, null);
                     if (!airDrops.get(args[1]).Delete())
                         Message.logger(Config.getMessage("delete-fail"));
                     else
@@ -491,7 +508,7 @@ public class Commands implements CommandExecutor {
                     int amount = 1;
                     if (args.length == 4) {
                         try {
-                             amount = Integer.parseInt(args[3]);
+                            amount = Integer.parseInt(args[3]);
                             item.setAmount(amount);
                         } catch (NumberFormatException e) {
                             item.setAmount(1);
@@ -505,11 +522,11 @@ public class Commands implements CommandExecutor {
                     if (player.getInventory().firstEmpty() == -1) {
                         player.getLocation().getWorld().dropItem(player.getLocation(), item);
                         Message.logger(String.format(Config.getMessage("get-item"), player.getName(), args[1], amount));
-                      //  Message.logger("{PP} &fИгроку " + player.getName() + " был выдан " + args[1] + " x" + amount);
+                        //  Message.logger("{PP} &fИгроку " + player.getName() + " был выдан " + args[1] + " x" + amount);
                     } else {
                         player.getInventory().addItem(item);
                         Message.logger(String.format(Config.getMessage("get-item"), player.getName(), args[1], amount));
-                       // Message.logger("{PP} &fИгроку " + player.getName() + " был выдан " + args[1] + " x" + amount);
+                        // Message.logger("{PP} &fИгроку " + player.getName() + " был выдан " + args[1] + " x" + amount);
                     }
                     return true;
                 }
@@ -517,7 +534,14 @@ public class Commands implements CommandExecutor {
             }
             if (args[0].equals("js")) { // /bair js fire.js <player name>
                 Player player = null;
-                if(args.length == 3){
+                if (args.length < 2) {
+                    Message.logger(Config.getMessage("few-arguments"));
+                    return true;
+                }
+                if(!Config.scripts.containsKey(args[1])){
+                    Message.logger(String.format(Config.getMessage("unknown-script"), args[1]));
+                }
+                if (args.length == 3) {
                     player = Bukkit.getPlayer(args[2]);
                 }
                 Player finalPlayer = player;
@@ -529,7 +553,7 @@ public class Commands implements CommandExecutor {
                         Manager manager = new Manager();
                         manager.runJsScript(args[1], map);
                     }
-                }.runTask(instance);
+                }.runTask(getInstance());
                 return true;
             }
             if (args[0].equals("compass")) {
@@ -560,5 +584,4 @@ public class Commands implements CommandExecutor {
         }
         return false;
     }
-
 }

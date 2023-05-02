@@ -8,6 +8,7 @@ import org.bukkit.entity.Firework;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.effect.EffectType;
 import org.by1337.bairdrop.effect.IEffect;
 import org.by1337.bairdrop.effect.util.RGBHelper;
@@ -57,9 +58,9 @@ public class FireworkEffect implements IEffect {
         this.airDrop = airDrop;
         if (airDrop.getAirLoc() == null) {
             if (airDrop.getFutureLocation() == null) {
-                Message.error("Локация для аирдропа ещё не сгенерирована");
-                Message.error("Эффект не может появится");
-                Message.error("аирдроп " + airDrop.getAirId());
+                Message.error(Config.getMessage("effect-error-loc-is-null"));
+                Message.error(Config.getMessage("effect-error-loc-is-null2"));
+                Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getAirId()));
                 return;
             } else loc = airDrop.getFutureLocation().clone();
         } else loc = airDrop.getAirLoc().clone();
@@ -112,7 +113,7 @@ public class FireworkEffect implements IEffect {
                     }
                 }
             }
-        }.runTaskTimerAsynchronously(BAirDrop.instance, timeUpdate, timeUpdate);
+        }.runTaskTimerAsynchronously(BAirDrop.getInstance(), timeUpdate, timeUpdate);
 
 
 

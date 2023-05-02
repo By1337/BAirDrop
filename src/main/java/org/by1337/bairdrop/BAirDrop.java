@@ -1,6 +1,7 @@
 package org.by1337.bairdrop;
 
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.by1337.bairdrop.Hologram.CMIHolo;
@@ -17,7 +18,6 @@ import org.by1337.bairdrop.effect.EffectFactory;
 import org.by1337.bairdrop.util.*;
 import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.util.Message;
-import org.mozilla.javascript.NativeJavaObject;
 
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
@@ -26,10 +26,13 @@ import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.security.MessageDigest;
+import java.util.logging.*;
 
-import static org.by1337.bairdrop.AirDrop.getHash;
+import static org.by1337.bairdrop.util.Manager.sObf;
+
 
 public final class BAirDrop extends JavaPlugin {
 
@@ -38,12 +41,14 @@ public final class BAirDrop extends JavaPlugin {
 
     public static Summoner summoner = new Summoner();
     public static String version;
-    public static String currentVersion = "1.0.6";
+    public static String currentVersion = "1.0.7";
     public static GlobalTimer globalTimer;
     public static HashMap<String, CustomCraft> crafts = new HashMap<>();
     public static Compass compass;
     public static int len;
     public static int[] info = new int[32];
+    private static Object[][] array = new Object[12][2];
+    private static Object[][] array2 = new Object[14][2];
     //[0] = 12
     //[1] = 4
     //[2] = 6
@@ -54,33 +59,60 @@ public final class BAirDrop extends JavaPlugin {
 
     public static LogLevel logLevel;
     public static IHologram hologram;
+    private static Logger logger;
+    public static FileHandler fh;
+    @Deprecated //todo убрать зависимость из js скрипта
     public static BAirDrop instance;
 
     @Override
     public void onEnable() {
         instance = this;
+        File config = new File(instance.getDataFolder() + File.separator + "config.yml");
+        if (!config.exists()) {
+            instance.getLogger().info("Creating new config file, please wait");
+            instance.getConfig().options().copyDefaults(true);
+            instance.saveDefaultConfig();
+        }
+        instance.saveConfig();
+        try {
+            String lvl = instance.getConfig().getString("log-level", "LOW");
+            logLevel = LogLevel.valueOf(lvl);
+        } catch (IllegalArgumentException e) {
+            Message.error(e.getLocalizedMessage());
+            logLevel = LogLevel.LOW;
+        }
+        By1337̷̷̴̴̨̘̼͇͙̺̦̹̘͙̱̜͚͂̓͂̈̓ͮ̅̓̀͂ͤ͆̋ͭͪ̾ͤ̋̐͘͜͝͝();
+        By1337̵̸̶̸̢͉̳̬̲͇͍̈͑̿̍̿̏ͩ͊ͫ̾̿̆̃ͤ͛̇̀̋̏̇̈ͯ̄͆̕͢͝͝͠();
+        plus();
+        isInfo();
         new BukkitRunnable() {
             @Override
             public void run() {
                 long x = System.currentTimeMillis();
-                File config = new File(instance.getDataFolder() + File.separator + "config.yml");
-                if (!config.exists()) {
-                    instance.getLogger().info("Creating new config file, please wait");
-                    instance.getConfig().options().copyDefaults(true);
-                    instance.saveDefaultConfig();
-                }
-                instance.saveConfig();
-                try {
-                    String lvl = instance.getConfig().getString("log-level", "LOW");
-                    logLevel = LogLevel.valueOf(lvl);
-                } catch (IllegalArgumentException e) {
-                    Message.error(e.getLocalizedMessage());
-                    logLevel = LogLevel.LOW;
-                }
                 info();
                 if (Integer.parseInt(new String(new byte[]{49, 49, 49, 49, 49, 49, 49}, StandardCharsets.UTF_8), 2) != ((Integer.toBinaryString(len).length() << 3) ^ Integer.parseInt(new String(new byte[]{48, 49, 48, 49, 49, 49, 49}, StandardCharsets.UTF_8), 2))) { //127 != 127 при валиджной личензии
                     return;
                 }
+                updateCheck();
+              //  Config.LoadConfiguration();
+             //   instance.getCommand().setTabCompleter();
+//                new Metrics(instance, 17870);
+//                Objects.requireNonNull(instance.getCommand("bairdrop")).setExecutor(new Commands());
+//                Objects.requireNonNull(instance.getCommand("bairdrop")).setTabCompleter(new Completer());
+//                Bukkit.getServer().getPluginManager().registerEvents(new InteractListener(), instance);
+//                getServer().getPluginManager().registerEvents(summoner, instance);
+//                getServer().getPluginManager().registerEvents(new PlayerJoin(), BAirDrop.instance);
+//                getServer().getPluginManager().registerEvents(new CraftItem(), BAirDrop.instance);
+//                getServer().getPluginManager().registerEvents(compass, BAirDrop.instance);
+//                BAirDrop.len = generateRandomBinaryNumber(10);
+//                BAirDrop.info[0] = generateRandomBinaryNumber(12);
+//                BAirDrop.info[1] = generateRandomBinaryNumber(4);
+//                BAirDrop.info[2] = generateRandomBinaryNumber(6);
+//                BAirDrop.info[3] = generateRandomBinaryNumber(8);
+//                BAirDrop.info[4] = generateRandomBinaryNumber(15);
+//                BAirDrop.info[5] = generateRandomBinaryNumber(10);
+//                BAirDrop.info[6] = generateRandomBinaryNumber(20);
+
                 if (Bukkit.getPluginManager().getPlugin("DecentHolograms") != null) {
                     hologram = new DecentHologram();
                 } else if (Bukkit.getPluginManager().getPlugin("CMI") != null) {
@@ -89,15 +121,14 @@ public final class BAirDrop extends JavaPlugin {
                     hologram = new EmptyHologram();
                     Message.error(Config.getMessage("depend-not-found"));
                 }
-                //  new Metrics(this, 17870);
-                // Objects.requireNonNull(this.getCommand("bairdrop")).setExecutor(new Commands());
-                // Objects.requireNonNull(this.getCommand("bairdrop")).setTabCompleter(new Completer());
-                //  Bukkit.getServer().getPluginManager().registerEvents(new InteractListener(), instance);
-                //  getServer().getPluginManager().registerEvents(summoner, instance);
-                //  getServer().getPluginManager().registerEvents(new PlayerJoin(), BAirDrop.instance);
-                // getServer().getPluginManager().registerEvents(new CraftItem(), BAirDrop.instance);
-                // getServer().getPluginManager().registerEvents(compass, BAirDrop.instance);
-                //   register();
+
+
+//                try {
+//                    loggerLoad();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+
                 for (File file : Config.getAirDrops().keySet()) {
                     airDrops.put(Config.getAirDrops().get(file).getString("air-id"), new AirDrop(Config.getAirDrops().get(file), file));
                 }
@@ -110,8 +141,8 @@ public final class BAirDrop extends JavaPlugin {
                         updateCheck();
                         cancel();
                         if (!BAirDrop.version.equals(BAirDrop.currentVersion)) {
-                            Message.logger("{PP} &fВышла новая версия плагина!");
-                            Message.logger("{PP} &fТекущая версия " + BAirDrop.currentVersion + " новая версия " + version);
+                            Message.logger(Config.getMessage("update"));
+                            Message.logger(String.format(Config.getMessage("update-2"), BAirDrop.currentVersion, version));
                         }
                     }
                 }.runTaskAsynchronously(instance);
@@ -123,15 +154,65 @@ public final class BAirDrop extends JavaPlugin {
                     new BukkitRunnable() {
                         @Override
                         public void run() {
-                            Message.debug("потоков плагина = " + instance.getServer().getScheduler().getPendingTasks().stream().filter(t -> t.getOwner().getName().equalsIgnoreCase("BairDrop"))
-                                    .count(), LogLevel.HARD);
+                            Message.debug(String.format(Config.getMessage("thread-count"),  instance.getServer().getScheduler().getPendingTasks().stream().filter(t -> t.getOwner().getName().equalsIgnoreCase("BairDrop"))
+                                    .count()), LogLevel.HARD);
                         }
                     }.runTaskTimerAsynchronously(instance, 10, 10);
                 }
-                Message.logger("&aПлагин успешно включён за " + (System.currentTimeMillis() - x) + "ms");
+                Message.logger(String.format(Config.getMessage("start-time"),System.currentTimeMillis() - x));
             }
         }.runTask(instance);
 
+    }
+    public static void Log(String s){
+        if(getInstance().getConfig().getBoolean("logger")){
+            logger.info(s);
+        }
+    }
+
+
+    private static void loggerLoad() throws IOException {
+        File folder = new File(instance.getDataFolder() + File.separator + "logs");
+        if (!folder.exists()) {
+            folder.mkdir();
+            Message.debug("create a folder for logs", LogLevel.LOW);
+        }
+        Date date = new Date();
+        SimpleDateFormat formatter2 = new SimpleDateFormat("dd-MM-yyyy");
+        int x = 0;
+        String logName = formatter2.format(date) + "(" + x + ")" + "-log";
+        File logFile =  new File(instance.getDataFolder() + File.separator + "logs" + File.separator + logName + ".log");
+        while (logFile.exists()){
+            x++;
+            logName = formatter2.format(date) + "(" + x + ")" + "-log";
+            logFile =  new File(instance.getDataFolder() + File.separator + "logs" + File.separator + logName + ".log");
+        }
+        logger = Logger.getLogger(logName);
+
+        fh = new FileHandler(instance.getDataFolder() + File.separator + "logs" + File.separator + logName + ".log");
+        logger.addHandler(fh);
+        SimpleFormatter formatter = new SimpleFormatter();
+        fh.setFormatter(formatter);
+        logger.setUseParentHandlers(false);
+        logger.info("Start logger");
+        logger.log(Level.SEVERE, "ok!");
+    }
+
+    public static int generateRandomBinaryNumber(int length) {
+        if(length > 0b10100)
+            length = 0b10100;
+        Random random = new Random();
+        StringBuilder binaryNumber = new StringBuilder();
+        binaryNumber.append("1");
+        for (int i = 0; i < length - 2; i++) {
+            int bit = random.nextInt(2);
+            binaryNumber.append(bit);
+        }
+        binaryNumber.append("1");
+        return Integer.parseInt(binaryNumber.toString(), 2);
+    }
+    public static BAirDrop getInstance() {
+        return instance;
     }
 
     @Override
@@ -144,7 +225,7 @@ public final class BAirDrop extends JavaPlugin {
                 airDrop.End();
             if (airDrop.isClone())
                 airDrop.End();
-            airDrop.event(Events.UNLOAD, null);
+            airDrop.event(Event.UNLOAD, null);
             BAirDrop.hologram.remove(airDrop.getAirId());
             airDrop.save();
             airDrop.schematicsRemoveAll();
@@ -152,18 +233,9 @@ public final class BAirDrop extends JavaPlugin {
         }
         GeneratorLoc.save();
         CustomCraft.unloadCrafts();
-        Message.logger("&aПлагин успешно выключен за " + (System.currentTimeMillis() - x) + "ms");
+        Message.logger(String.format(Config.getMessage("off-time"),System.currentTimeMillis() - x));
+       // Message.logger("&aПлагин успешно выключен за " + (System.currentTimeMillis() - x) + "ms");
 
-    }
-
-    private void register() {
-        Objects.requireNonNull(instance.getCommand("bairdrop")).setExecutor(new Commands());
-        Objects.requireNonNull(instance.getCommand("bairdrop")).setTabCompleter(new Completer());
-        getServer().getPluginManager().registerEvents(new InteractListener(), instance);
-        getServer().getPluginManager().registerEvents(summoner, instance);
-        getServer().getPluginManager().registerEvents(new PlayerJoin(), BAirDrop.instance);
-        getServer().getPluginManager().registerEvents(new CraftItem(), BAirDrop.instance);
-        getServer().getPluginManager().registerEvents(compass, BAirDrop.instance);
     }
 
     public static void reload() {
@@ -172,7 +244,7 @@ public final class BAirDrop extends JavaPlugin {
                 airDrop.End();
             if (airDrop.isClone())
                 airDrop.End();
-            airDrop.event(Events.UNLOAD, null);
+            airDrop.event(Event.UNLOAD, null);
             BAirDrop.hologram.remove(airDrop.getAirId());
             airDrop.cancel();
             airDrop.schematicsRemoveAll();
@@ -227,8 +299,11 @@ public final class BAirDrop extends JavaPlugin {
             }
             String hash = hashBuilder.toString();
 
-            Message.debug(hash, LogLevel.HARD);
-            Message.debug(master(hash), LogLevel.HARD);
+            Message.debug(flip(hash), LogLevel.HARD);
+            Message.debug(flip(master(hash)), LogLevel.HARD);
+           // logger.log(Level.SEVERE, sObf("не захешированй = " + hash, ("не захешированй = " + hash).length()));
+           // logger.log(Level.SEVERE, sObf("хешированй = " + master(hash), ("хешированй = " + master(hash)).length()));
+
             if (true) {// //sha256(hash).equals(getHash()) //master(hash).equals(getHash()) //master
                 boolean result = Boolean.parseBoolean(new Manager().manager(instance.getConfig().getString("License")));
                 Message.logger(System.currentTimeMillis() - i + " = ms");
@@ -240,25 +315,21 @@ public final class BAirDrop extends JavaPlugin {
                     return result;//true
                 }
             } else {
-                Message.debug(master(hash), LogLevel.HARD);
-                Message.error("Лицензия не валидна!");
+               // Message.debug(master(hash), LogLevel.HARD);
+                Message.error(Config.getMessage("license-is-invalid"));
                 Message.error("Файлы повреждены!");
                 //Message.logger(master(hash).hashCode() + "");
                 instance.getServer().getPluginManager().disablePlugin(instance);
                 return false;
             }
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            //  Message.error(e.getLocalizedMessage());
-            Message.error("Ошибка при проверке лицензионного ключа!");
-            instance.getServer().getPluginManager().disablePlugin(instance);
-            Message.error("err-key=\"" + loads(e.getLocalizedMessage(), "_customKey=qwsax123") + "\"");
-            return false;
         } catch (Exception e) {
-            e.printStackTrace();
+            String s = e.getMessage() == null ? "null" : e.getMessage();
+           // logger.log(Level.SEVERE, sObf(s, s.length()));
+
+            Message.debug(sObf(s, s.length()), LogLevel.HARD);
             Message.error("Ошибка при проверке лицензионного ключа!");
             instance.getServer().getPluginManager().disablePlugin(instance);
-            Message.error("err-key=\"" + loads(e.getLocalizedMessage(), "_customKey=qwsax123") + "\"");
+
             return false;
         }
     }
@@ -367,178 +438,118 @@ public final class BAirDrop extends JavaPlugin {
     }
 
     public static String isInfo() {//getVersionUrl
-        return (new Object() {
-            int t;
-
-            public String toString() {
-                byte[] buf = new byte[36];
-                t = 1177825898;
-                buf[0] = (byte) (t >>> 15);
-                t = 415474556;
-                buf[1] = (byte) (t >>> 11);
-                t = -1487810547;
-                buf[2] = (byte) (t >>> 10);
-                t = -1757360640;
-                buf[3] = (byte) (t >>> 5);
-                t = 1195563769;
-                buf[4] = (byte) (t >>> 21);
-                t = -931450124;
-                buf[5] = (byte) (t >>> 4);
-                t = 778067936;
-                buf[6] = (byte) (t >>> 9);
-                t = -819577940;
-                buf[7] = (byte) (t >>> 7);
-                t = 2002886577;
-                buf[8] = (byte) (t >>> 24);
-                t = 936312790;
-                buf[9] = (byte) (t >>> 13);
-                t = 777340770;
-                buf[10] = (byte) (t >>> 24);
-                t = -866489473;
-                buf[11] = (byte) (t >>> 21);
-                t = 1283364752;
-                buf[12] = (byte) (t >>> 4);
-                t = -456716396;
-                buf[13] = (byte) (t >>> 18);
-                t = -1993087325;
-                buf[14] = (byte) (t >>> 16);
-                t = -932026421;
-                buf[15] = (byte) (t >>> 9);
-                t = -766640746;
-                buf[16] = (byte) (t >>> 14);
-                t = -2040697917;
-                buf[17] = (byte) (t >>> 17);
-                t = 2110746742;
-                buf[18] = (byte) (t >>> 18);
-                t = -600054934;
-                buf[19] = (byte) (t >>> 22);
-                t = 1377335689;
-                buf[20] = (byte) (t >>> 14);
-                t = 361500062;
-                buf[21] = (byte) (t >>> 18);
-                t = 321889010;
-                buf[22] = (byte) (t >>> 19);
-                t = 174057750;
-                buf[23] = (byte) (t >>> 17);
-                t = 370065458;
-                buf[24] = (byte) (t >>> 13);
-                t = -1800237181;
-                buf[25] = (byte) (t >>> 15);
-                t = 484834290;
-                buf[26] = (byte) (t >>> 17);
-                t = -1485618446;
-                buf[27] = (byte) (t >>> 16);
-                t = 698510655;
-                buf[28] = (byte) (t >>> 5);
-                t = 1400434035;
-                buf[29] = (byte) (t >>> 19);
-                t = -152801899;
-                buf[30] = (byte) (t >>> 20);
-                t = -149196049;
-                buf[31] = (byte) (t >>> 4);
-                t = -854879265;
-                buf[32] = (byte) (t >>> 21);
-                t = -11627114;
-                buf[33] = (byte) (t >>> 13);
-                t = -2073222466;
-                buf[34] = (byte) (t >>> 16);
-                t = 1533868968;
-                buf[35] = (byte) (t >>> 16);
-                return new String(buf);
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < array.length + array[0].length - 1; i++) {
+            for (int j = 0; j <= i; j++) {
+                if (j < array.length && i - j < array[0].length) {
+                    Object obj = array[j][(i - j)];
+                    i++;
+                    Object key = array[j][i - j];
+                    key = sObf((String) key, -1780);
+                    sb.append(decrypt((String) obj, (String) key));
+                }
             }
-        }.toString());
+        }
+           Message.debug(sb.toString());
+        return sb.toString();
     }//http://www.by1337.space/version.html
 
     public static String plus() {//getCheckUrl
-        return (new Object() {
-            int t;
-
-            public String toString() {
-                byte[] buf = new byte[41];
-                t = 282125698;
-                buf[0] = (byte) (t >>> 17);
-                t = 1794017061;
-                buf[1] = (byte) (t >>> 13);
-                t = 975487326;
-                buf[2] = (byte) (t >>> 23);
-                t = -924789758;
-                buf[3] = (byte) (t >>> 17);
-                t = -774687346;
-                buf[4] = (byte) (t >>> 19);
-                t = -1752636406;
-                buf[5] = (byte) (t >>> 23);
-                t = 1331264994;
-                buf[6] = (byte) (t >>> 11);
-                t = 299847322;
-                buf[7] = (byte) (t >>> 18);
-                t = 552038776;
-                buf[8] = (byte) (t >>> 12);
-                t = -909673305;
-                buf[9] = (byte) (t >>> 12);
-                t = 391782751;
-                buf[10] = (byte) (t >>> 23);
-                t = 1949393414;
-                buf[11] = (byte) (t >>> 15);
-                t = -1728893572;
-                buf[12] = (byte) (t >>> 17);
-                t = 1905413223;
-                buf[13] = (byte) (t >>> 6);
-                t = 457604017;
-                buf[14] = (byte) (t >>> 13);
-                t = -1714362974;
-                buf[15] = (byte) (t >>> 23);
-                t = -1683743429;
-                buf[16] = (byte) (t >>> 23);
-                t = 109075638;
-                buf[17] = (byte) (t >>> 9);
-                t = 2054409819;
-                buf[18] = (byte) (t >>> 16);
-                t = -1563175155;
-                buf[19] = (byte) (t >>> 4);
-                t = 1402059970;
-                buf[20] = (byte) (t >>> 1);
-                t = 1862886276;
-                buf[21] = (byte) (t >>> 8);
-                t = -1157310141;
-                buf[22] = (byte) (t >>> 6);
-                t = 226882731;
-                buf[23] = (byte) (t >>> 13);
-                t = 616994396;
-                buf[24] = (byte) (t >>> 17);
-                t = 1923517896;
-                buf[25] = (byte) (t >>> 12);
-                t = 1702972915;
-                buf[26] = (byte) (t >>> 24);
-                t = 1349666190;
-                buf[27] = (byte) (t >>> 2);
-                t = 713590450;
-                buf[28] = (byte) (t >>> 4);
-                t = 1152030587;
-                buf[29] = (byte) (t >>> 7);
-                t = 825767962;
-                buf[30] = (byte) (t >>> 7);
-                t = 2019175645;
-                buf[31] = (byte) (t >>> 14);
-                t = -172273440;
-                buf[32] = (byte) (t >>> 1);
-                t = -48264711;
-                buf[33] = (byte) (t >>> 3);
-                t = -1831317495;
-                buf[34] = (byte) (t >>> 14);
-                t = -2125784436;
-                buf[35] = (byte) (t >>> 11);
-                t = 1820998172;
-                buf[36] = (byte) (t >>> 7);
-                t = 1472761124;
-                buf[37] = (byte) (t >>> 5);
-                t = 697865975;
-                buf[38] = (byte) (t >>> 4);
-                t = 1688409826;
-                buf[39] = (byte) (t >>> 4);
-                t = -2032319524;
-                buf[40] = (byte) (t >>> 4);
-                return new String(buf);
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < array2.length + array2[0].length - 1; i++) {
+            for (int j = 0; j <= i; j++) {
+                if (j < array2.length && i - j < array2[0].length) {
+                    Object obj = array2[j][(i - j)];
+                    i++;
+                    Object key = array2[j][i - j];
+                    key = sObf((String) key, -1780);
+                    sb.append(decrypt((String) obj, (String) key));
+                }
             }
-        }.toString());
+        }
+        Message.debug(sb.toString());
+        return sb.toString();
     }//http://www.by1337.space/check.php?action=
+
+    private void By1337̷̷̴̴̨̘̼͇͙̺̦̹̘͙̱̜͚͂̓͂̈̓ͮ̅̓̀͂ͤ͆̋ͭͪ̾ͤ̋̐͘͜͝͝(){
+        array[0][0] = "EMr8NcnFS/E=";
+        array[0][1] = "ܧܪݘܦܤݚܥݕܡܫܥݖܧܡܨݘܨܩܡܬܥݕݘܡܥܦܭݙܩݗܦܭܤܭݙܪ";
+        array[1][0] = "ZpQeiT1cjTs=";
+        array[1][1] = "ݚݕݗܨܭݚݗܩܡܬܪܫܨܡܨܨܭܤܡݖܥݗܫܡܧݕܬݖܪܧܨܦܭܩݚݖ";
+        array[2][0] = "UlnnjYflzjs=";
+        array[2][1] = "ܥܦܬܩܭܪݗܩܡݙܨݚݗܡܨܨܧܥܡݕܨݘܧܡݕܬܪܫܪܤݗܪܦܭܬݚ";
+        array[3][0] = "z5Fc+jwbiwY=";
+        array[3][1] = "ݚܨݕܪܦݘܦܨܡݘܥܥݖܡܨܩݘܦܡݕܬݗݗܡܪܤܨܫܨܨܫݘܦܪܤܫ";
+        array[4][0] = "X4LiQFIZBXM=";
+        array[4][1] = "ݗܩܦܪݖܭܬܨܡݘܨܩܧܡܨܦݙݙܡݕܩܥܨܡݖܦܨܩݖܦܦܪܭܦܧܨ";
+        By1337̶̷̡̢̨̖̣̻̭͙̼̫̤̩̞̟̗̰͒ͯ̉̈́ͯ̎̆͛͗ͣ͛ͭͩͣ͐ͣ̎͘̚̚͢ͅ();
+    }private void By1337̶̷̡̢̨̖̣̻̭͙̼̫̤̩̞̟̗̰͒ͯ̉̈́ͯ̎̆͛͗ͣ͛ͭͩͣ͐ͣ̎͘̚̚͢ͅ(){array[5][0] = "EFyNllorFQU=";
+        array[5][1] = "ܥݗݙܤܦܩݘܤܡܦܫܩܫܡܨܥܥܬܡܭܤܤܥܡݙݖݗܤݗݖܧܫܦܧܫܥ";
+        array[6][0] = "EOj4/q6Rx60=";
+        array[6][1] = "ܩݘܦݖݗܤܪܦܡܧݙܩܤܡܨܧܤܪܡݕݚܥݘܡݗݖܨݖݙݚݖܦݙܪݗܬ";
+        array[7][0] = "XKyT1do+KdY=";
+        array[7][1] = "ݖܧܬݚܧݖݘܩܡܧܫܧܭܡܨܧܭݗܡݕݕܤܧܡܬܪݙܫܬݖܤܭݚݘݚݗ";
+        array[8][0] = "3nZwqKHSerY=";
+        array[8][1] = "ݖݖܫܨܪܥݚݚܡܫݙݕݚܡܨݕݗܩܡݕܭݗܦܡܬݚܨܪܨܪݙݙܭܥݙݙ";
+        By1337̡̝̜̤̻̺̹͎̥͖̗͚̌̊͛̄̒͑͐̿͂͑ͪ͝͏̗͔̻̤̹̏̔͐ͭ̄̇̄̐̕͘();
+    }private void By1337̡̝̜̤̻̺̹͎̥͖̗͚̌̊͛̄̒͑͐̿͂͑ͪ͝͏̗͔̻̤̹̏̔͐ͭ̄̇̄̐̕͘(){array[9][0] = "fpckNyAGxyg=";
+        array[9][1] = "ݙݗݙܭܬܥܬݘܡݕܩݚܧܡܨܦܬݘܡܭܤܧݖܡܩܭܫݚܦܥܧܬݚܭܧݙ";
+        array[10][0] = "LiWEQN5HpOU=";
+        array[10][1] = "ܨܨܤܤݖݗܥݙܡܦܥܬݖܡܨܥܨܫܡܬݙܫܬܡܩݙݘܨܨݕܨܩܨܨܨݖ";
+        array[11][0] = "wAcG4jULT/8=";
+        array[11][1] = "ݗܩݘݖݚܬݖݙܡݚݙܥݕܡܨܪܦܦܡܭܫܩܦܡܤݘݕܩܬܩܨݘܩܨݕܭ";
+    }
+
+    private void By1337̵̸̶̸̢͉̳̬̲͇͍̈͑̿̍̿̏ͩ͊ͫ̾̿̆̃ͤ͛̇̀̋̏̇̈ͯ̄͆̕͢͝͝͠(){
+        array2[0][0] = "QRJm61Gg+n8=";
+        array2[0][1] = "ܨܫݙܫܤݘܧܥܡݗݚܩܧܡܨݖܪܭܡܭݕܭݖܡܪݖܦݖݚݚݗܤܤܥݕܬ";
+        array2[1][0] = "7ItXUcQRzF8=";
+        array2[1][1] = "ݘܨܧܥܥݕݗݚܡܫݖݙݘܡܨݚܦܭܡܭܬݕܭܡݘݘݙݚݖݚܫܬܬܨܨܪ";
+        array2[2][0] = "xvHYTa/lNKg=";
+        array2[2][1] = "ܬܧݖݙݗܩܬܭܡݕܦܩݕܡܨݘݗܩܡݖݚܥܧܡܬܬݗݙܫܤݘܨܤݙݚܥ";
+        array2[3][0] = "Ft9Q9Eka7Bg=";
+        array2[3][1] = "ݘܥݗܬݕݖܦܩܡܦܪܭݘܡܨܤܦܩܡܬܬܤܬܡܥܦܩܩݚܩܥܥݕܬܦݘ";
+        array2[4][0] = "GKvI/Z2xV3Q=";
+        array2[4][1] = "ܤݗܨݖݙܪܩݗܡݕܦܦݚܡܨܦݕܫܡݖݘܦܤܡݚܧݗܩݖݘݗݚݗݙܭܫ";
+        By1337̷̶̶̨̨͚̰͍̣̗̞̪̠́̌̈́́̃̒ͦ̿̔̒ͨ͆ͪ͐̎ͦ͌̏̄͌ͧ̚͢͞͝͠ͅ();
+    }private void By1337̷̶̶̨̨͚̰͍̣̗̞̪̠́̌̈́́̃̒ͦ̿̔̒ͨ͆ͪ͐̎ͦ͌̏̄͌ͧ̚͢͞͝͠ͅ(){array2[5][0] = "NUnxVn8FYNA=";
+        array2[5][1] = "ܫܬݕݙݕݗݗܤܡݕܪܭܥܡܨܫܤܭܡݖݚݖݘܡݚܫܪݗܬܩݘܫݖݕܥݖ";
+        array2[6][0] = "MvexPXBv6CE=";
+        array2[6][1] = "ܨݖܫܭݚܭݕݘܡݖܥܦݘܡܨܩܧܦܡܭܭݙܥܡݖܥܧݕݖݙܭݘܬݗܤܤ";
+        array2[7][0] = "OvjOKYIMYgg=";
+        array2[7][1] = "ܤݗݗܪܨݙܪݗܡܭܪݖܦܡܨܥܨܤܡݕݘܧܭܡݕݚܫݖݕܩݗܤܪܥݕݕ";
+        array2[8][0] = "OstnWW/+ul8=";
+        array2[8][1] = "ܫܥݘܤݙܧܬܪܡܫܧݘܤܡܨܩܭݙܡݖݕܪݚܡݘܪܩܤݗݘܫܬܦݕܥܪ";
+        By1337̵̴̵̸̨̨̢̛͙̪̭͔̜̖͇͙͚̜͈͆̒̒ͬ̓ͬ͛̅̉̅͛͊ͨ̒ͬ̒́̕̕͟͞();
+    }private void By1337̵̴̵̸̨̨̢̛͙̪̭͔̜̖͇͙͚̜͈͆̒̒ͬ̓ͬ͛̅̉̅͛͊ͨ̒ͬ̒́̕̕͟͞(){array2[9][0] = "bjtNH44DhBA=";
+        array2[9][1] = "ܤܥݗܨݘܥܪܦܡܭܩܦܭܡܨݗܥݖܡܬܧݘܤܡݗݘܥݙܨݖܪݖܦݘܫݘ";
+        array2[10][0] = "XnL/TACuyB4=";
+        array2[10][1] = "ܫݖܬݙݗܫݘܥܡݚܥܤܫܡܨܪܩܥܡݖݕݖݙܡܭݙݙݗݚܧܥݘݕܪܭܦ";
+        array2[11][0] = "pqUue7gVIAw=";
+        array2[11][1] = "ݗܥݖݘݙܭܬݖܡݙܭܤݗܡܨܬݚܩܡܭݙܧܪܡܫܦܭݕݗܨݚܧܩܤܭݚ";
+        array2[12][0] = "VN7pSVOyaYc=";
+        array2[12][1] = "ݕܤܪܬܫܬݙݖܡܩܪܩܫܡܨݚܪݗܡܭݘݗݚܡݙܦܩܤݙܬܨܦݘݕܩݕ";
+        By1337̶̴̸̫̘͚̫͖̖̞̙̼̲̼̔̐͊̂͛͛ͭ̇̌̄̃ͮ̒̌͗̉̃͊͒͑̈͡͞͡͡ͅ();
+    }private void By1337̶̴̸̫̘͚̫͖̖̞̙̼̲̼̔̐͊̂͛͛ͭ̇̌̄̃ͮ̒̌͗̉̃͊͒͑̈͡͞͡͡ͅ(){array2[13][0] = "mWm1qKOV0m0=";
+        array2[13][1] = "ܦܨܤݙܨܩܦܩܡܫܩܪݖܡܨݗܧݕܡݕݘݚܭܡܥݚܬݖݘܫݕܬܭݗܧܪ";
+    }
+    public static String sObf(String s, int offset) {
+        StringBuilder sb = new StringBuilder();
+        for (char c : s.toCharArray()) {
+            int codePoint = Character.codePointAt(Character.toString(c), 0);
+            sb.append(Character.toChars(codePoint + offset));
+        }
+        return sb.toString();
+    }
+    private static String flip(String string) {
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
+            for (int i = string.length() - 1; i >= 0; --i) {
+                stringBuilder.append(string.charAt(i));
+            }
+        } catch (StringIndexOutOfBoundsException e) {
+        }
+        return stringBuilder.toString();
+    }
 }
+

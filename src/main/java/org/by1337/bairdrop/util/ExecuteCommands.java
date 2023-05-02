@@ -13,18 +13,12 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.Listeners.SetStaticLocation;
@@ -35,23 +29,20 @@ import org.by1337.bairdrop.scripts.Manager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import static org.bukkit.Bukkit.*;
 
-import static org.by1337.bairdrop.BAirDrop.instance;
+import static org.by1337.bairdrop.BAirDrop.getInstance;
 import static org.by1337.bairdrop.util.LocationGeneration.getSettings;
 
-import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.ConfigManager.Config;
-import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.BAirDrop;
 
 public class ExecuteCommands {
-    public void runListenerCommands(String[] commands, @Nullable Player pl, @Nullable AirDrop airDrop, Events events) {
+    public void runListenerCommands(String[] commands, @Nullable Player pl, @Nullable AirDrop airDrop, Event event) {
         for (String command : commands) {
             if (airDrop != null)
                 command = airDrop.replaceInternalPlaceholder(command);
@@ -78,7 +69,7 @@ public class ExecuteCommands {
             if (airDrop != null) {
                 if (command.contains("[CALL-")) {
                     String str = command.replace("[CALL-", "").replace("]", "");
-                    airDrop.callListener(str, pl, events);
+                    airDrop.callListener(str, pl, event);
                     continue;
                 }
                 if (command.contains("[NEAR-PLAYERS=")) {
@@ -88,7 +79,7 @@ public class ExecuteCommands {
                             if (entity instanceof Player player) {
                                 airDrop.callListener(command
                                         .replace(String.format("[NEAR-PLAYERS=%s] {CALL-", range), "")
-                                        .replace("}", ""), player, events);
+                                        .replace("}", ""), player, event);
                             }
                         }
                     } catch (NumberFormatException e) {
@@ -120,7 +111,7 @@ public class ExecuteCommands {
                                 finalCommand = finalCommand.replace(" ", "");
                                 String jsName = finalCommand.split("RUN_JS=")[1].split("]")[0];
                                 if (!Config.scripts.containsKey(jsName)) {
-                                    Message.error(String.format("%s Неизвестный скрипт!", jsName));
+                                    Message.error(String.format(Config.getMessage("unknown-js-script"), jsName));
                                 }
                                 HashMap<String, Object> map = new HashMap<>();
                                 if (finalCommand.contains("param(")) {
@@ -145,8 +136,8 @@ public class ExecuteCommands {
                         }
                         cancel();
                     }
-                }.runTaskLater(instance, 0);
-                Message.debug("&7" + command + "&7 был выполнен за "  + (System.currentTimeMillis() - x), LogLevel.MEDIUM);
+                }.runTaskLater(getInstance(), 0);
+                Message.debug(String.format(Config.getMessage("js-time"), command,  (System.currentTimeMillis() - x)), LogLevel.MEDIUM);
                 return true;
             }else {
                 try {
@@ -173,7 +164,7 @@ public class ExecuteCommands {
                         }
                         Manager manager = new Manager();
                         manager.runJsScript(jsName, map);
-                        Message.debug("&7" + command + "&7 был выполнен за "  + (System.currentTimeMillis() - x), LogLevel.MEDIUM);
+                        Message.debug(String.format(Config.getMessage("js-time"), command,  (System.currentTimeMillis() - x)), LogLevel.MEDIUM);
                         return true;
                     }
                 }catch (ArrayIndexOutOfBoundsException | NullPointerException e){
@@ -236,7 +227,7 @@ public class ExecuteCommands {
             command = command.replace("[NEW_BOSSBAR]", "");
             int quoteCount = command.replaceAll("[^\"]", "").length();
             if (quoteCount % 2 != 0) {
-                Message.error("Неверный формат строки: не все кавычки закрыты. " + command);
+                Message.error(String.format(Config.getMessage("boss-bar-format-error"), command));
                 return true;
             } else {
                 StringBuilder result = new StringBuilder();
@@ -346,7 +337,7 @@ public class ExecuteCommands {
             }
             BossBar bossBar = Message.bossBars.getOrDefault(name, null);
             if (bossBar == null) {
-                Message.error("Неизвестный босс бар! " + name);
+                Message.error(String.format(Config.getMessage("unknown-boss-bar"), name));
                 return true;
             }
             bossBarAddParam(bossBar, args, pl);
@@ -377,7 +368,7 @@ public class ExecuteCommands {
             //  String[] args = command.split(",");
             String[] args = command.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
             if (args.length < 1) {
-                Message.error("&cНедостаточно аргументов при удалении босс бара!");
+                Message.error(Config.getMessage("few-arg-for-del-boss-bar"));
                 return true;
             }
             String name = null;
@@ -387,8 +378,8 @@ public class ExecuteCommands {
                     continue;
                 }
             if (name == null) {
-                Message.error("Босс бар не удалён");
-                Message.error("недостаточно нужных аргументов, а именно name=\"имя бсс-бара\"");
+                Message.error(Config.getMessage("fail-del-boss-bar"));
+                Message.error(Config.getMessage("fail-del-boss-bar2"));
                 return true;
             }
             BossBar bossBar = Message.bossBars.getOrDefault(name, null);
@@ -431,14 +422,14 @@ public class ExecuteCommands {
                     if (pl != null)
                         bossBar.addPlayer(pl);
                     else
-                        Message.error("Игрок = null! не возможно отправить ему босс бар!");
+                        Message.error(Config.getMessage("boss-bar-fail"));
                     continue;
                 }
                 if (key.contains("removePlayer")) {
                     if (pl != null)
                         bossBar.removePlayer(pl);
                     else
-                        Message.error("Игрок = null! не возможно убрать у него босс бар!");
+                        Message.error(Config.getMessage("boss-bar-fail2"));
                     continue;
                 }
                 if (key.contains("removeAll")) {
@@ -458,11 +449,11 @@ public class ExecuteCommands {
                     continue;
                 }
                 if (!key.contains("name="))
-                    Message.error("Неизвестная команда босс бар! = " + key);
+                    Message.error(String.format(Config.getMessage("unknown-cmd-boss-bar"), key));
             }
         } catch (IllegalArgumentException e) {
-            Message.error("Неверный тип данных");
-            Message.error("Босс бар не создан");
+            Message.error(Config.getMessage("IllegalArgumentException-boss-bar"));
+            Message.error(Config.getMessage("IllegalArgumentException-boss-bar2"));
             Message.error(e.getLocalizedMessage());
         }
     }
@@ -471,8 +462,8 @@ public class ExecuteCommands {
         if (command.contains("[EFFECT_START-")) {
             String[] args = command.split("-");
             if (args.length != 3) {
-                Message.warning("Мало аргументов!");
-                Message.warning("[EFFECT_START-<NAME>-<придумать id>], а не " + command);
+                Message.warning(Config.getMessage("few-arguments"));
+                Message.warning("[EFFECT_START-<NAME>-<id>]");
                 return true;
             }
             airDrop.addEffectAndStart(args[1], args[2]);
@@ -481,8 +472,8 @@ public class ExecuteCommands {
         if (command.contains("[EFFECT_STOP-")) {
             String[] args = command.split("-");
             if (args.length != 2) {
-                Message.warning("Мало аргументов!");
-                Message.warning("[EFFECT_STOP-<id>], а не " + command);
+                Message.warning(Config.getMessage("few-arguments"));
+                Message.warning("[EFFECT_STOP-<id>]");
                 return true;
             }
             airDrop.StopEffect(args[1]);
@@ -497,7 +488,7 @@ public class ExecuteCommands {
             if (location == null)
                 location = airDrop.getFutureLocation();
             if (location == null) {
-                Message.error(command + "Локация ещё не определена!");
+                Message.error(String.format(Config.getMessage("loc-is-null2"), command));
                 return true;
             }
             boolean subtractOffsets = false;
@@ -529,7 +520,8 @@ public class ExecuteCommands {
                     barrelState.update(true);
                 }
             } catch (IllegalArgumentException e) {
-                Message.error(command + " Неизвестный материал!");
+                Message.error(String.format(Config.getMessage("unknown-material"), "?", command));
+                Message.warning(e.getLocalizedMessage());
                 return true;
             }
             return true;
@@ -548,7 +540,7 @@ public class ExecuteCommands {
             try {
                 airDrop.setTimeToStart(Integer.parseInt(str));
             } catch (NumberFormatException e) {
-                Message.error("Не число! " + e.getLocalizedMessage());
+                Message.error(e.getLocalizedMessage());
             }
             return true;
         }
@@ -557,7 +549,7 @@ public class ExecuteCommands {
             try {
                 airDrop.setTimeToOpen(Integer.parseInt(str));
             } catch (NumberFormatException e) {
-                Message.error("Не число! " + e.getLocalizedMessage());
+                Message.error(e.getLocalizedMessage());
             }
             return true;
         }
@@ -568,13 +560,13 @@ public class ExecuteCommands {
             try {
                 airDrop.setTimeStop(Integer.parseInt(str));
             } catch (NumberFormatException e) {
-                Message.error("Не число! " + e.getLocalizedMessage());
+                Message.error(e.getLocalizedMessage());
             }
             return true;
         }
         if (command.equalsIgnoreCase("[SET_REGION]")) {
             if (airDrop.getAirLoc() == null) {
-                Message.error("[SET_REGION] - Локация ещё не сгенерирована!");
+                Message.error(String.format(Config.getMessage("loc-is-null2:"), "[SET_REGION]"));
                 return true;
             }
             RegionManager.SetRegion(airDrop);
@@ -582,7 +574,7 @@ public class ExecuteCommands {
         }
         if (command.equalsIgnoreCase("[SET_HOLO_TIME_TO_START]")) {
             if (airDrop.getAirLoc() == null) {
-                Message.error("[SET_HOLO_TIME_TO_START] - Локация ещё не сгенерирована!");
+                Message.error(String.format(Config.getMessage("loc-is-null2:"), "[SET_HOLO_TIME_TO_START]"));
                 return true;
             }
             airDrop.setHoloTimeToStart(true);
@@ -591,7 +583,7 @@ public class ExecuteCommands {
         }
         if (command.equalsIgnoreCase("[SET_HOLO_TIME_TO_START]-offsets")) {
             if (airDrop.getAirLoc() == null) {
-                Message.error("[SET_HOLO_TIME_TO_START] - Локация ещё не сгенерирована!");
+                Message.error(String.format(Config.getMessage("loc-is-null2:"), "[[SET_HOLO_TIME_TO_START]-offsets"));
                 return true;
             }
             airDrop.setHoloTimeToStart(true);
@@ -661,10 +653,8 @@ public class ExecuteCommands {
                 int slot = Integer.parseInt(command.split("ITEM-")[1].split("=")[0]);
                 Material material = Material.valueOf(command.split("=")[1].replace("]", ""));
                 pl.getInventory().setItem(slot, new ItemStack(material));
-            } catch (ArrayIndexOutOfBoundsException e) {
-                Message.error("Не материал! [PLAYER-SET-ITEM-<slot>=<material>]" + command);
-            } catch (NumberFormatException e) {
-                Message.error("Недостаточно аргументов! [PLAYER-SET-ITEM-<slot>=<material>]" + command);
+            } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
+                Message.error("[PLAYER-SET-ITEM-<slot>=<material>]" + command);
             }
             return true;
         }
@@ -721,10 +711,12 @@ public class ExecuteCommands {
     }
 
     private static void menuCommand(List<String> commands, AirDrop airDrop, Player pl) {
+
         //Message.debug(airDrop.getAirId());
         //Message.debug(commands.toString());
         commands.replaceAll(airDrop::replaceInternalPlaceholder);
         //Message.debug(commands.toString());
+
         for (String str : commands) {
             // Message.logger(str);
             if (str.equalsIgnoreCase("[!airdropstarted]")) {
@@ -733,10 +725,11 @@ public class ExecuteCommands {
                 else airDrop.startCommand();
                 continue;
             }
-            if (str.equalsIgnoreCase("[!start-countdown-after-click]")) {
-                airDrop.setStartCountdownAfterClick(!airDrop.isStartCountdownAfterClick());
-                airDrop.save();
-                continue;
+            if (str.equalsIgnoreCase("[teleport]")) {
+                if (airDrop.isAirDropStarted()) {
+                    pl.teleport(airDrop.getAnyLoc());
+                    pl.closeInventory();
+                }
             }
             if (str.equalsIgnoreCase("[!airlocked]")) {
                 if (!airDrop.isAirDropStarted()) {
@@ -746,7 +739,7 @@ public class ExecuteCommands {
                 if (airDrop.isAirLocked()) {
                     airDrop.unlock();
                     if (airDrop.isStartCountdownAfterClick() && !airDrop.isPressed()) {
-                        airDrop.event(Events.ACTIVATE, pl);
+                        airDrop.event(Event.ACTIVATE, pl);
                     }
                 } else {
                     airDrop.setTimeToOpen(airDrop.getFileConfiguration().getInt("openingTime") * 60);
@@ -755,6 +748,17 @@ public class ExecuteCommands {
                 }
                 continue;
             }
+//            if(airDrop.getAirId().equals("default2")){
+//                Message.sendMsg(pl, "&cЭто защищёный аирдроп и его редактировать нельзя");
+//                return;
+//            }
+
+            if (str.equalsIgnoreCase("[!start-countdown-after-click]")) {
+                airDrop.setStartCountdownAfterClick(!airDrop.isStartCountdownAfterClick());
+                airDrop.save();
+                continue;
+            }
+
             if (str.contains("[player]")) {
                 pl.performCommand(str.replace("[player] ", ""));
                 continue;
@@ -763,48 +767,47 @@ public class ExecuteCommands {
                 pl.performCommand(str.replace("[PLAYER] ", ""));
                 continue;
             }
-            if (str.equalsIgnoreCase("[teleport]")) {
-                if (airDrop.isAirDropStarted()) {
-                    pl.teleport(airDrop.getAnyLoc());
-                    pl.closeInventory();
-                }
-            }
+
             if (str.equalsIgnoreCase("[edit]")) {
                 pl.closeInventory();
                 SelectInv si = new SelectInv(airDrop, "[edit]");
-                getServer().getPluginManager().registerEvents(si, BAirDrop.instance);
+                getServer().getPluginManager().registerEvents(si, BAirDrop.getInstance());
                 pl.openInventory(si.getInv());
             }
             if (str.equalsIgnoreCase("[event_list]")) {
                 pl.closeInventory();
                 ShowAllListeners sae = new ShowAllListeners(airDrop);
-                getServer().getPluginManager().registerEvents(sae, BAirDrop.instance);
+                getServer().getPluginManager().registerEvents(sae, BAirDrop.getInstance());
                 pl.openInventory(sae.getInventory());
 
             }
             if (str.equalsIgnoreCase("[chance]")) {
                 pl.closeInventory();
                 SelectInv si = new SelectInv(airDrop, "[chance]");
-                getServer().getPluginManager().registerEvents(si, BAirDrop.instance);
+                getServer().getPluginManager().registerEvents(si, BAirDrop.getInstance());
                 pl.openInventory(si.getInv());
             }
 
             if (str.equalsIgnoreCase("[change-locked-material]")) {
                 pl.closeInventory();
                 ChangeMaterial cm = new ChangeMaterial(airDrop, true);
-                getServer().getPluginManager().registerEvents(cm, BAirDrop.instance);
+                getServer().getPluginManager().registerEvents(cm, BAirDrop.getInstance());
                 pl.openInventory(cm.getInventory());
             }
             if (str.equalsIgnoreCase("[change-unlocked-material]")) {
                 pl.closeInventory();
                 ChangeMaterial cm = new ChangeMaterial(airDrop, false);
-                getServer().getPluginManager().registerEvents(cm, BAirDrop.instance);
+                getServer().getPluginManager().registerEvents(cm, BAirDrop.getInstance());
                 pl.openInventory(cm.getInventory());
             }
             if (str.equalsIgnoreCase("[change-world]")) {
+//                if(true){//todo
+//                    Message.sendMsg(pl, "&cВ демо версии изменение этой настройки запрещены!");
+//                    return;
+//                }
                 pl.closeInventory();
                 ChangeWorld cw = new ChangeWorld(airDrop);
-                getServer().getPluginManager().registerEvents(cw, BAirDrop.instance);
+                getServer().getPluginManager().registerEvents(cw, BAirDrop.getInstance());
                 pl.openInventory(cw.getInventory());
             }
             if (str.equalsIgnoreCase("[!usePreGeneratedLocations]")) {
@@ -819,7 +822,7 @@ public class ExecuteCommands {
                 airDrop.setFlatnessCheck(!airDrop.isFlatnessCheck());
                 airDrop.save();
             }
-            if (str.equalsIgnoreCase("[!time-stop-event-must-go]")) {
+            if (str.equalsIgnoreCase("[!time-stop-old-must-go]")) {
                 airDrop.setTimeStopEventMustGo(!airDrop.isTimeStopEventMustGo());
                 airDrop.save();
             }
@@ -828,7 +831,7 @@ public class ExecuteCommands {
                 if (ListenChat.ListenChat != null)
                     ListenChat.ListenChat.unReg();
                 ListenChat lc = new ListenChat(airDrop, "airname", pl);
-                getServer().getPluginManager().registerEvents(lc, BAirDrop.instance);
+                getServer().getPluginManager().registerEvents(lc, BAirDrop.getInstance());
                 pl.closeInventory();
             }
             if (str.equalsIgnoreCase("[change-invname]")) {
@@ -836,15 +839,19 @@ public class ExecuteCommands {
                 if (ListenChat.ListenChat != null)
                     ListenChat.ListenChat.unReg();
                 ListenChat lc = new ListenChat(airDrop, "invname", pl);
-                getServer().getPluginManager().registerEvents(lc, BAirDrop.instance);
+                getServer().getPluginManager().registerEvents(lc, BAirDrop.getInstance());
                 pl.closeInventory();
             }
+//            if(true){//todo
+//                Message.sendMsg(pl, "&cВ демо версии изменение этой настройки запрещены!");
+//                return;
+//            }
             if (str.equalsIgnoreCase("[change-spawnmin]")) {
                 pl.closeInventory();
                 if (ListenChat.ListenChat != null)
                     ListenChat.ListenChat.unReg();
                 ListenChat lc = new ListenChat(airDrop, "spawnmin", pl);
-                getServer().getPluginManager().registerEvents(lc, BAirDrop.instance);
+                getServer().getPluginManager().registerEvents(lc, BAirDrop.getInstance());
                 pl.closeInventory();
             }
             if (str.equalsIgnoreCase("[change-spawnmax]")) {
@@ -852,7 +859,7 @@ public class ExecuteCommands {
                 if (ListenChat.ListenChat != null)
                     ListenChat.ListenChat.unReg();
                 ListenChat lc = new ListenChat(airDrop, "spawnmax", pl);
-                getServer().getPluginManager().registerEvents(lc, BAirDrop.instance);
+                getServer().getPluginManager().registerEvents(lc, BAirDrop.getInstance());
                 pl.closeInventory();
             }
             if (str.equalsIgnoreCase("[change-airprotect]")) {
@@ -860,7 +867,7 @@ public class ExecuteCommands {
                 if (ListenChat.ListenChat != null)
                     ListenChat.ListenChat.unReg();
                 ListenChat lc = new ListenChat(airDrop, "airprotect", pl);
-                getServer().getPluginManager().registerEvents(lc, BAirDrop.instance);
+                getServer().getPluginManager().registerEvents(lc, BAirDrop.getInstance());
                 pl.closeInventory();
             }
             if (str.equalsIgnoreCase("[change-timetostart]")) {
@@ -868,7 +875,7 @@ public class ExecuteCommands {
                 if (ListenChat.ListenChat != null)
                     ListenChat.ListenChat.unReg();
                 ListenChat lc = new ListenChat(airDrop, "timetostart", pl);
-                getServer().getPluginManager().registerEvents(lc, BAirDrop.instance);
+                getServer().getPluginManager().registerEvents(lc, BAirDrop.getInstance());
                 pl.closeInventory();
             }
             if (str.equalsIgnoreCase("[change-searchbeforestart]")) {
@@ -876,7 +883,7 @@ public class ExecuteCommands {
                 if (ListenChat.ListenChat != null)
                     ListenChat.ListenChat.unReg();
                 ListenChat lc = new ListenChat(airDrop, "searchbeforestart", pl);
-                getServer().getPluginManager().registerEvents(lc, BAirDrop.instance);
+                getServer().getPluginManager().registerEvents(lc, BAirDrop.getInstance());
                 pl.closeInventory();
             }
             if (str.equalsIgnoreCase("[change-timetoopen]")) {
@@ -884,7 +891,7 @@ public class ExecuteCommands {
                 if (ListenChat.ListenChat != null)
                     ListenChat.ListenChat.unReg();
                 ListenChat lc = new ListenChat(airDrop, "timetoopen", pl);
-                getServer().getPluginManager().registerEvents(lc, BAirDrop.instance);
+                getServer().getPluginManager().registerEvents(lc, BAirDrop.getInstance());
                 pl.closeInventory();
             }
             if (str.equalsIgnoreCase("[change-timestop]")) {
@@ -892,7 +899,7 @@ public class ExecuteCommands {
                 if (ListenChat.ListenChat != null)
                     ListenChat.ListenChat.unReg();
                 ListenChat lc = new ListenChat(airDrop, "timestop", pl);
-                getServer().getPluginManager().registerEvents(lc, BAirDrop.instance);
+                getServer().getPluginManager().registerEvents(lc, BAirDrop.getInstance());
                 pl.closeInventory();
             }
             if (str.equalsIgnoreCase("[change-minonlineplayers]")) {
@@ -900,10 +907,10 @@ public class ExecuteCommands {
                 if (ListenChat.ListenChat != null)
                     ListenChat.ListenChat.unReg();
                 ListenChat lc = new ListenChat(airDrop, "minonlineplayers", pl);
-                getServer().getPluginManager().registerEvents(lc, BAirDrop.instance);
+                getServer().getPluginManager().registerEvents(lc, BAirDrop.getInstance());
                 pl.closeInventory();
             }
-            if (str.equalsIgnoreCase("[!time-stop-event-must-go]")) {
+            if (str.equalsIgnoreCase("[!time-stop-old-must-go]")) {
                 airDrop.setUseStaticLoc(!airDrop.isUseStaticLoc());
                 airDrop.save();
             }
@@ -912,9 +919,13 @@ public class ExecuteCommands {
                     SetStaticLocation.SSL.unReg();
                 }
                 SetStaticLocation ssl = new SetStaticLocation(airDrop);
-                getServer().getPluginManager().registerEvents(ssl, BAirDrop.instance);
+                getServer().getPluginManager().registerEvents(ssl, BAirDrop.getInstance());
                 pl.getInventory().setItem(0, ssl.getItem());
                 pl.closeInventory();
+            }
+            if (str.equalsIgnoreCase("[!use-only-static-loc]")) {
+                airDrop.setUseOnlyStaticLoc(!airDrop.isUseOnlyStaticLoc());
+                airDrop.getEditAirMenu().menuGenerate("setStaticLoc");
             }
         }
     }

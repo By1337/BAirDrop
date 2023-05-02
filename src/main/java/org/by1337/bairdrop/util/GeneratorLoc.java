@@ -55,11 +55,11 @@ public class GeneratorLoc {
                         List<GenLoc> newValues = new ArrayList<>();
                         newValues.add(genLoc);
                         locs.put(airId, newValues);
-                        System.out.println("Добавлен новый ключ " + airId + " со значением " + genLoc);
+                      //  System.out.println("Добавлен новый ключ " + airId + " со значением " + genLoc);
                     } else {
                             existingValues.add(genLoc);
                             locs.put(airId, existingValues);
-                            System.out.println("Обновлен ключ " + airId + " (количество элементов: " + existingValues.size() + ")");
+                         //   System.out.println("Обновлен ключ " + airId + " (количество элементов: " + existingValues.size() + ")");
                     }
                     count1--;
                     Message.sendMsg(pl, String.format(Config.getMessage("generator"), count1));
@@ -84,7 +84,7 @@ public class GeneratorLoc {
                     cancel();
                 }
             }
-        }.runTaskTimerAsynchronously(BAirDrop.instance, timings, timings);
+        }.runTaskTimerAsynchronously(BAirDrop.getInstance(), timings, timings);
     }
 
     public static void save() {
@@ -153,26 +153,5 @@ public class GeneratorLoc {
                 }
             }
         }
-
-
-//        for (String worldName : Config.locations.getConfigurationSection("loc").getKeys(false)) {
-//            if (!locations.containsKey(worldName))
-//                locations.put(worldName, new ArrayList<>());
-//            if (Config.locations.getConfigurationSection("loc." + worldName) == null)
-//                continue;
-//            for (String num : Config.locations.getConfigurationSection("loc." + worldName).getKeys(false)) {
-//                try {
-//                    String x = Objects.requireNonNull(Config.locations.getString("loc." + worldName + "." + num + ".x"));
-//                    String y = Objects.requireNonNull(Config.locations.getString("loc." + worldName + "." + num + ".y"));
-//                    String z = Objects.requireNonNull(Config.locations.getString("loc." + worldName + "." + num + ".z"));
-//                    Location loc = new Location(Bukkit.getWorld(worldName), Double.parseDouble(x), Double.parseDouble(y), Double.parseDouble(z));
-//                    locations.get(worldName).add(loc);
-//                } catch (NullPointerException | NumberFormatException e) {
-//                    Message.warning(Config.getMessage("generator-loc-error"));
-//                }
-//
-//
-//            }
-//        }
     }
 }

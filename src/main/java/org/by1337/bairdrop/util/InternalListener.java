@@ -14,17 +14,16 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.scripts.Manager;
-import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.BAirDrop;
 
 public class InternalListener {
-    Events event;
+    Event event;
     String description;
     String[] commands;
     String[] denyCommands;
     HashMap<String, HashMap<String, String>> requirement;
 
-    public InternalListener(Events event, String[] commands, HashMap<String, HashMap<String, String>> requirement, String description, String[] denyCommands) {
+    public InternalListener(Event event, String[] commands, HashMap<String, HashMap<String, String>> requirement, String description, String[] denyCommands) {
         this.description = description;
         this.event = event;
         this.commands = commands;
@@ -32,7 +31,7 @@ public class InternalListener {
         this.denyCommands = denyCommands;
     }
 
-    public void execute(@Nullable Player pl, @Nullable AirDrop airDrop, boolean ignoredRequirement, Events event) {
+    public void execute(@Nullable Player pl, @Nullable AirDrop airDrop, boolean ignoredRequirement, Event event) {
         if (Arrays.stream(commands).toList().contains("[SCHEDULER]") || Arrays.stream(denyCommands).toList().contains("[SCHEDULER]")) {
             int time = 0;//[LATER-600]
             List<String> list = new ArrayList<>();
@@ -62,7 +61,7 @@ public class InternalListener {
                         executeCommands.runListenerCommands(denyCommands, pl, airDrop, event);
                     }
                 }
-            }.runTaskLater(BAirDrop.instance, time);
+            }.runTaskLater(BAirDrop.getInstance(), time);
             return;
         }
         if (Arrays.stream(commands).toList().contains("[ASYNC]") || Arrays.stream(denyCommands).toList().contains("[ASYNC]")) {
@@ -98,7 +97,7 @@ public class InternalListener {
                         Message.error(e.getLocalizedMessage());
                     }
                 }
-            }.runTaskLaterAsynchronously(BAirDrop.instance, time);
+            }.runTaskLaterAsynchronously(BAirDrop.getInstance(), time);
             return;
         }
         ExecuteCommands executeCommands = new ExecuteCommands();
@@ -111,7 +110,7 @@ public class InternalListener {
         }
     }
 
-    public Events getEvent() {
+    public Event getEvent() {
         return event;
     }
 
@@ -305,7 +304,7 @@ public class InternalListener {
                 command = command.replace(" ", "");
                 String jsName = command.split("RUN_JS=")[1].split("]")[0];
                 if (!Config.scripts.containsKey(jsName)) {
-                    Message.error(String.format("%s Неизвестный скрипт!", jsName));
+                    Message.error(String.format(Config.getMessage("unknown-js-script"), jsName));
                 }
                 HashMap<String, Object> map = new HashMap<>();
                 if (command.contains("param(")) {

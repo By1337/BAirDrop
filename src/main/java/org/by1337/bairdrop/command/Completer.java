@@ -36,7 +36,7 @@ public class Completer implements TabCompleter {
             if (args.length == 2 && args[0].equals("js")) return Config.scripts.values().stream().map(File::getName).collect(Collectors.toList());
             if (args.length == 2 && !args[0].equals("get") && !args[0].equals("compass")) return list;
             if (args.length == 1 ) {
-                return List.of("menu", "start", "stop", "tp", "listeners", "generate", "reload", "clone", "get", "delete", "create", "compass", "js");
+                return List.of("menu", "start", "stop", "tp", "listeners", "generate", "reload", "clone", "get", "delete", "create", "compass", "js", "help");
             }
             if (args.length == 2) return BAirDrop.summoner.getItems().keySet().stream().toList();
         }else {

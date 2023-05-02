@@ -7,10 +7,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
+
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.BAirDrop;
+
 public class GlobalTimer {
     int timeToStart;
     int timeToStartCons;
@@ -20,50 +22,50 @@ public class GlobalTimer {
     public GlobalTimer(int timeToStartCons) {
         this.timeToStartCons = timeToStartCons;
         this.timeToStart = timeToStartCons;
-        Message.debug("[GlobalTimer] До старта: " + timeToStart, LogLevel.LOW);
+        Message.debug(String.format(Config.getMessage("global-timer-to-start"), timeToStart), LogLevel.LOW);
         run();
     }
 
     public void run() {
-        Message.debug("[GlobalTimer] запускаю поток", LogLevel.LOW);
+        Message.debug(Config.getMessage("global-timer-thread-start"), LogLevel.LOW);
         new BukkitRunnable() {
             @Override
             public void run() {
-                if(stop){
+                if (stop) {
                     cancel();
-                    Message.debug("[GlobalTimer] завершаю поток", LogLevel.LOW);
+                    Message.debug(Config.getMessage("global-timer-thread-stop"), LogLevel.LOW);
                     return;
                 }
                 if (timeToStart <= 0) {
                     if (air == null) {
-                        Message.warning("Не удалось подобрать аирдроп! global-time");
+                        Message.warning(Config.getMessage("global-timer-failed"));
                         return;
                     }
                     air.setCountTheTime(true);
                     air.setHideInCompleter(false);
-                    if(air.isAirDropStarted()){
+                    if (air.isAirDropStarted()) {
                         air = null;
                         timeToStart = timeToStartCons;
                     }
-                } else if(air != null && Bukkit.getOnlinePlayers().size() >= air.getMinOnlinePlayers()){
+                } else if (air != null && Bukkit.getOnlinePlayers().size() >= air.getMinOnlinePlayers()) {
                     timeToStart--;
                 }
                 if (BAirDrop.airDrops.isEmpty()) {
-                    Message.error("global-time Список аирдропов пуст!");
+                    Message.error(Config.getMessage("global-timer-failed2"));
                     timeToStart = timeToStartCons;
                     return;
                 }
 
                 if (air == null) {
                     air = getRandomAir();
-                    if (air != null){
+                    if (air != null) {
                         air.setHideInCompleter(true);
                         BAirDrop.airDrops.put(air.getAirId(), air);
-                        Message.debug("[GlobalTimer] Выбрал аирдроп " + air.getAirId(), LogLevel.LOW);
+                        Message.debug(String.format(Config.getMessage("global-timer"), air.getAirId()), LogLevel.LOW);
                     }
                 }
             }
-        }.runTaskTimerAsynchronously(BAirDrop.instance, 20, 20);
+        }.runTaskTimerAsynchronously(BAirDrop.getInstance(), 20, 20);
     }
 
     @Nullable
@@ -89,7 +91,7 @@ public class GlobalTimer {
                 newid = air.getAirId() + "_clone" + UUID.randomUUID().toString();
 
             AirDrop aair = air.clone(newid);
-          //  AirDrop aair = air.clone(air.getAirId() + "_clone" + ThreadLocalRandom.current().nextInt(99999));
+            //  AirDrop aair = air.clone(air.getAirId() + "_clone" + ThreadLocalRandom.current().nextInt(99999));
             aair.setClone(true);
             aair.setKill(true);
             return aair;

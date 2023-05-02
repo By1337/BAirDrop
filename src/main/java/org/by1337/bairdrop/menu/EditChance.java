@@ -60,11 +60,11 @@ public class EditChance implements Listener {
                 @Override
                 public void run() {
                     SelectInv si = new SelectInv(air, "[chance]");
-                    getServer().getPluginManager().registerEvents(si, BAirDrop.instance);
+                    getServer().getPluginManager().registerEvents(si, BAirDrop.getInstance());
                     e.getPlayer().openInventory(si.getInv());
                     cancel();
                 }
-            }.runTaskTimer(BAirDrop.instance, 1, 1);
+            }.runTaskTimer(BAirDrop.getInstance(), 1, 1);
             editChance = null;
             HandlerList.unregisterAll(this);
         }

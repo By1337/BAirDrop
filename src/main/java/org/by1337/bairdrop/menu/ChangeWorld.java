@@ -87,7 +87,7 @@ public class ChangeWorld implements Listener {
 
             airDrop.save();
             EditAirMenu em = new EditAirMenu(airDrop);
-            getServer().getPluginManager().registerEvents(em, BAirDrop.instance);
+            getServer().getPluginManager().registerEvents(em, BAirDrop.getInstance());
             airDrop.setEditAirMenu(em);
             e.getWhoClicked().openInventory(em.getInventory());
         }

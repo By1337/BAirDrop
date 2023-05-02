@@ -18,9 +18,12 @@ public class CMIHolo implements IHologram{
             holo.update();
         }else {
             CMIHologram holo = CMI.getInstance().getHologramManager().getHolograms().get(name);
+            int size = holo.getLines().size();
             holo.setLines(lines);
             holo.setLoc(location);
             holo.update();
+            if(size != lines.size())//проблемы с api у cmi, или я додик
+                holo.refresh();
         }
     }
 

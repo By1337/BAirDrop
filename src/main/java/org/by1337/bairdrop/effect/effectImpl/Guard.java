@@ -9,6 +9,7 @@ import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.effect.EffectType;
 import org.by1337.bairdrop.effect.IEffect;
 
@@ -52,9 +53,9 @@ public class Guard implements IEffect{
         this.airDrop = airDrop;
         if (airDrop.getAirLoc() == null) {
             if (airDrop.getFutureLocation() == null) {
-                Message.error("Локация для аирдропа ещё не сгенерирована");
-                Message.error("Эффект не может появится");
-                Message.error("аирдроп " + airDrop.getAirId());
+                Message.error(Config.getMessage("effect-error-loc-is-null"));
+                Message.error(Config.getMessage("effect-error-loc-is-null2"));
+                Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getAirId()));
                 return;
             } else loc = airDrop.getFutureLocation().clone();
         } else loc = airDrop.getAirLoc().clone();
@@ -146,7 +147,7 @@ public class Guard implements IEffect{
                     }
                 }
             }
-        }.runTaskTimer(BAirDrop.instance, timeUpdate, timeUpdate);
+        }.runTaskTimer(BAirDrop.getInstance(), timeUpdate, timeUpdate);
     }
 
     @Override

@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.by1337.bairdrop.BAirDrop;
+import org.by1337.bairdrop.ConfigManager.Config;
 import org.jetbrains.annotations.Nullable;
 
 
@@ -51,8 +52,10 @@ public class Message {
 
     public static void debug(String msg, LogLevel logLevel) {
         if (BAirDrop.logLevel.getLvl() >= logLevel.getLvl()) {
-            if (BAirDrop.instance.getConfig().getBoolean("debug"))
+            if (BAirDrop.getInstance().getConfig().getBoolean("debug")) {
                 logger("&7[DEBUG] " + msg);
+                BAirDrop.Log("&7[DEBUG] " + msg);
+            }
         }
     }
 
@@ -62,7 +65,7 @@ public class Message {
      */
     @Deprecated
     public static void debug(String msg) {
-        if (BAirDrop.instance.getConfig().getBoolean("debug"))
+        if (BAirDrop.getInstance().getConfig().getBoolean("debug"))
             logger("&7[&eDeprecated &7DEBUG] " + msg);
     }
 
@@ -71,8 +74,8 @@ public class Message {
     }
 
     public static void error(String msg) {
-        BAirDrop.instance.getLogger().log(Level.SEVERE, msg);
-        sendAllOp(msg.replace("{PP}", prefixPlugin + " &#cb2d3e[&#d1313dE&#d7363dR&#dd3a3cR&#e33e3bO&#e9433bR&#ef473a]&c"));
+        BAirDrop.getInstance().getLogger().log(Level.SEVERE, msg);
+        sendAllOp(prefixPlugin + " &c" + msg);
 
     }
 
@@ -85,7 +88,7 @@ public class Message {
     }
 
     public static void warning(String msg) {
-        BAirDrop.instance.getLogger().warning(messageBuilder(msg));
+        BAirDrop.getInstance().getLogger().warning(messageBuilder(msg));
     }
 
     public static void sendActionBar(Player pl, String msg) {
@@ -97,6 +100,7 @@ public class Message {
             pl.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(messageBuilder(msg)));
     }
 
+    @Deprecated
     public static void sendAllOpActionBar(String msg) {
         Message.logger(msg);
         for (Player pl : Bukkit.getOnlinePlayers())
@@ -157,7 +161,7 @@ public class Message {
         try {
             pl.playSound(pl.getLocation(), Sound.valueOf(sound), 1, 1);
         } catch (IllegalArgumentException e) {
-            Message.error("Неизвестный звук! '" + sound + "'");
+            Message.error(String.format(Config.getMessage("unknown-sound"), sound));
         }
     }
 
@@ -171,7 +175,7 @@ public class Message {
             for (Player pl : Bukkit.getOnlinePlayers())
                 sendSound(pl, sound);
         } catch (IllegalArgumentException e) {
-            Message.error("Неизвестный звук! '" + sound + "'");
+            Message.error(String.format(Config.getMessage("unknown-sound"), sound));
         }
     }
 

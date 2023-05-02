@@ -56,7 +56,7 @@ effects:
     color-rgb-g: 0
     color-rgb-b: 255
 
-  ef=4:
+  ef=4: #Deprecated
     type: PARTICLE_EXPLOSION
     ticks: 1
     timeUpdate: 1

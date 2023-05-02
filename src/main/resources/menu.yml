@@ -243,11 +243,14 @@ main:
     material: BEDROCK
     lore:
       - '&aСейчас:&7 {use-static-loc}'
-      - '&aЛКМ&7- что-бы включить/выключить'
-      - '&aПКМ&7- что-бы установить'
+      - '&aЛКМ&7- что бы включить/выключить'
+      - '&aПКМ&7- что бы установить'
+      - '&aShift + ЛКМ &7- Использовать только статическую локацию: {use-only-static-loc}'
       - '&7Координаты статической локации'
       - '&7{stat-world}, {stat-x}, {stat-y}, {stat-z}'
     commands:
+      SHIFT_LEFT-CLICK:
+        - '[!use-only-static-loc]'
       LEFT-CLICK:
         - '[!use-static-loc]'
       RIGHT-CLICK:

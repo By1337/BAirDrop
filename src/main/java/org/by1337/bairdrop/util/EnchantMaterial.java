@@ -22,19 +22,27 @@ public class EnchantMaterial {
         this.conflictEnchantments = conflictEnchantments;
         this.enchantInfos = enchantInfos;
     }
-    public ItemStack enchant(@NotNull ItemStack itemStack){
-        if(itemStack.getItemMeta() == null) return itemStack;
+
+    public ItemStack enchant(@NotNull ItemStack itemStack) {
+        if (itemStack.getItemMeta() == null) return itemStack;
         ItemMeta im = itemStack.getItemMeta();
-        for(Map.Entry<Enchantment, Integer> map : im.getEnchants().entrySet()){
-            if(conflictEnchantments.contains(map.getKey())) return itemStack;
+        for (Map.Entry<Enchantment, Integer> map : im.getEnchants().entrySet()) {
+            if (conflictEnchantments.contains(map.getKey())) return itemStack;
         }
-        for(EnchantInfo ei : enchantInfos){
-            if(ei.getChance() > random.nextInt(Integer.toBinaryString(BAirDrop.info[5]).length() * 10) ){//100
-                int level = random.nextInt(ei.getMaxLeve() - ei.getMinLeve() + 1);
-                level += ei.getMinLeve();
-                im.addEnchant(ei.getEnchantment(), level, true);
+
+        for (EnchantInfo ei : enchantInfos) {
+            try {
+                if (ei.getChance() > random.nextInt(Integer.toBinaryString(BAirDrop.info[5]).length() * 10)) {//100
+                    int level = random.nextInt(ei.getMaxLeve() - ei.getMinLeve() + 1);
+                    level += ei.getMinLeve();
+                    im.addEnchant(ei.getEnchantment(), level, true);
+                }
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
             }
         }
+
+
         itemStack.setItemMeta(im);
         return itemStack;
     }

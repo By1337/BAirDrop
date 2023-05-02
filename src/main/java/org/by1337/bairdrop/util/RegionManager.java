@@ -31,7 +31,7 @@ public class RegionManager {
             world = airDrop.getFutureLocation().getWorld();
         else world = airDrop.getWorld();
         if(world == null){
-            Message.error("Удаление региона не удалось потому-что мир неизвестен!");
+            Message.error(Config.getMessage("unknown-world-region"));
             return;
         }
 
@@ -67,11 +67,11 @@ public class RegionManager {
     }
 
     public static void LoadFlags() {
-        for (String flag : BAirDrop.instance.getConfig().getStringList("settings.world-guard-flags.allow-flags")) {
+        for (String flag : BAirDrop.getInstance().getConfig().getStringList("settings.world-guard-flags.allow-flags")) {
             if (!addFlag(flag, true))
                 Message.warning("Flag " + flag + " not loaded in");
         }
-        for (String flag : BAirDrop.instance.getConfig().getStringList("settings.world-guard-flags.deny-flags")) {
+        for (String flag : BAirDrop.getInstance().getConfig().getStringList("settings.world-guard-flags.deny-flags")) {
             if (!addFlag(flag, false))
                 Message.warning("Flag " + flag + " not loaded in");
         }

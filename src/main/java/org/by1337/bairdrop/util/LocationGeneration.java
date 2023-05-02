@@ -201,7 +201,7 @@ public class LocationGeneration {
 
     @Nullable
     public Location PreGeneratedLocations(AirDrop airDrop) {
-        if (airDrop.getAttemptsToPick() >= BAirDrop.instance.getConfig().getInt("max-experience-pre-generated-location")) {
+        if (airDrop.getAttemptsToPick() >= BAirDrop.getInstance().getConfig().getInt("max-experience-pre-generated-location")) {
             if (cd.getOrDefault(airDrop.getAirId() + "004", 0L) < System.currentTimeMillis()) {
                 Message.error(Config.getMessage("search-location-limit"));
                 Message.error(String.format(Config.getMessage("search-location-limit-2"), airDrop.getAirId()));

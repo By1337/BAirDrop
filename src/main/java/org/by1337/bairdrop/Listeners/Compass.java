@@ -31,6 +31,7 @@ public class Compass implements Listener {
     double distanceBetweenPoints = 0.2;
     Color color = Color.RED;
     String messageNotFound = "&cError";
+    String messageFound = null;
     HashMap<UUID, Long> cd = new HashMap<>();
     @EventHandler
     public void onClick(PlayerInteractEvent e){
@@ -63,6 +64,9 @@ public class Compass implements Listener {
                     itemStack.setItemMeta(compassMeta);
                 }
             }else {
+                if(messageFound != null){
+                    Message.sendMsg(pl, airDrop.replaceInternalPlaceholder(messageFound));
+                }
                 AirDrop finalAirDrop = airDrop;
                 if(itemStack.getType() == Material.COMPASS){
                     CompassMeta compassMeta = (CompassMeta) itemStack.getItemMeta();
@@ -86,26 +90,28 @@ public class Compass implements Listener {
                         }
                         cancel();
                     }
-                }.runTaskTimer(BAirDrop.instance, 1L, 1L);
+                }.runTaskTimer(BAirDrop.getInstance(), 1L, 1L);
             }
         }
     }
     public void loadItem(){
         ItemStack itemStack = new ItemStack(Material.DIRT);
-        String mat = Objects.requireNonNull(BAirDrop.instance.getConfig().getString("compass.material"));
-        String name = Objects.requireNonNull(BAirDrop.instance.getConfig().getString("compass.item-name"));
-        String nbt = BAirDrop.instance.getConfig().getString("compass.nbt");
-        String messageNotFound = Objects.requireNonNull(BAirDrop.instance.getConfig().getString("compass.message-not-found"));
-        List<String> lore = BAirDrop.instance.getConfig().getStringList("compass.item-lore");
-        double lineMaxDistance = BAirDrop.instance.getConfig().getDouble("compass.line-max-distance");
-        double particleStep = BAirDrop.instance.getConfig().getDouble("compass.particle-step");
-        double size = BAirDrop.instance.getConfig().getDouble("compass.particle-size");
-        Color color = RGBHelper.getColorWithRgb(Objects.requireNonNull(BAirDrop.instance.getConfig().getString("compass.particle-color")));
+        String mat = Objects.requireNonNull(BAirDrop.getInstance().getConfig().getString("compass.material"));
+        String name = Objects.requireNonNull(BAirDrop.getInstance().getConfig().getString("compass.item-name"));
+        String nbt = BAirDrop.getInstance().getConfig().getString("compass.nbt");
+        String messageNotFound = Objects.requireNonNull(BAirDrop.getInstance().getConfig().getString("compass.message-not-found"));
+        String messageFound = BAirDrop.getInstance().getConfig().getString("compass.message-found");
+        List<String> lore = BAirDrop.getInstance().getConfig().getStringList("compass.item-lore");
+        double lineMaxDistance = BAirDrop.getInstance().getConfig().getDouble("compass.line-max-distance");
+        double particleStep = BAirDrop.getInstance().getConfig().getDouble("compass.particle-step");
+        double size = BAirDrop.getInstance().getConfig().getDouble("compass.particle-size");
+        Color color = RGBHelper.getColorWithRgb(Objects.requireNonNull(BAirDrop.getInstance().getConfig().getString("compass.particle-color")));
         itemStack = new ItemStack(Material.valueOf(mat));
         ItemMeta im = itemStack.getItemMeta();
         im.setDisplayName(Message.messageBuilder(name));
         if (nbt != null) im.setCustomModelData(Integer.parseInt(nbt.replace("{CustomModelData:", "").replace("}", "")));
         this.messageNotFound = messageNotFound;
+        this.messageFound = messageFound;
         this.color = color;
         this.size = size;
         this.maxDistance = lineMaxDistance;

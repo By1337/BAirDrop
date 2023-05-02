@@ -81,6 +81,7 @@ compass:
   particle-color: '255:0:0' #r:g:b
   particle-size: 3
   message-not-found: '&cСейчас нет активных аирдропов! &7ближайший через %bairdrop_time_start_format%'
+  message-found: null
 
 
 

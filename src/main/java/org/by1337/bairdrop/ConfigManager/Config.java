@@ -9,12 +9,13 @@ import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.Listeners.Compass;
 import org.by1337.bairdrop.menu.util.MenuItem;
 import org.by1337.bairdrop.util.*;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.util.*;
 
-import static org.by1337.bairdrop.BAirDrop.instance;
+import static org.by1337.bairdrop.BAirDrop.getInstance;
 import static org.by1337.bairdrop.BAirDrop.summoner;
 import static org.by1337.bairdrop.effect.LoadEffects.LoadEffect;
 import static org.by1337.bairdrop.util.GeneratorLoc.LoadLocations;
@@ -40,28 +41,28 @@ public class Config {
     public static HashMap<String, File> scripts = new HashMap<>();
 
     public static void LoadConfiguration() {
-        fileMenu = new File(instance.getDataFolder() + File.separator + "menu.yml");
+        fileMenu = new File(getInstance().getDataFolder() + File.separator + "menu.yml");
         if (!fileMenu.exists()) {
-            instance.saveResource("menu.yml", true);
+            getInstance().saveResource("menu.yml", true);
         }
         menu = YamlConfiguration.loadConfiguration(fileMenu);
 
 
-        fileGeneratorSettings = new File(instance.getDataFolder() + File.separator + "generatorSettings.yml");
+        fileGeneratorSettings = new File(getInstance().getDataFolder() + File.separator + "generatorSettings.yml");
         if (!fileGeneratorSettings.exists()) {
-            instance.saveResource("generatorSettings.yml", true);
+            getInstance().saveResource("generatorSettings.yml", true);
         }
         generatorSettings = YamlConfiguration.loadConfiguration(fileGeneratorSettings);
 
-        File shemDir = new File(instance.getDataFolder() + File.separator + "Schematics");
+        File shemDir = new File(getInstance().getDataFolder() + File.separator + "Schematics");
         if (!shemDir.exists()) {
             shemDir.mkdir();
-            //  instance.saveResource("Schematics" + File.separator + "air1.schem", true);
+            //  getInstance().saveResource("Schematics" + File.separator + "air1.schem", true);
         }
 
-        fileSchemConf = new File(instance.getDataFolder() + File.separator + "Schematics" + File.separator + "schemConf.yml");
+        fileSchemConf = new File(getInstance().getDataFolder() + File.separator + "Schematics" + File.separator + "schemConf.yml");
         if (!fileSchemConf.exists()) {
-            instance.saveResource("Schematics" + File.separator + "schemConf.yml", true);
+            getInstance().saveResource("Schematics" + File.separator + "schemConf.yml", true);
         }
         schemConf = YamlConfiguration.loadConfiguration(fileSchemConf);
 
@@ -74,41 +75,41 @@ public class Config {
         }
 
 
-        fileEffects = new File(instance.getDataFolder() + File.separator + "effects.yml");
+        fileEffects = new File(getInstance().getDataFolder() + File.separator + "effects.yml");
         if (!fileEffects.exists()) {
-            instance.saveResource("effects.yml", true);
+            getInstance().saveResource("effects.yml", true);
         }
         effects = YamlConfiguration.loadConfiguration(fileEffects);
 
-        fileLocations = new File(instance.getDataFolder() + File.separator + "locations.yml");
+        fileLocations = new File(getInstance().getDataFolder() + File.separator + "locations.yml");
         if (!fileLocations.exists()) {
-            instance.saveResource("locations.yml", true);
+            getInstance().saveResource("locations.yml", true);
         }
         locations = YamlConfiguration.loadConfiguration(fileLocations);
 
-        fileListeners = new File(instance.getDataFolder() + File.separator + "listeners.yml");
+        fileListeners = new File(getInstance().getDataFolder() + File.separator + "listeners.yml");
         if (!fileListeners.exists()) {
-            instance.saveResource("listeners.yml", true);
+            getInstance().saveResource("listeners.yml", true);
         }
         listeners = YamlConfiguration.loadConfiguration(fileListeners);
 
 
-        fileMessage = new File(instance.getDataFolder() + File.separator + "message.yml");
+        fileMessage = new File(getInstance().getDataFolder() + File.separator + "message.yml");
         if (!fileMessage.exists()) {
-            instance.saveResource("message.yml", true);
+            getInstance().saveResource("message.yml", true);
         }
         message = YamlConfiguration.loadConfiguration(fileMessage);
 
 
-        File dir = new File(instance.getDataFolder() + File.separator + "airdrops");
+        File dir = new File(getInstance().getDataFolder() + File.separator + "airdrops");
         if (!dir.exists()) {
             dir.mkdir();
-            instance.saveResource("airdrops" + File.separator + "default.yml", true);
+            getInstance().saveResource("airdrops" + File.separator + "default.yml", true);
         }
-        File dir2 = new File(instance.getDataFolder() + File.separator + "scripts");//diamond.js
+        File dir2 = new File(getInstance().getDataFolder() + File.separator + "scripts");//diamond.js
         if (!dir2.exists()) {
             dir2.mkdir();
-            instance.saveResource("scripts" + File.separator + "diamond.js", true);
+            getInstance().saveResource("scripts" + File.separator + "diamond.js", true);
         }
         scripts.clear();
         for (File script : Arrays.stream(Objects.requireNonNull(dir2.listFiles())).toList()) {
@@ -131,7 +132,7 @@ public class Config {
         summoner.Load();
         BAirDrop.compass = new Compass();
         BAirDrop.compass.loadItem();
-        if (instance.getConfig().getBoolean("custom-crafts.enable"))
+        if (getInstance().getConfig().getBoolean("custom-crafts.enable"))
             LoadCustomCraft();
         isLoaded = true;
 
@@ -163,60 +164,66 @@ public class Config {
     }
 
     private static void LoadCustomCraft() {
-        if (instance.getConfig().getConfigurationSection("custom-crafts.crafts") == null) {
-            Message.error("Список крафтов пуст!");
+        if (getInstance().getConfig().getConfigurationSection("custom-crafts.crafts") == null) {
+            Message.error(Config.getMessage("craft-list-is-empty"));
             return;
         }
         main:
-        for (String key : instance.getConfig().getConfigurationSection("custom-crafts.crafts").getKeys(false)) {
+        for (String key : getInstance().getConfig().getConfigurationSection("custom-crafts.crafts").getKeys(false)) {
             try {
-                String summoner = Objects.requireNonNull(instance.getConfig().getString(String.format("custom-crafts.crafts.%s.summoner", key)));
+                String summoner = Objects.requireNonNull(getInstance().getConfig().getString(String.format("custom-crafts.crafts.%s.summoner", key)));
                 if (!BAirDrop.summoner.getItems().containsKey(summoner)) {
-                    Message.error(summoner + " Неизвестный предмет!");
-                    Message.error(String.format("Крафт %s был пропущен", key));
+                    Message.error(String.format(Config.getMessage("craft-unknown-item"), summoner));
+                    Message.error(String.format(Config.getMessage("craft-skip"), key));
                     continue;
                 }
-                String top = Objects.requireNonNull(instance.getConfig().getString(String.format("custom-crafts.crafts.%s.slots.top", key)));
-                String middle = Objects.requireNonNull(instance.getConfig().getString(String.format("custom-crafts.crafts.%s.slots.middle", key)));
-                String bottom = Objects.requireNonNull(instance.getConfig().getString(String.format("custom-crafts.crafts.%s.slots.bottom", key)));
-                List<String> call = instance.getConfig().getStringList(String.format("custom-crafts.crafts.%s.call", key));
+                String top = Objects.requireNonNull(getInstance().getConfig().getString(String.format("custom-crafts.crafts.%s.slots.top", key)));
+                String middle = Objects.requireNonNull(getInstance().getConfig().getString(String.format("custom-crafts.crafts.%s.slots.middle", key)));
+                String bottom = Objects.requireNonNull(getInstance().getConfig().getString(String.format("custom-crafts.crafts.%s.slots.bottom", key)));
+                List<String> call = getInstance().getConfig().getStringList(String.format("custom-crafts.crafts.%s.call", key));
 
-                if (instance.getConfig().getConfigurationSection(String.format("custom-crafts.crafts.%s.ingredients", key)) == null) {
-                    Message.error("Список ингридиентов для крафта пуст!");
+                if (getInstance().getConfig().getConfigurationSection(String.format("custom-crafts.crafts.%s.ingredients", key)) == null) {
+                    Message.error(Config.getMessage("craft-ingredients-is-empty"));
                     continue;
                 }
                 HashMap<Character, Material> ingredients = new HashMap<>();
-                for (String ingred : instance.getConfig().getConfigurationSection(String.format("custom-crafts.crafts.%s.ingredients", key)).getKeys(false)) {
+                for (String ingred : getInstance().getConfig().getConfigurationSection(String.format("custom-crafts.crafts.%s.ingredients", key)).getKeys(false)) {
                     if (ingred.length() > 1) {
                         Message.error(ingred + " Может состоять только из одного символа!");
-                        Message.error(String.format("Крафт %s был пропущен", key));
+                        Message.error(String.format(Config.getMessage("craft-skip"), key));
                         continue main;
                     }
                     try {
-                        ingredients.put(ingred.charAt(0), Material.valueOf(Objects.requireNonNull(instance.getConfig().getString(String.format("custom-crafts.crafts.%s.ingredients.%s", key, ingred)))));
+                        ingredients.put(ingred.charAt(0), Material.valueOf(Objects.requireNonNull(getInstance().getConfig().getString(String.format("custom-crafts.crafts.%s.ingredients.%s", key, ingred)))));
                     } catch (IllegalArgumentException e) {
-                        Message.error(instance.getConfig().getString(String.format("custom-crafts.crafts.%s.ingredients.%s", key, ingred)) + " Неизвестный материал!");
-                        Message.error(String.format("Крафт %s был пропущен", key));
+                        Message.error(getInstance().getConfig().getString(String.format("custom-crafts.crafts.%s.ingredients.%s", key, ingred)) + " Неизвестный материал!");
+                        Message.error(String.format(Config.getMessage("craft-skip"), key));
                         continue main;
                     }
                 }
                 BAirDrop.crafts.put(key, new CustomCraft(key, summoner, call, ingredients, top, middle, bottom));
             } catch (NullPointerException e) {
-                Message.error(String.format("Ошибка загрузки крафта! %s", key));
+                Message.error(String.format(Config.getMessage("craft-load-error"), key));
+                e.printStackTrace();
             } catch (Exception e) {
-                Message.error("Произошла ошибка при загрузке крафта! " + key);
+                Message.error(String.format(Config.getMessage("craft-load-error"), key));
+                e.printStackTrace();
             }
         }
     }
 
     private static void LoadListeners() {
         if (listeners.getConfigurationSection("listeners") == null) {
-            Message.error("Список слушателей пуст!");
+            Message.error(Config.getMessage("list-listeners-is-empty"));
             return;
         }
         for (String key : listeners.getConfigurationSection("listeners").getKeys(false)) {
             try {
-                Events event = Events.valueOf(Objects.requireNonNull(listeners.getString("listeners." + key + ".event")));
+                Event event = Event.getByKey(NamespacedKey.fromString(Objects.requireNonNull(listeners.getString("listeners." + key + ".event")).toLowerCase()));
+                if (event == null) {
+                    Message.error("Незарегистрированный ивент! " + listeners.getString("listeners." + key + ".event"));
+                    continue;
+                }
                 List<String> commands = listeners.getStringList("listeners." + key + ".commands");
                 List<String> denyCommands = listeners.getStringList("listeners." + key + ".deny-commands");
                 String description = Objects.requireNonNull(listeners.getString("listeners." + key + ".description"));
@@ -234,54 +241,56 @@ public class Config {
             } catch (NullPointerException e) {
                 Message.error(Config.getMessage("listeners-error"));
             } catch (IllegalArgumentException e) {
-                Message.error("Неизвестный ивент! В слушателе " + key);
+                Message.error(String.format(Config.getMessage("unknown-event"), key));
             }
         }
     }
-    private static void LoadEnchant(){
-        EnchantMaterial.materialHashMap.clear();
-        if(!instance.getConfig().getBoolean("auto-enchant.enable")) return;
-        for(String id : instance.getConfig().getConfigurationSection("auto-enchant").getKeys(false)){
-            if(id.equals("enable")) continue;
 
-            if(instance.getConfig().getConfigurationSection("auto-enchant." + id) == null) continue;
+    private static void LoadEnchant() {
+        EnchantMaterial.materialHashMap.clear();
+        if (!getInstance().getConfig().getBoolean("auto-enchant.enable")) return;
+        for (String id : getInstance().getConfig().getConfigurationSection("auto-enchant").getKeys(false)) {
+            if (id.equals("enable")) continue;
+
+            if (getInstance().getConfig().getConfigurationSection("auto-enchant." + id) == null) continue;
             Material material1 = Material.DIRT;
             try {
-                material1  = Material.valueOf(instance.getConfig().getString(String.format("auto-enchant.%s.material", id)));
-            }catch (IllegalArgumentException e){
+                material1 = Material.valueOf(getInstance().getConfig().getString(String.format("auto-enchant.%s.material", id)));
+            } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             }
             List<EnchantInfo> enchantInfos = new ArrayList<>();
             List<Enchantment> conflictEnchantments = new ArrayList<>();
-            for(String enchant : instance.getConfig().getConfigurationSection("auto-enchant." + id).getKeys(false)){
-                if(enchant.equals("material")) continue;
+            for (String enchant : getInstance().getConfig().getConfigurationSection("auto-enchant." + id).getKeys(false)) {
+                if (enchant.equals("material")) continue;
                 try {
-                    if(enchant.equals("conflict-enchant")){
-                        for(String str : instance.getConfig().getStringList(String.format("auto-enchant.%s.%s", id, enchant))){
+                    if (enchant.equals("conflict-enchant")) {
+                        for (String str : getInstance().getConfig().getStringList(String.format("auto-enchant.%s.%s", id, enchant))) {
                             Enchantment enchantment = Objects.requireNonNull(Enchantment.getByKey(NamespacedKey.fromString("minecraft:" + str)));
                             conflictEnchantments.add(enchantment);
                         }
                         continue;
                     }
-                    Enchantment enchantment = Objects.requireNonNull(Enchantment.getByKey(NamespacedKey.fromString( "minecraft:" + enchant)));
-                    int chance = instance.getConfig().getInt(String.format("auto-enchant.%s.%s.chance", id, enchant));
-                    int minLevel = instance.getConfig().getInt(String.format("auto-enchant.%s.%s.min-level", id, enchant));
-                    int maxLevel = instance.getConfig().getInt(String.format("auto-enchant.%s.%s.max-level", id, enchant));
+                    Enchantment enchantment = Objects.requireNonNull(Enchantment.getByKey(NamespacedKey.fromString("minecraft:" + enchant)));
+                    int chance = getInstance().getConfig().getInt(String.format("auto-enchant.%s.%s.chance", id, enchant));
+                    int minLevel = getInstance().getConfig().getInt(String.format("auto-enchant.%s.%s.min-level", id, enchant));
+                    int maxLevel = getInstance().getConfig().getInt(String.format("auto-enchant.%s.%s.max-level", id, enchant));
                     enchantInfos.add(new EnchantInfo(chance, minLevel, maxLevel, enchantment));
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
             }
             EnchantMaterial.materialHashMap.put(id, new EnchantMaterial(material1, conflictEnchantments, enchantInfos));
         }
     }
+
     public static String getMessage(String path) {
         if (message.getString(path) == null) {
             String MessageFromPlugin = getMessageFromPlugin(path);
-            if(MessageFromPlugin == null){
+            if (MessageFromPlugin == null) {
                 Message.error(path + " <- this path does not exist!");
                 return Message.messageBuilder("&cСообщения с таким пути нет!, There are no messages with this path!");
-            }else{
+            } else {
                 message.set(path, MessageFromPlugin);
                 try {
                     message.save(fileMessage);
@@ -294,9 +303,10 @@ public class Config {
         }
         return Message.messageBuilder(message.getString(path));
     }
+
     @Nullable
-    public static String getMessageFromPlugin(String path) {
-        InputStream resourceStream = instance.getResource("message.yml");
+    private static String getMessageFromPlugin(String path) {
+        InputStream resourceStream = getInstance().getResource("message.yml");
         if (resourceStream == null) {
             return null;
         }
@@ -323,10 +333,49 @@ public class Config {
 
     public static List<String> getList(String path) {
         if (message.getStringList(path).isEmpty()) {
-            Message.error(path + " <- this path does not exist!");
-            return Collections.singletonList(Message.messageBuilder("&cСообщения с таким пути нет!, There are no messages with this path!"));
+            List<String> list = getListFromPlugin(path);
+            if (!list.isEmpty()) {
+                message.set(path, list);
+                try {
+                    message.save(fileMessage);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return list;
+
+            } else {
+                Message.error(path + " <- this path does not exist!");
+                return Collections.singletonList(Message.messageBuilder("&cСообщения с таким пути нет!, There are no messages with this path!"));
+            }
         }
         return new ArrayList<>(message.getStringList(path));
+    }
+
+    @NotNull
+    private static List<String> getListFromPlugin(String path) {
+        InputStream resourceStream = getInstance().getResource("message.yml");
+        if (resourceStream == null) {
+            return new ArrayList<>();
+        }
+        File tempFile;
+        try {
+            tempFile = File.createTempFile("message", ".yml");
+        } catch (IOException e) {
+            return new ArrayList<>();
+        }
+        try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = resourceStream.read(buffer)) != -1) {
+                fos.write(buffer, 0, bytesRead);
+            }
+        } catch (IOException e) {
+            return new ArrayList<>();
+        }
+
+        FileConfiguration config = YamlConfiguration.loadConfiguration(tempFile);
+        tempFile.delete();
+        return config.getStringList(path);
     }
 
     public static List<String> getListOrEmpty(String path, FileConfiguration file) {

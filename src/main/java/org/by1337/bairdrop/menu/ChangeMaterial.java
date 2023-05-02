@@ -81,7 +81,7 @@ public class ChangeMaterial implements Listener {
                 if(airDrop.getEditAirMenu() != null)
                     airDrop.getEditAirMenu().unReg();
                 EditAirMenu em = new EditAirMenu(airDrop);
-                getServer().getPluginManager().registerEvents(em, BAirDrop.instance);
+                getServer().getPluginManager().registerEvents(em, BAirDrop.getInstance());
                 airDrop.setEditAirMenu(em);
                 e.getWhoClicked().openInventory(em.getInventory());
                 e.setCancelled(true);
@@ -112,7 +112,7 @@ public class ChangeMaterial implements Listener {
             if(airDrop.getEditAirMenu() != null)
                 airDrop.getEditAirMenu().unReg();
             EditAirMenu em = new EditAirMenu(airDrop);
-            getServer().getPluginManager().registerEvents(em, BAirDrop.instance);
+            getServer().getPluginManager().registerEvents(em, BAirDrop.getInstance());
             airDrop.setEditAirMenu(em);
             e.getWhoClicked().openInventory(em.getInventory());
         }

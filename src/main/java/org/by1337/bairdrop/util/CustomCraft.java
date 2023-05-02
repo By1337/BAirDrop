@@ -1,5 +1,6 @@
 package org.by1337.bairdrop.util;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -27,12 +28,12 @@ public class CustomCraft {
         ItemMeta im = itemStack.getItemMeta();
         im.getPersistentDataContainer().set(NamespacedKey.fromString("custom_crafts_bairdrop"), PersistentDataType.STRING, id);
         itemStack.setItemMeta(im);
-        namespacedKey = new NamespacedKey(BAirDrop.instance, id);
+        namespacedKey = new NamespacedKey(BAirDrop.getInstance(), id);
         shapedRecipe = new ShapedRecipe(namespacedKey, itemStack);
         shapedRecipe.shape(top, middle, bottom);
         for (char key : ingredients.keySet())
             shapedRecipe.setIngredient(key, ingredients.get(key));
-        BAirDrop.instance.getServer().addRecipe(shapedRecipe);
+        BAirDrop.getInstance().getServer().addRecipe(shapedRecipe);
     }
 
     public String getId() {
@@ -67,7 +68,7 @@ public class CustomCraft {
         try {
             if (!BAirDrop.internalListeners.containsKey(listener))
                 return;
-            BAirDrop.internalListeners.get(listener).execute(pl, null, false, Events.CRAFT_ITEM);
+            BAirDrop.internalListeners.get(listener).execute(pl, null, false, Event.CRAFT_ITEM);
         } catch (StackOverflowError e) {
             Message.error(Config.getMessage("too-many-call"));
         }
@@ -75,7 +76,7 @@ public class CustomCraft {
 
     public static void unloadCrafts() {
         for (CustomCraft cc : BAirDrop.crafts.values()) {
-            BAirDrop.instance.getServer().removeRecipe(cc.getNamespacedKey());
+            BAirDrop.getInstance().getServer().removeRecipe(cc.getNamespacedKey());
         }
     }
 

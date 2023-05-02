@@ -6,6 +6,7 @@ public enum EffectType {
     FIREWORK,
     SPAWN_GUARD,
     HELIX,
+    @Deprecated
     PARTICLE_EXPLOSION,
     RANDOM_PARTICLE,
     TORUS,

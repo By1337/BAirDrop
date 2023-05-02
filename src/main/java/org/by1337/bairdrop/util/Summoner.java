@@ -1,8 +1,8 @@
 package org.by1337.bairdrop.util;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -20,8 +20,9 @@ import java.util.UUID;
 import static org.by1337.bairdrop.util.LocationGeneration.getSettings;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.ConfigManager.Config;
-import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.BAirDrop;
+import org.by1337.bairdrop.api.event.AirDropSummonerEvent;
+
 public class Summoner implements Listener {
     HashMap<String, SummonerItem> items = new HashMap<>();
     HashMap<UUID, Long> auntyDouble = new HashMap<>();
@@ -30,23 +31,23 @@ public class Summoner implements Listener {
 
     public void Load() {
         items.clear();
-        cooldown = BAirDrop.instance.getConfig().getInt("summoner-сooldown");
-        if (BAirDrop.instance.getConfig().getConfigurationSection("summoner") == null)
+        cooldown = BAirDrop.getInstance().getConfig().getInt("summoner-сooldown");
+        if (BAirDrop.getInstance().getConfig().getConfigurationSection("summoner") == null)
             return;
-        for (String key : BAirDrop.instance.getConfig().getConfigurationSection("summoner").getKeys(false)) {
+        for (String key : BAirDrop.getInstance().getConfig().getConfigurationSection("summoner").getKeys(false)) {
             ItemStack item = new ItemStack(Material.DIRT);
 
-            String material = Objects.requireNonNull(BAirDrop.instance.getConfig().getString(String.format("summoner.%s.material", key)));
-            String nbt = BAirDrop.instance.getConfig().getString(String.format("summoner.%s.nbt", key));
-            String name = Objects.requireNonNull(BAirDrop.instance.getConfig().getString(String.format("summoner.%s.name", key)));
-            String airdrop = Objects.requireNonNull(BAirDrop.instance.getConfig().getString(String.format("summoner.%s.airdrop", key)));
-            List<String> lore = BAirDrop.instance.getConfig().getStringList(String.format("summoner.%s.lore", key));
-            List<String> call = BAirDrop.instance.getConfig().getStringList(String.format("summoner.%s.call", key));
-            boolean clone = BAirDrop.instance.getConfig().getBoolean(String.format("summoner.%s.clone", key));
-            boolean usePlayerLocation = BAirDrop.instance.getConfig().getBoolean(String.format("summoner.%s.use-player-location", key));
-            boolean flatnessCheck = BAirDrop.instance.getConfig().getBoolean(String.format("summoner.%s.flatness-check", key));
-            boolean checkUpBlocks = BAirDrop.instance.getConfig().getBoolean(String.format("summoner.%s.check-up-blocks", key));
-            boolean ignoreRegion = BAirDrop.instance.getConfig().getBoolean(String.format("summoner.%s.ignore-region", key));
+            String material = Objects.requireNonNull(BAirDrop.getInstance().getConfig().getString(String.format("summoner.%s.material", key)));
+            String nbt = BAirDrop.getInstance().getConfig().getString(String.format("summoner.%s.nbt", key));
+            String name = Objects.requireNonNull(BAirDrop.getInstance().getConfig().getString(String.format("summoner.%s.name", key)));
+            String airdrop = Objects.requireNonNull(BAirDrop.getInstance().getConfig().getString(String.format("summoner.%s.airdrop", key)));
+            List<String> lore = BAirDrop.getInstance().getConfig().getStringList(String.format("summoner.%s.lore", key));
+            List<String> call = BAirDrop.getInstance().getConfig().getStringList(String.format("summoner.%s.call", key));
+            boolean clone = BAirDrop.getInstance().getConfig().getBoolean(String.format("summoner.%s.clone", key));
+            boolean usePlayerLocation = BAirDrop.getInstance().getConfig().getBoolean(String.format("summoner.%s.use-player-location", key));
+            boolean flatnessCheck = BAirDrop.getInstance().getConfig().getBoolean(String.format("summoner.%s.flatness-check", key));
+            boolean checkUpBlocks = BAirDrop.getInstance().getConfig().getBoolean(String.format("summoner.%s.check-up-blocks", key));
+            boolean ignoreRegion = BAirDrop.getInstance().getConfig().getBoolean(String.format("summoner.%s.ignore-region", key));
 
             try {
                 if (material.contains("basehead-"))
@@ -77,7 +78,7 @@ public class Summoner implements Listener {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
-        if (e.getAction() == Action.RIGHT_CLICK_BLOCK || BAirDrop.instance.getConfig().getBoolean("geyser")) {
+        if (e.getAction() == Action.RIGHT_CLICK_BLOCK || BAirDrop.getInstance().getConfig().getBoolean("geyser")) {
             ItemStack item = e.getPlayer().getInventory().getItemInMainHand();
             ItemMeta im = item.getItemMeta();
             if (im == null) return;
@@ -119,7 +120,11 @@ public class Summoner implements Listener {
                     BAirDrop.airDrops.put(airDrop.getAirId(), airDrop);
                     e.getPlayer().setCooldown(items.get(key).item.getType(), cooldown);
                     cooldownPlayers.put(e.getPlayer().getUniqueId(), (System.currentTimeMillis() / 50 + cooldown));
-                    airDrop.event(Events.SUMMONER, e.getPlayer());
+                    AirDropSummonerEvent airDropSummonerEvent = new AirDropSummonerEvent(airDrop, e.getPlayer());
+                    Bukkit.getServer().getPluginManager().callEvent(airDropSummonerEvent);
+                    if(airDropSummonerEvent.isCancelled())
+                        return;
+                    airDrop.event(Event.SUMMONER, e.getPlayer());
                     if (item.getAmount() > 1) {
                         item.setAmount(item.getAmount() - 1);
 

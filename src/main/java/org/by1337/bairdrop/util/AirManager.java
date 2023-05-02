@@ -1,24 +1,16 @@
 package org.by1337.bairdrop.util;
 
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Objects;
-import java.util.UUID;
 
-import static org.by1337.bairdrop.BAirDrop.instance;
+
+
 import org.by1337.bairdrop.AirDrop;
-import org.by1337.bairdrop.ConfigManager.Config;
-import org.by1337.bairdrop.util.Message;
+
 import org.by1337.bairdrop.BAirDrop;
 public class AirManager {
     @Nullable
@@ -34,7 +26,7 @@ public class AirManager {
         int sec = Sec % 60;
         return String.format("%02d:%02d:%02d", hour, min, sec);
     }
-    public static String getTimeToNexAirdrop() {
+    public static String getTimeToNextAirdrop() {
         if (BAirDrop.globalTimer != null)
             return Message.setPlaceholders(null, "%bairdrop_time_start_format%");
         int time = -1;

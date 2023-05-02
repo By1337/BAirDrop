@@ -12,6 +12,7 @@ timeToStart: 2
 use-pre-generated-locations: false
 search-before-start: 1
 stop-when-empty: false
+use-only-static-loc: false
 flatness-check: true
 use-static-loc: false
 static-location:

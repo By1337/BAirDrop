@@ -41,7 +41,7 @@ public class SelectInv implements Listener {
         selectInv = this;
         this.airDrop = airDrop;
         this.menu = menu;
-        inv = Bukkit.createInventory(null, 54, Message.messageBuilder("&7Выбор инвентаря"));
+        inv = Bukkit.createInventory(null, 54, Message.messageBuilder(Config.getMessage("inv-select")));
         generate();
     }
 
@@ -99,14 +99,14 @@ public class SelectInv implements Listener {
                 openEditAirMenu = false;
                 pl.closeInventory();
                 AddingItems ai = new AddingItems(airDrop, str);
-                getServer().getPluginManager().registerEvents(ai, BAirDrop.instance);
+                getServer().getPluginManager().registerEvents(ai, BAirDrop.getInstance());
                 pl.openInventory(ai.getInv());
                 HandlerList.unregisterAll(this);
             } else {
                 openEditAirMenu = false;
                 pl.closeInventory();
                 EditChance ec = new EditChance(airDrop, str);
-                getServer().getPluginManager().registerEvents(ec, BAirDrop.instance);
+                getServer().getPluginManager().registerEvents(ec, BAirDrop.getInstance());
                 pl.openInventory(ec.getInv());
             }
 
@@ -125,12 +125,12 @@ public class SelectInv implements Listener {
                     public void run() {
 
                         EditAirMenu em = new EditAirMenu(air);
-                        getServer().getPluginManager().registerEvents(em, BAirDrop.instance);
+                        getServer().getPluginManager().registerEvents(em, BAirDrop.getInstance());
                         air.setEditAirMenu(em);
                         e.getPlayer().openInventory(em.getInventory());
                         cancel();
                     }
-                }.runTaskTimer(BAirDrop.instance, 1, 1);
+                }.runTaskTimer(BAirDrop.getInstance(), 1, 1);
             }
 
             HandlerList.unregisterAll(this);

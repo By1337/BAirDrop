@@ -61,11 +61,11 @@ public class AddingItems implements Listener {
                 @Override
                 public void run() {
                     SelectInv si = new SelectInv(air, "[edit]");
-                    getServer().getPluginManager().registerEvents(si, BAirDrop.instance);
+                    getServer().getPluginManager().registerEvents(si, BAirDrop.getInstance());
                     e.getPlayer().openInventory(si.getInv());
                     cancel();
                 }
-            }.runTaskTimer(BAirDrop.instance, 1, 1);
+            }.runTaskTimer(BAirDrop.getInstance(), 1, 1);
             addingItems = null;
             HandlerList.unregisterAll(this);
         }

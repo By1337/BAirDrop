@@ -1,7 +1,5 @@
 package org.by1337.bairdrop.util;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
 import org.bukkit.OfflinePlayer;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
@@ -21,7 +19,7 @@ public class PlaceholderExpansion extends me.clip.placeholderapi.expansion.Place
 
     @Override
     public @NotNull String getVersion() {
-        return "1.0.4";
+        return BAirDrop.getInstance().getDescription().getVersion();
     }
 
     @Override
@@ -48,7 +46,7 @@ public class PlaceholderExpansion extends me.clip.placeholderapi.expansion.Place
         }
         if(params.equals("time_start_format")){ //%bairdrop_time_start_format%
             if(BAirDrop.globalTimer == null)
-                return AirManager.getTimeToNexAirdrop();
+                return AirManager.getTimeToNextAirdrop();
             int time = 0;
             time += BAirDrop.globalTimer.getTimeToStart();
             if(BAirDrop.globalTimer.getAir() != null)

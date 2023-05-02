@@ -1,6 +1,7 @@
 package org.by1337.bairdrop.util;
 
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.enchantments.EnchantmentWrapper;
 
 public class EnchantInfo {
     private final int chance;

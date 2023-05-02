@@ -17,14 +17,10 @@ import org.bukkit.persistence.PersistentDataType;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.ConfigManager.Config;
-import org.by1337.bairdrop.util.AirManager;
-import org.by1337.bairdrop.util.Events;
-import org.by1337.bairdrop.util.InternalListener;
-import org.by1337.bairdrop.util.Message;
+import org.by1337.bairdrop.util.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 import static org.by1337.bairdrop.menu.util.ItemUtil.getErrorItem;
@@ -37,21 +33,14 @@ public class ShowAllListeners implements Listener {
     public ShowAllListeners(AirDrop airDrop) {
         this.airDrop = airDrop;
         page = 0;
-        inventory = Bukkit.createInventory(null, 54, Config.getMessage("show-all-events-inv"));
-        generate();
-    }
-
-    public ShowAllListeners(AirDrop airDrop, int page) {
-        this.page = page;
-        this.airDrop = airDrop;
-        inventory = Bukkit.createInventory(null, 54, Config.getMessage("show-all-events-inv"));
+        inventory = Bukkit.createInventory(null, 54, Config.getMessage("show-all-listeners-inv"));
         generate();
     }
 
     private void generate() {
         int slot = 0;
         for (String key : BAirDrop.internalListeners.keySet()) {
-            if (BAirDrop.internalListeners.get(key).getEvent() == Events.NONE) continue;
+            if (BAirDrop.internalListeners.get(key).getEvent() == Event.NONE) continue;
             if (page > 0) {
 
                 if (slot < (53 * page)) {
@@ -91,7 +80,7 @@ public class ShowAllListeners implements Listener {
         lore.replaceAll(s -> s
                 .replace("{description}", ei.getDescription())
                 .replace("{flag}", airDrop.getSignedListener().contains(key) + "")
-                .replace("{event}", ei.getEvent().toString())
+                .replace("{event}", ei.getEvent().getKey().getKey())
         );
 
         int max = 0;

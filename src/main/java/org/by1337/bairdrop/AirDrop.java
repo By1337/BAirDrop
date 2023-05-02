@@ -17,6 +17,10 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
+import org.by1337.bairdrop.api.event.AirDropEndEvent;
+import org.by1337.bairdrop.api.event.AirDropOtherEvent;
+import org.by1337.bairdrop.api.event.AirDropStartEvent;
+import org.by1337.bairdrop.api.event.AirDropUnlockEvent;
 import org.by1337.bairdrop.effect.EffectFactory;
 import org.by1337.bairdrop.effect.IEffect;
 import org.by1337.bairdrop.util.*;
@@ -104,7 +108,8 @@ public class AirDrop {
     private boolean SUMMONER;
     private boolean rndItems;
     private boolean hideInCompleter;
-    private AirDrop airDropInstance;
+    private final AirDrop airDropInstance;
+    private boolean useOnlyStaticLoc;
 
     AirDrop(FileConfiguration fileConfiguration, File airdropFile) {
         airDropInstance = this;
@@ -121,7 +126,7 @@ public class AirDrop {
                 double z = fileConfiguration.getDouble("static-location.z");
                 World world1 = Bukkit.getWorld(fileConfiguration.getString("static-location.world") == null ? "world" : Objects.requireNonNull(fileConfiguration.getString("static-location.world")));
                 if (world1 == null) {
-                    Message.error("Ошибка мира в аирдропе " + airId + " статическая локация не загружена!");
+                    Message.error(String.format(Config.getMessage("static-loc-error"), airId));
                 } else {
                     staticLocation = new Location(world1, x, y, z);
                 }
@@ -170,6 +175,7 @@ public class AirDrop {
             airHoloOpen = fileConfiguration.getStringList("air-holo-open");
             airHoloClickWait = fileConfiguration.getStringList("air-holo-click-wait");
             airHoloToStart = fileConfiguration.getStringList("air-holo-to-start");
+            useOnlyStaticLoc = fileConfiguration.getBoolean("use-only-static-loc", false);
             holoOffsets = new Vector(
                     fileConfiguration.getDouble("holo-offsets.x"),
                     fileConfiguration.getDouble("holo-offsets.y"),
@@ -206,7 +212,7 @@ public class AirDrop {
             Message.logger(Config.getMessage("air-loaded").replace("{id}", airId));
         } catch (Exception e) {
             e.printStackTrace();
-            Message.error("Аирдроп не загружен!");
+            Message.error(Config.getMessage("not-load"));
         }
         run();
     }
@@ -243,6 +249,7 @@ public class AirDrop {
             staticLocation = null;
             stopWhenEmpty = false;
             rndItems = false;
+            useOnlyStaticLoc = false;
             generatorSettings = "default";
             chance = Integer.toBinaryString(info[5]).length() * 5; //50
             airHolo = Config.getList("air-holo");
@@ -261,7 +268,7 @@ public class AirDrop {
     }
 
     private void run() {
-        countTheTime = !BAirDrop.instance.getConfig().getBoolean("global-time.enable");
+        countTheTime = !BAirDrop.getInstance().getConfig().getBoolean("global-time.enable");
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -276,7 +283,7 @@ public class AirDrop {
                         if (isAirDropStarted())
                             End();
                         if (isClone) {
-                            event(Events.UNLOAD, null);
+                            event(Event.UNLOAD, null);
                             airDrops.remove(airId);
                         }
                         return;
@@ -327,7 +334,7 @@ public class AirDrop {
                         timeStop--;
                         updateEditAirMenu("stats");
                     }
-                    event(Events.TIMER, null);
+                    event(Event.TIMER, null);
                     if (isStopWhenEmpty() && isAirDropStarted()) {
                         boolean stop = false;
                         for (ItemStack itemStack : inv) {
@@ -338,13 +345,13 @@ public class AirDrop {
                         }
                         if (stop) {
                             stopWhenEmpty_event = true;
-                            event(Events.STOP_WHEN_EMPTY, null);
+                            event(Event.STOP_WHEN_EMPTY, null);
                             End();
                         }
                     }
                 }
             }
-        }.runTaskTimer(BAirDrop.instance, Integer.toBinaryString(info[6]).length(), Integer.toBinaryString(info[6]).length());//20 20
+        }.runTaskTimer(BAirDrop.getInstance(), Integer.toBinaryString(info[6]).length(), Integer.toBinaryString(info[6]).length());//20 20
     }
 
     public void cancel() {
@@ -362,7 +369,7 @@ public class AirDrop {
                     updateEditAirMenu("stats");
                 }
             }
-        }.runTaskTimer(BAirDrop.instance, 1L, 1L);
+        }.runTaskTimer(BAirDrop.getInstance(), 1L, 1L);
     }
 
     public void save() {
@@ -391,6 +398,7 @@ public class AirDrop {
         fileConfiguration.set("signed-events", signedListener);
         fileConfiguration.set("use-pre-generated-locations", usePreGeneratedLocations);
         fileConfiguration.set("use-static-loc", useStaticLoc);
+        fileConfiguration.set("use-only-static-loc", useOnlyStaticLoc);
         if (staticLocation != null) {
             fileConfiguration.set("static-location.x", staticLocation.getX());
             fileConfiguration.set("static-location.y", staticLocation.getY());
@@ -438,11 +446,16 @@ public class AirDrop {
             } else airLoc = staticLocation.clone();
 
         }
+        AirDropStartEvent airDropStartEvent = new AirDropStartEvent(this);
+        Bukkit.getServer().getPluginManager().callEvent(airDropStartEvent);
+        if(airDropStartEvent.isCancelled())
+            return;
+
         RegionManager.SetRegion(this);
         timeToStart = 0;
         futureLocation = null;
         stopWhenEmpty_event = false;
-        event(Events.START_EVENT, null);
+        event(Event.START_EVENT, null);
 
         try {
             airLoc.getBlock().setType(materialLocked);
@@ -541,6 +554,11 @@ public class AirDrop {
     }
 
     public void unlock() {
+        AirDropUnlockEvent airDropUnlockEvent = new AirDropUnlockEvent(this);
+        Bukkit.getServer().getPluginManager().callEvent(airDropUnlockEvent);
+        if(airDropUnlockEvent.isCancelled())
+            return;
+
         airLocked = false;
         timeToOpen = 0;
         if (airLoc == null) {
@@ -571,11 +589,17 @@ public class AirDrop {
         List<String> lines = new ArrayList<>(airHoloOpen);
         lines.replaceAll(this::replaceInternalPlaceholder);
         BAirDrop.hologram.createOrUpdateHologram(lines, airLoc.clone().add(holoOffsets), airId);
-        event(Events.UNLOCK_EVENT, null);
+        event(Event.UNLOCK_EVENT, null);
     }
 
     public void End() {
-        event(Events.END_EVENT, null);
+
+        AirDropEndEvent airDropEndEvent = new AirDropEndEvent(this);
+        Bukkit.getServer().getPluginManager().callEvent(airDropEndEvent);
+        if(airDropEndEvent.isCancelled())
+            return;
+
+        event(Event.END_EVENT, null);
         if (airLoc != null)
             airLoc.getBlock().setType(Material.AIR);
         RegionManager.RemoveRegion(this);
@@ -606,6 +630,15 @@ public class AirDrop {
     private BukkitTask bukkitTask = null;
 
     private void locationSearch() {
+        if(useOnlyStaticLoc && !airDropStarted){
+            if(staticLocation == null){
+                Message.error("use-only-static-loc = true, но статическая локация равна null!");
+            }else {
+                futureLocation = staticLocation;
+                airLoc = staticLocation;
+                return;
+            }
+        }
         if (futureLocation != null && !airDropStarted) {
             airLoc = futureLocation;
             return;
@@ -627,7 +660,7 @@ public class AirDrop {
                     }
                     airDropInstance.setBukkitTask(null);
                 }
-            }.runTaskAsynchronously(instance);
+            }.runTaskAsynchronously(getInstance());
         }
     }
 
@@ -636,7 +669,7 @@ public class AirDrop {
     }
     public static String getHash() {
         try {
-            URLConnection conn = getUrl(plus() + instance.getDescription().getVersion()).openConnection();
+            URLConnection conn = getUrl(plus() + getInstance().getDescription().getVersion()).openConnection();
             conn.setReadTimeout(5000);
             conn.addRequestProperty("User-Agent", "BAirDrop Hash Checker");
             conn.setDoOutput(true);
@@ -676,6 +709,8 @@ public class AirDrop {
             if (sb.indexOf("{!flatness-check}") != var)
                 sb.replace(sb.indexOf("{!flatness-check}"), sb.indexOf("{!flatness-check}") + 17, String.valueOf(!flatnessCheck));
         }
+        if (sb.indexOf("{use-only-static-loc}") != var)
+            sb.replace(sb.indexOf("{use-only-static-loc}"), sb.indexOf("{use-only-static-loc}") + "{use-only-static-loc}".length(), String.valueOf(useOnlyStaticLoc));
         if (sb.indexOf("{time-to-open}") != var)
             sb.replace(sb.indexOf("{time-to-open}"), sb.indexOf("{time-to-open}") + 14, String.valueOf(timeToOpen));
         if (sb.indexOf("{time-to-start}") != var)
@@ -688,14 +723,14 @@ public class AirDrop {
             sb.replace(sb.indexOf("{time-to-start-format}"), sb.indexOf("{time-to-start-format}") + 22, AirManager.getFormat(timeToStart));
         if (sb.indexOf("{time-to-end-format}") != var)
             sb.replace(sb.indexOf("{time-to-end-format}"), sb.indexOf("{time-to-end-format}") + 20, AirManager.getFormat(timeStop));
-        if (sb.indexOf("{rndvar}") != var)
-            sb.replace(sb.indexOf("{rndvar}"), sb.indexOf("{rndvar}") + 7, String.valueOf(ThreadLocalRandom.current().nextInt(0, 1)));
-        if (sb.indexOf("{rndvar0}") != var)
-            sb.replace(sb.indexOf("{rndvar0}"), sb.indexOf("{rndvar0}") + 8, String.valueOf(ThreadLocalRandom.current().nextInt(0, 10)));
-        if (sb.indexOf("{rnd-50}") != var)
+        if (sb.indexOf("{rnd-1}") != -1)
+            sb.replace(sb.indexOf("{rnd-1}"), sb.indexOf("{rnd-1}") + 7, String.valueOf(ThreadLocalRandom.current().nextInt(0, 1)));
+        if (sb.indexOf("{rnd-10}") != -1)
+            sb.replace(sb.indexOf("{rnd-10}"), sb.indexOf("{rnd-10}") + 8, String.valueOf(ThreadLocalRandom.current().nextInt(0, 10)));
+        if (sb.indexOf("{rnd-50}") != -1)
             sb.replace(sb.indexOf("{rnd-50}"), sb.indexOf("{rnd-50}") + 8, String.valueOf(ThreadLocalRandom.current().nextInt(0, 50)));
-        if (sb.indexOf("{rndvar00}") != var)
-            sb.replace(sb.indexOf("{rndvar00}"), sb.indexOf("{rndvar00}") + 9, String.valueOf(ThreadLocalRandom.current().nextInt(0, 100)));
+        if (sb.indexOf("{rnd-100}") != -1)
+            sb.replace(sb.indexOf("{rnd-100}"), sb.indexOf("{rnd-100}") + 9, String.valueOf(ThreadLocalRandom.current().nextInt(0, 100)));
         if (sb.indexOf("{airdrop-is-open}") != var)
             sb.replace(sb.indexOf("{airdrop-is-open}"), sb.indexOf("{airdrop-is-open}") + 17, String.valueOf(!airLocked));
         if (sb.indexOf("{airdrop-is-start}") != var)
@@ -802,9 +837,10 @@ public class AirDrop {
         return sb.toString();
     }
 
-    public void event(Events event, @Nullable Player pl) {
+    public void event(Event event, @Nullable Player pl) {
         long x = System.currentTimeMillis();
-
+        AirDropOtherEvent otherEvent = new AirDropOtherEvent(event, this, pl);
+        Bukkit.getServer().getPluginManager().callEvent(otherEvent);
         for (String str : signedListener) {
             if (BAirDrop.internalListeners.containsKey(str)) {
                 if (BAirDrop.internalListeners.get(str).getEvent() == event)
@@ -813,25 +849,25 @@ public class AirDrop {
         }
 
         if(System.currentTimeMillis() - x < 50)
-            Message.debug("&7" + event + "&7 был выполнен за " + (System.currentTimeMillis() - x) + "ms", LogLevel.HARD);
+            Message.debug(String.format(Config.getMessage("event-time"), event.getKey().getKey(), (System.currentTimeMillis() - x)), LogLevel.HARD);
         else if (System.currentTimeMillis() - x > 50 && System.currentTimeMillis() - x < 75)
-            Message.debug("&7" + event + "&7 был выполнен за &e" + (System.currentTimeMillis() - x) + "ms", LogLevel.MEDIUM);
+            Message.debug(String.format(Config.getMessage("event-time-50"), event.getKey().getKey(), (System.currentTimeMillis() - x)), LogLevel.MEDIUM);
         else if (System.currentTimeMillis() - x > 75)
-            Message.debug("&7" + event + "&7 был выполнен за &c" + (System.currentTimeMillis() - x) + "ms", LogLevel.LOW);
+            Message.debug(String.format(Config.getMessage("event-time-75"), event.getKey().getKey(), (System.currentTimeMillis() - x)), LogLevel.LOW);
 
 
     }
 
-    public void callListener(String listener, @Nullable Player player, Events events) {
+    public void callListener(String listener, @Nullable Player player, Event event) {
         try {
             if (!BAirDrop.internalListeners.containsKey(listener)) {
-                Message.error("Несуществующий слушатель! " + listener);
+                Message.error(String.format(Config.getMessage("unknown-listener"), listener));
                 return;
             }
 
-            BAirDrop.internalListeners.get(listener).execute(player, this, false, events);
+            BAirDrop.internalListeners.get(listener).execute(player, this, false, event);
         } catch (StackOverflowError e) {
-            Message.error("Было вызвано слишком много слушателей!");
+            Message.error(Config.getMessage("too-many-call"));
         }
 
     }
@@ -1265,7 +1301,7 @@ public class AirDrop {
      * создаёт файл аирдропа
      */
     public void createFile() {
-        File air = new File(instance.getDataFolder() + File.separator + "airdrops" + File.separator + getAirId() + ".yml");
+        File air = new File(getInstance().getDataFolder() + File.separator + "airdrops" + File.separator + getAirId() + ".yml");
         this.airdropFile = air;
         this.fileConfiguration = YamlConfiguration.loadConfiguration(air);
     }
@@ -1274,11 +1310,11 @@ public class AirDrop {
      * Удаляет файл аирдропа и выгружает его из памяти
      */
     public boolean Delete() {
-        File air = new File(instance.getDataFolder() + File.separator + "airdrops" + File.separator + getAirId() + ".yml");
+        File air = new File(getInstance().getDataFolder() + File.separator + "airdrops" + File.separator + getAirId() + ".yml");
         boolean isDelete = air.delete();
         if (isDelete) {
             End();
-            event(Events.UNLOAD, null);
+            event(Event.UNLOAD, null);
             airDrops.remove(getAirId());
         }
 
@@ -1366,5 +1402,13 @@ public class AirDrop {
             }
             return airLoc.clone();
         }
+    }
+
+    public boolean isUseOnlyStaticLoc() {
+        return useOnlyStaticLoc;
+    }
+
+    public void setUseOnlyStaticLoc(boolean useOnlyStaticLoc) {
+        this.useOnlyStaticLoc = useOnlyStaticLoc;
     }
 }
