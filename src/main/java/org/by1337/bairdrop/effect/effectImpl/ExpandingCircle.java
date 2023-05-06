@@ -4,18 +4,17 @@ import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.effect.EffectType;
 import org.by1337.bairdrop.effect.IEffect;
-
-import java.util.Objects;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.util.Message;
+
+import java.util.Objects;
 
 public class ExpandingCircle implements IEffect {
     int ticks = -1;
@@ -27,7 +26,6 @@ public class ExpandingCircle implements IEffect {
     double endRadius;
     double stepRadius;
     int count;
-    //int viewDistance;
     double step;
     Vector offsets;
     double numberOfSteps;
@@ -49,7 +47,6 @@ public class ExpandingCircle implements IEffect {
         stepRadius = cs.getDouble(String.format("effects.%s.step-radius", name));
 
         count = cs.getInt(String.format("effects.%s.count", name));
-        //viewDistance = cs.getInt(String.format("effects.%s.viewDistance", name));
         step = cs.getDouble(String.format("effects.%s.step", name));
         offsets = new Vector(
                 cs.getDouble(String.format("effects.%s.offset-x", name)),
@@ -67,14 +64,12 @@ public class ExpandingCircle implements IEffect {
     @Override
     public void Start(AirDrop airDrop) {
         this.airDrop = airDrop;
-        if (airDrop.getAirLoc() == null) {
-            if (airDrop.getFutureLocation() == null) {
-                Message.error(Config.getMessage("effect-error-loc-is-null"));
-                Message.error(Config.getMessage("effect-error-loc-is-null2"));
-                Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getAirId()));
-                return;
-            } else loc = airDrop.getFutureLocation().clone();
-        } else loc = airDrop.getAirLoc().clone();
+        if (airDrop.getAnyLoc() == null) {
+            Message.error(Config.getMessage("effect-error-loc-is-null"));
+            Message.error(Config.getMessage("effect-error-loc-is-null2"));
+            Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getAirId()));
+            return;
+        } else loc = airDrop.getAnyLoc().clone();
         run();
     }
 
@@ -90,13 +85,10 @@ public class ExpandingCircle implements IEffect {
                 for (double y = 0; y <= numberOfSteps; y += step) {
                     double x = radius * Math.cos(y);
                     double z = radius * Math.sin(y);
-
-                            if (particle.name().equals("REDSTONE"))
-                                loc.getWorld().spawnParticle(particle, loc.clone().add(offsets).add(x, 0, z), count, new org.bukkit.Particle.DustOptions(color, (float) size));
-                            else
-                                loc.getWorld().spawnParticle(particle, loc.clone().add(offsets).add(x, 0, z), count);
-
-
+                    if (particle.name().equals("REDSTONE"))
+                        loc.getWorld().spawnParticle(particle, loc.clone().add(offsets).add(x, 0, z), count, new org.bukkit.Particle.DustOptions(color, (float) size));
+                    else
+                        loc.getWorld().spawnParticle(particle, loc.clone().add(offsets).add(x, 0, z), count);
                 }
                 if (!isActive())
                     cancel();
@@ -131,9 +123,7 @@ public class ExpandingCircle implements IEffect {
 
     @Override
     public IEffect clone() {
-
         return new ExpandingCircle(cs, name);
-
     }
 
     @Override

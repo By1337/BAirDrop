@@ -8,16 +8,19 @@ import org.bukkit.entity.Firework;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+
 import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.effect.EffectType;
 import org.by1337.bairdrop.effect.IEffect;
 import org.by1337.bairdrop.effect.util.RGBHelper;
-
-import java.util.ArrayList;
-import java.util.List;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.BAirDrop;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
 public class FireworkEffect implements IEffect {
     int ticks = -1;
     int timeUpdate;
@@ -49,23 +52,18 @@ public class FireworkEffect implements IEffect {
         startHeight = cs.getDouble(String.format("effects.%s.start-height", name));
         endHeight = cs.getDouble(String.format("effects.%s.end-height", name));
         stepHeight = cs.getDouble(String.format("effects.%s.step-height", name));
-
-
     }
 
     @Override
     public void Start(AirDrop airDrop) {
         this.airDrop = airDrop;
-        if (airDrop.getAirLoc() == null) {
-            if (airDrop.getFutureLocation() == null) {
-                Message.error(Config.getMessage("effect-error-loc-is-null"));
-                Message.error(Config.getMessage("effect-error-loc-is-null2"));
-                Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getAirId()));
-                return;
-            } else loc = airDrop.getFutureLocation().clone();
-        } else loc = airDrop.getAirLoc().clone();
+        if (airDrop.getAnyLoc() == null) {
+            Message.error(Config.getMessage("effect-error-loc-is-null"));
+            Message.error(Config.getMessage("effect-error-loc-is-null2"));
+            Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getAirId()));
+            return;
+        } else loc = airDrop.getAnyLoc().clone();
         run();
-
     }
 
     @Override
@@ -89,7 +87,6 @@ public class FireworkEffect implements IEffect {
             public void run() {
                 Location location = new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ());
                 location.add(offsets);
-             //   y += 1;
                 Firework firework = (Firework) location.getWorld().spawnEntity(location.add(0.0D, startHeight, 0.0D), EntityType.FIREWORK);
                 FireworkMeta fireworkMeta = firework.getFireworkMeta();
                 fireworkMeta.addEffect(org.bukkit.FireworkEffect.builder()
@@ -114,11 +111,6 @@ public class FireworkEffect implements IEffect {
                 }
             }
         }.runTaskTimerAsynchronously(BAirDrop.getInstance(), timeUpdate, timeUpdate);
-
-
-
-
-
     }
 
     @Override

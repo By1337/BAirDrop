@@ -14,29 +14,29 @@ import org.by1337.bairdrop.effect.EffectType;
 import org.by1337.bairdrop.effect.IEffect;
 
 import java.util.Objects;
+
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.BAirDrop;
 
 public class Helix implements IEffect {
-    double radius; //
+    double radius;
     double height;
-    double step; //
-    //int viewDistance; //
+    double step;
     Location loc;
     Color color;
     double size;
     Particle particle;
     Vector offsets;
-    int count; //
-    int timeUpdate; //
-    int ticks; //
+    int count;
+    int timeUpdate;
+    int ticks;
     String name;
     boolean active = true;
     FileConfiguration cs;
     AirDrop airDrop;
 
-    public Helix(FileConfiguration cs, String name) throws NullPointerException, IllegalArgumentException{
+    public Helix(FileConfiguration cs, String name) throws NullPointerException, IllegalArgumentException {
         this.name = name;
         this.cs = cs;
         ticks = cs.getInt(String.format("effects.%s.ticks", name));
@@ -46,7 +46,6 @@ public class Helix implements IEffect {
         radius = cs.getDouble(String.format("effects.%s.radius", name));
         height = cs.getDouble(String.format("effects.%s.height", name));
         count = cs.getInt(String.format("effects.%s.count", name));
-        //viewDistance = cs.getInt(String.format("effects.%s.viewDistance", name));
         step = cs.getDouble(String.format("effects.%s.step", name));
         offsets = new Vector(
                 cs.getDouble(String.format("effects.%s.offset-x", name)),
@@ -59,24 +58,24 @@ public class Helix implements IEffect {
                 cs.getInt(String.format("effects.%s.color-rgb-r", name)));
 
     }
+
     @Override
     public void Start(AirDrop airDrop) {
         this.airDrop = airDrop;
-        if (airDrop.getAirLoc() == null) {
-            if (airDrop.getFutureLocation() == null) {
-                Message.error(Config.getMessage("effect-error-loc-is-null"));
-                Message.error(Config.getMessage("effect-error-loc-is-null2"));
-                Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getAirId()));
-                return;
-            } else loc = airDrop.getFutureLocation().clone();
-        } else loc = airDrop.getAirLoc().clone();
+        if (airDrop.getAnyLoc() == null) {
+            Message.error(Config.getMessage("effect-error-loc-is-null"));
+            Message.error(Config.getMessage("effect-error-loc-is-null2"));
+            Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getAirId()));
+            return;
+        } else loc = airDrop.getAnyLoc().clone();
         run();
     }
 
     @Override
     public void End() {
         active = false;
-    }//writhing spiral
+    }
+
     void run() {
         new BukkitRunnable() {
             @Override
@@ -84,11 +83,10 @@ public class Helix implements IEffect {
                 for (double y = 0; y <= height; y += step) {
                     double x = radius * Math.cos(y);
                     double z = radius * Math.sin(y);
-
-                            if (particle.name().equals("REDSTONE"))
-                                loc.getWorld().spawnParticle(particle, loc.clone().add(offsets).add(x, y, z), count, new org.bukkit.Particle.DustOptions(color, (float) size));
-                            else
-                                loc.getWorld().spawnParticle(particle, loc.clone().add(offsets).add(x, y, z), count);
+                    if (particle.name().equals("REDSTONE"))
+                        loc.getWorld().spawnParticle(particle, loc.clone().add(offsets).add(x, y, z), count, new org.bukkit.Particle.DustOptions(color, (float) size));
+                    else
+                        loc.getWorld().spawnParticle(particle, loc.clone().add(offsets).add(x, y, z), count);
 
                 }
                 if (!isActive())
@@ -124,13 +122,7 @@ public class Helix implements IEffect {
 
     @Override
     public IEffect clone() {
-        try {
-            IEffect clone = (IEffect) super.clone();
-            return new Helix(cs, name);
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return new WrithingHelix(cs, name);
     }
 
     @Override

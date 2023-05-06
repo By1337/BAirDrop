@@ -4,10 +4,9 @@ import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+
 import org.by1337.bairdrop.*;
 import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.effect.EffectType;
@@ -24,7 +23,6 @@ public class circle implements IEffect {
     Particle particle;
     double radius;
     int count;
-    //int viewDistance;
     double step;
     Vector offsets;
     double numberOfSteps;
@@ -43,7 +41,6 @@ public class circle implements IEffect {
 
         radius = cs.getDouble(String.format("effects.%s.radius", name));
         count = cs.getInt(String.format("effects.%s.count", name));
-        //viewDistance = cs.getInt(String.format("effects.%s.viewDistance", name));
         step = cs.getDouble(String.format("effects.%s.step", name));
         offsets = new Vector(
                 cs.getDouble(String.format("effects.%s.offset-x", name)),
@@ -61,16 +58,13 @@ public class circle implements IEffect {
     @Override
     public void Start(AirDrop airDrop) {
         this.airDrop = airDrop;
-        if (airDrop.getAirLoc() == null) {
-            if (airDrop.getFutureLocation() == null) {
-                Message.error(Config.getMessage("effect-error-loc-is-null"));
-                Message.error(Config.getMessage("effect-error-loc-is-null2"));
-                Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getAirId()));
-                return;
-            } else loc = airDrop.getFutureLocation().clone();
-        } else loc = airDrop.getAirLoc().clone();
+        if (airDrop.getAnyLoc() == null) {
+            Message.error(Config.getMessage("effect-error-loc-is-null"));
+            Message.error(Config.getMessage("effect-error-loc-is-null2"));
+            Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getAirId()));
+            return;
+        } else loc = airDrop.getAnyLoc().clone();
         run();
-
     }
 
     @Override
@@ -100,8 +94,6 @@ public class circle implements IEffect {
                         loc.getWorld().spawnParticle(particle, loc.clone().add(offsets).add(x, 0, z), count, new org.bukkit.Particle.DustOptions(color, (float) size));
                     else
                         loc.getWorld().spawnParticle(particle, loc.clone().add(offsets).add(x, 0, z), count);
-
-
                 }
                 if (!isActive())
                     cancel();
@@ -128,8 +120,6 @@ public class circle implements IEffect {
 
     @Override
     public IEffect clone() {
-
         return new circle(cs, name);
-
     }
 }

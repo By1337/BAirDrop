@@ -9,8 +9,6 @@ import org.by1337.bairdrop.util.Message;
 
 
 public class PlayerJoin implements Listener {
-
-
     @EventHandler
     public void onConnect(PlayerJoinEvent e){
         if(e.getPlayer().isOp()){
@@ -20,5 +18,4 @@ public class PlayerJoin implements Listener {
             }
         }
     }
-
 }

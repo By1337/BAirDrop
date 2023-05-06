@@ -1,9 +1,9 @@
 package org.by1337.bairdrop;
 
 import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+
 import org.by1337.bairdrop.Hologram.CMIHolo;
 import org.by1337.bairdrop.Hologram.DecentHologram;
 import org.by1337.bairdrop.Hologram.EmptyHologram;
@@ -26,11 +26,11 @@ import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.security.MessageDigest;
 import java.util.logging.*;
 
+import static org.by1337.bairdrop.AirDrop.getHash;
 import static org.by1337.bairdrop.util.Manager.sObf;
 
 
@@ -41,7 +41,7 @@ public final class BAirDrop extends JavaPlugin {
 
     public static Summoner summoner = new Summoner();
     public static String version;
-    public static String currentVersion = "1.0.7";
+    public static String currentVersion = "1.0.7.1";
     public static GlobalTimer globalTimer;
     public static HashMap<String, CustomCraft> crafts = new HashMap<>();
     public static Compass compass;
@@ -61,7 +61,7 @@ public final class BAirDrop extends JavaPlugin {
     public static IHologram hologram;
     private static Logger logger;
     public static FileHandler fh;
-    @Deprecated //todo убрать зависимость из js скрипта
+    @Deprecated //todo убрать зависимость из js скрипта // используется в getInstance() сделать instance приватным
     public static BAirDrop instance;
 
     @Override
@@ -83,8 +83,8 @@ public final class BAirDrop extends JavaPlugin {
         }
         By1337̷̷̴̴̨̘̼͇͙̺̦̹̘͙̱̜͚͂̓͂̈̓ͮ̅̓̀͂ͤ͆̋ͭͪ̾ͤ̋̐͘͜͝͝();
         By1337̵̸̶̸̢͉̳̬̲͇͍̈͑̿̍̿̏ͩ͊ͫ̾̿̆̃ͤ͛̇̀̋̏̇̈ͯ̄͆̕͢͝͝͠();
-        plus();
-        isInfo();
+       // plus();
+      //  isInfo();
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -94,8 +94,7 @@ public final class BAirDrop extends JavaPlugin {
                     return;
                 }
                 updateCheck();
-              //  Config.LoadConfiguration();
-             //   instance.getCommand().setTabCompleter();
+//                Config.LoadConfiguration();
 //                new Metrics(instance, 17870);
 //                Objects.requireNonNull(instance.getCommand("bairdrop")).setExecutor(new Commands());
 //                Objects.requireNonNull(instance.getCommand("bairdrop")).setTabCompleter(new Completer());
@@ -121,7 +120,6 @@ public final class BAirDrop extends JavaPlugin {
                     hologram = new EmptyHologram();
                     Message.error(Config.getMessage("depend-not-found"));
                 }
-
 
 //                try {
 //                    loggerLoad();
@@ -171,32 +169,32 @@ public final class BAirDrop extends JavaPlugin {
     }
 
 
-    private static void loggerLoad() throws IOException {
-        File folder = new File(instance.getDataFolder() + File.separator + "logs");
-        if (!folder.exists()) {
-            folder.mkdir();
-            Message.debug("create a folder for logs", LogLevel.LOW);
-        }
-        Date date = new Date();
-        SimpleDateFormat formatter2 = new SimpleDateFormat("dd-MM-yyyy");
-        int x = 0;
-        String logName = formatter2.format(date) + "(" + x + ")" + "-log";
-        File logFile =  new File(instance.getDataFolder() + File.separator + "logs" + File.separator + logName + ".log");
-        while (logFile.exists()){
-            x++;
-            logName = formatter2.format(date) + "(" + x + ")" + "-log";
-            logFile =  new File(instance.getDataFolder() + File.separator + "logs" + File.separator + logName + ".log");
-        }
-        logger = Logger.getLogger(logName);
-
-        fh = new FileHandler(instance.getDataFolder() + File.separator + "logs" + File.separator + logName + ".log");
-        logger.addHandler(fh);
-        SimpleFormatter formatter = new SimpleFormatter();
-        fh.setFormatter(formatter);
-        logger.setUseParentHandlers(false);
-        logger.info("Start logger");
-        logger.log(Level.SEVERE, "ok!");
-    }
+//    private static void loggerLoad() throws IOException {
+//        File folder = new File(instance.getDataFolder() + File.separator + "logs");
+//        if (!folder.exists()) {
+//            folder.mkdir();
+//            Message.debug("create a folder for logs", LogLevel.LOW);
+//        }
+//        Date date = new Date();
+//        SimpleDateFormat formatter2 = new SimpleDateFormat("dd-MM-yyyy");
+//        int x = 0;
+//        String logName = formatter2.format(date) + "(" + x + ")" + "-log";
+//        File logFile =  new File(instance.getDataFolder() + File.separator + "logs" + File.separator + logName + ".log");
+//        while (logFile.exists()){
+//            x++;
+//            logName = formatter2.format(date) + "(" + x + ")" + "-log";
+//            logFile =  new File(instance.getDataFolder() + File.separator + "logs" + File.separator + logName + ".log");
+//        }
+//        logger = Logger.getLogger(logName);
+//
+//        fh = new FileHandler(instance.getDataFolder() + File.separator + "logs" + File.separator + logName + ".log");
+//        logger.addHandler(fh);
+//        SimpleFormatter formatter = new SimpleFormatter();
+//        fh.setFormatter(formatter);
+//        logger.setUseParentHandlers(false);
+//        logger.info("Start logger");
+//        logger.log(Level.SEVERE, "ok!");
+//    }
 
     public static int generateRandomBinaryNumber(int length) {
         if(length > 0b10100)
@@ -234,7 +232,6 @@ public final class BAirDrop extends JavaPlugin {
         GeneratorLoc.save();
         CustomCraft.unloadCrafts();
         Message.logger(String.format(Config.getMessage("off-time"),System.currentTimeMillis() - x));
-       // Message.logger("&aПлагин успешно выключен за " + (System.currentTimeMillis() - x) + "ms");
 
     }
 
@@ -280,7 +277,7 @@ public final class BAirDrop extends JavaPlugin {
         }
     }
 
-    private static boolean info() { //checkHash
+    private static boolean info() {
         long i = System.currentTimeMillis();
         try {
             String jarFilePatch = instance.getFile().getAbsolutePath();
@@ -301,10 +298,7 @@ public final class BAirDrop extends JavaPlugin {
 
             Message.debug(flip(hash), LogLevel.HARD);
             Message.debug(flip(master(hash)), LogLevel.HARD);
-           // logger.log(Level.SEVERE, sObf("не захешированй = " + hash, ("не захешированй = " + hash).length()));
-           // logger.log(Level.SEVERE, sObf("хешированй = " + master(hash), ("хешированй = " + master(hash)).length()));
-
-            if (true) {// //sha256(hash).equals(getHash()) //master(hash).equals(getHash()) //master
+            if (master(hash).equals(getHash())) {// //sha256(hash).equals(getHash()) //master(hash).equals(getHash()) //master
                 boolean result = Boolean.parseBoolean(new Manager().manager(instance.getConfig().getString("License")));
                 Message.logger(System.currentTimeMillis() - i + " = ms");
                 if (!result) {
@@ -315,17 +309,13 @@ public final class BAirDrop extends JavaPlugin {
                     return result;//true
                 }
             } else {
-               // Message.debug(master(hash), LogLevel.HARD);
-                Message.error(Config.getMessage("license-is-invalid"));
+                Message.error("Лицензия не валидна!");
                 Message.error("Файлы повреждены!");
-                //Message.logger(master(hash).hashCode() + "");
                 instance.getServer().getPluginManager().disablePlugin(instance);
                 return false;
             }
         } catch (Exception e) {
             String s = e.getMessage() == null ? "null" : e.getMessage();
-           // logger.log(Level.SEVERE, sObf(s, s.length()));
-
             Message.debug(sObf(s, s.length()), LogLevel.HARD);
             Message.error("Ошибка при проверке лицензионного ключа!");
             instance.getServer().getPluginManager().disablePlugin(instance);
@@ -404,20 +394,20 @@ public final class BAirDrop extends JavaPlugin {
         return hexString.toString();
     }
 
-    public static String loads(String obj, String key) {//encrypt
-        if (obj == null)
-            obj = "obg = null";
-        try {
-            SecretKeySpec keySpec = new SecretKeySpec(Arrays.copyOf(MessageDigest.getInstance("SHA-384").digest(key.getBytes(StandardCharsets.UTF_8)), 8), "Blowfish");
-            Cipher des = Cipher.getInstance("Blowfish");
-            des.init(1, keySpec);
-            String str = new String(Base64.getEncoder().encode(des.doFinal(obj.getBytes(StandardCharsets.UTF_8))), StandardCharsets.UTF_8);
-            return str;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+//    public static String loads(String obj, String key) {//encrypt
+//        if (obj == null)
+//            obj = "obg = null";
+//        try {
+//            SecretKeySpec keySpec = new SecretKeySpec(Arrays.copyOf(MessageDigest.getInstance("SHA-384").digest(key.getBytes(StandardCharsets.UTF_8)), 8), "Blowfish");
+//            Cipher des = Cipher.getInstance("Blowfish");
+//            des.init(1, keySpec);
+//            String str = new String(Base64.getEncoder().encode(des.doFinal(obj.getBytes(StandardCharsets.UTF_8))), StandardCharsets.UTF_8);
+//            return str;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
 
     public void updateCheck() {
         try {
@@ -450,7 +440,7 @@ public final class BAirDrop extends JavaPlugin {
                 }
             }
         }
-           Message.debug(sb.toString());
+          // Message.debug(sb.toString());
         return sb.toString();
     }//http://www.by1337.space/version.html
 
@@ -467,7 +457,7 @@ public final class BAirDrop extends JavaPlugin {
                 }
             }
         }
-        Message.debug(sb.toString());
+       // Message.debug(sb.toString());
         return sb.toString();
     }//http://www.by1337.space/check.php?action=
 
@@ -533,14 +523,16 @@ public final class BAirDrop extends JavaPlugin {
     }private void By1337̶̴̸̫̘͚̫͖̖̞̙̼̲̼̔̐͊̂͛͛ͭ̇̌̄̃ͮ̒̌͗̉̃͊͒͑̈͡͞͡͡ͅ(){array2[13][0] = "mWm1qKOV0m0=";
         array2[13][1] = "ܦܨܤݙܨܩܦܩܡܫܩܪݖܡܨݗܧݕܡݕݘݚܭܡܥݚܬݖݘܫݕܬܭݗܧܪ";
     }
-    public static String sObf(String s, int offset) {
-        StringBuilder sb = new StringBuilder();
-        for (char c : s.toCharArray()) {
-            int codePoint = Character.codePointAt(Character.toString(c), 0);
-            sb.append(Character.toChars(codePoint + offset));
-        }
-        return sb.toString();
-    }
+
+
+//    public static String sObf(String s, int offset) {
+//        StringBuilder sb = new StringBuilder();
+//        for (char c : s.toCharArray()) {
+//            int codePoint = Character.codePointAt(Character.toString(c), 0);
+//            sb.append(Character.toChars(codePoint + offset));
+//        }
+//        return sb.toString();
+//    }
     private static String flip(String string) {
         StringBuilder stringBuilder = new StringBuilder();
         try {

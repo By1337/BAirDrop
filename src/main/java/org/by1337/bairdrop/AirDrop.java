@@ -120,17 +120,19 @@ public class AirDrop {
             useStaticLoc = fileConfiguration.getBoolean("use-static-loc");
             stopWhenEmpty = fileConfiguration.getBoolean("stop-when-empty");
             rndItems = fileConfiguration.getBoolean("random-slot");
-            if (useStaticLoc) {
+
+            if (fileConfiguration.getString("static-location.world") != null) {
                 double x = fileConfiguration.getDouble("static-location.x");
                 double y = fileConfiguration.getDouble("static-location.y");
                 double z = fileConfiguration.getDouble("static-location.z");
-                World world1 = Bukkit.getWorld(fileConfiguration.getString("static-location.world") == null ? "world" : Objects.requireNonNull(fileConfiguration.getString("static-location.world")));
+                World world1 = Bukkit.getWorld(fileConfiguration.getString("static-location.world"));
                 if (world1 == null) {
                     Message.error(String.format(Config.getMessage("static-loc-error"), airId));
                 } else {
                     staticLocation = new Location(world1, x, y, z);
                 }
             }
+
             chance = fileConfiguration.getInt("spawn-chance");
             flatnessCheck = fileConfiguration.getBoolean("flatness-check");
             usePreGeneratedLocations = fileConfiguration.getBoolean("use-pre-generated-locations");
@@ -175,7 +177,7 @@ public class AirDrop {
             airHoloOpen = fileConfiguration.getStringList("air-holo-open");
             airHoloClickWait = fileConfiguration.getStringList("air-holo-click-wait");
             airHoloToStart = fileConfiguration.getStringList("air-holo-to-start");
-            useOnlyStaticLoc = fileConfiguration.getBoolean("use-only-static-loc", false);
+            useOnlyStaticLoc = fileConfiguration.getBoolean("use-only-static-loc");
             holoOffsets = new Vector(
                     fileConfiguration.getDouble("holo-offsets.x"),
                     fileConfiguration.getDouble("holo-offsets.y"),
@@ -347,6 +349,16 @@ public class AirDrop {
                             stopWhenEmpty_event = true;
                             event(Event.STOP_WHEN_EMPTY, null);
                             End();
+                        }
+                    }
+                    if(airDropStarted){
+                        List<HumanEntity> heList = new ArrayList<>(getInv().getViewers());
+                        for(HumanEntity he : heList){
+                            if(he instanceof Player pl){
+                                if(getAirLoc().distance(pl.getLocation()) > 10D){
+                                    pl.closeInventory();
+                                }
+                            }
                         }
                     }
                 }

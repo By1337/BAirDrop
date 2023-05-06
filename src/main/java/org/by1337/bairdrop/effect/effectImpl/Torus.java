@@ -4,29 +4,28 @@ import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+
 import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.effect.EffectType;
 import org.by1337.bairdrop.effect.IEffect;
-
-import java.util.Objects;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.BAirDrop;
-public class Torus implements IEffect {
 
-    double step; //
+import java.util.Objects;
+
+public class Torus implements IEffect {
+    double step;
     Location loc;
     Color color;
     double size;
     Particle particle;
     Vector offsets;
-    int count; //
-    int timeUpdate; //
-    int ticks; //
+    int count;
+    int timeUpdate;
+    int ticks;
     String name;
     boolean active = true;
     FileConfiguration cs;
@@ -60,14 +59,12 @@ public class Torus implements IEffect {
     @Override
     public void Start(AirDrop airDrop) {
         this.airDrop = airDrop;
-        if (airDrop.getAirLoc() == null) {
-            if (airDrop.getFutureLocation() == null) {
-                Message.error(Config.getMessage("effect-error-loc-is-null"));
-                Message.error(Config.getMessage("effect-error-loc-is-null2"));
-                Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getAirId()));
-                return;
-            } else loc = airDrop.getFutureLocation().clone();
-        } else loc = airDrop.getAirLoc().clone();
+        if (airDrop.getAnyLoc() == null) {
+            Message.error(Config.getMessage("effect-error-loc-is-null"));
+            Message.error(Config.getMessage("effect-error-loc-is-null2"));
+            Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getAirId()));
+            return;
+        } else loc = airDrop.getAnyLoc().clone();
         run();
     }
 
@@ -95,7 +92,6 @@ public class Torus implements IEffect {
                             center.getWorld().spawnParticle(particle, loc.clone().add(offsets).add(x, y, z), 0, new org.bukkit.Particle.DustOptions(color, (float) size));
                         else
                             center.getWorld().spawnParticle(particle, loc.clone().add(offsets).add(x, y, z), 0);
-                        // center.getWorld().spawnParticle(Particle.REDSTONE, center.clone().add(x, y, z), 1, new Particle.DustOptions(Color.RED, 1));
                     }
                 }
                 if (!isActive())
@@ -110,8 +106,6 @@ public class Torus implements IEffect {
             }
         }.runTaskTimerAsynchronously(BAirDrop.getInstance(), timeUpdate, timeUpdate);
     }
-
-
     @Override
     public void setLifetime(int ticks) {
         this.ticks = ticks;

@@ -28,20 +28,17 @@ public class InteractListener implements Listener {
                 return;
             e.setCancelled(true);
             if(auntyDouble.getOrDefault(e.getPlayer().getUniqueId(), 0L) > System.currentTimeMillis()){
-               // e.setCancelled(true);
                 return;
             }else {
                 auntyDouble.put(e.getPlayer().getUniqueId(), System.currentTimeMillis() + 20L);
             }
             if(!airDrop.isAirDropStarted()){
-               // e.setCancelled(true);
                 return;
             }
             if(airDrop.isStartCountdownAfterClick() && !airDrop.isPressed()){
                 airDrop.setPressed(true);
                 airDrop.setTimeStop(airDrop.getTimeToStopCons() * 60);
                 airDrop.event(Event.ACTIVATE, pl);
-                //e.setCancelled(true);
                 return;
             }
 

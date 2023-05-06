@@ -27,7 +27,7 @@ public class Message {
     private static final ConsoleCommandSender SENDER = Bukkit.getConsoleSender();
     private static final String AUTHOR = "&#a612cb&lB&#9a17d2&ly&#8d1bd9&l1&#8120e1&l3&#7424e8&l3&#6829ef&l7";
     private static final String prefixPlugin = "&#a600f4[&#a70bf5B&#a815f6A&#a920f7i&#aa2bf8r&#aa35f8d&#ab40f9r&#ac4bfao&#ad55fbp&#ae60fc]";
-    public static final Pattern RAW_HEX_REGEX = Pattern.compile("&(#[a-f0-9]{6})", Pattern.CASE_INSENSITIVE);
+    private static final Pattern RAW_HEX_REGEX = Pattern.compile("&(#[a-f0-9]{6})", Pattern.CASE_INSENSITIVE);
     public static HashMap<String, BossBar> bossBars = new HashMap<>();
 
 
@@ -129,6 +129,7 @@ public class Message {
             return "";
         String str = msg.replace("{PP}", prefixPlugin).replace("AU", AUTHOR);
         str = setPlaceholders(null, str);
+
         return hex(str);
     }
 
@@ -137,15 +138,6 @@ public class Message {
             sendMsg(pl, msg);
 
     }
-    @Deprecated
-    public static void sendAllNear(String msg, Location loc) {
-        for (Entity entity : Objects.requireNonNull(loc.getWorld()).getNearbyEntities(loc, 10, 10, 10)) {
-            if (entity instanceof Player) {
-                sendMsg((Player) entity, msg);
-            }
-        }
-    }
-
     public static String setPlaceholders(@Nullable Player player, String string) {
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             try {
@@ -171,9 +163,8 @@ public class Message {
 
     public static void sendAllSound(String sound) {
         try {
-            //   Sound.valueOf(sound);
             for (Player pl : Bukkit.getOnlinePlayers())
-                sendSound(pl, sound);
+                pl.playSound(pl.getLocation(), Sound.valueOf(sound), 1, 1);
         } catch (IllegalArgumentException e) {
             Message.error(String.format(Config.getMessage("unknown-sound"), sound));
         }

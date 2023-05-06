@@ -4,34 +4,30 @@ import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+
 import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.effect.EffectType;
 import org.by1337.bairdrop.effect.IEffect;
-
-import java.util.Objects;
-
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.BAirDrop;
 
+import java.util.Objects;
+
 public class WrithingHelix implements IEffect {
-    double radius; //
+    double radius;
     double height;
-    double step; //
-    //int viewDistance; //
+    double step;
     Location loc;
     Color color;
     double size;
     Particle particle;
     Vector offsets;
-    int count; //
-    int timeUpdate; //
-    int ticks; //
+    int count;
+    int timeUpdate;
+    int ticks;
     String name;
     boolean active = true;
     FileConfiguration cs;
@@ -47,7 +43,6 @@ public class WrithingHelix implements IEffect {
         radius = cs.getDouble(String.format("effects.%s.radius", name));
         height = cs.getDouble(String.format("effects.%s.height", name));
         count = cs.getInt(String.format("effects.%s.count", name));
-        //viewDistance = cs.getInt(String.format("effects.%s.viewDistance", name));
         step = cs.getDouble(String.format("effects.%s.step", name));
         offsets = new Vector(
                 cs.getDouble(String.format("effects.%s.offset-x", name)),
@@ -58,37 +53,34 @@ public class WrithingHelix implements IEffect {
                 cs.getInt(String.format("effects.%s.color-rgb-b", name)),
                 cs.getInt(String.format("effects.%s.color-rgb-g", name)),
                 cs.getInt(String.format("effects.%s.color-rgb-r", name)));
-
     }
 
     @Override
     public void Start(AirDrop airDrop) {
         this.airDrop = airDrop;
-        if (airDrop.getAirLoc() == null) {
-            if (airDrop.getFutureLocation() == null) {
-                Message.error(Config.getMessage("effect-error-loc-is-null"));
-                Message.error(Config.getMessage("effect-error-loc-is-null2"));
-                Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getAirId()));
-                return;
-            } else loc = airDrop.getFutureLocation().clone();
-        } else loc = airDrop.getAirLoc().clone();
+        if (airDrop.getAnyLoc() == null) {
+            Message.error(Config.getMessage("effect-error-loc-is-null"));
+            Message.error(Config.getMessage("effect-error-loc-is-null2"));
+            Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getAirId()));
+            return;
+        } else loc = airDrop.getAnyLoc().clone();
         run();
     }
 
     @Override
     public void End() {
         active = false;
-    }//writhing spiral
+    }
 
     void run() {
         new BukkitRunnable() {
-            double angle = 0; // initialize angle variable
+            double angle = 0;
 
             @Override
             public void run() {
                 for (double y = 0; y <= height; y += step) {
                     double x = radius * Math.cos(y);
-                    double z = radius * Math.sin(y + angle); // add angle to y
+                    double z = radius * Math.sin(y + angle);
 
                     if (particle.name().equals("REDSTONE"))
                         loc.getWorld().spawnParticle(particle, loc.clone().add(offsets).add(x, y, z), count, new org.bukkit.Particle.DustOptions(color, (float) size));
@@ -96,7 +88,7 @@ public class WrithingHelix implements IEffect {
                         loc.getWorld().spawnParticle(particle, loc.clone().add(offsets).add(x, y, z), count);
 
                 }
-                angle += 0.1; // increase angle for the next iteration
+                angle += 0.1;
                 if (!isActive())
                     cancel();
                 if (ticks != -1) {
@@ -115,24 +107,18 @@ public class WrithingHelix implements IEffect {
     public void setLifetime(int ticks) {
         this.ticks = ticks;
     }
-
     @Override
     public boolean isActive() {
         return active;
     }
-
     @Override
     public String getName() {
         return name;
     }
-
     @Override
     public IEffect clone() {
-
         return new WrithingHelix(cs, name);
-
     }
-
     @Override
     public EffectType getType() {
         return EffectType.WRITHING_HELIX;

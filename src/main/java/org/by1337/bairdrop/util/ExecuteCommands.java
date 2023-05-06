@@ -54,7 +54,7 @@ public class ExecuteCommands {
             if(command.equalsIgnoreCase("[SCHEDULER]") || command.equalsIgnoreCase("[ASYNC]") || command.contains("[LATER-")){
                 continue;
             }
-            if(runJsCommand(pl, airDrop, command)) //
+            if(runJsCommand(pl, airDrop, command))
                 continue;
             if (pl != null)
                 if (execPlayerCommands(pl, command))
@@ -195,22 +195,6 @@ public class ExecuteCommands {
                     command = command.replace(String.format("{player-get-item-%s}.isNull", slot), "false");
                     return command;
                 }
-                if (command.contains(".getPDC.get")) {
-                    String key = command.split(".getPDC.get=\"")[1].split("\"")[0];
-                    if (key == null) throw new NullPointerException("getPDC.get=\"key\" key is null!");
-                    String oldKey = key;
-                    key = key.replace(" ", "_");
-                    key = key.toLowerCase();
-
-                    if (item == null || item.getItemMeta() == null) {
-                        command = command.replace(String.format("{player-get-item-%s}.getType", slot), "");
-                        return command;
-                    }
-                    command = command.replace(String.format("{player-get-item-%s}.getPDC.get=\"%s\"", slot, oldKey),
-                            item.getItemMeta().getPersistentDataContainer().getOrDefault(NamespacedKey.fromString(key), PersistentDataType.STRING, "")
-                    );
-                    return command;
-                }
             } catch (NumberFormatException e) {
                 Message.error("{player-get-item-<slot>} <slot> должен быть числом!");
             } catch (ArrayIndexOutOfBoundsException e) {
@@ -242,10 +226,7 @@ public class ExecuteCommands {
                     result.append(c);
                 }
                 command = result.toString();
-                // System.out.println(result.toString());
             }
-
-            //String[] args = command.split(",");
             String[] args = command.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
             if (args.length < 4) {
                 Message.error(Config.getMessage("boss-bar-few-args"));
@@ -363,9 +344,7 @@ public class ExecuteCommands {
                     result.append(c);
                 }
                 command = result.toString();
-                // System.out.println(result.toString());
             }
-            //  String[] args = command.split(",");
             String[] args = command.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
             if (args.length < 1) {
                 Message.error(Config.getMessage("few-arg-for-del-boss-bar"));
@@ -384,12 +363,11 @@ public class ExecuteCommands {
             }
             BossBar bossBar = Message.bossBars.getOrDefault(name, null);
             if (bossBar == null) {
-                //  Message.error("Неизвестный босс бар! " + name);
+                Message.error(String.format(Config.getMessage("unknown-boss-bar"), name));
                 return true;
             }
             Message.bossBars.remove(name);
             return true;
-            // bossBarAddParam(bossBar, args, pl);
         }
         return false;
     }
@@ -483,7 +461,7 @@ public class ExecuteCommands {
             airDrop.StopAllEffects();
             return true;
         }
-        if (command.contains("[SET_MATERIAL_")) {//-offsets
+        if (command.contains("[SET_MATERIAL_")) {
             Location location = airDrop.getAirLoc();
             if (location == null)
                 location = airDrop.getFutureLocation();
@@ -711,14 +689,9 @@ public class ExecuteCommands {
     }
 
     private static void menuCommand(List<String> commands, AirDrop airDrop, Player pl) {
-
-        //Message.debug(airDrop.getAirId());
-        //Message.debug(commands.toString());
         commands.replaceAll(airDrop::replaceInternalPlaceholder);
-        //Message.debug(commands.toString());
 
         for (String str : commands) {
-            // Message.logger(str);
             if (str.equalsIgnoreCase("[!airdropstarted]")) {
                 if (airDrop.isAirDropStarted())
                     airDrop.End();
@@ -822,7 +795,7 @@ public class ExecuteCommands {
                 airDrop.setFlatnessCheck(!airDrop.isFlatnessCheck());
                 airDrop.save();
             }
-            if (str.equalsIgnoreCase("[!time-stop-old-must-go]")) {
+            if (str.equalsIgnoreCase("[!time-stop-event-must-go]")) {
                 airDrop.setTimeStopEventMustGo(!airDrop.isTimeStopEventMustGo());
                 airDrop.save();
             }
@@ -910,7 +883,7 @@ public class ExecuteCommands {
                 getServer().getPluginManager().registerEvents(lc, BAirDrop.getInstance());
                 pl.closeInventory();
             }
-            if (str.equalsIgnoreCase("[!time-stop-old-must-go]")) {
+            if (str.equalsIgnoreCase("[!time-stop-event-must-go]")) {
                 airDrop.setUseStaticLoc(!airDrop.isUseStaticLoc());
                 airDrop.save();
             }
@@ -922,9 +895,11 @@ public class ExecuteCommands {
                 getServer().getPluginManager().registerEvents(ssl, BAirDrop.getInstance());
                 pl.getInventory().setItem(0, ssl.getItem());
                 pl.closeInventory();
+
             }
             if (str.equalsIgnoreCase("[!use-only-static-loc]")) {
                 airDrop.setUseOnlyStaticLoc(!airDrop.isUseOnlyStaticLoc());
+                airDrop.save();
                 airDrop.getEditAirMenu().menuGenerate("setStaticLoc");
             }
         }

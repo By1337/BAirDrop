@@ -156,7 +156,6 @@ public class InternalListener {
         String[] args = mathExp.split("\\s+");
 
         String result = "error";
-        //  Double.parseDouble()
         try {
             if (args[1].equals("%"))
                 result = (Double.parseDouble(args[0]) % Double.parseDouble(args[2])) + "";
@@ -180,8 +179,6 @@ public class InternalListener {
                 result = (Double.parseDouble(args[0]) <= Double.parseDouble(args[2])) + "";
             if (args[1].equals("!="))
                 result = (Double.parseDouble(args[0]) != Double.parseDouble(args[2])) + "";
-            //   Message.error(String.format(Config.getMessage("numerical-check-unknown-operator"), args[1], reqOld));
-            //  result = "0.5";
         } catch (NumberFormatException e) {
             Message.error(String.format(Config.getMessage("numeric_check-error-not-a-number"), reqOld));
             Message.error(e.getLocalizedMessage()); //.replace("For input string:", "Не число:")
@@ -198,11 +195,11 @@ public class InternalListener {
     }
 
     private boolean NUMERICAL_CHECK(String checkId, String req, @Nullable AirDrop airDrop, @Nullable Player pl) {
-        int var = 0;//0
+        int var = 0;
         int var1 = Integer.toBinaryString(BAirDrop.info[1]).length() / 2;//2
         int var2 = Integer.toBinaryString(BAirDrop.info[1]).length();//4
-        int var3 = 3;//3
-        int var4 = 1;//1
+        int var3 = 3;
+        int var4 = 1;
         Pattern pattern = Pattern.compile("\\{\\[RUN_JS=.*?\\}");
         Matcher matcher = pattern.matcher(req);
         if (matcher.find()) {
@@ -247,7 +244,7 @@ public class InternalListener {
             return false;
         } catch (NumberFormatException e) {
             Message.error(String.format(Config.getMessage("numeric_check-error-not-a-number"), checkId));
-            Message.error(e.getLocalizedMessage()); //.replace("For input string:", "Не число:")
+            Message.error(e.getLocalizedMessage());
             return false;
         } catch (ArrayIndexOutOfBoundsException e) {
             Message.error(String.format(Config.getMessage("numerical_check-few-arguments"), checkId));
@@ -327,7 +324,6 @@ public class InternalListener {
         } catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
             e.printStackTrace();
         }
-
         return "js error";
     }
 

@@ -18,7 +18,7 @@ public class DecentHologram implements IHologram{
                 hologram = DHAPI.createHologram(name, location, lines);
             }
             DHAPI.setHologramLines(hologram, lines);
-            DHAPI.moveHologram(hologram, location);
+         //   DHAPI.moveHologram(hologram, location);
         }else {
             DHAPI.createHologram(name, location, lines);
         }

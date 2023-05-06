@@ -9,17 +9,19 @@ import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
+
 import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.effect.EffectType;
 import org.by1337.bairdrop.effect.IEffect;
+import org.by1337.bairdrop.AirDrop;
+import org.by1337.bairdrop.util.Message;
+import org.by1337.bairdrop.BAirDrop;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
-import org.by1337.bairdrop.AirDrop;
-import org.by1337.bairdrop.util.Message;
-import org.by1337.bairdrop.BAirDrop;
+
 public class Guard implements IEffect{
     int ticks = -1;
     int timeUpdate;
@@ -35,7 +37,6 @@ public class Guard implements IEffect{
     List<Zombie> zombies = new ArrayList<>();
 
     public Guard(FileConfiguration cs, String name) throws NullPointerException, IllegalArgumentException{
-     //   getServer().getPluginManager().registerEvents(this, BAirDrop.instance);
         this.cs = cs;
         ticks = cs.getInt(String.format("effects.%s.ticks", name));
         timeUpdate = cs.getInt(String.format("effects.%s.timeUpdate", name));
@@ -51,23 +52,19 @@ public class Guard implements IEffect{
     @Override
     public void Start(AirDrop airDrop) {
         this.airDrop = airDrop;
-        if (airDrop.getAirLoc() == null) {
-            if (airDrop.getFutureLocation() == null) {
-                Message.error(Config.getMessage("effect-error-loc-is-null"));
-                Message.error(Config.getMessage("effect-error-loc-is-null2"));
-                Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getAirId()));
-                return;
-            } else loc = airDrop.getFutureLocation().clone();
-        } else loc = airDrop.getAirLoc().clone();
+        if (airDrop.getAnyLoc() == null) {
+            Message.error(Config.getMessage("effect-error-loc-is-null"));
+            Message.error(Config.getMessage("effect-error-loc-is-null2"));
+            Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getAirId()));
+            return;
+        } else loc = airDrop.getAnyLoc().clone();
         run();
-
     }
 
     @Override
     public void End() {
         active = false;
         zombies.forEach(Entity::remove);
-     //   HandlerList.unregisterAll(this);
     }
 
     @Override
@@ -162,9 +159,7 @@ public class Guard implements IEffect{
 
     @Override
     public IEffect clone() {
-
         return new Guard(cs, name);
-
     }
 
 }
