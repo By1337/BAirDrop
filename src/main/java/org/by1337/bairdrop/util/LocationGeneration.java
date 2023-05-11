@@ -35,11 +35,11 @@ public class LocationGeneration {
     @Nullable
     public Location getPreLocation(@NotNull AirDrop airDrop) {
         world = airDrop.getWorld();
-        if (GeneratorLoc.locs.getOrDefault(airDrop.getAirId(), new ArrayList<>()).isEmpty()) {
-            if (cd.getOrDefault(airDrop.getAirId() + "001", 0L) < System.currentTimeMillis()) {
+        if (GeneratorLoc.locs.getOrDefault(airDrop.getId(), new ArrayList<>()).isEmpty()) {
+            if (cd.getOrDefault(airDrop.getId() + "001", 0L) < System.currentTimeMillis()) {
                 Message.warning(String.format(Config.getMessage("locations-are-absent"), world.getName()));
                 Message.warning(Config.getMessage("attempt-use-static-loc"));
-                cd.put(airDrop.getAirId() + "001", System.currentTimeMillis() + 150000L);//скажем что это error 001
+                cd.put(airDrop.getId() + "001", System.currentTimeMillis() + 150000L);//скажем что это error 001
             }
             if (airDrop.isUseStaticLoc())
                 return airDrop.getStaticLocation();
@@ -51,9 +51,9 @@ public class LocationGeneration {
     @Nullable
     public Location getLocation(@NotNull AirDrop airDrop, boolean isGenerator) {
         world = airDrop.getWorld();
-        double x = ThreadLocalRandom.current().nextLong(airDrop.getSpawnMin(), airDrop.getSpawnMax());
+        double x = ThreadLocalRandom.current().nextLong(airDrop.getSpawnRadiusMin(), airDrop.getSpawnRadiusMax());
         double y = Integer.toBinaryString(BAirDrop.info[5]).length() * 100;//100
-        double z = ThreadLocalRandom.current().nextLong(airDrop.getSpawnMin(), airDrop.getSpawnMax());
+        double z = ThreadLocalRandom.current().nextLong(airDrop.getSpawnRadiusMin(), airDrop.getSpawnRadiusMax());
 
         Location loc1 = new Location(world, x, y, z);
         String worldType = String.valueOf(world.getEnvironment());
@@ -62,16 +62,16 @@ public class LocationGeneration {
         if (worldType.equals("THE_END"))
             return getLocationTHE_END(loc1, airDrop);
         if (worldType.equals("NETHER")) {
-            if (!isGenerator && cd.getOrDefault(airDrop.getAirId() + "002", 0L) < System.currentTimeMillis()) {
-                Message.warning(String.format(Config.getMessage("generation-nether"), airDrop.getAirId()));
-                cd.put(airDrop.getAirId() + "002", System.currentTimeMillis() + 150000L);//а это 002
+            if (!isGenerator && cd.getOrDefault(airDrop.getId() + "002", 0L) < System.currentTimeMillis()) {
+                Message.warning(String.format(Config.getMessage("generation-nether"), airDrop.getId()));
+                cd.put(airDrop.getId() + "002", System.currentTimeMillis() + 150000L);//а это 002
             }
             return getLocationNETHER(loc1, airDrop);
         }
         if (worldType.equals("CUSTOM")) {
-            if (cd.getOrDefault(airDrop.getAirId() + "003", 0L) < System.currentTimeMillis()) {
+            if (cd.getOrDefault(airDrop.getId() + "003", 0L) < System.currentTimeMillis()) {
                 Message.warning(String.format(Config.getMessage("unknown-world-type"), world.getName()));
-                cd.put(airDrop.getAirId() + "003", System.currentTimeMillis() + 150000L); //а это 003
+                cd.put(airDrop.getId() + "003", System.currentTimeMillis() + 150000L); //а это 003
             }
             return getLocationNORMAL(loc1, airDrop);
 
@@ -201,21 +201,21 @@ public class LocationGeneration {
 
     @Nullable
     public Location PreGeneratedLocations(AirDrop airDrop) {
-        if (airDrop.getAttemptsToPick() >= BAirDrop.getInstance().getConfig().getInt("max-experience-pre-generated-location")) {
-            if (cd.getOrDefault(airDrop.getAirId() + "004", 0L) < System.currentTimeMillis()) {
+        if (airDrop.getPickPreGenLocs() >= BAirDrop.getInstance().getConfig().getInt("max-experience-pre-generated-location")) {
+            if (cd.getOrDefault(airDrop.getId() + "004", 0L) < System.currentTimeMillis()) {
                 Message.error(Config.getMessage("search-location-limit"));
-                Message.error(String.format(Config.getMessage("search-location-limit-2"), airDrop.getAirId()));
-                cd.put(airDrop.getAirId() + "004", System.currentTimeMillis() + 75000L);//004
+                Message.error(String.format(Config.getMessage("search-location-limit-2"), airDrop.getId()));
+                cd.put(airDrop.getId() + "004", System.currentTimeMillis() + 75000L);//004
             }
             if (airDrop.isUseStaticLoc())
                 return airDrop.getStaticLocation();
             return null;
         }
-        airDrop.setAttemptsToPick(airDrop.getAttemptsToPick() + 1);
+        airDrop.setPickPreGenLocs(airDrop.getPickPreGenLocs() + 1);
 
         Location loc = GeneratorLoc.getLocationForAirDrop(airDrop);
         if (loc == null) {
-            Message.error(String.format(Config.getMessage("gen-loc-is-null"), airDrop.getAirId()));
+            Message.error(String.format(Config.getMessage("gen-loc-is-null"), airDrop.getId()));
             return null;
         }
         if (loc.clone().add(-getOffsets(airDrop).getX(), -getOffsets(airDrop).getY(), -getOffsets(airDrop).getZ()).getBlock().isEmpty()) {
@@ -266,10 +266,10 @@ public class LocationGeneration {
 
             assert regions != null;
 
-            Location point1 = new Location(airDrop.getWorld(), location.getX() + airDrop.getAirProtect(), location.getY() + airDrop.getAirProtect(), location.getZ() + airDrop.getAirProtect());
-            Location point2 = new Location(airDrop.getWorld(), location.getX() - airDrop.getAirProtect(), location.getY() - airDrop.getAirProtect(), location.getZ() - airDrop.getAirProtect());
+            Location point1 = new Location(airDrop.getWorld(), location.getX() + airDrop.getRegionRadius(), location.getY() + airDrop.getRegionRadius(), location.getZ() + airDrop.getRegionRadius());
+            Location point2 = new Location(airDrop.getWorld(), location.getX() - airDrop.getRegionRadius(), location.getY() - airDrop.getRegionRadius(), location.getZ() - airDrop.getRegionRadius());
 
-            ProtectedCuboidRegion region = new ProtectedCuboidRegion(airDrop.getAirId() + "_region",
+            ProtectedCuboidRegion region = new ProtectedCuboidRegion(airDrop.getId() + "_region",
                     BlockVector3.at(point1.getX(), point1.getY(), point1.getZ()),
                     BlockVector3.at(point2.getX(), point2.getY(), point2.getZ()));
 

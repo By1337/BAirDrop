@@ -7,7 +7,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.by1337.bairdrop.BAirDrop;
 import org.jetbrains.annotations.NotNull;
 
-import java.security.PublicKey;
 import java.util.*;
 
 public class EnchantMaterial {
@@ -31,10 +30,11 @@ public class EnchantMaterial {
         }
 
         for (EnchantInfo ei : enchantInfos) {
+            Message.debug("ei.getMaxLeve(): " + ei.getMaxLevel() + ", ei.getMinLeve(): " + ei.getMinLevel());
             try {
                 if (ei.getChance() > random.nextInt(Integer.toBinaryString(BAirDrop.info[5]).length() * 10)) {//100
-                    int level = random.nextInt(ei.getMaxLeve() - ei.getMinLeve() + 1);
-                    level += ei.getMinLeve();
+                    int level = random.nextInt(ei.getMaxLevel() - ei.getMinLevel() + 1);
+                    level += ei.getMinLevel();
                     im.addEnchant(ei.getEnchantment(), level, true);
                 }
             } catch (IllegalArgumentException e) {

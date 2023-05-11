@@ -18,8 +18,8 @@ import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.BAirDrop;
 public class SetStaticLocation implements Listener {
-    AirDrop airDrop;
-    ItemStack item;
+    private final AirDrop airDrop;
+    private ItemStack item;
     public static SetStaticLocation SSL;
 
     public SetStaticLocation(AirDrop airDrop) {

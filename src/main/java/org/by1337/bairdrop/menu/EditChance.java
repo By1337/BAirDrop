@@ -1,20 +1,15 @@
 package org.by1337.bairdrop.menu;
 
 import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.by1337.bairdrop.util.Items;
 import org.jetbrains.annotations.NotNull;
@@ -28,10 +23,10 @@ import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.BAirDrop;
 public class EditChance implements Listener {
-    public static EditChance editChance = null;
-    Inventory inv;
-    AirDrop airDrop;
-    String invName;
+    private static EditChance editChance = null;
+    private final Inventory inv;
+    private final AirDrop airDrop;
+    private final String invName;
 
     public EditChance(@NotNull AirDrop airDrop, String invName) {
         if(editChance != null){
@@ -40,7 +35,7 @@ public class EditChance implements Listener {
         editChance = this;
         this.airDrop = airDrop;
         this.invName = invName;
-        inv = Bukkit.createInventory(null, airDrop.getInvSize(), airDrop.getAirId());
+        inv = Bukkit.createInventory(null, airDrop.getInventorySize(), airDrop.getId());
 
         for(Items items : airDrop.getListItems().getOrDefault(invName, new ArrayList<>())){
             ItemStack item = items.getItem();

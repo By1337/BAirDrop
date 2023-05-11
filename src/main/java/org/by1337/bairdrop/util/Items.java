@@ -4,10 +4,10 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class Items {
-    int slot;
-    int chance;
-    ItemStack item;
-    String inv;
+    private int slot;
+    private int chance;
+    private ItemStack item;
+    private String inv;
 
     public Items(int slot, int chance, @NotNull ItemStack item, String inv) {
         this.slot = slot;

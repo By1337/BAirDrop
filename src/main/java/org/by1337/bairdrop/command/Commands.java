@@ -12,9 +12,10 @@ import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.Listeners.Compass;
 import org.by1337.bairdrop.menu.EditAirMenu;
+import org.by1337.bairdrop.menu.SelectAirMenu;
 import org.by1337.bairdrop.menu.ShowAllListeners;
 import org.by1337.bairdrop.scripts.Manager;
-import org.by1337.bairdrop.util.Event;
+import org.by1337.bairdrop.customListeners.CustomEvent;
 import org.by1337.bairdrop.util.GeneratorLoc;
 import org.by1337.bairdrop.util.Message;
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +28,7 @@ import static org.by1337.bairdrop.BAirDrop.*;
 public class Commands implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        BAirDrop.Log(sender.getName() +  " use command: " + Arrays.toString(args));
+        BAirDrop.Log(sender.getName() + " use command: " + Arrays.toString(args));
         if (sender instanceof Player pl) {
             if (args.length == 0) {
                 Message.sendMsg(pl, Config.getMessage("few-arguments"));
@@ -38,7 +39,7 @@ public class Commands implements CommandExecutor {
                     Message.sendMsg(pl, Config.getMessage("no-prem"));
                     return true;
                 }
-                for(String str : Config.getList("help-list")){
+                for (String str : Config.getList("help-list")) {
                     Message.sendMsg(pl, str);
                 }
                 return true;
@@ -78,7 +79,7 @@ public class Commands implements CommandExecutor {
                     Message.sendMsg(pl, Config.getMessage("few-arguments"));
                     return true;
                 }
-                if(!Config.scripts.containsKey(args[1])){
+                if (!Config.scripts.containsKey(args[1])) {
                     Message.sendMsg(pl, String.format(Config.getMessage("unknown-script"), args[1]));
                 }
                 Player player = pl;
@@ -107,11 +108,13 @@ public class Commands implements CommandExecutor {
                     return true;
                 }
                 if (BAirDrop.airDrops.containsKey(args[1])) {
-                    airDrops.get(args[1]).event(Event.UNLOAD, null);
-                    if (!airDrops.get(args[1]).Delete())
+                    airDrops.get(args[1]).notifyObservers(CustomEvent.UNLOAD, null);
+                    if (!airDrops.get(args[1]).delete())
                         Message.sendMsg(pl, Config.getMessage("delete-fail"));
-                    else
+                    else {
+                        airDrops.get(args[1]).unload();
                         Message.sendMsg(pl, Config.getMessage("delete-good"));
+                    }
 
                     return true;
                 } else {
@@ -187,7 +190,9 @@ public class Commands implements CommandExecutor {
                     return true;
                 }
                 if (args.length == 1) {
-                    Message.sendMsg(pl, Config.getMessage("few-arguments"));
+                    SelectAirMenu selectAirMenu = new SelectAirMenu();
+                    getServer().getPluginManager().registerEvents(selectAirMenu, BAirDrop.getInstance());
+                    pl.openInventory(selectAirMenu.getInventory());
                     return true;
                 }
                 if (BAirDrop.airDrops.containsKey(args[1])) {
@@ -195,7 +200,7 @@ public class Commands implements CommandExecutor {
                         BAirDrop.airDrops.get(args[1]).getEditAirMenu().unReg();
                     }
                     EditAirMenu em = new EditAirMenu(BAirDrop.airDrops.get(args[1]));
-                    getServer().getPluginManager().registerEvents(em, BAirDrop.getInstance());
+                 //   getServer().getPluginManager().registerEvents(em, BAirDrop.getInstance());
                     BAirDrop.airDrops.get(args[1]).setEditAirMenu(em);
                     pl.openInventory(em.getInventory());
 
@@ -281,7 +286,7 @@ public class Commands implements CommandExecutor {
                     }
                     if (!air.isClone())
                         air.createFile();
-                    airDrops.put(air.getAirId(), air);
+                    airDrops.put(air.getId(), air);
                     Message.sendMsg(pl, Config.getMessage("airdrop-crated"));
                 } else {
                     Message.sendMsg(pl, String.format(Config.getMessage("unknown-airdrop"), args[1]));
@@ -304,7 +309,7 @@ public class Commands implements CommandExecutor {
                         Message.sendMsg(pl, Config.getMessage("airdrop-is-not-started"));
                         return true;
                     }
-                    pl.teleport(Objects.requireNonNull(airDrops.get(args[1]).getAirLoc()));
+                    pl.teleport(Objects.requireNonNull(airDrops.get(args[1]).getAirDropLocation()));
                     Message.sendMsg(pl, Config.getMessage("teleportation"));
                 } else {
                     Message.sendMsg(pl, String.format(Config.getMessage("unknown-airdrop"), args[1]));
@@ -377,11 +382,13 @@ public class Commands implements CommandExecutor {
                     return true;
                 }
                 if (BAirDrop.airDrops.containsKey(args[1])) {
-                    airDrops.get(args[1]).event(Event.UNLOAD, null);
-                    if (!airDrops.get(args[1]).Delete())
+                    airDrops.get(args[1]).notifyObservers(CustomEvent.UNLOAD, null);
+                    if (!airDrops.get(args[1]).delete()) {
                         Message.logger(Config.getMessage("delete-fail"));
-                    else
+                    } else {
+                        airDrops.get(args[1]).unload();
                         Message.logger(Config.getMessage("delete-good"));
+                    }
 
                     return true;
                 } else {
@@ -456,7 +463,7 @@ public class Commands implements CommandExecutor {
                     }
                     if (!air.isClone())
                         air.createFile();
-                    airDrops.put(air.getAirId(), air);
+                    airDrops.put(air.getId(), air);
                     Message.logger(Config.getMessage("airdrop-crated"));
                     return true;
                 } else {
@@ -538,7 +545,7 @@ public class Commands implements CommandExecutor {
                     Message.logger(Config.getMessage("few-arguments"));
                     return true;
                 }
-                if(!Config.scripts.containsKey(args[1])){
+                if (!Config.scripts.containsKey(args[1])) {
                     Message.logger(String.format(Config.getMessage("unknown-script"), args[1]));
                 }
                 if (args.length == 3) {

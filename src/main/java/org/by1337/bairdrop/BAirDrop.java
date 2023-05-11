@@ -1,6 +1,8 @@
 package org.by1337.bairdrop;
 
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -14,6 +16,8 @@ import org.by1337.bairdrop.Listeners.InteractListener;
 import org.by1337.bairdrop.Listeners.PlayerJoin;
 import org.by1337.bairdrop.command.Commands;
 import org.by1337.bairdrop.command.Completer;
+import org.by1337.bairdrop.customListeners.CustomEvent;
+import org.by1337.bairdrop.customListeners.observer.Observer;
 import org.by1337.bairdrop.effect.EffectFactory;
 import org.by1337.bairdrop.util.*;
 import org.by1337.bairdrop.ConfigManager.Config;
@@ -37,7 +41,7 @@ import static org.by1337.bairdrop.util.Manager.sObf;
 public final class BAirDrop extends JavaPlugin {
 
     public static HashMap<String, AirDrop> airDrops = new HashMap<>();
-    public static HashMap<String, InternalListener> internalListeners = new HashMap<>();
+    public static HashMap<NamespacedKey, Observer> customEventListeners = new HashMap<>();
 
     public static Summoner summoner = new Summoner();
     public static String version;
@@ -66,6 +70,7 @@ public final class BAirDrop extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        ConfigurationSerialization.registerClass(GenLoc.class);
         instance = this;
         File config = new File(instance.getDataFolder() + File.separator + "config.yml");
         if (!config.exists()) {
@@ -89,28 +94,29 @@ public final class BAirDrop extends JavaPlugin {
             @Override
             public void run() {
                 long x = System.currentTimeMillis();
-                info();
-                if (Integer.parseInt(new String(new byte[]{49, 49, 49, 49, 49, 49, 49}, StandardCharsets.UTF_8), 2) != ((Integer.toBinaryString(len).length() << 3) ^ Integer.parseInt(new String(new byte[]{48, 49, 48, 49, 49, 49, 49}, StandardCharsets.UTF_8), 2))) { //127 != 127 при валиджной личензии
-                    return;
-                }
+//                info();
+//                if (Integer.parseInt(new String(new byte[]{49, 49, 49, 49, 49, 49, 49}, StandardCharsets.UTF_8), 2) != ((Integer.toBinaryString(len).length() << 3) ^ Integer.parseInt(new String(new byte[]{48, 49, 48, 49, 49, 49, 49}, StandardCharsets.UTF_8), 2))) { //127 != 127 при валиджной личензии
+//                    return;
+//                }
+
                 updateCheck();
-//                Config.LoadConfiguration();
-//                new Metrics(instance, 17870);
-//                Objects.requireNonNull(instance.getCommand("bairdrop")).setExecutor(new Commands());
-//                Objects.requireNonNull(instance.getCommand("bairdrop")).setTabCompleter(new Completer());
-//                Bukkit.getServer().getPluginManager().registerEvents(new InteractListener(), instance);
-//                getServer().getPluginManager().registerEvents(summoner, instance);
-//                getServer().getPluginManager().registerEvents(new PlayerJoin(), BAirDrop.instance);
-//                getServer().getPluginManager().registerEvents(new CraftItem(), BAirDrop.instance);
-//                getServer().getPluginManager().registerEvents(compass, BAirDrop.instance);
-//                BAirDrop.len = generateRandomBinaryNumber(10);
-//                BAirDrop.info[0] = generateRandomBinaryNumber(12);
-//                BAirDrop.info[1] = generateRandomBinaryNumber(4);
-//                BAirDrop.info[2] = generateRandomBinaryNumber(6);
-//                BAirDrop.info[3] = generateRandomBinaryNumber(8);
-//                BAirDrop.info[4] = generateRandomBinaryNumber(15);
-//                BAirDrop.info[5] = generateRandomBinaryNumber(10);
-//                BAirDrop.info[6] = generateRandomBinaryNumber(20);
+                Config.LoadConfiguration();
+                new Metrics(instance, 17870);
+                Objects.requireNonNull(instance.getCommand("bairdrop")).setExecutor(new Commands());
+                Objects.requireNonNull(instance.getCommand("bairdrop")).setTabCompleter(new Completer());
+                Bukkit.getServer().getPluginManager().registerEvents(new InteractListener(), instance);
+                getServer().getPluginManager().registerEvents(summoner, instance);
+                getServer().getPluginManager().registerEvents(new PlayerJoin(), BAirDrop.instance);
+                getServer().getPluginManager().registerEvents(new CraftItem(), BAirDrop.instance);
+                getServer().getPluginManager().registerEvents(compass, BAirDrop.instance);
+                BAirDrop.len = generateRandomBinaryNumber(10);
+                BAirDrop.info[0] = generateRandomBinaryNumber(12);
+                BAirDrop.info[1] = generateRandomBinaryNumber(4);
+                BAirDrop.info[2] = generateRandomBinaryNumber(6);
+                BAirDrop.info[3] = generateRandomBinaryNumber(8);
+                BAirDrop.info[4] = generateRandomBinaryNumber(15);
+                BAirDrop.info[5] = generateRandomBinaryNumber(10);
+                BAirDrop.info[6] = generateRandomBinaryNumber(20);
 
                 if (Bukkit.getPluginManager().getPlugin("DecentHolograms") != null) {
                     hologram = new DecentHologram();
@@ -130,6 +136,11 @@ public final class BAirDrop extends JavaPlugin {
                 for (File file : Config.getAirDrops().keySet()) {
                     airDrops.put(Config.getAirDrops().get(file).getString("air-id"), new AirDrop(Config.getAirDrops().get(file), file));
                 }
+                List<String> ids = new ArrayList<>(airDrops.keySet());
+                for(String id : ids){
+                    airDrops.get(id).registerAllSignedObservers();
+                }
+
                 if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)
                     new PlaceholderExpansion().register();
 
@@ -158,10 +169,13 @@ public final class BAirDrop extends JavaPlugin {
                     }.runTaskTimerAsynchronously(instance, 10, 10);
                 }
                 Message.logger(String.format(Config.getMessage("start-time"),System.currentTimeMillis() - x));
+
+                System.out.println(customEventListeners.keySet());
             }
         }.runTask(instance);
 
     }
+
     public static void Log(String s){
         if(getInstance().getConfig().getBoolean("logger")){
             logger.info(s);
@@ -223,10 +237,10 @@ public final class BAirDrop extends JavaPlugin {
                 airDrop.End();
             if (airDrop.isClone())
                 airDrop.End();
-            airDrop.event(Event.UNLOAD, null);
-            BAirDrop.hologram.remove(airDrop.getAirId());
+            airDrop.notifyObservers(CustomEvent.UNLOAD, null);
+            BAirDrop.hologram.remove(airDrop.getId());
             airDrop.save();
-            airDrop.schematicsRemoveAll();
+            airDrop.schematicsUndo();
             RegionManager.RemoveRegion(airDrop);
         }
         GeneratorLoc.save();
@@ -241,16 +255,16 @@ public final class BAirDrop extends JavaPlugin {
                 airDrop.End();
             if (airDrop.isClone())
                 airDrop.End();
-            airDrop.event(Event.UNLOAD, null);
-            BAirDrop.hologram.remove(airDrop.getAirId());
-            airDrop.cancel();
-            airDrop.schematicsRemoveAll();
+            airDrop.notifyObservers(CustomEvent.UNLOAD, null);
+            BAirDrop.hologram.remove(airDrop.getId());
+            airDrop.setCanceled(true);
+            airDrop.schematicsUndo();
             RegionManager.RemoveRegion(airDrop);
         }
         CustomCraft.unloadCrafts();
         Config.Schematics.clear();
         airDrops.clear();
-        internalListeners.clear();
+        customEventListeners.clear();
         EffectFactory.EffectList.clear();
         Config.getAirDrops().clear();
 
@@ -274,6 +288,10 @@ public final class BAirDrop extends JavaPlugin {
         Config.LoadConfiguration();
         for (File file : Config.getAirDrops().keySet()) {
             airDrops.put(Config.getAirDrops().get(file).getString("air-id"), new AirDrop(Config.getAirDrops().get(file), file));
+        }
+        List<String> ids = new ArrayList<>(airDrops.keySet());
+        for(String id : ids){
+            airDrops.get(id).registerAllSignedObservers();
         }
     }
 

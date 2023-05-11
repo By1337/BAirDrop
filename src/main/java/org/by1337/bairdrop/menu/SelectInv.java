@@ -28,11 +28,11 @@ import java.util.concurrent.ThreadLocalRandom;
 import static org.bukkit.Bukkit.getServer;
 
 public class SelectInv implements Listener {
-    public static SelectInv selectInv = null;
-    Inventory inv;
-    AirDrop airDrop;
-    String menu;
-    boolean openEditAirMenu = true;
+    private static SelectInv selectInv = null;
+    private final Inventory inv;
+    private final AirDrop airDrop;
+    private final String menu;
+    private boolean openEditAirMenu = true;
 
     public SelectInv(AirDrop airDrop, String menu) {
         if (selectInv != null) {
@@ -56,7 +56,7 @@ public class SelectInv implements Listener {
                 else
                     itemStack = BaseHeadHook.getItem("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDNhOWEwNzFiNDI4M2M3NTYyNjg3NWM3YmFmZDBlZWYxM2IzZGZmNThhZDk2ODBhMTY1Mjg4YTcxNzFjNTYzNSJ9fX0=");
                 ItemMeta im = itemStack.getItemMeta();
-                im.setLore(List.of(Message.messageBuilder(Config.getMessage("edit-list")), Message.messageBuilder( String.format(Config.getMessage("list-size"), airDrop.getListItems().get(inv).size()))));
+                im.setLore(List.of(Message.messageBuilder(Config.getMessage("edit-list")), Message.messageBuilder(String.format(Config.getMessage("list-size"), airDrop.getListItems().get(inv).size()))));
                 im.getPersistentDataContainer().set(NamespacedKey.fromString("inv"), PersistentDataType.STRING, inv);
                 im.setDisplayName(Message.messageBuilder("&7" + inv));
                 itemStack.setItemMeta(im);
@@ -125,7 +125,7 @@ public class SelectInv implements Listener {
                     public void run() {
 
                         EditAirMenu em = new EditAirMenu(air);
-                        getServer().getPluginManager().registerEvents(em, BAirDrop.getInstance());
+                      //  getServer().getPluginManager().registerEvents(em, BAirDrop.getInstance());
                         air.setEditAirMenu(em);
                         e.getPlayer().openInventory(em.getInventory());
                         cancel();

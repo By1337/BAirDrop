@@ -1,6 +1,7 @@
 package org.by1337.bairdrop.util;
 
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -11,18 +12,19 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.BAirDrop;
+import org.by1337.bairdrop.customListeners.CustomEvent;
 
 import static org.by1337.bairdrop.BAirDrop.len;
 
 public class SummonerItem {
-    final ItemStack item;
-    final String airdrop;
-    final boolean clone;
-    final boolean usePlayerLocation;
-    final boolean ignoreRegion;
-    final boolean flatnessCheck;
-    final boolean checkUpBlocks;
-    List<String> call;
+    private final ItemStack item;
+    private final String airdrop;
+    private final boolean clone;
+    private final boolean usePlayerLocation;
+    private final boolean ignoreRegion;
+    private final boolean flatnessCheck;
+    private final boolean checkUpBlocks;
+    private final List<String> call;
 
     public SummonerItem(ItemStack item, String airdrop, boolean clone, boolean usePlayerLocation, boolean flatnessCheck, boolean checkUpBlocks, List<String> call, boolean ignoreRegion) {
         this.item = item;
@@ -103,8 +105,8 @@ public class SummonerItem {
         if (key.equals("RANDOM"))
             for (AirDrop air : BAirDrop.airDrops.values()) {
                 if (!air.isAirDropStarted() && !air.isClone() || clone)
-                    if (ThreadLocalRandom.current().nextInt(0, 100) <= air.getChance()) {
-                            key = air.getAirId();
+                    if (ThreadLocalRandom.current().nextInt(0, 100) <= air.getSpawnChance()) {
+                            key = air.getId();
                             break;
                     }
             }
@@ -144,7 +146,7 @@ public class SummonerItem {
         }
         AirDrop air;
         if (clone) {
-            String newid = BAirDrop.airDrops.get(key).getAirId() + "_clone" + UUID.randomUUID();
+            String newid = BAirDrop.airDrops.get(key).getId() + "_clone" + UUID.randomUUID();
           //  while (BAirDrop.airDrops.containsKey(newid))
               //  newid = BAirDrop.airDrops.get(key).getAirId() + "_clone" + UUID.randomUUID();
 
@@ -153,15 +155,16 @@ public class SummonerItem {
             air.setKill(true);
         } else {
             air = BAirDrop.airDrops.get(key);
-            if (air.isAirDropStarted() || air.isSUMMONER()) {
+            if (air.isAirDropStarted() || air.isSummoner()) {
                 Message.sendMsg(pl, Config.getMessage("impossible-to-call"));
                 pl.setCooldown(getItem().getType(), 40);
                 return null;
             }
         }
         for(String str : call)
-            air.callListener(str, pl, Event.NONE);
-        air.setSUMMONER(true);
+            air.callListener(NamespacedKey.fromString(str), pl, CustomEvent.NONE);
+        air.setSummoner(true);
         return air;
     }
+
 }

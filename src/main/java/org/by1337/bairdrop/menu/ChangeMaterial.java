@@ -22,30 +22,30 @@ import java.util.List;
 import static org.bukkit.Bukkit.getServer;
 
 public class ChangeMaterial implements Listener {
-    Inventory inventory;
-    AirDrop airDrop;
-    int page = 0;
-    boolean isMaterialLocked;
+    private final Inventory inventory;
+    private final AirDrop airDrop;
+    private int page = 0;
+    private final boolean isMaterialLocked;
 
     public ChangeMaterial(AirDrop airDrop, boolean isMaterialLocked) {
-        this.inventory = Bukkit.createInventory(null, 54, String.format(Config.getMessage("mat-change-inv"), airDrop.getAirId()));
+        this.inventory = Bukkit.createInventory(null, 54, String.format(Config.getMessage("mat-change-inv"), airDrop.getId()));
         this.airDrop = airDrop;
         this.isMaterialLocked = isMaterialLocked;
         generate();
     }
 
-    private void generate(){
+    private void generate() {
         int slot = 0;
-        for(Material mat : Material.values()){
-            if(!mat.isBlock() || mat.isAir())
+        for (Material mat : Material.values()) {
+            if (!mat.isBlock() || mat.isAir())
                 continue;
-            if(page > 0){
-                if(slot  < (52 * page)){
+            if (page > 0) {
+                if (slot < (52 * page)) {
                     slot++;
                     continue;
                 }
             }
-            if(slot - (52 * page) >= 52) break;
+            if (slot - (52 * page) >= 52) break;
 
             ItemStack itemStack = new ItemStack(mat);
             ItemMeta im = Bukkit.getItemFactory().getItemMeta(mat);
@@ -55,7 +55,7 @@ public class ChangeMaterial implements Listener {
             inventory.setItem(slot - (52 * page), itemStack);
             slot++;
         }
-        if(slot >= 52){
+        if (slot >= 52) {
             ItemStack itemStack = new ItemStack(Material.ARROW);
             ItemMeta im = itemStack.getItemMeta();
             im.setDisplayName(Config.getMessage("mat-change-arrow-name"));
@@ -75,25 +75,25 @@ public class ChangeMaterial implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent e) {
         if (e.getInventory().equals(inventory)) {
-            if(e.getCurrentItem() == null)  return;
-            if(e.getSlot() == 52){
+            if (e.getCurrentItem() == null) return;
+            if (e.getSlot() == 52) {
                 HandlerList.unregisterAll(this);
-                if(airDrop.getEditAirMenu() != null)
+                if (airDrop.getEditAirMenu() != null)
                     airDrop.getEditAirMenu().unReg();
                 EditAirMenu em = new EditAirMenu(airDrop);
-                getServer().getPluginManager().registerEvents(em, BAirDrop.getInstance());
+              //  getServer().getPluginManager().registerEvents(em, BAirDrop.getInstance());
                 airDrop.setEditAirMenu(em);
                 e.getWhoClicked().openInventory(em.getInventory());
                 e.setCancelled(true);
                 return;
             }
-            if(e.getSlot() == 53){
-                if(e.getClick() == ClickType.LEFT && inventory.getItem(51) != null){
+            if (e.getSlot() == 53) {
+                if (e.getClick() == ClickType.LEFT && inventory.getItem(51) != null) {
                     page++;
                     inventory.clear();
                     generate();
                 }
-                if(e.getClick() == ClickType.RIGHT){
+                if (e.getClick() == ClickType.RIGHT) {
                     page = page == 0 ? 0 : page - 1;
                     inventory.clear();
                     generate();
@@ -101,22 +101,23 @@ public class ChangeMaterial implements Listener {
                 e.setCancelled(true);
                 return;
             }
-            if(isMaterialLocked){
+            if (isMaterialLocked) {
                 airDrop.setMaterialLocked(e.getCurrentItem().getType());
                 e.getWhoClicked().closeInventory();
-            }else {
+            } else {
                 airDrop.setMaterialUnlocked(e.getCurrentItem().getType());
                 e.getWhoClicked().closeInventory();
             }
             airDrop.save();
-            if(airDrop.getEditAirMenu() != null)
+            if (airDrop.getEditAirMenu() != null)
                 airDrop.getEditAirMenu().unReg();
             EditAirMenu em = new EditAirMenu(airDrop);
-            getServer().getPluginManager().registerEvents(em, BAirDrop.getInstance());
+           // getServer().getPluginManager().registerEvents(em, BAirDrop.getInstance());
             airDrop.setEditAirMenu(em);
             e.getWhoClicked().openInventory(em.getInventory());
         }
     }
+
     @EventHandler
     public void onClose(InventoryCloseEvent e) {
         if (e.getInventory().equals(inventory)) {

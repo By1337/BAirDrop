@@ -26,13 +26,13 @@ import java.util.UUID;
 
 public class Compass implements Listener {
     public static ItemStack item = null;
-    double maxDistance = 10;
-    double size = 3;
-    double distanceBetweenPoints = 0.2;
-    Color color = Color.RED;
-    String messageNotFound = "&cError";
-    String messageFound = null;
-    HashMap<UUID, Long> cd = new HashMap<>();
+    private double maxDistance = 10;
+    private double size = 3;
+    private double distanceBetweenPoints = 0.2;
+    private Color color = Color.RED;
+    private String messageNotFound = "&cError";
+    private String messageFound = null;
+    private final HashMap<UUID, Long> cd = new HashMap<>();
     @EventHandler
     public void onClick(PlayerInteractEvent e){
         if(e.getAction() == Action.RIGHT_CLICK_AIR){
@@ -48,9 +48,9 @@ public class Compass implements Listener {
             int dist = 0;
             for(AirDrop air : BAirDrop.airDrops.values()){
                 if(!air.isAirDropStarted()) continue;
-                if(!air.getAirLoc().getWorld().equals(pl.getWorld())) continue;
-                if(dist > pl.getPlayer().getLocation().distance(air.getAirLoc()) || airDrop == null){
-                    dist = (int) pl.getPlayer().getLocation().distance(air.getAirLoc());
+                if(!air.getAirDropLocation().getWorld().equals(pl.getWorld())) continue;
+                if(dist > pl.getPlayer().getLocation().distance(air.getAirDropLocation()) || airDrop == null){
+                    dist = (int) pl.getPlayer().getLocation().distance(air.getAirDropLocation());
                     airDrop = air;
                 }
             }
@@ -70,7 +70,7 @@ public class Compass implements Listener {
                 AirDrop finalAirDrop = airDrop;
                 if(itemStack.getType() == Material.COMPASS){
                     CompassMeta compassMeta = (CompassMeta) itemStack.getItemMeta();
-                    compassMeta.setLodestone(finalAirDrop.getAirLoc().clone());
+                    compassMeta.setLodestone(finalAirDrop.getAirDropLocation().clone());
                     compassMeta.setLodestoneTracked(false);
                     itemStack.setItemMeta(compassMeta);
                 }
@@ -78,7 +78,7 @@ public class Compass implements Listener {
                     @Override
                     public void run() {
                         Location playerLocation = pl.getLocation().clone().add(0, 1.5, 0);
-                        Location targetLocation = finalAirDrop.getAirLoc().clone();
+                        Location targetLocation = finalAirDrop.getAirDropLocation().clone();
 
                         Vector direction = targetLocation.toVector().subtract(playerLocation.toVector()).normalize();
                         double distance = 0.0;

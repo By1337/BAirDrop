@@ -31,36 +31,36 @@ import static org.by1337.bairdrop.BAirDrop.getInstance;
 
 
 public class Manager {
-    String string;//licenseKey
+    private String string;//licenseKey
     private static final Integer[] num = new Integer[8];
     private static final String[] strings = new String[18];
-    private static Object[][] array2 = new Object[30][2];
-    private static Object[][] array3 = new Object[10][2];
-    private static Object[][] array4 = new Object[13][2];
-    private static Object[][] array5 = new Object[12][2];
-    private static Object[][] array6 = new Object[14][2];//679
-    private static Object[][] array10 = new Object[9][2]; //4315
-    private static Object[][] array7 = new Object[12][2]; //565
-    private static Object[][] array8 = new Object[5][2]; //614
-    private static Object[][] array9 = new Object[14][2]; //2557
-    private static Object[][] array11 = new Object[34][2]; //4657 By1337̵̨̡̛͖̰͉̰͖̰͍̯̼̼̞̣̬̿͒̀͌͊͒͋̃́̿̑ͥ̑̈́̔̌͂̈́ͬ̕͢͢͢(); []==============================[]
-    private static Object[][] array12 = new Object[21][2]; //2712 By1337̸̵͔̙̥̳̥͈͇̬͚̹̦̥̰̳̟ͫ̓́͌̉́͆͂̇ͩͪͩͤ̈́ͣ͆̈́͑ͨͮ̚͟͢(); Соединение с сервером
-    private static Object[][] array13 = new Object[4][2]; //4337 By1337̵̡̛̤̥̥̬̠͕̪̯̥̤̞͇ͦ̽͗̑̑ͬ̄͋ͤ̆͗̿̾ͭ̎ͫ̈́̔ͥ̕͝͡ͅͅ͏(); true
-    private static Object[][] array14 = new Object[22][2]; //2197 By1337̸̴̧̛̬͉̼̙̦͔̻̼͍̳̲̀̽́ͯ̇ͫ̃̂͛̅̌ͯ̂͑̏̐͊̂͗̐͟͡͡ͅͅ(); §cЛицензия не валидна!
-    private static Object[][] array15 = new Object[18][2]; //1001 By1337̢̛̘̟͕̪̞̮̳͇͖̘̞̭͓̼̤̩ͭ̌ͬ̏ͦ̊̽ͧ̊̎̋ͭ͐̔͑͗̽ͧ̆ͬ͆̂(); §cПлагин выключен!
-    private static Object[][] array16 = new Object[5][2]; //2794 By1337̵̧͕̞̻̣͖̠̥͈̙̤̫̺͉̯̥ͬͪ̌ͨ̏̌͋̂ͤͣͣ̇ͮͮ͗ͨ̾̈́ͭ͑̕͟͡(); false
-    private static Object[][] array17 = new Object[25][2]; //1084 By1337̭̟̞͙͉̱̹̭͓̭̘̖̺̘̬̌ͮ̑ͬ́ͯ͊ͮ̔ͬͩ͆͐̋̿͌ͥ̆̌͂̐ͪͩ͂̽(); &cОшибка сервера лицензий
-    private static Object[][] array18 = new Object[32][2]; //3623 By1337̶̵̢̹͍̣̺̗̱̠̳̣͐ͧ̀̓̊̃ͪ̋̓̀̏ͨ̔̏̅ͥ̂͋ͥ̂̅̀͆ͤ͜͢͝͝(); &cОтсутствует лицензионный ключ!
-    private static Object[][] array19 = new Object[18][2]; //213 By1337̶̛̛̫̟̭͕̫ͤ̾ͬͧ͑̽̓̈ͣ͂̚͘͘͝͞͏̵̵̻͚͎͇ͩ̄̾̔̋̀̄̈́̍͠(); &aЛицензия валидна
-    private static Object[][] array20 = new Object[32][2]; //1014 By1337̴̨͍̱̝̮̣͇͕̞̮͉͖͍͍̮̬̬̰͓̩̽ͣ̌͂̓̒̓̽̽͌͋̽̅̍ͯ̀̾̿͝(); &cНеправильный ответ от сервера!
-    private static Object[][] array21 = new Object[20][2]; //4415 By1337͚͉̘̍̾̽̓͗͑̍͌͟͏̛͙͖͔̥͖͔̙̤̻̗͍͖̖̤͂̾́͋̓̓̋ͮͯ͝͞͞(); &cНеправильный ключ!
-    private static Object[][] array22 = new Object[23][2]; //2698 By1337̷̶̵̢̹̼͚̲̥̣̘͈̯͎͑̈͌̄͌͛ͩ̌ͤ̾͌͊ͮ̒ͥ̉͆ͧ̈̾͘͜͢͜ͅͅ(); &cIP адрес не валидный!
-    private static Object[][] array23 = new Object[22][2]; //1640 By1337̴̵̴̵̢͓̱̲̞̱͓̥͚͊̓̉̑̈͋̐̊ͯ̏̉̊̇̒̈́ͥ͊̎ͩͥ̎̇͟͠͡ͅͅ(); &cНеправильный плагин!
-    private static Object[][] array24 = new Object[15][2]; //2674 By1337̵̡̧͓̺͔̼͍̤͎̝̹̐̀̽́͗̎͑̇̐ͬ̔͌ͣͫ͘͝ͅ͏̸̷̫̩̓ͬͫ̔́ͨ(); &cКлюч устарел!
-    private static Object[][] array25 = new Object[20][2]; //3754 By1337̧̤̫̭̞̫̻̦̹̹̹̻̞̺̭̘̤̞̗̘̗̿̈͌̐́̾ͤͣͧ͗ͤͤ͌̾ͥͥ͘͠͠(); &cНеизвестная ошибка
-    private static Object[][] array26 = new Object[4][2]; //1754 By1337̶̴̧̨̼͙̻͙̝̝̯͉͍̫̖͍ͫ̈́͗̓ͯͧͯ̃̀̌́͆̍͛̕͏̷͓̞͌̂̓̄ͣ(); ?v1=
-    private static Object[][] array27 = new Object[4][2]; //3648 By1337̷̢̹̫̝̙̻̯̳̠́̈̈́ͦ̆̅̎̀̅͒͏̸̦̮̺̥̱̘͍͉́͆̄̋͐̒̽̀ͬ͞(); &v2=
-    private static Object[][] array28 = new Object[4][2]; //3948 By1337̶̷̶̴̵̴̧̧̨͉̠̬̣̹͚̭̳̐̓ͯͧ͗̄̈́̄̔̏̉̽ͪ̂̎̉̀͌ͨͭ͘̚͜(); &pl=
+    private static final Object[][] array2 = new Object[30][2];
+    private static final Object[][] array3 = new Object[10][2];
+    private static final Object[][] array4 = new Object[13][2];
+    private static final Object[][] array5 = new Object[12][2];
+    private static final Object[][] array6 = new Object[14][2];//679
+    private static final Object[][] array10 = new Object[9][2]; //4315
+    private static final Object[][] array7 = new Object[12][2]; //565
+    private static final Object[][] array8 = new Object[5][2]; //614
+    private static final Object[][] array9 = new Object[14][2]; //2557
+    private static final Object[][] array11 = new Object[34][2]; //4657 By1337̵̨̡̛͖̰͉̰͖̰͍̯̼̼̞̣̬̿͒̀͌͊͒͋̃́̿̑ͥ̑̈́̔̌͂̈́ͬ̕͢͢͢(); []==============================[]
+    private static final Object[][] array12 = new Object[21][2]; //2712 By1337̸̵͔̙̥̳̥͈͇̬͚̹̦̥̰̳̟ͫ̓́͌̉́͆͂̇ͩͪͩͤ̈́ͣ͆̈́͑ͨͮ̚͟͢(); Соединение с сервером
+    private static final Object[][] array13 = new Object[4][2]; //4337 By1337̵̡̛̤̥̥̬̠͕̪̯̥̤̞͇ͦ̽͗̑̑ͬ̄͋ͤ̆͗̿̾ͭ̎ͫ̈́̔ͥ̕͝͡ͅͅ͏(); true
+    private static final Object[][] array14 = new Object[22][2]; //2197 By1337̸̴̧̛̬͉̼̙̦͔̻̼͍̳̲̀̽́ͯ̇ͫ̃̂͛̅̌ͯ̂͑̏̐͊̂͗̐͟͡͡ͅͅ(); §cЛицензия не валидна!
+    private static final Object[][] array15 = new Object[18][2]; //1001 By1337̢̛̘̟͕̪̞̮̳͇͖̘̞̭͓̼̤̩ͭ̌ͬ̏ͦ̊̽ͧ̊̎̋ͭ͐̔͑͗̽ͧ̆ͬ͆̂(); §cПлагин выключен!
+    private static final Object[][] array16 = new Object[5][2]; //2794 By1337̵̧͕̞̻̣͖̠̥͈̙̤̫̺͉̯̥ͬͪ̌ͨ̏̌͋̂ͤͣͣ̇ͮͮ͗ͨ̾̈́ͭ͑̕͟͡(); false
+    private static final Object[][] array17 = new Object[25][2]; //1084 By1337̭̟̞͙͉̱̹̭͓̭̘̖̺̘̬̌ͮ̑ͬ́ͯ͊ͮ̔ͬͩ͆͐̋̿͌ͥ̆̌͂̐ͪͩ͂̽(); &cОшибка сервера лицензий
+    private static final Object[][] array18 = new Object[32][2]; //3623 By1337̶̵̢̹͍̣̺̗̱̠̳̣͐ͧ̀̓̊̃ͪ̋̓̀̏ͨ̔̏̅ͥ̂͋ͥ̂̅̀͆ͤ͜͢͝͝(); &cОтсутствует лицензионный ключ!
+    private static final Object[][] array19 = new Object[18][2]; //213 By1337̶̛̛̫̟̭͕̫ͤ̾ͬͧ͑̽̓̈ͣ͂̚͘͘͝͞͏̵̵̻͚͎͇ͩ̄̾̔̋̀̄̈́̍͠(); &aЛицензия валидна
+    private static final Object[][] array20 = new Object[32][2]; //1014 By1337̴̨͍̱̝̮̣͇͕̞̮͉͖͍͍̮̬̬̰͓̩̽ͣ̌͂̓̒̓̽̽͌͋̽̅̍ͯ̀̾̿͝(); &cНеправильный ответ от сервера!
+    private static final Object[][] array21 = new Object[20][2]; //4415 By1337͚͉̘̍̾̽̓͗͑̍͌͟͏̛͙͖͔̥͖͔̙̤̻̗͍͖̖̤͂̾́͋̓̓̋ͮͯ͝͞͞(); &cНеправильный ключ!
+    private static final Object[][] array22 = new Object[23][2]; //2698 By1337̷̶̵̢̹̼͚̲̥̣̘͈̯͎͑̈͌̄͌͛ͩ̌ͤ̾͌͊ͮ̒ͥ̉͆ͧ̈̾͘͜͢͜ͅͅ(); &cIP адрес не валидный!
+    private static final Object[][] array23 = new Object[22][2]; //1640 By1337̴̵̴̵̢͓̱̲̞̱͓̥͚͊̓̉̑̈͋̐̊ͯ̏̉̊̇̒̈́ͥ͊̎ͩͥ̎̇͟͠͡ͅͅ(); &cНеправильный плагин!
+    private static final Object[][] array24 = new Object[15][2]; //2674 By1337̵̡̧͓̺͔̼͍̤͎̝̹̐̀̽́͗̎͑̇̐ͬ̔͌ͣͫ͘͝ͅ͏̸̷̫̩̓ͬͫ̔́ͨ(); &cКлюч устарел!
+    private static final Object[][] array25 = new Object[20][2]; //3754 By1337̧̤̫̭̞̫̻̦̹̹̹̻̞̺̭̘̤̞̗̘̗̿̈͌̐́̾ͤͣͧ͗ͤͤ͌̾ͥͥ͘͠͠(); &cНеизвестная ошибка
+    private static final Object[][] array26 = new Object[4][2]; //1754 By1337̶̴̧̨̼͙̻͙̝̝̯͉͍̫̖͍ͫ̈́͗̓ͯͧͯ̃̀̌́͆̍͛̕͏̷͓̞͌̂̓̄ͣ(); ?v1=
+    private static final Object[][] array27 = new Object[4][2]; //3648 By1337̷̢̹̫̝̙̻̯̳̠́̈̈́ͦ̆̅̎̀̅͒͏̸̦̮̺̥̱̘͍͉́͆̄̋͐̒̽̀ͬ͞(); &v2=
+    private static final Object[][] array28 = new Object[4][2]; //3948 By1337̶̷̶̴̵̴̧̧̨͉̠̬̣̹͚̭̳̐̓ͯͧ͗̄̈́̄̔̏̉̽ͪ̂̎̉̀͌ͨͭ͘̚͜(); &pl=
 
     public String manager(String s) {//loadAndRegister
         this.string = s;

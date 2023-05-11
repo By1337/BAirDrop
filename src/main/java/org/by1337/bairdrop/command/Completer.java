@@ -1,7 +1,5 @@
 package org.by1337.bairdrop.command;
 
-import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -9,15 +7,11 @@ import org.bukkit.entity.Player;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.ConfigManager.Config;
-import org.by1337.bairdrop.scripts.Manager;
-import org.by1337.bairdrop.util.LogLevel;
-import org.by1337.bairdrop.util.Message;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +25,7 @@ public class Completer implements TabCompleter {
             List<String> list = new ArrayList<>();
             for(AirDrop airDrop : BAirDrop.airDrops.values()){
                 if(!airDrop.isHideInCompleter())
-                    list.add(airDrop.getAirId());
+                    list.add(airDrop.getId());
             }
             if (args.length == 2 && args[0].equals("js")) return Config.scripts.values().stream().map(File::getName).collect(Collectors.toList());
             if (args.length == 2 && !args[0].equals("get") && !args[0].equals("compass")) return list;

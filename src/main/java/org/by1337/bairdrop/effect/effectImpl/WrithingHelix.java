@@ -17,21 +17,21 @@ import org.by1337.bairdrop.BAirDrop;
 import java.util.Objects;
 
 public class WrithingHelix implements IEffect {
-    double radius;
-    double height;
-    double step;
-    Location loc;
-    Color color;
-    double size;
-    Particle particle;
-    Vector offsets;
-    int count;
-    int timeUpdate;
-    int ticks;
-    String name;
-    boolean active = true;
-    FileConfiguration cs;
-    AirDrop airDrop;
+    private final double radius;
+    private final double height;
+    private final double step;
+    private Location loc;
+    private final Color color;
+    private final double size;
+    private final Particle particle;
+    private final Vector offsets;
+    private final int count;
+    private final int timeUpdate;
+    private int ticks;
+    private String name;
+    private boolean active = true;
+    private final FileConfiguration cs;
+    private AirDrop airDrop;
 
     public WrithingHelix(FileConfiguration cs, String name) throws NullPointerException, IllegalArgumentException {
         this.name = name;
@@ -61,7 +61,7 @@ public class WrithingHelix implements IEffect {
         if (airDrop.getAnyLoc() == null) {
             Message.error(Config.getMessage("effect-error-loc-is-null"));
             Message.error(Config.getMessage("effect-error-loc-is-null2"));
-            Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getAirId()));
+            Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getId()));
             return;
         } else loc = airDrop.getAnyLoc().clone();
         run();
@@ -89,12 +89,14 @@ public class WrithingHelix implements IEffect {
 
                 }
                 angle += 0.1;
-                if (!isActive())
+                if (!isActive()){
                     cancel();
+                }
                 if (ticks != -1) {
                     if ((ticks - timeUpdate) > 0) {
                         ticks -= timeUpdate;
                     } else {
+                        End();
                         cancel();
                     }
                 }
@@ -107,18 +109,22 @@ public class WrithingHelix implements IEffect {
     public void setLifetime(int ticks) {
         this.ticks = ticks;
     }
+
     @Override
     public boolean isActive() {
         return active;
     }
+
     @Override
     public String getName() {
         return name;
     }
+
     @Override
     public IEffect clone() {
         return new WrithingHelix(cs, name);
     }
+
     @Override
     public EffectType getType() {
         return EffectType.WRITHING_HELIX;

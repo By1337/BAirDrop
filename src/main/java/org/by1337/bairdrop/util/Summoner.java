@@ -22,12 +22,13 @@ import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.api.event.AirDropSummonerEvent;
+import org.by1337.bairdrop.customListeners.CustomEvent;
 
 public class Summoner implements Listener {
-    HashMap<String, SummonerItem> items = new HashMap<>();
-    HashMap<UUID, Long> auntyDouble = new HashMap<>();
-    HashMap<UUID, Long> cooldownPlayers = new HashMap<>();
-    int cooldown;
+    private final HashMap<String, SummonerItem> items = new HashMap<>();
+    private final HashMap<UUID, Long> auntyDouble = new HashMap<>();
+    private final HashMap<UUID, Long> cooldownPlayers = new HashMap<>();
+    private int cooldown;
 
     public void Load() {
         items.clear();
@@ -92,21 +93,21 @@ public class Summoner implements Listener {
             }
             if (items.containsKey(key)) {
                 if(!e.getPlayer().isOp()){
-                    if(!e.getPlayer().hasCooldown(items.get(key).item.getType()) && cooldownPlayers.getOrDefault(e.getPlayer().getUniqueId(),  System.currentTimeMillis() / 50) - (System.currentTimeMillis() / 50) > 0){
+                    if(!e.getPlayer().hasCooldown(items.get(key).getItem().getType()) && cooldownPlayers.getOrDefault(e.getPlayer().getUniqueId(),  System.currentTimeMillis() / 50) - (System.currentTimeMillis() / 50) > 0){
                         int cooldown = (int) (cooldownPlayers.get(e.getPlayer().getUniqueId()) - (int) (System.currentTimeMillis() / 50));
                         Message.sendMsg(e.getPlayer(), String.format(Config.getMessage("summoner-limit"), cooldown / 20));
-                        e.getPlayer().setCooldown(items.get(key).item.getType(), cooldown);
+                        e.getPlayer().setCooldown(items.get(key).getItem().getType(), cooldown);
                         return;
-                    }else if(e.getPlayer().hasCooldown(items.get(key).item.getType())){
-                        int cooldown = e.getPlayer().getCooldown(items.get(key).item.getType());
+                    }else if(e.getPlayer().hasCooldown(items.get(key).getItem().getType())){
+                        int cooldown = e.getPlayer().getCooldown(items.get(key).getItem().getType());
                         Message.sendMsg(e.getPlayer(), String.format(Config.getMessage("summoner-limit"), cooldown / 20));
                         return;
                     }
                 }
                 AirDrop airDrop = items.get(key).start(e.getClickedBlock().getLocation(), e.getPlayer());
                 if (airDrop != null) {
-                    if (items.get(key).usePlayerLocation) {
-                        airDrop.setAirLoc(e.getClickedBlock().getLocation().add(0, 0, 0).add(
+                    if (items.get(key).isUsePlayerLocation()) {
+                        airDrop.setAirDropLocation(e.getClickedBlock().getLocation().add(0, 0, 0).add(
                                 getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.x", LocationGeneration.getWorldKeyByWorld(e.getClickedBlock().getWorld()))),
                                 getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.y", LocationGeneration.getWorldKeyByWorld(e.getClickedBlock().getWorld()))),
                                 getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.z", LocationGeneration.getWorldKeyByWorld(e.getClickedBlock().getWorld())))));
@@ -117,14 +118,14 @@ public class Summoner implements Listener {
                                 getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.z", LocationGeneration.getWorldKeyByWorld(e.getClickedBlock().getWorld())))));
                         airDrop.setUsePlayerLocation(true);
                     }
-                    BAirDrop.airDrops.put(airDrop.getAirId(), airDrop);
-                    e.getPlayer().setCooldown(items.get(key).item.getType(), cooldown);
+                    BAirDrop.airDrops.put(airDrop.getId(), airDrop);
+                    e.getPlayer().setCooldown(items.get(key).getItem().getType(), cooldown);
                     cooldownPlayers.put(e.getPlayer().getUniqueId(), (System.currentTimeMillis() / 50 + cooldown));
                     AirDropSummonerEvent airDropSummonerEvent = new AirDropSummonerEvent(airDrop, e.getPlayer());
                     Bukkit.getServer().getPluginManager().callEvent(airDropSummonerEvent);
                     if(airDropSummonerEvent.isCancelled())
                         return;
-                    airDrop.event(Event.SUMMONER, e.getPlayer());
+                    airDrop.notifyObservers(CustomEvent.SUMMONER, e.getPlayer());
                     if (item.getAmount() > 1) {
                         item.setAmount(item.getAmount() - 1);
 

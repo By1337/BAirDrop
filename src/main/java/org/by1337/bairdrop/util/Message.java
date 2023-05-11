@@ -145,7 +145,6 @@ public class Message {
             } catch (Exception var3) {
             }
         }
-
         return string;
     }
 

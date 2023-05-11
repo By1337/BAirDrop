@@ -18,11 +18,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.Listeners.SetStaticLocation;
 import org.by1337.bairdrop.Listeners.util.ListenChat;
+import org.by1337.bairdrop.customListeners.CustomEvent;
+import org.by1337.bairdrop.customListeners.CustomEventListener;
 import org.by1337.bairdrop.menu.*;
 import org.by1337.bairdrop.menu.util.MenuItem;
 import org.by1337.bairdrop.scripts.Manager;
@@ -42,13 +43,13 @@ import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.BAirDrop;
 
 public class ExecuteCommands {
-    public void runListenerCommands(String[] commands, @Nullable Player pl, @Nullable AirDrop airDrop, Event event) {
+    public void runListenerCommands(String[] commands, @Nullable Player pl, @Nullable AirDrop airDrop, CustomEvent customEvent) {
         for (String command : commands) {
             if (airDrop != null)
                 command = airDrop.replaceInternalPlaceholder(command);
             command = Message.setPlaceholders(pl, command);
             if (command.contains("[math#"))
-                command = InternalListener.math(command, airDrop, pl);
+                command = CustomEventListener.math(command, airDrop, pl);
             if (command.contains("{player-get-item-") && pl != null)
                 command = setPlayerPlaceholder(pl, command);
             if(command.equalsIgnoreCase("[SCHEDULER]") || command.equalsIgnoreCase("[ASYNC]") || command.contains("[LATER-")){
@@ -69,7 +70,7 @@ public class ExecuteCommands {
             if (airDrop != null) {
                 if (command.contains("[CALL-")) {
                     String str = command.replace("[CALL-", "").replace("]", "");
-                    airDrop.callListener(str, pl, event);
+                    airDrop.callListener(NamespacedKey.fromString(str), pl, customEvent);
                     continue;
                 }
                 if (command.contains("[NEAR-PLAYERS=")) {
@@ -77,9 +78,9 @@ public class ExecuteCommands {
                         int range = Integer.parseInt(command.split("=")[1].split("]")[0]);
                         for (Entity entity : airDrop.getAnyLoc().getWorld().getNearbyEntities(airDrop.getAnyLoc(), range, range, range)) {
                             if (entity instanceof Player player) {
-                                airDrop.callListener(command
+                                airDrop.callListener(NamespacedKey.fromString(command
                                         .replace(String.format("[NEAR-PLAYERS=%s] {CALL-", range), "")
-                                        .replace("}", ""), player, event);
+                                        .replace("}", "")), player, customEvent);
                             }
                         }
                     } catch (NumberFormatException e) {
@@ -444,7 +445,12 @@ public class ExecuteCommands {
                 Message.warning("[EFFECT_START-<NAME>-<id>]");
                 return true;
             }
-            airDrop.addEffectAndStart(args[1], args[2]);
+            try {
+                airDrop.addEffect(args[1], args[2]);
+                airDrop.startEffect(args[2]);
+            }catch (IllegalArgumentException e){
+                Message.warning(e.getLocalizedMessage());
+            }
             return true;
         }
         if (command.contains("[EFFECT_STOP-")) {
@@ -454,7 +460,12 @@ public class ExecuteCommands {
                 Message.warning("[EFFECT_STOP-<id>]");
                 return true;
             }
-            airDrop.StopEffect(args[1]);
+            try {
+                airDrop.StopEffect(args[1]);
+            }catch (IllegalArgumentException e){
+                Message.warning(e.getLocalizedMessage());
+            }
+
             return true;
         }
         if (command.equalsIgnoreCase("[EFFECT_STOP_ALL]")) {
@@ -462,7 +473,7 @@ public class ExecuteCommands {
             return true;
         }
         if (command.contains("[SET_MATERIAL_")) {
-            Location location = airDrop.getAirLoc();
+            Location location = airDrop.getAirDropLocation();
             if (location == null)
                 location = airDrop.getFutureLocation();
             if (location == null) {
@@ -510,7 +521,7 @@ public class ExecuteCommands {
             return true;
         }
         if (command.equalsIgnoreCase("[SCHEMATICS_REMOVE]")) {
-            airDrop.schematicsRemoveAll();
+            airDrop.schematicsUndo();
             return true;
         }
         if (command.contains("[SET_TIME_START-")) {
@@ -543,7 +554,7 @@ public class ExecuteCommands {
             return true;
         }
         if (command.equalsIgnoreCase("[SET_REGION]")) {
-            if (airDrop.getAirLoc() == null) {
+            if (airDrop.getAirDropLocation() == null) {
                 Message.error(String.format(Config.getMessage("loc-is-null2:"), "[SET_REGION]"));
                 return true;
             }
@@ -551,20 +562,20 @@ public class ExecuteCommands {
             return true;
         }
         if (command.equalsIgnoreCase("[SET_HOLO_TIME_TO_START]")) {
-            if (airDrop.getAirLoc() == null) {
+            if (airDrop.getAirDropLocation() == null) {
                 Message.error(String.format(Config.getMessage("loc-is-null2:"), "[SET_HOLO_TIME_TO_START]"));
                 return true;
             }
-            airDrop.setHoloTimeToStart(true);
+            airDrop.setHoloTimeToStartEnabled(true);
             airDrop.setHoloTimeToStartMinusOffsets(false);
             return true;
         }
         if (command.equalsIgnoreCase("[SET_HOLO_TIME_TO_START]-offsets")) {
-            if (airDrop.getAirLoc() == null) {
+            if (airDrop.getAirDropLocation() == null) {
                 Message.error(String.format(Config.getMessage("loc-is-null2:"), "[[SET_HOLO_TIME_TO_START]-offsets"));
                 return true;
             }
-            airDrop.setHoloTimeToStart(true);
+            airDrop.setHoloTimeToStartEnabled(true);
             airDrop.setHoloTimeToStartMinusOffsets(true);
             return true;
         }
@@ -709,15 +720,15 @@ public class ExecuteCommands {
                     Message.sendMsg(pl, Config.getMessage("airdrop-is-not-started"));
                     return;
                 }
-                if (airDrop.isAirLocked()) {
+                if (airDrop.isAirDropLocked()) {
                     airDrop.unlock();
-                    if (airDrop.isStartCountdownAfterClick() && !airDrop.isPressed()) {
-                        airDrop.event(Event.ACTIVATE, pl);
+                    if (airDrop.isStartCountdownAfterClick() && !airDrop.isActivated()) {
+                        airDrop.notifyObservers(CustomEvent.ACTIVATE, pl);
                     }
                 } else {
                     airDrop.setTimeToOpen(airDrop.getFileConfiguration().getInt("openingTime") * 60);
-                    airDrop.setAirLocked(true);
-                    airDrop.getAirLoc().getBlock().setType(airDrop.getMaterialLocked());
+                    airDrop.setAirDropLocked(true);
+                    airDrop.getAirDropLocation().getBlock().setType(airDrop.getMaterialLocked());
                 }
                 continue;
             }

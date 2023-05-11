@@ -4,9 +4,6 @@ import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.by1337.bairdrop.ConfigManager.Config;
@@ -20,21 +17,21 @@ import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.BAirDrop;
 
 public class Helix implements IEffect {
-    double radius;
-    double height;
-    double step;
-    Location loc;
-    Color color;
-    double size;
-    Particle particle;
-    Vector offsets;
-    int count;
-    int timeUpdate;
-    int ticks;
-    String name;
-    boolean active = true;
-    FileConfiguration cs;
-    AirDrop airDrop;
+    private final double radius;
+    private final double height;
+    private final double step;
+    private Location loc;
+    private final Color color;
+    private final double size;
+    private final Particle particle;
+    private final Vector offsets;
+    private final int count;
+    private final int timeUpdate;
+    private int ticks;
+    private String name;
+    private boolean active = true;
+    private FileConfiguration cs;
+    private AirDrop airDrop;
 
     public Helix(FileConfiguration cs, String name) throws NullPointerException, IllegalArgumentException {
         this.name = name;
@@ -65,7 +62,7 @@ public class Helix implements IEffect {
         if (airDrop.getAnyLoc() == null) {
             Message.error(Config.getMessage("effect-error-loc-is-null"));
             Message.error(Config.getMessage("effect-error-loc-is-null2"));
-            Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getAirId()));
+            Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getId()));
             return;
         } else loc = airDrop.getAnyLoc().clone();
         run();
@@ -95,6 +92,7 @@ public class Helix implements IEffect {
                     if ((ticks - timeUpdate) > 0) {
                         ticks -= timeUpdate;
                     } else {
+                        End();
                         cancel();
                     }
                 }

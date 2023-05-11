@@ -23,9 +23,9 @@ import static org.bukkit.Bukkit.getServer;
 
 public class AddingItems implements Listener {
     public static AddingItems addingItems = null;
-    Inventory inv;
-    AirDrop airdrop;
-    String invName;
+    private Inventory inv;
+    private AirDrop airdrop;
+    private String invName;
 
     public AddingItems(AirDrop airdrop, String invName) {
         if(addingItems != null){
@@ -34,9 +34,9 @@ public class AddingItems implements Listener {
         addingItems = this;
         if (airdrop != null) {
             this.airdrop = airdrop;
-            inv = Bukkit.createInventory(null, airdrop.getInvSize(), Config.getMessage("inv-edit").replace("{id}", airdrop.getAirId()));
+            inv = Bukkit.createInventory(null, airdrop.getInventorySize(), Config.getMessage("inv-edit").replace("{id}", airdrop.getId()));
             this.invName = invName;
-            airdrop.getEditorItemsInventory(inv, invName);
+            inv = airdrop.getEditorItemsInventory(inv, invName);
         }
     }
 

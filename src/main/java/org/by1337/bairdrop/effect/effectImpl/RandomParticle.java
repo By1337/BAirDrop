@@ -18,22 +18,22 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class RandomParticle implements IEffect {
-    int ticks = -1;
-    int timeUpdate;
-    AirDrop airDrop;
-    boolean active = true;
-    List<Particle> particle = new ArrayList<>();
-    double radius;
-    int count;
-    FileConfiguration cs;
-    Location loc;
-    String name;
+    private int ticks = -1;
+    private final int timeUpdate;
+    private AirDrop airDrop;
+    private boolean active = true;
+    private final List<Particle> particle = new ArrayList<>();
+    private final double radius;
+    private final int count;
+    private final FileConfiguration cs;
+    private Location loc;
+    private final String name;
 
     public RandomParticle(FileConfiguration cs, String name) throws NullPointerException, IllegalArgumentException {
         this.cs = cs;
         ticks = cs.getInt(String.format("effects.%s.ticks", name));
         timeUpdate = cs.getInt(String.format("effects.%s.timeUpdate", name));
-        for(String pr : cs.getStringList(String.format("effects.%s.particle", name))){
+        for (String pr : cs.getStringList(String.format("effects.%s.particle", name))) {
             particle.add(Particle.valueOf(pr));
         }
         this.name = name;
@@ -41,17 +41,19 @@ public class RandomParticle implements IEffect {
         radius = cs.getDouble(String.format("effects.%s.radius", name));
         count = cs.getInt(String.format("effects.%s.count", name));
     }
+
     @Override
     public void Start(AirDrop airDrop) {
         this.airDrop = airDrop;
         if (airDrop.getAnyLoc() == null) {
             Message.error(Config.getMessage("effect-error-loc-is-null"));
             Message.error(Config.getMessage("effect-error-loc-is-null2"));
-            Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getAirId()));
+            Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getId()));
             return;
         } else loc = airDrop.getAnyLoc().clone();
         run();
     }
+
     @Override
     public void End() {
         active = false;
@@ -71,7 +73,7 @@ public class RandomParticle implements IEffect {
         new BukkitRunnable() {
             @Override
             public void run() {
-                for(Particle pr : particle){
+                for (Particle pr : particle) {
                     double x = ThreadLocalRandom.current().nextDouble(-radius, radius);
                     double y = ThreadLocalRandom.current().nextDouble(radius);
                     double z = ThreadLocalRandom.current().nextDouble(-radius, radius);
@@ -83,6 +85,7 @@ public class RandomParticle implements IEffect {
                     if ((ticks - timeUpdate) > 0) {
                         ticks -= timeUpdate;
                     } else {
+                        End();
                         cancel();
                     }
                 }
@@ -94,10 +97,12 @@ public class RandomParticle implements IEffect {
     public String getName() {
         return name;
     }
+
     @Override
     public EffectType getType() {
         return EffectType.RANDOM_PARTICLE;
     }
+
     @Override
     public IEffect clone() {
         return new RandomParticle(cs, name);

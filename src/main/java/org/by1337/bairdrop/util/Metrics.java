@@ -32,7 +32,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.by1337.bairdrop.obfuscate.DontObfuscate;
 
+@DontObfuscate
 public class Metrics {
 
     private final Plugin plugin;
@@ -141,7 +143,7 @@ public class Metrics {
             return Bukkit.getOnlinePlayers().size();
         }
     }
-
+    @DontObfuscate
     public static class MetricsBase {
 
         /** The version of the Metrics class. */
@@ -400,7 +402,7 @@ public class Metrics {
             return new JsonObjectBuilder().appendField("values", valuesBuilder.build()).build();
         }
     }
-
+    @DontObfuscate
     public abstract static class CustomChart {
 
         private final String chartId;
@@ -434,7 +436,7 @@ public class Metrics {
 
         protected abstract JsonObjectBuilder.JsonObject getChartData() throws Exception;
     }
-
+    @DontObfuscate
     public static class SingleLineChart extends CustomChart {
 
         private final Callable<Integer> callable;
@@ -460,7 +462,7 @@ public class Metrics {
             return new JsonObjectBuilder().appendField("value", value).build();
         }
     }
-
+    @DontObfuscate
     public static class AdvancedPie extends CustomChart {
 
         private final Callable<Map<String, Integer>> callable;
@@ -500,7 +502,7 @@ public class Metrics {
             return new JsonObjectBuilder().appendField("values", valuesBuilder.build()).build();
         }
     }
-
+    @DontObfuscate
     public static class DrilldownPie extends CustomChart {
 
         private final Callable<Map<String, Map<String, Integer>>> callable;
@@ -544,7 +546,7 @@ public class Metrics {
             return new JsonObjectBuilder().appendField("values", valuesBuilder.build()).build();
         }
     }
-
+    @DontObfuscate
     public static class MultiLineChart extends CustomChart {
 
         private final Callable<Map<String, Integer>> callable;
@@ -584,7 +586,7 @@ public class Metrics {
             return new JsonObjectBuilder().appendField("values", valuesBuilder.build()).build();
         }
     }
-
+    @DontObfuscate
     public static class AdvancedBarChart extends CustomChart {
 
         private final Callable<Map<String, int[]>> callable;
@@ -624,7 +626,7 @@ public class Metrics {
             return new JsonObjectBuilder().appendField("values", valuesBuilder.build()).build();
         }
     }
-
+    @DontObfuscate
     public static class SimplePie extends CustomChart {
 
         private final Callable<String> callable;
@@ -657,6 +659,7 @@ public class Metrics {
      * <p>While this class is neither feature-rich nor the most performant one, it's sufficient enough
      * for its use-case.
      */
+    @DontObfuscate
     public static class JsonObjectBuilder {
 
         private StringBuilder builder = new StringBuilder();
@@ -842,6 +845,7 @@ public class Metrics {
          * allow a raw string inputs for methods like {@link JsonObjectBuilder#appendField(String,
          * JsonObject)}.
          */
+        @DontObfuscate
         public static class JsonObject {
 
             private final String value;

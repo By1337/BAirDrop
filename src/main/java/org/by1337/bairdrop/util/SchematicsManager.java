@@ -51,7 +51,7 @@ public class SchematicsManager {
 
             Clipboard clipboard = reader.read();
 
-            Location loc = airDrop.getAirLoc();
+            Location loc = airDrop.getAirDropLocation();
             if (loc == null)
                 loc = airDrop.getFutureLocation();
             if (loc == null)

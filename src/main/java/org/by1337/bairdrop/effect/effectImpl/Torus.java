@@ -17,21 +17,21 @@ import org.by1337.bairdrop.BAirDrop;
 import java.util.Objects;
 
 public class Torus implements IEffect {
-    double step;
-    Location loc;
-    Color color;
-    double size;
-    Particle particle;
-    Vector offsets;
-    int count;
-    int timeUpdate;
-    int ticks;
-    String name;
-    boolean active = true;
-    FileConfiguration cs;
-    AirDrop airDrop;
-    double innerRadius;
-    double outerRadius;
+    private final double step;
+    private Location loc;
+    private final Color color;
+    private final double size;
+    private final Particle particle;
+    private final Vector offsets;
+    private final int count;
+    private final int timeUpdate;
+    private int ticks;
+    private String name;
+    private boolean active = true;
+    private final FileConfiguration cs;
+    private AirDrop airDrop;
+    private final double innerRadius;
+    private final double outerRadius;
 
     public Torus(FileConfiguration cs, String name) throws NullPointerException, IllegalArgumentException {
         this.name = name;
@@ -62,7 +62,7 @@ public class Torus implements IEffect {
         if (airDrop.getAnyLoc() == null) {
             Message.error(Config.getMessage("effect-error-loc-is-null"));
             Message.error(Config.getMessage("effect-error-loc-is-null2"));
-            Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getAirId()));
+            Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getId()));
             return;
         } else loc = airDrop.getAnyLoc().clone();
         run();
@@ -77,11 +77,11 @@ public class Torus implements IEffect {
         new BukkitRunnable() {
             @Override
             public void run() {
-                Location center = airDrop.getAirLoc();
+                Location center = airDrop.getAirDropLocation();
                 double step1 = step * Math.PI / count;
 
                 for (double theta = 0; theta < 2 * Math.PI; theta += step1) {
-                    if(center == null)
+                    if (center == null)
                         break;
                     for (double phi = 0; phi < 2 * Math.PI; phi += step1) {
                         double v = outerRadius + innerRadius * Math.cos(theta);
@@ -100,12 +100,14 @@ public class Torus implements IEffect {
                     if ((ticks - timeUpdate) > 0) {
                         ticks -= timeUpdate;
                     } else {
+                        End();
                         cancel();
                     }
                 }
             }
         }.runTaskTimerAsynchronously(BAirDrop.getInstance(), timeUpdate, timeUpdate);
     }
+
     @Override
     public void setLifetime(int ticks) {
         this.ticks = ticks;

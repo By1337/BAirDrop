@@ -59,8 +59,8 @@ public class PlaceholderExpansion extends me.clip.placeholderapi.expansion.Place
             int dist = 0;
             for(AirDrop air : BAirDrop.airDrops.values()){
                 if(!air.isAirDropStarted()) continue;
-                if(dist > player.getPlayer().getLocation().distance(air.getAirLoc()) || airDrop == null){
-                    dist = (int) player.getPlayer().getLocation().distance(air.getAirLoc());
+                if(dist > player.getPlayer().getLocation().distance(air.getAirDropLocation()) || airDrop == null){
+                    dist = (int) player.getPlayer().getLocation().distance(air.getAirDropLocation());
                     airDrop = air;
                 }
             }
@@ -87,40 +87,40 @@ public class PlaceholderExpansion extends me.clip.placeholderapi.expansion.Place
             if(args.length != 3) return "error";
             AirDrop airDrop = BAirDrop.airDrops.getOrDefault(args[2], null);
             if(airDrop == null) return "error";
-            return airDrop.getAirName();
+            return airDrop.getDisplayName();
         }
         if(params.contains("x_")){ //%bairdrop_x_<air id>%
             String[] args = params.split("_");
             if(args.length != 2) return "error";
             AirDrop airDrop = BAirDrop.airDrops.getOrDefault(args[1], null);
             if(airDrop == null) return "error";
-            if(airDrop.getAirLoc() == null){
+            if(airDrop.getAirDropLocation() == null){
                 if(airDrop.getFutureLocation() == null){
                     return "?";
                 }else return (airDrop.getFutureLocation().getX() + "").replace(".0", "");
-            }else return (airDrop.getAirLoc().getX() + "").replace(".0", "");
+            }else return (airDrop.getAirDropLocation().getX() + "").replace(".0", "");
         }
         if(params.contains("y_")){ //%bairdrop_y_<air id>%
             String[] args = params.split("_");
             if(args.length != 2) return "error";
             AirDrop airDrop = BAirDrop.airDrops.getOrDefault(args[1], null);
             if(airDrop == null) return "error";
-            if(airDrop.getAirLoc() == null){
+            if(airDrop.getAirDropLocation() == null){
                 if(airDrop.getFutureLocation() == null){
                     return "?";
                 }else return (airDrop.getFutureLocation().getY() + "").replace(".0", "");
-            }else return (airDrop.getAirLoc().getY() + "").replace(".0", "");
+            }else return (airDrop.getAirDropLocation().getY() + "").replace(".0", "");
         }
         if(params.contains("z_")){ //%bairdrop_z_<air id>%
             String[] args = params.split("_");
             if(args.length != 2) return "error";
             AirDrop airDrop = BAirDrop.airDrops.getOrDefault(args[1], null);
             if(airDrop == null) return "error";
-            if(airDrop.getAirLoc() == null){
+            if(airDrop.getAirDropLocation() == null){
                 if(airDrop.getFutureLocation() == null){
                     return "?";
                 }else return (airDrop.getFutureLocation().getZ() + "").replace(".0", "");
-            }else return (airDrop.getAirLoc().getZ() + "").replace(".0", "");
+            }else return (airDrop.getAirDropLocation().getZ() + "").replace(".0", "");
         }
         return null;
     }

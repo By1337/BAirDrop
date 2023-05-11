@@ -1,5 +1,6 @@
-package org.by1337.bairdrop.util;
+package org.by1337.bairdrop.customListeners;
 
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nullable;
@@ -13,107 +14,137 @@ import java.util.regex.Pattern;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.ConfigManager.Config;
+import org.by1337.bairdrop.customListeners.observer.Observer;
 import org.by1337.bairdrop.scripts.Manager;
 import org.by1337.bairdrop.BAirDrop;
+import org.by1337.bairdrop.util.ExecuteCommands;
+import org.by1337.bairdrop.util.Message;
+import org.jetbrains.annotations.NotNull;
 
-public class InternalListener {
-    Event event;
-    String description;
-    String[] commands;
-    String[] denyCommands;
-    HashMap<String, HashMap<String, String>> requirement;
+public class CustomEventListener implements Observer {
+    private final CustomEvent customEvent;
+    private final String description;
+    private final String[] commands;
+    private final String[] denyCommands;
+    private final HashMap<String, HashMap<String, String>> requirement;
+    private final NamespacedKey key;
 
-    public InternalListener(Event event, String[] commands, HashMap<String, HashMap<String, String>> requirement, String description, String[] denyCommands) {
+    public CustomEventListener(CustomEvent customEvent, String[] commands, HashMap<String, HashMap<String, String>> requirement, String description, String[] denyCommands, NamespacedKey key) {
         this.description = description;
-        this.event = event;
+        this.customEvent = customEvent;
         this.commands = commands;
         this.requirement = requirement;
         this.denyCommands = denyCommands;
+        this.key = key;
     }
 
-    public void execute(@Nullable Player pl, @Nullable AirDrop airDrop, boolean ignoredRequirement, Event event) {
+    @Override
+    public void update(@Nullable Player pl, @Nullable AirDrop airDrop, CustomEvent customEvent, boolean ignoreEvent) {
+        if(customEvent != this.customEvent && !ignoreEvent)
+            return;
         if (Arrays.stream(commands).toList().contains("[SCHEDULER]") || Arrays.stream(denyCommands).toList().contains("[SCHEDULER]")) {
-            int time = 0;//[LATER-600]
-            List<String> list = new ArrayList<>();
-            list.add(Arrays.toString(commands));
-            list.add(Arrays.toString(denyCommands));
-            Pattern laterPattern = Pattern.compile("\\[LATER-(\\d+)\\]");
-            for (String str : list) {
-                Matcher matcher = laterPattern.matcher(str);
-                if (matcher.find()) {
-                    try {
-                        time = Integer.parseInt(matcher.group(1));
-                        break;
-                    } catch (NumberFormatException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    ExecuteCommands executeCommands = new ExecuteCommands();
-                    if (ignoredRequirement)
-                        executeCommands.runListenerCommands(commands, pl, airDrop, event);
-                    else if (checkRequirement(airDrop, pl)) {
-                        executeCommands.runListenerCommands(commands, pl, airDrop, event);
-                    } else {
-                        executeCommands.runListenerCommands(denyCommands, pl, airDrop, event);
-                    }
-                }
-            }.runTaskLater(BAirDrop.getInstance(), time);
+            run_SCHEDULER(pl, airDrop, customEvent);
             return;
         }
         if (Arrays.stream(commands).toList().contains("[ASYNC]") || Arrays.stream(denyCommands).toList().contains("[ASYNC]")) {
-            int time = 0;
-            List<String> list = new ArrayList<>();
-            list.add(Arrays.toString(commands));
-            list.add(Arrays.toString(denyCommands));
-            Pattern laterPattern = Pattern.compile("\\[LATER-(\\d+)\\]");
-            for (String str : list) {
-                Matcher matcher = laterPattern.matcher(str);
-                if (matcher.find()) {
-                    try {
-                        time = Integer.parseInt(matcher.group(1));
-                        break;
-                    } catch (NumberFormatException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    try {
-                        ExecuteCommands executeCommands = new ExecuteCommands();
-                        if (ignoredRequirement)
-                            executeCommands.runListenerCommands(commands, pl, airDrop, event);
-                        else if (checkRequirement(airDrop, pl)) {
-                            executeCommands.runListenerCommands(commands, pl, airDrop, event);
-                        } else {
-                            executeCommands.runListenerCommands(denyCommands, pl, airDrop, event);
-                        }
-                    } catch (Throwable e) {
-                        Message.error(e.getLocalizedMessage());
-                    }
-                }
-            }.runTaskLaterAsynchronously(BAirDrop.getInstance(), time);
+            run_ASYNC(pl, airDrop, customEvent);
             return;
         }
+
         ExecuteCommands executeCommands = new ExecuteCommands();
-        if (ignoredRequirement)
-            executeCommands.runListenerCommands(commands, pl, airDrop, event);
-        else if (checkRequirement(airDrop, pl)) {
-            executeCommands.runListenerCommands(commands, pl, airDrop, event);
+        if (checkRequirement(airDrop, pl)) {
+            executeCommands.runListenerCommands(commands, pl, airDrop, customEvent);
         } else {
-            executeCommands.runListenerCommands(denyCommands, pl, airDrop, event);
+            executeCommands.runListenerCommands(denyCommands, pl, airDrop, customEvent);
         }
     }
-
-    public Event getEvent() {
-        return event;
+    @Override
+    public CustomEvent getEvent() {
+        return customEvent;
+    }
+    @Override
+    public String[] getCommands() {
+        return commands;
     }
 
+    @Override
+    public String[] getDenyCommands() {
+        return denyCommands;
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
+    }
+
+    @NotNull
+    @Override
+    public NamespacedKey getKey() {
+        return key;
+    }
+
+    private void run_SCHEDULER(@Nullable Player pl, @Nullable AirDrop airDrop, CustomEvent customEvent){
+        int time = 0;//[LATER-600]
+        List<String> list = new ArrayList<>();
+        list.add(Arrays.toString(commands));
+        list.add(Arrays.toString(denyCommands));
+        Pattern laterPattern = Pattern.compile("\\[LATER-(\\d+)\\]");
+        for (String str : list) {
+            Matcher matcher = laterPattern.matcher(str);
+            if (matcher.find()) {
+                try {
+                    time = Integer.parseInt(matcher.group(1));
+                    break;
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                ExecuteCommands executeCommands = new ExecuteCommands();
+                if (checkRequirement(airDrop, pl)) {
+                    executeCommands.runListenerCommands(commands, pl, airDrop, customEvent);
+                } else {
+                    executeCommands.runListenerCommands(denyCommands, pl, airDrop, customEvent);
+                }
+            }
+        }.runTaskLater(BAirDrop.getInstance(), time);
+    }
+    private void run_ASYNC(@Nullable Player pl, @Nullable AirDrop airDrop, CustomEvent customEvent){
+        int time = 0;
+        List<String> list = new ArrayList<>();
+        list.add(Arrays.toString(commands));
+        list.add(Arrays.toString(denyCommands));
+        Pattern laterPattern = Pattern.compile("\\[LATER-(\\d+)\\]");
+        for (String str : list) {
+            Matcher matcher = laterPattern.matcher(str);
+            if (matcher.find()) {
+                try {
+                    time = Integer.parseInt(matcher.group(1));
+                    break;
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                try {
+                    ExecuteCommands executeCommands = new ExecuteCommands();
+                    if (checkRequirement(airDrop, pl)) {
+                        executeCommands.runListenerCommands(commands, pl, airDrop, customEvent);
+                    } else {
+                        executeCommands.runListenerCommands(denyCommands, pl, airDrop, customEvent);
+                    }
+                } catch (Throwable e) {
+                    Message.error(e.getLocalizedMessage());
+                }
+            }
+        }.runTaskLaterAsynchronously(BAirDrop.getInstance(), time);
+    }
     private boolean checkRequirement(@Nullable AirDrop airDrop, @Nullable Player pl) {
         boolean requirementsMet = true;
         for (String idCheck : requirement.keySet()) {
@@ -125,7 +156,7 @@ public class InternalListener {
                             requirementsMet = LOGICAL_CHECK(requirement.get(idCheck).get(type), airDrop, pl);
                     case "STRING_CHECK" ->
                             requirementsMet = STRING_CHECK(requirement.get(idCheck).get(type), airDrop, pl);
-                    case "FIRST_OPEN" -> requirementsMet = airDrop != null && !airDrop.isItWasOpen();
+                    case "FIRST_OPEN" -> requirementsMet = airDrop != null && !airDrop.isWasOpened();
                     default -> requirementsMet = true;
                 }
                 if (!requirementsMet) return false;
@@ -209,7 +240,7 @@ public class InternalListener {
             req = airDrop.replaceInternalPlaceholder(req);
         req = Message.setPlaceholders(pl, req);
         if (req.contains("[math#"))
-            req = InternalListener.math(req, airDrop, pl);
+            req = CustomEventListener.math(req, airDrop, pl);
         String[] args = req.split(" ");
         try {
             if (args[var4].equals("%")) {
@@ -267,7 +298,7 @@ public class InternalListener {
             req = airDrop.replaceInternalPlaceholder(req);
         req = Message.setPlaceholders(pl, req);
         if (req.contains("[math#"))
-            req = InternalListener.math(req, airDrop, pl);
+            req = CustomEventListener.math(req, airDrop, pl);
         if (req.contains("{player-get") && pl != null)
             req = ExecuteCommands.setPlayerPlaceholder(pl, req);
         String[] args = req.split(" ");
@@ -282,19 +313,9 @@ public class InternalListener {
         return false;
     }
 
-    public String[] getCommands() {
-        return commands;
-    }
 
-    public String[] getDenyCommands() {
-        return denyCommands;
-    }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public String runJs(String command, @Nullable Player pl, @Nullable AirDrop airDrop) {
+    private String runJs(String command, @Nullable Player pl, @Nullable AirDrop airDrop) {
 
         try {
             if (command.contains("[RUN_JS=")) {
@@ -327,9 +348,11 @@ public class InternalListener {
         return "js error";
     }
 
-    public String replaceText(String input, String to) {
+    private String replaceText(String input, String to) {
         String regex = "\\{\\[RUN_JS=.*?\\]\\s*(param\\(player=player\\))?(\\-scheduler)?\\}";
         return input.replaceAll(regex, to);
     }
+
+
 
 }

@@ -12,13 +12,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.by1337.bairdrop.AirDrop;
+import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.menu.util.MenuItem;
 import org.by1337.bairdrop.util.ExecuteCommands;
 import org.jetbrains.annotations.Nullable;
 
 public class EditAirMenu implements Listener {
-    public static EditAirMenu editAirMenu = null;
+    private static EditAirMenu editAirMenu = null;
     private final Inventory inventory;
     private final AirDrop airDrop;
 
@@ -27,8 +28,9 @@ public class EditAirMenu implements Listener {
             editAirMenu.unReg();
         editAirMenu = this;
         this.airDrop = airDrop;
-        inventory = Bukkit.createInventory(null, 54, String.format(Config.getMessage("editor"), airDrop.getAirId()));
+        inventory = Bukkit.createInventory(null, 54, String.format(Config.getMessage("editor"), airDrop.getId()));
         menuGenerate();
+        Bukkit.getServer().getPluginManager().registerEvents(this, BAirDrop.getInstance());
     }
 
     @EventHandler

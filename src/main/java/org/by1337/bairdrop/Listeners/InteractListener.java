@@ -10,15 +10,15 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.api.event.AirDropOpenEvent;
+import org.by1337.bairdrop.customListeners.CustomEvent;
 import org.by1337.bairdrop.util.AirManager;
-import org.by1337.bairdrop.util.Event;
 
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
 
 public class InteractListener implements Listener {
-    HashMap<UUID, Long> auntyDouble = new HashMap<>();
+    private final HashMap<UUID, Long> auntyDouble = new HashMap<>();
     @EventHandler
     public void PlayerClick(PlayerInteractEvent e) {
         Player pl = e.getPlayer();
@@ -35,26 +35,26 @@ public class InteractListener implements Listener {
             if(!airDrop.isAirDropStarted()){
                 return;
             }
-            if(airDrop.isStartCountdownAfterClick() && !airDrop.isPressed()){
-                airDrop.setPressed(true);
+            if(airDrop.isStartCountdownAfterClick() && !airDrop.isActivated()){
+                airDrop.setActivated(true);
                 airDrop.setTimeStop(airDrop.getTimeToStopCons() * 60);
-                airDrop.event(Event.ACTIVATE, pl);
+                airDrop.notifyObservers(CustomEvent.ACTIVATE, pl);
                 return;
             }
 
-            if(airDrop.isAirLocked()){
-                airDrop.event(Event.CLICK_CLOSE, pl);
+            if(airDrop.isAirDropLocked()){
+                airDrop.notifyObservers(CustomEvent.CLICK_CLOSE, pl);
             }else {
                 AirDropOpenEvent airDropOpenEvent = new AirDropOpenEvent(airDrop, pl);
                 Bukkit.getServer().getPluginManager().callEvent(airDropOpenEvent);
                 if(airDropOpenEvent.isCancelled())
                     return;
-                pl.openInventory(airDrop.getInv());
-                airDrop.event(Event.CLICK_OPEN, pl);
-                if(!airDrop.isItWasOpen()) {
-                    airDrop.event(Event.FIRST_OPEN, pl);
+                pl.openInventory(airDrop.getInventory());
+                airDrop.notifyObservers(CustomEvent.CLICK_OPEN, pl);
+                if(!airDrop.isWasOpened()) {
+                    airDrop.notifyObservers(CustomEvent.FIRST_OPEN, pl);
                 }
-                airDrop.setItWasOpen(true);
+                airDrop.setWasOpened(true);
             }
         }
     }

@@ -1,11 +1,9 @@
 package org.by1337.bairdrop.Listeners.util;
 
 import org.bukkit.entity.Player;
-import org.bukkit.entity.PufferFish;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.by1337.bairdrop.AirDrop;
@@ -18,10 +16,10 @@ import static org.bukkit.Bukkit.getServer;
 
 public class ListenChat implements Listener {
     public static ListenChat ListenChat = null;
-    AirDrop airDrop;
-    String changeNameString;
+    private final AirDrop airDrop;
+    private final String changeNameString;
 
-    Player pl;
+    private final Player pl;
 
     public void unReg(){
         HandlerList.unregisterAll(this);
@@ -50,7 +48,7 @@ public class ListenChat implements Listener {
                     e.setCancelled(true);
                     return;
                 }
-                airDrop.setInvName(e.getMessage());
+                airDrop.setInventoryTitle(e.getMessage());
                 airDrop.updateInvName();
                 airDrop.save();
                 Message.sendMsg(pl, String.format(Config.getMessage("named-changed"), e.getMessage()));
@@ -61,7 +59,7 @@ public class ListenChat implements Listener {
                     e.setCancelled(true);
                     return;
                 }
-                airDrop.setAirName(e.getMessage());
+                airDrop.setDisplayName(e.getMessage());
                 airDrop.save();
                 Message.sendMsg(pl, String.format(Config.getMessage("named-changed"), e.getMessage()));
             }
@@ -73,7 +71,7 @@ public class ListenChat implements Listener {
                         return;
                     }
                     int x = Integer.parseInt(e.getMessage());
-                    airDrop.setSpawnMin(x);
+                    airDrop.setSpawnRadiusMin(x);
                     airDrop.save();
                     Message.sendMsg(pl, String.format(Config.getMessage("min-spawn-changed"), e.getMessage()));
                 }
@@ -84,12 +82,12 @@ public class ListenChat implements Listener {
                         return;
                     }
                     int x = Integer.parseInt(e.getMessage());
-                    if(airDrop.getSpawnMin() >= x){
+                    if(airDrop.getSpawnRadiusMin() >= x){
                         Message.sendMsg(pl, Config.getMessage("max-limit"));
                         e.setCancelled(true);
                         return;
                     }
-                    airDrop.setSpawnMax(x);
+                    airDrop.setSpawnRadiusMax(x);
                     airDrop.save();
                     Message.sendMsg(pl, String.format(Config.getMessage("max-spawn-changed"), e.getMessage()));
                 }
@@ -100,7 +98,7 @@ public class ListenChat implements Listener {
                         return;
                     }
                     int x = Integer.parseInt(e.getMessage());
-                    airDrop.setAirProtect(x);
+                    airDrop.setRegionRadius(x);
                     airDrop.save();
                     Message.sendMsg(pl, String.format(Config.getMessage("protect-changed"), e.getMessage()));
                 }
@@ -159,7 +157,7 @@ public class ListenChat implements Listener {
                         return;
                     }
                     int x = Integer.parseInt(e.getMessage());
-                    airDrop.setMinOnlinePlayers(x);
+                    airDrop.setMinPlayersToStart(x);
                     airDrop.save();
                     Message.sendMsg(pl, String.format(Config.getMessage("min-online-players-changed"), e.getMessage()));
                 }
@@ -174,7 +172,7 @@ public class ListenChat implements Listener {
                 @Override
                 public void run() {
                     EditAirMenu em = new EditAirMenu(airDrop);
-                    getServer().getPluginManager().registerEvents(em, BAirDrop.getInstance());
+                   // getServer().getPluginManager().registerEvents(em, BAirDrop.getInstance());
                     airDrop.setEditAirMenu(em);
                     pl.openInventory(em.getInventory());
                     cancel();

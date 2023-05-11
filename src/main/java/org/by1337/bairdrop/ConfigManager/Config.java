@@ -7,6 +7,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.Listeners.Compass;
+import org.by1337.bairdrop.customListeners.CustomEvent;
+import org.by1337.bairdrop.customListeners.CustomEventListener;
+import org.by1337.bairdrop.customListeners.util.CustomEventListenerBuilder;
 import org.by1337.bairdrop.menu.util.MenuItem;
 import org.by1337.bairdrop.util.*;
 import org.jetbrains.annotations.NotNull;
@@ -21,22 +24,22 @@ import static org.by1337.bairdrop.effect.LoadEffects.LoadEffect;
 import static org.by1337.bairdrop.util.GeneratorLoc.LoadLocations;
 
 public class Config {
-    public static FileConfiguration listeners;
-    static File fileListeners;
-    public static FileConfiguration effects;
-    static File fileEffects;
+    private static FileConfiguration listeners;
+    private static File fileListeners;
+    private static FileConfiguration effects;
+    private static File fileEffects;
     public static FileConfiguration locations;
     public static File fileLocations;
-    static FileConfiguration menu;
-    static File fileMenu;
-    static FileConfiguration schemConf;
-    static File fileSchemConf;
-    static FileConfiguration generatorSettings;
-    static File fileGeneratorSettings;
+    private static FileConfiguration menu;
+    private static File fileMenu;
+    private static FileConfiguration schemConf;
+    private static File fileSchemConf;
+    private static FileConfiguration generatorSettings;
+    private static File fileGeneratorSettings;
     public static HashMap<String, File> Schematics = new HashMap<>();
     private static HashMap<File, FileConfiguration> airDrops = new HashMap<>();
-    public static FileConfiguration message;
-    static File fileMessage;
+    private static FileConfiguration message;
+    private static File fileMessage;
     public static boolean isLoaded;
     public static HashMap<String, File> scripts = new HashMap<>();
 
@@ -122,7 +125,7 @@ public class Config {
             FileConfiguration fc = YamlConfiguration.loadConfiguration(airFile);
             airDrops.put(airFile, fc);
         }
-        BAirDrop.internalListeners.clear();
+        BAirDrop.customEventListeners.clear();
         LoadListeners();
         LoadMenu();
         LoadLocations();
@@ -219,8 +222,8 @@ public class Config {
         }
         for (String key : listeners.getConfigurationSection("listeners").getKeys(false)) {
             try {
-                Event event = Event.getByKey(NamespacedKey.fromString(Objects.requireNonNull(listeners.getString("listeners." + key + ".event")).toLowerCase()));
-                if (event == null) {
+                CustomEvent customEvent = CustomEvent.getByKey(NamespacedKey.fromString(Objects.requireNonNull(listeners.getString("listeners." + key + ".event")).toLowerCase()));
+                if (customEvent == null) {
                     Message.error("Незарегистрированный ивент! " + listeners.getString("listeners." + key + ".event"));
                     continue;
                 }
@@ -237,11 +240,22 @@ public class Config {
                         requirement.put(checkId, check);
                     }
                 }
-                BAirDrop.internalListeners.put(key, new InternalListener(event, commands.toArray(new String[0]), requirement, description, denyCommands.toArray(new String[0])));
+                CustomEventListener customEventListener = new CustomEventListenerBuilder()
+                        .setCustomEvent(customEvent)
+                        .setCommands(commands.toArray(new String[0]))
+                        .setDenyCommands(denyCommands.toArray(new String[0]))
+                        .setDescription(description).setRequirement(requirement)
+                        .setKey(NamespacedKey.fromString(key.toLowerCase()))
+                        .build();
+
+
+                BAirDrop.customEventListeners.put(NamespacedKey.fromString(key.toLowerCase()), customEventListener);
             } catch (NullPointerException e) {
                 Message.error(Config.getMessage("listeners-error"));
+                e.printStackTrace();
             } catch (IllegalArgumentException e) {
                 Message.error(String.format(Config.getMessage("unknown-event"), key));
+                e.printStackTrace();
             }
         }
     }
@@ -271,10 +285,15 @@ public class Config {
                         }
                         continue;
                     }
-                    Enchantment enchantment = Objects.requireNonNull(Enchantment.getByKey(NamespacedKey.fromString("minecraft:" + enchant)));
+                    Enchantment enchantment = Enchantment.getByKey(NamespacedKey.fromString(enchant));
+                    if (enchantment == null) {
+                        Message.error("Неизвестный чар: " + enchant);
+                        continue;
+                    }
                     int chance = getInstance().getConfig().getInt(String.format("auto-enchant.%s.%s.chance", id, enchant));
                     int minLevel = getInstance().getConfig().getInt(String.format("auto-enchant.%s.%s.min-level", id, enchant));
                     int maxLevel = getInstance().getConfig().getInt(String.format("auto-enchant.%s.%s.max-level", id, enchant));
+                    //Message.debug(enchant + " = chance:" + chance + ", minLevel:" + minLevel + ", maxLevel:" + maxLevel);
                     enchantInfos.add(new EnchantInfo(chance, minLevel, maxLevel, enchantment));
                 } catch (NullPointerException e) {
                     e.printStackTrace();

@@ -22,21 +22,21 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Guard implements IEffect{
-    int ticks = -1;
-    int timeUpdate;
-    AirDrop airDrop;
-    boolean active = true;
-    double radius;
-    double heal;
-    int count;
-    FileConfiguration cs;
-    Location loc;
-    String name;
-    String entityName;
-    List<Zombie> zombies = new ArrayList<>();
+public class Guard implements IEffect {
+    private int ticks = -1;
+    private final int timeUpdate;
+    private AirDrop airDrop;
+    private boolean active = true;
+    private final double radius;
+    private final double heal;
+    private final int count;
+    private final FileConfiguration cs;
+    private Location loc;
+    private final String name;
+    private final String entityName;
+    private final List<Zombie> zombies = new ArrayList<>();
 
-    public Guard(FileConfiguration cs, String name) throws NullPointerException, IllegalArgumentException{
+    public Guard(FileConfiguration cs, String name) throws NullPointerException, IllegalArgumentException {
         this.cs = cs;
         ticks = cs.getInt(String.format("effects.%s.ticks", name));
         timeUpdate = cs.getInt(String.format("effects.%s.timeUpdate", name));
@@ -55,7 +55,7 @@ public class Guard implements IEffect{
         if (airDrop.getAnyLoc() == null) {
             Message.error(Config.getMessage("effect-error-loc-is-null"));
             Message.error(Config.getMessage("effect-error-loc-is-null2"));
-            Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getAirId()));
+            Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getId()));
             return;
         } else loc = airDrop.getAnyLoc().clone();
         run();
@@ -81,7 +81,7 @@ public class Guard implements IEffect{
         new BukkitRunnable() {
             @Override
             public void run() {
-                for(int i = 0; i < count; i++){
+                for (int i = 0; i < count; i++) {
                     double x = ThreadLocalRandom.current().nextDouble(-radius, radius);
                     double y;
                     double z = ThreadLocalRandom.current().nextDouble(-radius, radius);
@@ -140,6 +140,7 @@ public class Guard implements IEffect{
                     if ((ticks - timeUpdate) > 0) {
                         ticks -= timeUpdate;
                     } else {
+                        End();
                         cancel();
                     }
                 }

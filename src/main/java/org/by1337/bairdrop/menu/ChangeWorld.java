@@ -25,8 +25,8 @@ import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.BAirDrop;
 public class ChangeWorld implements Listener {
-    Inventory inventory;
-    AirDrop airDrop;
+    private final Inventory inventory;
+    private final AirDrop airDrop;
 
     public ChangeWorld(AirDrop airDrop) {
         this.airDrop = airDrop;
@@ -87,7 +87,7 @@ public class ChangeWorld implements Listener {
 
             airDrop.save();
             EditAirMenu em = new EditAirMenu(airDrop);
-            getServer().getPluginManager().registerEvents(em, BAirDrop.getInstance());
+         //   getServer().getPluginManager().registerEvents(em, BAirDrop.getInstance());
             airDrop.setEditAirMenu(em);
             e.getWhoClicked().openInventory(em.getInventory());
         }

@@ -16,7 +16,7 @@ public class AirManager {
     @Nullable
     public static AirDrop getAirDropForLocation(@NotNull Location location) {
         for (AirDrop airDrop : BAirDrop.airDrops.values()) {
-            if (Objects.equals(location, airDrop.getAirLoc())) return airDrop;
+            if (Objects.equals(location, airDrop.getAirDropLocation())) return airDrop;
         }
         return null;
     }

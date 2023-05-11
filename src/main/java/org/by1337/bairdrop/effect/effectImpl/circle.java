@@ -16,21 +16,21 @@ import org.by1337.bairdrop.util.Message;
 import java.util.Objects;
 
 public class circle implements IEffect {
-    int ticks = -1;
-    int timeUpdate;
-    AirDrop airDrop;
-    boolean active = true;
-    Particle particle;
-    double radius;
-    int count;
-    double step;
-    Vector offsets;
-    double numberOfSteps;
-    double size;
-    Color color;
-    FileConfiguration cs;
-    Location loc;
-    String name;
+    private int ticks = -1;
+    private final int timeUpdate;
+    private AirDrop airDrop;
+    private boolean active = true;
+    private final Particle particle;
+    private final double radius;
+    private final int count;
+    private final double step;
+    private final Vector offsets;
+    private final double numberOfSteps;
+    private final double size;
+    private final Color color;
+    private final FileConfiguration cs;
+    private Location loc;
+    private final String name;
 
     public circle(FileConfiguration cs, String name) throws NullPointerException, IllegalArgumentException {
         this.cs = cs;
@@ -61,7 +61,7 @@ public class circle implements IEffect {
         if (airDrop.getAnyLoc() == null) {
             Message.error(Config.getMessage("effect-error-loc-is-null"));
             Message.error(Config.getMessage("effect-error-loc-is-null2"));
-            Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getAirId()));
+            Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getId()));
             return;
         } else loc = airDrop.getAnyLoc().clone();
         run();
@@ -101,6 +101,7 @@ public class circle implements IEffect {
                     if ((ticks - timeUpdate) > 0) {
                         ticks -= timeUpdate;
                     } else {
+                        End();
                         cancel();
                     }
                 }

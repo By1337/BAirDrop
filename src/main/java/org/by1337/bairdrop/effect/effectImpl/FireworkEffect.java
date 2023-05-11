@@ -22,24 +22,24 @@ import java.util.List;
 
 
 public class FireworkEffect implements IEffect {
-    int ticks = -1;
-    int timeUpdate;
-    AirDrop airDrop;
-    boolean active = true;
-    double startHeight;
-    double endHeight;
-    double stepHeight;
-    FileConfiguration cs;
-    Location loc;
-    String name;
-    List<Color> colors = new ArrayList<>();
-    Vector offsets;
+    private int ticks = -1;
+    private final int timeUpdate;
+    private AirDrop airDrop;
+    private boolean active = true;
+    private double startHeight;
+    private final double endHeight;
+    private final double stepHeight;
+    private final FileConfiguration cs;
+    private Location loc;
+    private final String name;
+    private final List<Color> colors = new ArrayList<>();
+    private final Vector offsets;
 
     public FireworkEffect(FileConfiguration cs, String name) throws NullPointerException, IllegalArgumentException {
         this.cs = cs;
         ticks = cs.getInt(String.format("effects.%s.ticks", name));
         timeUpdate = cs.getInt(String.format("effects.%s.timeUpdate", name));
-        for(String pr : cs.getStringList(String.format("effects.%s.colors", name))){
+        for (String pr : cs.getStringList(String.format("effects.%s.colors", name))) {
             colors.add(RGBHelper.getColorWithRgb(pr));
         }
         this.name = name;
@@ -60,7 +60,7 @@ public class FireworkEffect implements IEffect {
         if (airDrop.getAnyLoc() == null) {
             Message.error(Config.getMessage("effect-error-loc-is-null"));
             Message.error(Config.getMessage("effect-error-loc-is-null2"));
-            Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getAirId()));
+            Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getId()));
             return;
         } else loc = airDrop.getAnyLoc().clone();
         run();
@@ -106,6 +106,7 @@ public class FireworkEffect implements IEffect {
                     if ((ticks - timeUpdate) > 0) {
                         ticks -= timeUpdate;
                     } else {
+                        End();
                         cancel();
                     }
                 }

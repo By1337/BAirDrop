@@ -17,23 +17,23 @@ import org.by1337.bairdrop.util.Message;
 import java.util.Objects;
 
 public class ExpandingCircle implements IEffect {
-    int ticks = -1;
-    int timeUpdate;
-    AirDrop airDrop;
-    boolean active = true;
-    Particle particle;
-    double radius;
-    double endRadius;
-    double stepRadius;
-    int count;
-    double step;
-    Vector offsets;
-    double numberOfSteps;
-    double size;
-    Color color;
-    FileConfiguration cs;
-    Location loc;
-    String name;
+    private int ticks = -1;
+    private final int timeUpdate;
+    private  AirDrop airDrop;
+    private boolean active = true;
+    private final Particle particle;
+    private double radius;
+    private final double endRadius;
+    private final double stepRadius;
+    private final int count;
+    private final double step;
+    private final Vector offsets;
+    private final double numberOfSteps;
+    private final double size;
+    private final Color color;
+    private final FileConfiguration cs;
+    private Location loc;
+    private final String name;
 
     public ExpandingCircle(FileConfiguration cs, String name) throws NullPointerException, IllegalArgumentException {
         this.cs = cs;
@@ -67,7 +67,7 @@ public class ExpandingCircle implements IEffect {
         if (airDrop.getAnyLoc() == null) {
             Message.error(Config.getMessage("effect-error-loc-is-null"));
             Message.error(Config.getMessage("effect-error-loc-is-null2"));
-            Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getAirId()));
+            Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getId()));
             return;
         } else loc = airDrop.getAnyLoc().clone();
         run();
@@ -96,12 +96,16 @@ public class ExpandingCircle implements IEffect {
                     if ((ticks - timeUpdate) > 0) {
                         ticks -= timeUpdate;
                     } else {
+                        End();
                         cancel();
                     }
                 }
                 radius += stepRadius;
-                if (radius >= endRadius)
-                    active = false;
+                if (radius >= endRadius){
+                    End();
+                    cancel();
+                }
+
             }
         }.runTaskTimerAsynchronously(BAirDrop.getInstance(), timeUpdate, timeUpdate);
     }

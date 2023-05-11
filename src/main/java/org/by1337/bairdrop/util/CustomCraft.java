@@ -1,6 +1,5 @@
 package org.by1337.bairdrop.util;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -8,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.by1337.bairdrop.customListeners.CustomEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -66,9 +66,9 @@ public class CustomCraft {
 
     public void callListeners(String listener, @NotNull Player pl) {
         try {
-            if (!BAirDrop.internalListeners.containsKey(listener))
+            if (!BAirDrop.customEventListeners.containsKey(listener))
                 return;
-            BAirDrop.internalListeners.get(listener).execute(pl, null, false, Event.CRAFT_ITEM);
+            BAirDrop.customEventListeners.get(listener).update(pl, null, CustomEvent.CRAFT_ITEM, false);
         } catch (StackOverflowError e) {
             Message.error(Config.getMessage("too-many-call"));
         }

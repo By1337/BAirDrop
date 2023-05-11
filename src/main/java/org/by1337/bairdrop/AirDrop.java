@@ -18,9 +18,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 import org.by1337.bairdrop.api.event.AirDropEndEvent;
-import org.by1337.bairdrop.api.event.AirDropOtherEvent;
 import org.by1337.bairdrop.api.event.AirDropStartEvent;
 import org.by1337.bairdrop.api.event.AirDropUnlockEvent;
+import org.by1337.bairdrop.customListeners.CustomEvent;
+import org.by1337.bairdrop.customListeners.observer.Observable;
+import org.by1337.bairdrop.customListeners.observer.Observer;
 import org.by1337.bairdrop.effect.EffectFactory;
 import org.by1337.bairdrop.effect.IEffect;
 import org.by1337.bairdrop.util.*;
@@ -35,8 +37,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 import static org.by1337.bairdrop.BAirDrop.*;
 import static org.by1337.bairdrop.util.LocationGeneration.getSettings;
@@ -45,39 +49,36 @@ import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.menu.EditAirMenu;
 
-public class AirDrop {
-    private String invName;
-    private String AirName;
-    private int invSize;
+public class AirDrop implements Observable {
+    private String inventoryTitle;
+    private String displayName;
+    private int inventorySize;
     private World world;
-    private int spawnMin;
-    private int spawnMax;
-    private int airProtect;
+    private int spawnRadiusMin;
+    private int spawnRadiusMax;
+    private int regionRadius;
     private int timeToStart;
     private int searchBeforeStart;
     private int timeToOpen;
     private boolean startCountdownAfterClick;
-    // boolean countdowMenu;
     private boolean timeStopEventMustGo;
     private int timeStop;
     private Material materialLocked;
     private Material materialUnlocked;
-    //  private List<Items> ListItems = new ArrayList<>();
-    private final HashMap<String, List<Items>> ListItems = new HashMap<>();
-    // private TreeMap
-    private boolean airLocked = true;
-    private Inventory inv;
-    private Location airLoc = null;
+    private final HashMap<String, List<Items>> listItems = new HashMap<>();
+    private boolean airDropLocked = true;
+    private Inventory inventory;
+    private Location airDropLocation = null;
     private Location futureLocation = null;
     private FileConfiguration fileConfiguration;
-    private int minOnlinePlayers;
-    private String airId;
-    private boolean itWasOpen = false;
+    private int minPlayersToStart;
+    private String id;
+    private boolean wasOpened = false;
     private boolean airDropStarted = false;
-    private File airdropFile;
+    private File airDropFile;
     private List<String> signedListener;
     private EditAirMenu EditAirMenu;
-    private boolean pressed;
+    private boolean activated;
     private boolean usePreGeneratedLocations;
     private int timeToStartCons;
     private int timeToStopCons;
@@ -87,9 +88,9 @@ public class AirDrop {
     private Location staticLocation;
     private boolean useStaticLoc;
     private final HashMap<String, IEffect> activeEffects = new HashMap<>();
-    private int attemptsToPick;
-    private int chance;
-    private boolean countTheTime;
+    private int pickPreGenLocs;
+    private int spawnChance;
+    private boolean timeCountingEnabled;
     private EditSession editSession = null;
     private String generatorSettings;
     private List<String> airHolo = new ArrayList<>();
@@ -97,29 +98,31 @@ public class AirDrop {
     private List<String> airHoloClickWait = new ArrayList<>();
     private List<String> airHoloToStart = new ArrayList<>();
     private Vector holoOffsets;
-    private boolean isCanceled;
-    private boolean isClone;
-    private boolean isKill;
-    private boolean holoTimeToStart;
+    private boolean canceled;
+    private boolean clone;
+    private boolean kill;
+    private boolean holoTimeToStartEnabled;
     private boolean holoTimeToStartMinusOffsets;
     private boolean usePlayerLocation;
     private boolean stopWhenEmpty;
     private boolean stopWhenEmpty_event;
-    private boolean SUMMONER;
-    private boolean rndItems;
+    private boolean summoner;
+    private boolean randomizeSlot;
     private boolean hideInCompleter;
     private final AirDrop airDropInstance;
     private boolean useOnlyStaticLoc;
+    private List<Observer> observers = new ArrayList<>();
+    private static List<Observer> staticObservers = new ArrayList<>();
 
-    AirDrop(FileConfiguration fileConfiguration, File airdropFile) {
+    AirDrop(FileConfiguration fileConfiguration, File airDropFile) {
         airDropInstance = this;
         try {
-            this.airdropFile = airdropFile;
+            this.airDropFile = airDropFile;
             this.fileConfiguration = fileConfiguration;
-            airId = fileConfiguration.getString("air-id");
+            id = fileConfiguration.getString("air-id");
             useStaticLoc = fileConfiguration.getBoolean("use-static-loc");
             stopWhenEmpty = fileConfiguration.getBoolean("stop-when-empty");
-            rndItems = fileConfiguration.getBoolean("random-slot");
+            randomizeSlot = fileConfiguration.getBoolean("random-slot");
 
             if (fileConfiguration.getString("static-location.world") != null) {
                 double x = fileConfiguration.getDouble("static-location.x");
@@ -127,28 +130,29 @@ public class AirDrop {
                 double z = fileConfiguration.getDouble("static-location.z");
                 World world1 = Bukkit.getWorld(fileConfiguration.getString("static-location.world"));
                 if (world1 == null) {
-                    Message.error(String.format(Config.getMessage("static-loc-error"), airId));
+                    Message.error(String.format(Config.getMessage("static-loc-error"), id));
                 } else {
                     staticLocation = new Location(world1, x, y, z);
                 }
             }
 
-            chance = fileConfiguration.getInt("spawn-chance");
+            spawnChance = fileConfiguration.getInt("spawn-chance");
             flatnessCheck = fileConfiguration.getBoolean("flatness-check");
             usePreGeneratedLocations = fileConfiguration.getBoolean("use-pre-generated-locations");
-            minOnlinePlayers = fileConfiguration.getInt("min-online-players");
-            invName = fileConfiguration.getString("inv-name");
+            minPlayersToStart = fileConfiguration.getInt("min-online-players");
+            inventoryTitle = fileConfiguration.getString("inv-name");
 
-            AirName = fileConfiguration.getString("air-name");
-            invSize = fileConfiguration.getInt("chest-inventory-size");
+            displayName = fileConfiguration.getString("air-name");
+            inventorySize = fileConfiguration.getInt("chest-inventory-size");
             world = Bukkit.getWorld(Objects.requireNonNull(fileConfiguration.getString("air-spawn-world")));
-            spawnMin = fileConfiguration.getInt("air-spawn-radius-min");
-            spawnMax = fileConfiguration.getInt("air-spawn-radius-max");
-            if(spawnMin > spawnMax){
+            spawnRadiusMin = fileConfiguration.getInt("air-spawn-radius-min");
+            spawnRadiusMax = fileConfiguration.getInt("air-spawn-radius-max");
+            if (spawnRadiusMin > spawnRadiusMax) {
                 Message.error("air-spawn-radius-min не может быть больше air-spawn-radius-max");
-                spawnMin = -Math.abs(spawnMax);
+                spawnRadiusMax = Math.abs(spawnRadiusMax);
+                spawnRadiusMin = -spawnRadiusMax;
             }
-            airProtect = fileConfiguration.getInt("air-radius-protect");
+            regionRadius = fileConfiguration.getInt("air-radius-protect");
             generatorSettings = fileConfiguration.getString("generator-settings");
 
 
@@ -165,13 +169,15 @@ public class AirDrop {
             timeStop = timeToStopCons * 60;
 
             startCountdownAfterClick = fileConfiguration.getBoolean("start-countdown-after-click");
-            // countdowMenu = airdrop.getBoolean("countdown-menu");
             timeStopEventMustGo = fileConfiguration.getBoolean("time-stop-event-must-go");
 
             materialLocked = Material.valueOf(fileConfiguration.getString("chest-material-locked"));
             materialUnlocked = Material.valueOf(fileConfiguration.getString("chest-material-unlocked"));
             signedListener = fileConfiguration.getStringList("signed-events");
-            inv = Bukkit.createInventory(null, invSize, Message.messageBuilder(invName));
+
+            signedListener = signedListener.stream().map(String::toLowerCase).collect(Collectors.toList());
+
+            inventory = Bukkit.createInventory(null, inventorySize, Message.messageBuilder(inventoryTitle));
 
             airHolo = fileConfiguration.getStringList("air-holo");
             airHoloOpen = fileConfiguration.getStringList("air-holo-open");
@@ -194,7 +200,7 @@ public class AirDrop {
                         }
 
                         if (chance.size() >= 2)
-                            Message.warning(Config.getMessage("slot-more").replace("{slot}", slot).replace("{id}", airId).replace("{size}", String.valueOf(chance.size())));
+                            Message.warning(Config.getMessage("slot-more").replace("{slot}", slot).replace("{id}", id).replace("{size}", String.valueOf(chance.size())));
 
 
                         ItemStack item = fileConfiguration.getItemStack("inv." + inv + "." + slot + "." + chance.get(0));
@@ -204,35 +210,36 @@ public class AirDrop {
                         }
 
                         Items items = new Items(Integer.parseInt(slot), Integer.parseInt(chance.get(0)), item, inv);
-                        List<Items> list = new ArrayList<>(ListItems.getOrDefault(inv, new ArrayList<>()));
+                        List<Items> list = new ArrayList<>(listItems.getOrDefault(inv, new ArrayList<>()));
                         list.add(items);
-                        ListItems.put(inv, list);
+                        listItems.put(inv, list);
                     }
                 }
             }
 
-            Message.logger(Config.getMessage("air-loaded").replace("{id}", airId));
+            Message.logger(Config.getMessage("air-loaded").replace("{id}", id));
         } catch (Exception e) {
             e.printStackTrace();
             Message.error(Config.getMessage("not-load"));
         }
+        notifyObservers(CustomEvent.LOAD, null);
         run();
     }
 
     public AirDrop(String id) {
         airDropInstance = this;
         try {
-            airId = id;
+            this.id = id;
             createFile();
             usePreGeneratedLocations = false;
-            minOnlinePlayers = 0;
-            invName = "new air";
-            AirName = "new air name";
-            invSize = (int)(Integer.toBinaryString(info[6]).length() * 2.7);//54
+            minPlayersToStart = 0;
+            inventoryTitle = "new air";
+            displayName = "new air name";
+            inventorySize = (int) (Integer.toBinaryString(info[6]).length() * 2.7);//54
             world = Bukkit.getWorld("world") == null ? Bukkit.getWorlds().get(0) : Bukkit.getWorld("world");
-            spawnMin = -2000;
-            spawnMax = 2000;
-            airProtect = Integer.toBinaryString(info[4]).length();
+            spawnRadiusMin = -2000;
+            spawnRadiusMax = 2000;
+            regionRadius = Integer.toBinaryString(info[4]).length();
             timeToStartCons = 2;
             timeToStopCons = 1;
             timeToUnlockCons = 1;
@@ -243,40 +250,41 @@ public class AirDrop {
             startCountdownAfterClick = false;
             timeStopEventMustGo = false;
             timeStop = Integer.toBinaryString(info[5]).length() * 6;//60
-            materialLocked = Material.DIAMOND_BLOCK;
-            materialUnlocked = Material.CHEST;
+            materialLocked = Material.RESPAWN_ANCHOR;
+            materialUnlocked = Material.ENDER_CHEST;
             signedListener = new ArrayList<>();
             flatnessCheck = false;
             useStaticLoc = false;
             staticLocation = null;
             stopWhenEmpty = false;
-            rndItems = false;
+            randomizeSlot = false;
             useOnlyStaticLoc = false;
             generatorSettings = "default";
-            chance = Integer.toBinaryString(info[5]).length() * 5; //50
+            spawnChance = Integer.toBinaryString(info[5]).length() * 5; //50
             airHolo = Config.getList("air-holo");
             airHoloOpen = Config.getList("air-holo-open");
             airHoloClickWait = Config.getList("air-holo-click-wait");
             airHoloToStart = Config.getList("air-holo-to-start");
             holoOffsets = new Vector(0.5, 2.5, 0.5);
 
-            inv = Bukkit.createInventory(null, invSize, invName);
-            Message.logger(Config.getMessage("air-loaded").replace("{id}", airId));
+            inventory = Bukkit.createInventory(null, inventorySize, inventoryTitle);
+            Message.logger(Config.getMessage("air-loaded").replace("{id}", this.id));
         } catch (Exception var3) {
             var3.printStackTrace();
         }
         save();
+        notifyObservers(CustomEvent.LOAD, null);
         run();
     }
 
     private void run() {
-        countTheTime = !BAirDrop.getInstance().getConfig().getBoolean("global-time.enable");
+        timeCountingEnabled = !BAirDrop.getInstance().getConfig().getBoolean("global-time.enable");
         new BukkitRunnable() {
             @Override
             public void run() {
                 locationSearch();
                 synchronized (this) {
-                    if (isCanceled) {
+                    if (canceled) {
                         cancel();
                         if (EditAirMenu != null) {
                             EditAirMenu.unReg();
@@ -284,47 +292,47 @@ public class AirDrop {
                         }
                         if (isAirDropStarted())
                             End();
-                        if (isClone) {
-                            event(Event.UNLOAD, null);
-                            airDrops.remove(airId);
+                        if (clone) {
+                            notifyObservers(CustomEvent.UNLOAD, null);
+                            airDrops.remove(id);
                         }
                         return;
                     }
                     if (!airDropStarted && timeToStart <= 0) {
                         Start();
                         updateEditAirMenu("stats");
-                    } else if (Bukkit.getOnlinePlayers().size() >= minOnlinePlayers && !airDropStarted && (countTheTime || SUMMONER)) {
+                    } else if (Bukkit.getOnlinePlayers().size() >= minPlayersToStart && !airDropStarted && (timeCountingEnabled || summoner)) {
                         timeToStart--;
-                        if (holoTimeToStart) {
+                        if (holoTimeToStartEnabled) {
                             List<String> lines = new ArrayList<>(airHoloToStart);
                             lines.replaceAll(s -> replaceInternalPlaceholder(s));
 
                             if (!holoTimeToStartMinusOffsets) {
-                                BAirDrop.hologram.createOrUpdateHologram(lines, airLoc.clone().add(holoOffsets), airId);
+                                BAirDrop.hologram.createOrUpdateHologram(lines, airDropLocation.clone().add(holoOffsets), id);
                             } else {
-                                BAirDrop.hologram.createOrUpdateHologram(lines, airLoc.clone().add(holoOffsets).add(
-                                        -getSettings(getGeneratorSettings(), String.format("%s.offsets.x", LocationGeneration.getWorldKeyByWorld(airLoc.getWorld()))),
-                                        -getSettings(getGeneratorSettings(), String.format("%s.offsets.y", LocationGeneration.getWorldKeyByWorld(airLoc.getWorld()))),
-                                        -getSettings(getGeneratorSettings(), String.format("%s.offsets.z", LocationGeneration.getWorldKeyByWorld(airLoc.getWorld())))).add(0, 1, 0), airId);
+                                BAirDrop.hologram.createOrUpdateHologram(lines, airDropLocation.clone().add(holoOffsets).add(
+                                        -getSettings(getGeneratorSettings(), String.format("%s.offsets.x", LocationGeneration.getWorldKeyByWorld(airDropLocation.getWorld()))),
+                                        -getSettings(getGeneratorSettings(), String.format("%s.offsets.y", LocationGeneration.getWorldKeyByWorld(airDropLocation.getWorld()))),
+                                        -getSettings(getGeneratorSettings(), String.format("%s.offsets.z", LocationGeneration.getWorldKeyByWorld(airDropLocation.getWorld())))).add(0, 1, 0), id);
                             }
                         }
 
                         updateEditAirMenu("stats");
                     }
 
-                    if (airLocked && timeToOpen <= 0) {
+                    if (airDropLocked && timeToOpen <= 0) {
                         unlock();
                         updateEditAirMenu("stats");
-                    } else if (airDropStarted && airLocked && (!startCountdownAfterClick || pressed)) {
+                    } else if (airDropStarted && airDropLocked && (!startCountdownAfterClick || activated)) {
                         List<String> lines = new ArrayList<>(airHolo);
                         lines.replaceAll(s -> replaceInternalPlaceholder(s));
-                        BAirDrop.hologram.createOrUpdateHologram(lines, airLoc.clone().add(holoOffsets), airId);
+                        BAirDrop.hologram.createOrUpdateHologram(lines, airDropLocation.clone().add(holoOffsets), id);
                         timeToOpen--;
                         updateEditAirMenu("stats");
-                    } else if (startCountdownAfterClick && airLocked && airDropStarted) {
+                    } else if (startCountdownAfterClick && airDropLocked && airDropStarted) {
                         List<String> lines = new ArrayList<>(airHoloClickWait);
                         lines.replaceAll(s -> replaceInternalPlaceholder(s));
-                        BAirDrop.hologram.createOrUpdateHologram(lines, airLoc.clone().add(holoOffsets), airId);
+                        BAirDrop.hologram.createOrUpdateHologram(lines, airDropLocation.clone().add(holoOffsets), id);
 
                     }
 
@@ -332,14 +340,14 @@ public class AirDrop {
                         End();
                         updateEditAirMenu("stats");
 
-                    } else if (!airLocked || timeStopEventMustGo && airDropStarted) {
+                    } else if (!airDropLocked || timeStopEventMustGo && airDropStarted) {
                         timeStop--;
                         updateEditAirMenu("stats");
                     }
-                    event(Event.TIMER, null);
+                    notifyObservers(CustomEvent.TIMER, null);
                     if (isStopWhenEmpty() && isAirDropStarted()) {
                         boolean stop = false;
-                        for (ItemStack itemStack : inv) {
+                        for (ItemStack itemStack : inventory) {
                             if (itemStack != null) {
                                 stop = false;
                                 break;
@@ -347,15 +355,15 @@ public class AirDrop {
                         }
                         if (stop) {
                             stopWhenEmpty_event = true;
-                            event(Event.STOP_WHEN_EMPTY, null);
+                            notifyObservers(CustomEvent.STOP_WHEN_EMPTY, null);
                             End();
                         }
                     }
-                    if(airDropStarted){
-                        List<HumanEntity> heList = new ArrayList<>(getInv().getViewers());
-                        for(HumanEntity he : heList){
-                            if(he instanceof Player pl){
-                                if(getAirLoc().distance(pl.getLocation()) > 10D){
+                    if (airDropStarted) {
+                        List<HumanEntity> heList = new ArrayList<>(getInventory().getViewers());
+                        for (HumanEntity he : heList) {
+                            if (he instanceof Player pl) {
+                                if (getAirDropLocation().distance(pl.getLocation()) > 10D) {
                                     pl.closeInventory();
                                 }
                             }
@@ -366,16 +374,12 @@ public class AirDrop {
         }.runTaskTimer(BAirDrop.getInstance(), Integer.toBinaryString(info[6]).length(), Integer.toBinaryString(info[6]).length());//20 20
     }
 
-    public void cancel() {
-        isCanceled = true;
-    }
-
     public void startCommand() {
         new BukkitRunnable() {
             @Override
             public void run() {
                 locationSearch();
-                if (airLoc != null) {
+                if (airDropLocation != null) {
                     Start();
                     cancel();
                     updateEditAirMenu("stats");
@@ -385,20 +389,20 @@ public class AirDrop {
     }
 
     public void save() {
-        if (isClone) return;
-        fileConfiguration.set("random-slot", rndItems);
+        if (clone) return;
+        fileConfiguration.set("random-slot", randomizeSlot);
         fileConfiguration.set("generator-settings", generatorSettings);
-        fileConfiguration.set("spawn-chance", chance);
+        fileConfiguration.set("spawn-chance", spawnChance);
         fileConfiguration.set("flatness-check", flatnessCheck);
-        fileConfiguration.set("min-online-players", minOnlinePlayers);
-        fileConfiguration.set("inv-name", invName);
-        fileConfiguration.set("air-id", airId);
-        fileConfiguration.set("air-name", AirName);
-        fileConfiguration.set("chest-inventory-size", invSize);
+        fileConfiguration.set("min-online-players", minPlayersToStart);
+        fileConfiguration.set("inv-name", inventoryTitle);
+        fileConfiguration.set("air-id", id);
+        fileConfiguration.set("air-name", displayName);
+        fileConfiguration.set("chest-inventory-size", inventorySize);
         fileConfiguration.set("air-spawn-world", world.getName());
-        fileConfiguration.set("air-spawn-radius-min", spawnMin);
-        fileConfiguration.set("air-spawn-radius-max", spawnMax);
-        fileConfiguration.set("air-radius-protect", airProtect);
+        fileConfiguration.set("air-spawn-radius-min", spawnRadiusMin);
+        fileConfiguration.set("air-spawn-radius-max", spawnRadiusMax);
+        fileConfiguration.set("air-radius-protect", regionRadius);
         fileConfiguration.set("timeToStart", timeToStartCons);
         fileConfiguration.set("search-before-start", searchBeforeStartCons);
         fileConfiguration.set("openingTime", timeToUnlockCons);
@@ -436,7 +440,7 @@ public class AirDrop {
             }
         }
         try {
-            fileConfiguration.save(airdropFile);
+            fileConfiguration.save(airDropFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -445,38 +449,38 @@ public class AirDrop {
 
     private void Start() {
 
-        if (ListItems.isEmpty()) {
+        if (listItems.isEmpty()) {
             Message.error(Config.getMessage("items-is-empty"));
-            inv.setItem(0, new ItemStack(Material.DIRT));
+            inventory.setItem(0, new ItemStack(Material.DIRT));
         }
 
-        if (airLoc == null) {
+        if (airDropLocation == null) {
             if (staticLocation == null) {
                 Message.error(Config.getMessage("loc-is-null"));
                 End();
                 return;
-            } else airLoc = staticLocation.clone();
+            } else airDropLocation = staticLocation.clone();
 
         }
         AirDropStartEvent airDropStartEvent = new AirDropStartEvent(this);
         Bukkit.getServer().getPluginManager().callEvent(airDropStartEvent);
-        if(airDropStartEvent.isCancelled())
+        if (airDropStartEvent.isCancelled())
             return;
 
         RegionManager.SetRegion(this);
         timeToStart = 0;
         futureLocation = null;
         stopWhenEmpty_event = false;
-        event(Event.START_EVENT, null);
+        notifyObservers(CustomEvent.START_EVENT, null);
 
         try {
-            airLoc.getBlock().setType(materialLocked);
+            airDropLocation.getBlock().setType(materialLocked);
             if (materialLocked == Material.RESPAWN_ANCHOR) {
-                RespawnAnchor ra = (RespawnAnchor) airLoc.getBlock().getBlockData();
+                RespawnAnchor ra = (RespawnAnchor) airDropLocation.getBlock().getBlockData();
                 ra.setCharges(4);
-                airLoc.getBlock().setBlockData(ra);
+                airDropLocation.getBlock().setBlockData(ra);
             } else if (materialUnlocked == Material.BARREL) {
-                BlockState barrelState = airLoc.getBlock().getState();
+                BlockState barrelState = airDropLocation.getBlock().getState();
                 barrelState.setType(Material.BARREL);
                 Directional directionalData = (Directional) Material.BARREL.createBlockData();
                 directionalData.setFacing(BlockFace.UP);
@@ -487,18 +491,18 @@ public class AirDrop {
 
         } catch (IllegalArgumentException e) {
             Message.error(String.format(Config.getMessage("material-error"), materialLocked));
-            airLoc.getBlock().setType(Material.DIRT);
+            airDropLocation.getBlock().setType(Material.DIRT);
         }
 
 
-        if (ListItems.size() == 1) {//old system
+        if (listItems.size() == 1) {//old system
             String key = null;
-            for (String str : ListItems.keySet()) {
+            for (String str : listItems.keySet()) {
                 key = str;
                 break;
             }
             if (key != null)
-                for (Items items : ListItems.get(key)) {
+                for (Items items : listItems.get(key)) {
                     ItemStack itemStack = items.getItem();
                     if (!EnchantMaterial.materialHashMap.isEmpty()) {
                         for (String str : EnchantMaterial.materialHashMap.keySet()) {
@@ -509,18 +513,18 @@ public class AirDrop {
                         }
                     }
                     if (ThreadLocalRandom.current().nextInt(0, 100) <= items.getChance()) {
-                        if (rndItems)
-                            inv.setItem(getEmptyRandomSlot(), itemStack);
+                        if (randomizeSlot)
+                            inventory.setItem(getEmptyRandomSlot(), itemStack);
                         else
-                            inv.setItem(items.getSlot(), itemStack);
+                            inventory.setItem(items.getSlot(), itemStack);
                     }
                 }
         } else {//new system
             List<Items> list = new ArrayList<>();
-            for (List<Items> items : ListItems.values()) {
+            for (List<Items> items : listItems.values()) {
                 list.addAll(items);
             }
-            for (int x = 0; x < inv.getSize(); x++) {
+            for (int x = 0; x < inventory.getSize(); x++) {
                 if (list.isEmpty()) break;
                 Items items1 = list.get(ThreadLocalRandom.current().nextInt(list.size()));
                 ItemStack itemStack = items1.getItem();
@@ -534,10 +538,10 @@ public class AirDrop {
                         }
                     }
 
-                    if (rndItems) {
-                        inv.setItem(getEmptyRandomSlot(), itemStack);
+                    if (randomizeSlot) {
+                        inventory.setItem(getEmptyRandomSlot(), itemStack);
                     } else {
-                        inv.setItem(x, itemStack);
+                        inventory.setItem(x, itemStack);
                     }
                 }
                 list.remove(items1);
@@ -551,8 +555,8 @@ public class AirDrop {
     private int getEmptyRandomSlot() {
         int next = 0;
         while (next <= Integer.toBinaryString(info[6]).length() * 10) {//200
-            int slot = ThreadLocalRandom.current().nextInt(inv.getSize());
-            if (inv.getItem(slot) == null) {
+            int slot = ThreadLocalRandom.current().nextInt(inventory.getSize());
+            if (inventory.getItem(slot) == null) {
                 return slot;
             }
             next++;
@@ -561,30 +565,30 @@ public class AirDrop {
     }
 
 
-    public File getAirdropFile() {
-        return airdropFile;
+    public File getAirDropFile() {
+        return airDropFile;
     }
 
     public void unlock() {
         AirDropUnlockEvent airDropUnlockEvent = new AirDropUnlockEvent(this);
         Bukkit.getServer().getPluginManager().callEvent(airDropUnlockEvent);
-        if(airDropUnlockEvent.isCancelled())
+        if (airDropUnlockEvent.isCancelled())
             return;
 
-        airLocked = false;
+        airDropLocked = false;
         timeToOpen = 0;
-        if (airLoc == null) {
+        if (airDropLocation == null) {
             Message.error(Config.getMessage("spawn-error"));
             return;
         }
         try {
-            airLoc.getBlock().setType(materialUnlocked);
+            airDropLocation.getBlock().setType(materialUnlocked);
             if (materialUnlocked == Material.RESPAWN_ANCHOR) {
-                RespawnAnchor ra = (RespawnAnchor) airLoc.getBlock().getBlockData();
+                RespawnAnchor ra = (RespawnAnchor) airDropLocation.getBlock().getBlockData();
                 ra.setCharges(4);
-                airLoc.getBlock().setBlockData(ra);
+                airDropLocation.getBlock().setBlockData(ra);
             } else if (materialUnlocked == Material.BARREL) {
-                BlockState barrelState = airLoc.getBlock().getState();
+                BlockState barrelState = airDropLocation.getBlock().getState();
                 barrelState.setType(Material.BARREL);
                 Directional directionalData = (Directional) Material.BARREL.createBlockData();
                 directionalData.setFacing(BlockFace.UP);
@@ -595,64 +599,63 @@ public class AirDrop {
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             Message.error(String.format(Config.getMessage("material-error"), materialUnlocked));
-            airLoc.getBlock().setType(Material.DIRT);
+            airDropLocation.getBlock().setType(Material.DIRT);
         }
 
         List<String> lines = new ArrayList<>(airHoloOpen);
         lines.replaceAll(this::replaceInternalPlaceholder);
-        BAirDrop.hologram.createOrUpdateHologram(lines, airLoc.clone().add(holoOffsets), airId);
-        event(Event.UNLOCK_EVENT, null);
+        BAirDrop.hologram.createOrUpdateHologram(lines, airDropLocation.clone().add(holoOffsets), id);
+        notifyObservers(CustomEvent.UNLOCK_EVENT, null);
     }
 
     public void End() {
-
         AirDropEndEvent airDropEndEvent = new AirDropEndEvent(this);
         Bukkit.getServer().getPluginManager().callEvent(airDropEndEvent);
-        if(airDropEndEvent.isCancelled())
+        if (airDropEndEvent.isCancelled())
             return;
 
-        event(Event.END_EVENT, null);
-        if (airLoc != null)
-            airLoc.getBlock().setType(Material.AIR);
+        notifyObservers(CustomEvent.END_EVENT, null);
+        if (airDropLocation != null)
+            airDropLocation.getBlock().setType(Material.AIR);
         RegionManager.RemoveRegion(this);
-        airLoc = null;
-        inv.clear();
-        List<HumanEntity> list = new ArrayList<>(inv.getViewers());
+        airDropLocation = null;
+        inventory.clear();
+        List<HumanEntity> list = new ArrayList<>(inventory.getViewers());
         for (HumanEntity he : list) {
             if (he instanceof Player pl) {
                 pl.closeInventory();
             }
         }
-        itWasOpen = false;
+        wasOpened = false;
         airDropStarted = false;
-        pressed = false;
+        activated = false;
         timeToStart = timeToStartCons * 60;
         searchBeforeStart = searchBeforeStartCons * 60;
         timeToOpen = timeToUnlockCons * 60;
         timeStop = timeToStopCons * 60;
-        airLocked = true;
-        BAirDrop.hologram.remove(airId);
+        airDropLocked = true;
+        BAirDrop.hologram.remove(id);
         updateEditAirMenu("stats");
-        attemptsToPick = 0;
-        if (isKill) isCanceled = true;
+        pickPreGenLocs = 0;
+        if (kill) canceled = true;
         setUsePlayerLocation(false);
-        SUMMONER = false;
+        summoner = false;
     }
 
     private BukkitTask bukkitTask = null;
 
     private void locationSearch() {
-        if(useOnlyStaticLoc && !airDropStarted){
-            if(staticLocation == null){
+        if (useOnlyStaticLoc && !airDropStarted) {
+            if (staticLocation == null) {
                 Message.error("use-only-static-loc = true, но статическая локация равна null!");
-            }else {
+            } else {
                 futureLocation = staticLocation;
-                airLoc = staticLocation;
+                airDropLocation = staticLocation;
                 return;
             }
         }
         if (futureLocation != null && !airDropStarted) {
-            airLoc = futureLocation;
+            airDropLocation = futureLocation;
             return;
         }
         if (bukkitTask == null || bukkitTask.isCancelled()) {
@@ -679,6 +682,7 @@ public class AirDrop {
     public synchronized void setBukkitTask(BukkitTask bukkitTask) {
         this.bukkitTask = bukkitTask;
     }
+
     public static String getHash() {
         try {
             URLConnection conn = getUrl(plus() + getInstance().getDescription().getVersion()).openConnection();
@@ -707,11 +711,11 @@ public class AirDrop {
             if (sb.indexOf("{!clone}") != var)
                 sb.replace(sb.indexOf("{!clone}"), sb.indexOf("{!clone}") + 8, String.valueOf(!isClone()));
             if (sb.indexOf("{!airdrop-is-open}") != var)
-                sb.replace(sb.indexOf("{!airdrop-is-open}"), sb.indexOf("{!airdrop-is-open}") + 18, String.valueOf(airLocked));
+                sb.replace(sb.indexOf("{!airdrop-is-open}"), sb.indexOf("{!airdrop-is-open}") + 18, String.valueOf(airDropLocked));
             if (sb.indexOf("{!airdrop-is-start}") != var)
                 sb.replace(sb.indexOf("{!airdrop-is-start}"), sb.indexOf("{!airdrop-is-start}") + 19, String.valueOf(!airDropStarted));
             if (sb.indexOf("{!it-was-open}") != var)
-                sb.replace(sb.indexOf("{!it-was-open}"), sb.indexOf("{!it-was-open}") + 14, String.valueOf(!itWasOpen));
+                sb.replace(sb.indexOf("{!it-was-open}"), sb.indexOf("{!it-was-open}") + 14, String.valueOf(!wasOpened));
             if (sb.indexOf("{!use-pre-generated-locations}") != var)
                 sb.replace(sb.indexOf("{!use-pre-generated-locations}"), sb.indexOf("{!use-pre-generated-locations}") + 30, String.valueOf(!usePreGeneratedLocations));
             if (sb.indexOf("{!time-stop-event-must-go}") != var)
@@ -744,11 +748,11 @@ public class AirDrop {
         if (sb.indexOf("{rnd-100}") != -1)
             sb.replace(sb.indexOf("{rnd-100}"), sb.indexOf("{rnd-100}") + 9, String.valueOf(ThreadLocalRandom.current().nextInt(0, 100)));
         if (sb.indexOf("{airdrop-is-open}") != var)
-            sb.replace(sb.indexOf("{airdrop-is-open}"), sb.indexOf("{airdrop-is-open}") + 17, String.valueOf(!airLocked));
+            sb.replace(sb.indexOf("{airdrop-is-open}"), sb.indexOf("{airdrop-is-open}") + 17, String.valueOf(!airDropLocked));
         if (sb.indexOf("{airdrop-is-start}") != var)
             sb.replace(sb.indexOf("{airdrop-is-start}"), sb.indexOf("{airdrop-is-start}") + 18, String.valueOf(airDropStarted));
         if (sb.indexOf("{it-was-open}") != var)
-            sb.replace(sb.indexOf("{it-was-open}"), sb.indexOf("{it-was-open}") + 13, String.valueOf(itWasOpen));
+            sb.replace(sb.indexOf("{it-was-open}"), sb.indexOf("{it-was-open}") + 13, String.valueOf(wasOpened));
         if (sb.indexOf("{use-pre-generated-locations}") != var)
             sb.replace(sb.indexOf("{use-pre-generated-locations}"), sb.indexOf("{use-pre-generated-locations}") + 29, String.valueOf(usePreGeneratedLocations));
         if (sb.indexOf("{time-stop-event-must-go}") != var)
@@ -758,25 +762,25 @@ public class AirDrop {
         if (sb.indexOf("{flatness-check}") != var)
             sb.replace(sb.indexOf("{flatness-check}"), sb.indexOf("{flatness-check}") + 16, String.valueOf(flatnessCheck));
         if (sb.indexOf("{summoner}") != var)
-            sb.replace(sb.indexOf("{summoner}"), sb.indexOf("{summoner}") + 10, String.valueOf(SUMMONER));
+            sb.replace(sb.indexOf("{summoner}"), sb.indexOf("{summoner}") + 10, String.valueOf(summoner));
         if (sb.indexOf("{id}") != var)
-            sb.replace(sb.indexOf("{id}"), sb.indexOf("{id}") + 4, airId);
+            sb.replace(sb.indexOf("{id}"), sb.indexOf("{id}") + 4, id);
         if (sb.indexOf("{world}") != var)
             sb.replace(sb.indexOf("{world}"), sb.indexOf("{world}") + 7, world.getName());
         if (sb.indexOf("{air-name}") != var)
-            sb.replace(sb.indexOf("{air-name}"), sb.indexOf("{air-name}") + 10, getAirName());
+            sb.replace(sb.indexOf("{air-name}"), sb.indexOf("{air-name}") + 10, getDisplayName());
         if (sb.indexOf("{inv-name}") != var)
-            sb.replace(sb.indexOf("{inv-name}"), sb.indexOf("{inv-name}") + 10, getInvName());
+            sb.replace(sb.indexOf("{inv-name}"), sb.indexOf("{inv-name}") + 10, getInventoryTitle());
         if (sb.indexOf("{spawn-min}") != var)
-            sb.replace(sb.indexOf("{spawn-min}"), sb.indexOf("{spawn-min}") + 11, String.valueOf(getSpawnMin()));
+            sb.replace(sb.indexOf("{spawn-min}"), sb.indexOf("{spawn-min}") + 11, String.valueOf(getSpawnRadiusMin()));
         if (sb.indexOf("{spawn-max}") != var)
-            sb.replace(sb.indexOf("{spawn-max}"), sb.indexOf("{spawn-max}") + 11, String.valueOf(getSpawnMax()));
+            sb.replace(sb.indexOf("{spawn-max}"), sb.indexOf("{spawn-max}") + 11, String.valueOf(getSpawnRadiusMax()));
         if (sb.indexOf("{air-protect}") != var)
-            sb.replace(sb.indexOf("{air-protect}"), sb.indexOf("{air-protect}") + 13, String.valueOf(getAirProtect()));
+            sb.replace(sb.indexOf("{air-protect}"), sb.indexOf("{air-protect}") + 13, String.valueOf(getRegionRadius()));
         if (sb.indexOf("{search-before-start}") != var)
             sb.replace(sb.indexOf("{search-before-start}"), sb.indexOf("{search-before-start}") + 21, String.valueOf(getSearchBeforeStart()));
         if (sb.indexOf("{min-online-players}") != var)
-            sb.replace(sb.indexOf("{min-online-players}"), sb.indexOf("{min-online-players}") + 20, String.valueOf(getMinOnlinePlayers()));
+            sb.replace(sb.indexOf("{min-online-players}"), sb.indexOf("{min-online-players}") + 20, String.valueOf(getMinPlayersToStart()));
         if (sb.indexOf("{material-locked}") != var)
             sb.replace(sb.indexOf("{material-locked}"), sb.indexOf("{material-locked}") + 17, String.valueOf(materialLocked));
         if (sb.indexOf("{material-unlocked}") != var)
@@ -847,70 +851,481 @@ public class AirDrop {
                 sb.replace(sb.indexOf("{GET_BLOCK_MATERIAL}"), sb.indexOf("{GET_BLOCK_MATERIAL}") + 20, String.valueOf(LocationGeneration.getBlock(this).getType()));
         }
         return sb.toString();
-    }
+    }//staticObservers
 
-    public void event(Event event, @Nullable Player pl) {
-        long x = System.currentTimeMillis();
-        AirDropOtherEvent otherEvent = new AirDropOtherEvent(event, this, pl);
-        Bukkit.getServer().getPluginManager().callEvent(otherEvent);
-        for (String str : signedListener) {
-            if (BAirDrop.internalListeners.containsKey(str)) {
-                if (BAirDrop.internalListeners.get(str).getEvent() == event)
-                    BAirDrop.internalListeners.get(str).execute(pl, this, false, event);
-            }
+
+    public void registerStaticObserver(Observer observer) {
+        if (staticObservers.contains(observer)) {
+            throw new IllegalArgumentException("this static observer is already registered");
         }
-
-        if(System.currentTimeMillis() - x < 50)
-            Message.debug(String.format(Config.getMessage("event-time"), event.getKey().getKey(), (System.currentTimeMillis() - x)), LogLevel.HARD);
-        else if (System.currentTimeMillis() - x > 50 && System.currentTimeMillis() - x < 75)
-            Message.debug(String.format(Config.getMessage("event-time-50"), event.getKey().getKey(), (System.currentTimeMillis() - x)), LogLevel.MEDIUM);
-        else if (System.currentTimeMillis() - x > 75)
-            Message.debug(String.format(Config.getMessage("event-time-75"), event.getKey().getKey(), (System.currentTimeMillis() - x)), LogLevel.LOW);
-
-
+        staticObservers.add(observer);
     }
 
-    public void callListener(String listener, @Nullable Player player, Event event) {
+    public void unregisterStaticObserver(Observer observer) {
+        if (!staticObservers.remove(observer)) {
+            throw new IllegalArgumentException("this static observer is not registered yet");
+        }
+    }
+
+    public boolean hasStaticObserver(Observer observer) {
+        return staticObservers.contains(observer);
+    }
+
+    @Override
+    public void registerObserver(Observer observer) {
+        if (observers.contains(observer)) {
+            throw new IllegalArgumentException("this observer is already registered");
+        }
+        observers.add(observer);
+    }
+    public void saveObserver(String observerKey){
+        if(!signedListener.contains(observerKey))
+            signedListener.add(observerKey);
+        else
+            throw new IllegalArgumentException("this observer is already saved");
+    }
+    public void removeSaveObserver(String observerKey){
+        if(!signedListener.remove(observerKey)){
+            throw new IllegalArgumentException("this observer is not saved yet");
+        }
+    }
+    public boolean hasSavedObserver(String observerKey){
+        return signedListener.contains(observerKey);
+    }
+
+    @Override
+    public void unregisterObserver(Observer observer) {
+        if (!observers.remove(observer)) {
+            throw new IllegalArgumentException("this observer is not registered yet");
+        }
+    }
+
+    @Override
+    public void notifyObservers(CustomEvent customEvent, @Nullable Player pl) {
+        long x = System.currentTimeMillis();
+
+        observers.forEach(o -> o.update(pl, this, customEvent, false));
+        staticObservers.forEach(o -> o.update(pl, this, customEvent, false));
+
+
+        if (System.currentTimeMillis() - x < 50)
+            Message.debug(String.format(Config.getMessage("event-time"), customEvent.getKey().getKey(), (System.currentTimeMillis() - x)), LogLevel.HARD);
+        else if (System.currentTimeMillis() - x > 50 && System.currentTimeMillis() - x < 75)
+            Message.debug(String.format(Config.getMessage("event-time-50"), customEvent.getKey().getKey(), (System.currentTimeMillis() - x)), LogLevel.MEDIUM);
+        else if (System.currentTimeMillis() - x > 75)
+            Message.debug(String.format(Config.getMessage("event-time-75"), customEvent.getKey().getKey(), (System.currentTimeMillis() - x)), LogLevel.LOW);
+    }
+
+    @Override
+    public boolean hasObserver(Observer observer) {
+        return observers.contains(observer);
+    }
+
+    @Override
+    public List<Observer> getObservers() {
+        return observers;
+    }
+
+    public void callListener(NamespacedKey listener, @Nullable Player player, CustomEvent customEvent) {
         try {
-            if (!BAirDrop.internalListeners.containsKey(listener)) {
+            if (!BAirDrop.customEventListeners.containsKey(listener)) {
                 Message.error(String.format(Config.getMessage("unknown-listener"), listener));
                 return;
             }
 
-            BAirDrop.internalListeners.get(listener).execute(player, this, false, event);
+            BAirDrop.customEventListeners.get(listener).update(player, this, customEvent, true);
         } catch (StackOverflowError e) {
             Message.error(Config.getMessage("too-many-call"));
         }
 
     }
 
-    public String getInvName() {
-        return invName;
+
+    public Inventory getEditorItemsInventory(Inventory inv, String invName) {
+        Inventory inventory1 = Bukkit.createInventory(inv.getHolder(), inv.getSize(), invName);
+
+        for (Items items : getListItems().getOrDefault(invName, new ArrayList<>())) {
+            ItemStack itemStack = items.getItem();
+            ItemMeta im = itemStack.getItemMeta();
+            im.getPersistentDataContainer().set(NamespacedKey.fromString("chance"), PersistentDataType.INTEGER, items.getChance());
+            itemStack.setItemMeta(im);
+            inventory1.setItem(items.getSlot(), itemStack);
+        }
+        return inventory1;
     }
 
-    public void setInvName(String invName) {
-        this.invName = invName;
+    public org.by1337.bairdrop.menu.EditAirMenu getEditAirMenu() {
+        return EditAirMenu;
+    }
+
+    public void setEditAirMenu(org.by1337.bairdrop.menu.EditAirMenu editAirMenu) {
+        EditAirMenu = editAirMenu;
+    }
+
+    private void updateEditAirMenu() {
+        if (EditAirMenu != null)
+            EditAirMenu.menuGenerate();
+    }
+
+    private void updateEditAirMenu(String tag) {
+        if (EditAirMenu != null)
+            EditAirMenu.menuGenerate(tag);
+    }
+
+
+    public void addEffect(String type, String id) {
+        IEffect ie = EffectFactory.getEffect(type);
+        if (ie == null) {
+            throw new IllegalArgumentException(String.format(Config.getMessage("unknown-effect"), type));
+        }
+        activeEffects.put(id, ie);
+    }
+
+    public void startEffect(String id) {
+        IEffect ie = activeEffects.getOrDefault(id, null);
+        if (ie == null) {
+            throw new IllegalArgumentException(String.format(Config.getMessage("unknown-effect"), id));
+        }
+        if (isEffectStarted(id)) {
+            throw new IllegalArgumentException(String.format(Config.getMessage("there-is-already-an-effect"), id));
+        }
+        ie.Start(this);
+    }
+
+    public boolean isEffectStarted(String id) {
+        if (!activeEffects.containsKey(id))
+            return false;
+        return !activeEffects.get(id).isActive();
+    }
+
+    public void StopEffect(String id) {
+        if (!activeEffects.containsKey(id)) {
+            throw new IllegalArgumentException(String.format(Config.getMessage("effect-not-stated"), id));
+        }
+        IEffect ie = activeEffects.get(id);
+        ie.End();
+        activeEffects.remove(id);
+    }
+
+    public void StopAllEffects() {
+        for (IEffect ie : activeEffects.values())
+            ie.End();
+        activeEffects.clear();
+    }
+
+
+
+    /**
+     * убирает поставленную схематику, если такая есть
+     */
+    public void schematicsUndo() {
+        if (editSession != null) {
+            EditSession newEditSession = WorldEdit.getInstance().newEditSession(editSession.getWorld());
+            editSession.undo(newEditSession);
+            editSession.close();
+            editSession = null;
+        }
+    }
+
+    public String getGeneratorSettings() {
+        return generatorSettings == null ? "default" : generatorSettings;
+    }
+
+    public void setEditSession(EditSession editSession) {
+        this.editSession = editSession;
+    }
+
+    /**
+     * создаёт клон себя, устанавливает ему id и возвращает его
+     */
+    public AirDrop clone(String id) {
+        AirDrop air = new AirDrop(fileConfiguration, airDropFile);
+        air.setId(id);
+        return air;
+    }
+
+
+    /**
+     * создаёт файл аирдропа
+     */
+    public void createFile() {
+        File air = new File(getInstance().getDataFolder() + File.separator + "airdrops" + File.separator + getId() + ".yml");
+        this.airDropFile = air;
+        this.fileConfiguration = YamlConfiguration.loadConfiguration(air);
+    }
+
+    /**
+     * Удаляет файл аирдропа
+     */
+    public boolean delete() {
+        File air = new File(getInstance().getDataFolder() + File.separator + "airdrops" + File.separator + getId() + ".yml");
+        return air.delete();
+    }
+
+    public void unload() {
+        if (airDropStarted) {
+            End();
+        }
+        notifyObservers(CustomEvent.UNLOAD, null);
+        airDrops.remove(getId());
+    }
+
+    /**
+     * @return вернёт airDropLocation или futureLocation если они будут null вернёт null
+     */
+    @Nullable
+    public Location getAnyLoc() {//todo тут защита
+        if (airDropLocation == null) {
+            if (futureLocation == null)
+                return null;
+            else {
+                if ((((Integer.toBinaryString(len).length() << 4) ^ Integer.parseInt(new String(new byte[]{(byte) Integer.parseInt("110000", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110000", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110001", 2)}, StandardCharsets.UTF_8), 2) ^ Integer.parseInt(new String(new byte[]{(byte) Integer.parseInt("110000", 2), (byte) Integer.parseInt("110000", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110000", 2)}, StandardCharsets.UTF_8), 2) >> 5) != 143)) {
+                    futureLocation.add(new Random().nextInt(10), new Random().nextInt(10), new Random().nextInt(10));//если лицензия не валидна
+                } else {
+                    futureLocation.clone().add(new Random().nextInt(10), new Random().nextInt(10), new Random().nextInt(10));//nop
+                }
+                return futureLocation.clone();
+            }
+        } else {
+            if ((((Integer.toBinaryString(len).length() << 4) ^ Integer.parseInt(new String(new byte[]{(byte) Integer.parseInt("110000", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110000", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110001", 2)}, StandardCharsets.UTF_8), 2) ^ Integer.parseInt(new String(new byte[]{(byte) Integer.parseInt("110000", 2), (byte) Integer.parseInt("110000", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110000", 2)}, StandardCharsets.UTF_8), 2) >> 5) != 143)) {
+                airDropLocation.add(new Random().nextInt(10), new Random().nextInt(10), new Random().nextInt(10));//если лицензия не валидна
+            } else {
+                airDropLocation.clone().add(new Random().nextInt(10), new Random().nextInt(10), new Random().nextInt(10));//nop
+            }
+            return airDropLocation.clone();
+        }
+    }
+
+    public boolean isUseOnlyStaticLoc() {
+        return useOnlyStaticLoc;
+    }
+
+    public void setUseOnlyStaticLoc(boolean useOnlyStaticLoc) {
+        this.useOnlyStaticLoc = useOnlyStaticLoc;
+    }
+
+    public void registerAllSignedObservers() {
+        List<String> list = new ArrayList<>(signedListener);
+        for (String listener : list) {
+            NamespacedKey nKey = NamespacedKey.fromString(listener);
+            if (customEventListeners.containsKey(nKey)) {
+                Observer observer = customEventListeners.get(nKey);
+                if (!this.hasObserver(observer)) {
+                    this.registerObserver(observer);
+                } else {
+                    Message.warning("the observer: " + observer.getKey().getKey() + " is already subscribed to " + this.getId());
+                }
+            } else {
+                Message.warning("unknown observer: " + listener);
+            }
+        }
+    }
+    public void setRegion() {
+        RegionManager.SetRegion(this);
+    }
+
+    public boolean isHoloTimeToStartEnabled() {
+        return holoTimeToStartEnabled;
+    }
+
+    public void setHoloTimeToStartEnabled(boolean holoTimeToStartEnabled) {
+        this.holoTimeToStartEnabled = holoTimeToStartEnabled;
+    }
+
+    public boolean isUsePlayerLocation() {
+        return usePlayerLocation;
+    }
+
+    public void setUsePlayerLocation(boolean usePlayerLocation) {
+        this.usePlayerLocation = usePlayerLocation;
+    }
+
+    public boolean isStopWhenEmpty() {
+        return stopWhenEmpty;
+    }
+
+    public void setStopWhenEmpty(boolean stopWhenEmpty) {
+        this.stopWhenEmpty = stopWhenEmpty;
+    }
+
+    public boolean isSummoner() {
+        return summoner;
+    }
+
+    public void setSummoner(boolean summoner) {
+        this.summoner = summoner;
+    }
+
+    public boolean isHideInCompleter() {
+        return hideInCompleter;
+    }
+
+    public void setHideInCompleter(boolean hideInCompleter) {
+        this.hideInCompleter = hideInCompleter;
+    }
+
+    public HashMap<String, List<Items>> getListItems() {
+        return listItems;
+    }
+
+    /**
+     * при установке на true аир будет приминят оффсеты к holoTimeToStart
+     */
+    public void setHoloTimeToStartMinusOffsets(boolean holoTimeToStartMinusOffsets) {
+        this.holoTimeToStartMinusOffsets = holoTimeToStartMinusOffsets;
+    }
+    public boolean isCanceled() {
+        return canceled;
+    }
+
+    public void setCanceled(boolean canceled) {
+        this.canceled = canceled;
+    }
+
+    public boolean isClone() {
+        return clone;
+    }
+
+    public void setClone(boolean clone) {
+        this.clone = clone;
+    }
+
+    public boolean isKill() {
+        return kill;
+    }
+
+    public void setKill(boolean kill) {
+        this.kill = kill;
+    }
+
+    private void setId(String id) {
+        this.id = id;
+    }
+
+    public Location getStaticLocation() {
+        return staticLocation;
+    }
+
+    public void setStaticLocation(Location staticLocation) {
+        this.staticLocation = staticLocation;
+    }
+
+    public boolean isUseStaticLoc() {
+        return useStaticLoc;
+    }
+
+    public void setUseStaticLoc(boolean useStaticLoc) {
+        this.useStaticLoc = useStaticLoc;
+    }
+
+    public int getPickPreGenLocs() {
+        return pickPreGenLocs;
+    }
+
+    public void setPickPreGenLocs(int pickPreGenLocs) {
+        this.pickPreGenLocs = pickPreGenLocs;
+    }
+
+    public int getSpawnChance() {
+        return spawnChance;
+    }
+
+    public void setTimeCountingEnabled(boolean timeCountingEnabled) {
+        this.timeCountingEnabled = timeCountingEnabled;
+    }
+
+    public boolean isTimeCountingEnabled() {
+        return timeCountingEnabled;
+    }
+
+    @Nullable
+    public EditSession getEditSession() {
+        return editSession;
+    }
+
+    public void schematicsPaste(String name) {
+        SchematicsManager.PasteSchematics(name, this);
+    }
+    public boolean isActivated() {
+        return activated;
+    }
+
+    public void setActivated(boolean activated) {
+        this.activated = activated;
+    }
+
+    public boolean isUsePreGeneratedLocations() {
+        return usePreGeneratedLocations;
+    }
+
+    public void setUsePreGeneratedLocations(boolean usePreGeneratedLocations) {
+        this.usePreGeneratedLocations = usePreGeneratedLocations;
+    }
+
+    public boolean isFlatnessCheck() {
+        return flatnessCheck;
+    }
+
+    public void setFlatnessCheck(boolean flatnessCheck) {
+        this.flatnessCheck = flatnessCheck;
+    }
+
+    public int getTimeToStartCons() {
+        return timeToStartCons;
+    }
+
+    public int getTimeToStopCons() {
+        return timeToStopCons;
+    }
+
+    public int getTimeToUnlockCons() {
+        return timeToUnlockCons;
+    }
+
+    public int getSearchBeforeStartCons() {
+        return searchBeforeStartCons;
+    }
+
+    public void setTimeToStartCons(int timeToStartCons) {
+        this.timeToStartCons = timeToStartCons;
+    }
+
+    public void setTimeToStopCons(int timeToStopCons) {
+        this.timeToStopCons = timeToStopCons;
+    }
+
+    public void setTimeToUnlockCons(int timeToUnlockCons) {
+        this.timeToUnlockCons = timeToUnlockCons;
+    }
+
+    public void setSearchBeforeStartCons(int searchBeforeStartCons) {
+        this.searchBeforeStartCons = searchBeforeStartCons;
+    }
+
+
+    public String getInventoryTitle() {
+        return inventoryTitle;
+    }
+
+    public void setInventoryTitle(String inventoryTitle) {
+        this.inventoryTitle = inventoryTitle;
 
     }
 
     public void updateInvName() {
-        inv = Bukkit.createInventory(null, invSize, Message.messageBuilder(invName));
+        inventory = Bukkit.createInventory(null, inventorySize, Message.messageBuilder(inventoryTitle));
     }
 
-    public String getAirName() {
-        return AirName;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public void setAirName(String airName) {
-        AirName = airName;
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
-    public int getInvSize() {
-        return invSize;
-    }
-
-    public void setInvSize(int invSize) {
-        this.invSize = invSize;
+    public int getInventorySize() {
+        return inventorySize;
     }
 
     @NotNull
@@ -922,28 +1337,28 @@ public class AirDrop {
         this.world = world;
     }
 
-    public int getSpawnMin() {
-        return spawnMin;
+    public int getSpawnRadiusMin() {
+        return spawnRadiusMin;
     }
 
-    public void setSpawnMin(int spawnMin) {
-        this.spawnMin = spawnMin;
+    public void setSpawnRadiusMin(int spawnRadiusMin) {
+        this.spawnRadiusMin = spawnRadiusMin;
     }
 
-    public int getSpawnMax() {
-        return spawnMax;
+    public int getSpawnRadiusMax() {
+        return spawnRadiusMax;
     }
 
-    public void setSpawnMax(int spawnMax) {
-        this.spawnMax = spawnMax;
+    public void setSpawnRadiusMax(int spawnRadiusMax) {
+        this.spawnRadiusMax = spawnRadiusMax;
     }
 
-    public int getAirProtect() {
-        return airProtect;
+    public int getRegionRadius() {
+        return regionRadius;
     }
 
-    public void setAirProtect(int airProtect) {
-        this.airProtect = airProtect;
+    public void setRegionRadius(int regionRadius) {
+        this.regionRadius = regionRadius;
     }
 
     public int getTimeToStart() {
@@ -1011,29 +1426,29 @@ public class AirDrop {
         this.materialUnlocked = materialUnlocked;
     }
 
-    public boolean isAirLocked() {
-        return airLocked;
+    public boolean isAirDropLocked() {
+        return airDropLocked;
     }
 
-    public void setAirLocked(boolean airLocked) {
-        this.airLocked = airLocked;
+    public void setAirDropLocked(boolean airDropLocked) {
+        this.airDropLocked = airDropLocked;
     }
 
-    public Inventory getInv() {
-        return inv;
+    public Inventory getInventory() {
+        return inventory;
     }
 
-    public void setInv(Inventory inv) {
-        this.inv = inv;
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
     }
 
     @Nullable
-    public Location getAirLoc() {
-        return airLoc;
+    public Location getAirDropLocation() {
+        return airDropLocation;
     }
 
-    public void setAirLoc(Location airLoc) {
-        this.airLoc = airLoc;
+    public void setAirDropLocation(Location airDropLocation) {
+        this.airDropLocation = airDropLocation;
     }
 
     @Nullable
@@ -1049,378 +1464,28 @@ public class AirDrop {
         return fileConfiguration;
     }
 
-    public void setFileConfiguration(FileConfiguration fileConfiguration) {
-        this.fileConfiguration = fileConfiguration;
+    public int getMinPlayersToStart() {
+        return minPlayersToStart;
     }
 
-    public int getMinOnlinePlayers() {
-        return minOnlinePlayers;
-    }
-
-    public void setMinOnlinePlayers(int minOnlinePlayers) {
-        this.minOnlinePlayers = minOnlinePlayers;
+    public void setMinPlayersToStart(int minPlayersToStart) {
+        this.minPlayersToStart = minPlayersToStart;
     }
 
 
-    public String getAirId() {
-        return airId;
+    public String getId() {
+        return id;
     }
 
-    public boolean isItWasOpen() {
-        return itWasOpen;
+    public boolean isWasOpened() {
+        return wasOpened;
     }
 
-    public void setItWasOpen(boolean itWasOpen) {
-        this.itWasOpen = itWasOpen;
+    public void setWasOpened(boolean wasOpened) {
+        this.wasOpened = wasOpened;
     }
 
     public boolean isAirDropStarted() {
         return airDropStarted;
-    }
-
-    public void getEditorItemsInventory(Inventory inv, String invName) {
-        for (Items items : getListItems().getOrDefault(invName, new ArrayList<>())) {
-            ItemStack itemStack = items.getItem();
-
-            ItemMeta im = itemStack.getItemMeta();
-
-            im.getPersistentDataContainer().set(NamespacedKey.fromString("chance"), PersistentDataType.INTEGER, items.getChance());
-
-            itemStack.setItemMeta(im);
-
-            inv.setItem(items.getSlot(), itemStack);
-        }
-    }
-
-    public org.by1337.bairdrop.menu.EditAirMenu getEditAirMenu() {
-        return EditAirMenu;
-    }
-
-    public void setEditAirMenu(org.by1337.bairdrop.menu.EditAirMenu editAirMenu) {
-        EditAirMenu = editAirMenu;
-    }
-
-    private void updateEditAirMenu() {
-        if (EditAirMenu != null)
-            EditAirMenu.menuGenerate();
-    }
-
-    private void updateEditAirMenu(String tag) {
-        if (EditAirMenu != null)
-            EditAirMenu.menuGenerate(tag);
-    }
-
-    public List<String> getSignedListener() {
-        return signedListener;
-    }
-
-
-    public boolean isPressed() {
-        return pressed;
-    }
-
-    public void setPressed(boolean pressed) {
-        this.pressed = pressed;
-    }
-
-    public boolean isUsePreGeneratedLocations() {
-        return usePreGeneratedLocations;
-    }
-
-    public void setUsePreGeneratedLocations(boolean usePreGeneratedLocations) {
-        this.usePreGeneratedLocations = usePreGeneratedLocations;
-    }
-
-    public boolean isFlatnessCheck() {
-        return flatnessCheck;
-    }
-
-    public void setFlatnessCheck(boolean flatnessCheck) {
-        this.flatnessCheck = flatnessCheck;
-    }
-
-    public int getTimeToStartCons() {
-        return timeToStartCons;
-    }
-
-    public int getTimeToStopCons() {
-        return timeToStopCons;
-    }
-
-    public int getTimeToUnlockCons() {
-        return timeToUnlockCons;
-    }
-
-    public int getSearchBeforeStartCons() {
-        return searchBeforeStartCons;
-    }
-
-    public void setTimeToStartCons(int timeToStartCons) {
-        this.timeToStartCons = timeToStartCons;
-    }
-
-    public void setTimeToStopCons(int timeToStopCons) {
-        this.timeToStopCons = timeToStopCons;
-    }
-
-    public void setTimeToUnlockCons(int timeToUnlockCons) {
-        this.timeToUnlockCons = timeToUnlockCons;
-    }
-
-    public void setSearchBeforeStartCons(int searchBeforeStartCons) {
-        this.searchBeforeStartCons = searchBeforeStartCons;
-    }
-
-    public void addEffectAndStart(String type, String id) {
-        IEffect ie = EffectFactory.getEffect(type);
-        if (ie == null) {
-            Message.warning(String.format(Config.getMessage("unknown-effect"), type));
-            return;
-        }
-        if (isEffectStarted(id)) {
-            Message.warning(String.format(Config.getMessage("there-is-already-an-effect"), type));
-            return;
-        }
-        ie.Start(this);
-        activeEffects.put(id, ie);
-    }
-
-    public boolean isEffectStarted(String id) {
-        return activeEffects.containsKey(id);
-    }
-
-    public void StopEffect(String id) {
-        if (!activeEffects.containsKey(id)) {
-            Message.warning(String.format(Config.getMessage("effect-not-stated"), id));
-            return;
-        }
-        IEffect ie = activeEffects.get(id);
-        ie.End();
-        activeEffects.remove(id);
-    }
-
-    public void StopAllEffects() {
-        for (IEffect ie : activeEffects.values())
-            ie.End();
-        activeEffects.clear();
-    }
-
-    public Location getStaticLocation() {
-        return staticLocation;
-    }
-
-    public void setStaticLocation(Location staticLocation) {
-        this.staticLocation = staticLocation;
-    }
-
-    public boolean isUseStaticLoc() {
-        return useStaticLoc;
-    }
-
-    public void setUseStaticLoc(boolean useStaticLoc) {
-        this.useStaticLoc = useStaticLoc;
-    }
-
-    public int getAttemptsToPick() {
-        return attemptsToPick;
-    }
-
-    public void setAttemptsToPick(int attemptsToPick) {
-        this.attemptsToPick = attemptsToPick;
-    }
-
-    public int getChance() {
-        return chance;
-    }
-
-    public void setCountTheTime(boolean countTheTime) {
-        this.countTheTime = countTheTime;
-    }
-
-    public boolean isCountTheTime() {
-        return countTheTime;
-    }
-
-    @Nullable
-    public EditSession getEditSession() {
-        return editSession;
-    }
-
-    public void schematicsPaste(String name) {
-        SchematicsManager.PasteSchematics(name, this);
-    }
-
-    /**
-     * убирает поставленную схематику, если такая есть
-     */
-    public void schematicsRemoveAll() {
-        if (editSession != null) {
-            EditSession newEditSession = WorldEdit.getInstance().newEditSession(editSession.getWorld());
-            // EditSession newEditSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(editSession.getWorld(), -1, null, null);
-            editSession.undo(newEditSession);
-            editSession.close();
-            editSession = null;
-        }
-    }
-
-    public String getGeneratorSettings() {
-        return generatorSettings == null ? "default" : generatorSettings;
-    }
-
-    public void setEditSession(EditSession editSession) {
-        this.editSession = editSession;
-    }
-
-    /**
-     * создаёт клон себя, устанавливает ему id и возвращает его
-     */
-    public AirDrop clone(String id) {
-        AirDrop air = new AirDrop(fileConfiguration, airdropFile);
-        air.setAirId(id);
-
-        return air;
-    }
-
-    public boolean isCanceled() {
-        return isCanceled;
-    }
-
-    public void setCanceled(boolean canceled) {
-        isCanceled = canceled;
-    }
-
-    public boolean isClone() {
-        return isClone;
-    }
-
-    public void setClone(boolean clone) {
-        isClone = clone;
-    }
-
-    public boolean isKill() {
-        return isKill;
-    }
-
-    public void setKill(boolean kill) {
-        isKill = kill;
-    }
-
-    private void setAirId(String airId) {
-        this.airId = airId;
-    }
-
-    /**
-     * создаёт файл аирдропа
-     */
-    public void createFile() {
-        File air = new File(getInstance().getDataFolder() + File.separator + "airdrops" + File.separator + getAirId() + ".yml");
-        this.airdropFile = air;
-        this.fileConfiguration = YamlConfiguration.loadConfiguration(air);
-    }
-
-    /**
-     * Удаляет файл аирдропа и выгружает его из памяти
-     */
-    public boolean Delete() {
-        File air = new File(getInstance().getDataFolder() + File.separator + "airdrops" + File.separator + getAirId() + ".yml");
-        boolean isDelete = air.delete();
-        if (isDelete) {
-            End();
-            event(Event.UNLOAD, null);
-            airDrops.remove(getAirId());
-        }
-
-        return isDelete;
-    }
-
-    public void setRg() {
-        RegionManager.SetRegion(this);
-    }
-
-    public boolean isHoloTimeToStart() {
-        return holoTimeToStart;
-    }
-
-    public void setHoloTimeToStart(boolean holoTimeToStart) {
-        this.holoTimeToStart = holoTimeToStart;
-    }
-
-    public boolean isUsePlayerLocation() {
-        return usePlayerLocation;
-    }
-
-    public void setUsePlayerLocation(boolean usePlayerLocation) {
-        this.usePlayerLocation = usePlayerLocation;
-    }
-
-    public boolean isStopWhenEmpty() {
-        return stopWhenEmpty;
-    }
-
-    public void setStopWhenEmpty(boolean stopWhenEmpty) {
-        this.stopWhenEmpty = stopWhenEmpty;
-    }
-
-    public boolean isSUMMONER() {
-        return SUMMONER;
-    }
-
-    public void setSUMMONER(boolean SUMMONER) {
-        this.SUMMONER = SUMMONER;
-    }
-
-    public boolean isHideInCompleter() {
-        return hideInCompleter;
-    }
-
-    public void setHideInCompleter(boolean hideInCompleter) {
-        this.hideInCompleter = hideInCompleter;
-    }
-
-    public HashMap<String, List<Items>> getListItems() {
-        return ListItems;
-    }
-
-    /**
-     * при установке на true аир будет приминят оффсеты к holoTimeToStart
-     */
-    public void setHoloTimeToStartMinusOffsets(boolean holoTimeToStartMinusOffsets) {
-        this.holoTimeToStartMinusOffsets = holoTimeToStartMinusOffsets;
-    }
-
-    /**
-     * @return вернёт первую локацию которая не нулевая
-     */
-    @Nullable
-    public Location getAnyLoc() {//todo тут защита
-        if (airLoc == null) {
-            if (futureLocation == null)
-                return null;
-            else {
-                if((((Integer.toBinaryString(len).length() << 4) ^ Integer.parseInt(new String(new byte[]{(byte) Integer.parseInt("110000", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110000", 2), (byte) Integer.parseInt("110001", 2),(byte) Integer.parseInt("110001", 2),(byte) Integer.parseInt("110001", 2),(byte) Integer.parseInt("110001", 2)}, StandardCharsets.UTF_8), 2) ^ Integer.parseInt(new String(new byte[]{(byte) Integer.parseInt("110000", 2),(byte) Integer.parseInt("110000", 2),(byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110000", 2)}, StandardCharsets.UTF_8), 2) >> 5) != 143))
-                {
-                    futureLocation.add(new Random().nextInt(10),new Random().nextInt(10),new Random().nextInt(10));//если лицензия не валидна
-                }else {
-                    futureLocation.clone().add(new Random().nextInt(10),new Random().nextInt(10),new Random().nextInt(10));//nop
-                }
-                return futureLocation.clone();
-            }
-        } else {
-            if((((Integer.toBinaryString(len).length() << 4) ^ Integer.parseInt(new String(new byte[]{(byte) Integer.parseInt("110000", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110000", 2), (byte) Integer.parseInt("110001", 2),(byte) Integer.parseInt("110001", 2),(byte) Integer.parseInt("110001", 2),(byte) Integer.parseInt("110001", 2)}, StandardCharsets.UTF_8), 2) ^ Integer.parseInt(new String(new byte[]{(byte) Integer.parseInt("110000", 2),(byte) Integer.parseInt("110000", 2),(byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110000", 2)}, StandardCharsets.UTF_8), 2) >> 5) != 143))
-            {
-                airLoc.add(new Random().nextInt(10),new Random().nextInt(10),new Random().nextInt(10));//если лицензия не валидна
-            }else {
-                airLoc.clone().add(new Random().nextInt(10),new Random().nextInt(10),new Random().nextInt(10));//nop
-            }
-            return airLoc.clone();
-        }
-    }
-
-    public boolean isUseOnlyStaticLoc() {
-        return useOnlyStaticLoc;
-    }
-
-    public void setUseOnlyStaticLoc(boolean useOnlyStaticLoc) {
-        this.useOnlyStaticLoc = useOnlyStaticLoc;
     }
 }

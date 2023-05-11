@@ -17,6 +17,9 @@ import org.bukkit.persistence.PersistentDataType;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.ConfigManager.Config;
+import org.by1337.bairdrop.customListeners.CustomEvent;
+import org.by1337.bairdrop.customListeners.CustomEventListener;
+import org.by1337.bairdrop.customListeners.observer.Observer;
 import org.by1337.bairdrop.util.*;
 
 import java.util.ArrayList;
@@ -26,9 +29,9 @@ import java.util.List;
 import static org.by1337.bairdrop.menu.util.ItemUtil.getErrorItem;
 
 public class ShowAllListeners implements Listener {
-    Inventory inventory;
-    AirDrop airDrop;
-    int page = 0;
+    private final Inventory inventory;
+    private final AirDrop airDrop;
+    private int page = 0;
 
     public ShowAllListeners(AirDrop airDrop) {
         this.airDrop = airDrop;
@@ -39,10 +42,9 @@ public class ShowAllListeners implements Listener {
 
     private void generate() {
         int slot = 0;
-        for (String key : BAirDrop.internalListeners.keySet()) {
-            if (BAirDrop.internalListeners.get(key).getEvent() == Event.NONE) continue;
+        for (NamespacedKey key : BAirDrop.customEventListeners.keySet()) {
+            if (BAirDrop.customEventListeners.get(key).getEvent() == CustomEvent.NONE) continue;
             if (page > 0) {
-
                 if (slot < (53 * page)) {
                     slot++;
                     continue;
@@ -65,43 +67,43 @@ public class ShowAllListeners implements Listener {
         }
     }
 
-    public ItemStack getItem(String key) {
-        InternalListener ei = BAirDrop.internalListeners.get(key);
-        if (ei == null) {
+    public ItemStack getItem(NamespacedKey key) {
+        Observer observer = BAirDrop.customEventListeners.get(key);
+        if (observer == null) {
             return getErrorItem();
         }
-        ItemStack itemStack = new ItemStack(airDrop.getSignedListener().contains(key) ? Material.DISPENSER : Material.OBSERVER);
+        ItemStack itemStack = new ItemStack(airDrop.hasObserver(observer) ? Material.DISPENSER : Material.OBSERVER);
         ItemMeta im = itemStack.getItemMeta();
 
-        im.setDisplayName(Message.messageBuilder("&f" + key));
+        im.setDisplayName(Message.messageBuilder("&f" + key.getKey()));
 
-        im.getPersistentDataContainer().set(NamespacedKey.fromString("event"), PersistentDataType.STRING, key);
+        im.getPersistentDataContainer().set(NamespacedKey.fromString("event"), PersistentDataType.STRING, key.getKey());
         List<String> lore = new ArrayList<>(Config.getList("event-lore"));
         lore.replaceAll(s -> s
-                .replace("{description}", ei.getDescription())
-                .replace("{flag}", airDrop.getSignedListener().contains(key) + "")
-                .replace("{event}", ei.getEvent().getKey().getKey())
+                .replace("{description}", observer.getDescription())
+                .replace("{flag}", airDrop.hasObserver(observer) + "")
+                .replace("{event}", observer.getEvent().getKey().getKey())
         );
 
         int max = 0;
-        for (String cmd : ei.getCommands()) {
+        for (String cmd : observer.getCommands()) {
             lore.add("&7" + cmd);
             max++;
             if (max == 3) {
-                if (ei.getCommands().length > 3)
-                    lore.add(String.format(Config.getMessage("event-lore-max"), (ei.getCommands().length - 4)));
+                if (observer.getCommands().length > 3)
+                    lore.add(String.format(Config.getMessage("event-lore-max"), (observer.getCommands().length - 4)));
                 break;
             }
         }
-        if (ei.getDenyCommands().length != 0)
+        if (observer.getDenyCommands().length != 0)
             lore.add("&adeny-commands:");
         max = 0;
-        for (String cmd : ei.getDenyCommands()) {
+        for (String cmd : observer.getDenyCommands()) {
             lore.add("&7" + cmd);
             max++;
             if (max == 3) {
-                if (ei.getCommands().length > 3)
-                    lore.add(String.format(Config.getMessage("event-lore-max"), (ei.getCommands().length - 4)));
+                if (observer.getCommands().length > 3)
+                    lore.add(String.format(Config.getMessage("event-lore-max"), (observer.getCommands().length - 4)));
                 break;
             }
         }
@@ -188,16 +190,33 @@ public class ShowAllListeners implements Listener {
                     return;
                 }
             }
-            if (airDrop.getSignedListener().contains(key)) {
-                airDrop.getSignedListener().remove(key);
-                Message.sendMsg((Player) e.getWhoClicked(), Config.getMessage("unsubscribed"));
-            } else {
-                airDrop.getSignedListener().add(key);
-                Message.sendMsg((Player) e.getWhoClicked(), Config.getMessage("signed"));
+            Observer observer = BAirDrop.customEventListeners.getOrDefault(NamespacedKey.fromString(key), null);
+
+            if(observer == null){
+                e.setCancelled(true);
+                Message.sendMsg((Player) e.getWhoClicked(), Config.getMessage("item-error2"));
+                inventory.clear();
+                generate();
+                return;
             }
+
+            if (airDrop.hasObserver(observer)) {
+                airDrop.unregisterObserver(observer);
+                Message.sendMsg((Player) e.getWhoClicked(), Config.getMessage("unsubscribed"));
+                if(airDrop.hasSavedObserver(observer.getKey().getKey())){
+                    airDrop.removeSaveObserver(observer.getKey().getKey());
+                }
+            } else {
+                airDrop.registerObserver(observer);
+                Message.sendMsg((Player) e.getWhoClicked(), Config.getMessage("signed"));
+                if(!airDrop.hasSavedObserver(observer.getKey().getKey())){
+                    airDrop.saveObserver(observer.getKey().getKey());
+                }
+            }
+
             airDrop.save();
             e.setCancelled(true);
-            inventory.setItem(e.getSlot(), getItem(key));
+            inventory.setItem(e.getSlot(), getItem(NamespacedKey.fromString(key)));
         }
 
 
