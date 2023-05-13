@@ -211,3 +211,9 @@ help-list:
   - '&7/bair listeners <id> - просмотр всех слушателей'
   - '&7/bair js <script> - выполнить скрипт'
   - '&7/bair <tp/start/stop> <id>'
+select-air-menu-lore:
+  - "&7id: {id}"
+  - "&7До старта: {time-to-start}"
+  - "&7До открытия: {time-to-open}"
+  - "&7До окончания: {time-to-end}"
+  - "&7Мир появления: {world}"

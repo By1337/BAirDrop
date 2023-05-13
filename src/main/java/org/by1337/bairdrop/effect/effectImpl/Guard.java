@@ -10,7 +10,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.effect.EffectType;
 import org.by1337.bairdrop.effect.IEffect;
 import org.by1337.bairdrop.AirDrop;
@@ -53,9 +52,9 @@ public class Guard implements IEffect {
     public void Start(AirDrop airDrop) {
         this.airDrop = airDrop;
         if (airDrop.getAnyLoc() == null) {
-            Message.error(Config.getMessage("effect-error-loc-is-null"));
-            Message.error(Config.getMessage("effect-error-loc-is-null2"));
-            Message.error(String.format(Config.getMessage("effect-error-loc-is-null3"), airDrop.getId()));
+            Message.error(BAirDrop.getConfigMessage().getMessage("effect-error-loc-is-null"));
+            Message.error(BAirDrop.getConfigMessage().getMessage("effect-error-loc-is-null2"));
+            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("effect-error-loc-is-null3"), airDrop.getId()));
             return;
         } else loc = airDrop.getAnyLoc().clone();
         run();

@@ -18,19 +18,17 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.bukkit.Bukkit.getServer;
-import static org.bukkit.Bukkit.selectEntities;
 import org.by1337.bairdrop.AirDrop;
-import org.by1337.bairdrop.ConfigManager.Config;
-import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.BAirDrop;
+import org.by1337.bairdrop.util.Message;
+
 public class ChangeWorld implements Listener {
     private final Inventory inventory;
     private final AirDrop airDrop;
 
     public ChangeWorld(AirDrop airDrop) {
         this.airDrop = airDrop;
-        inventory = Bukkit.createInventory(null, 54, Config.getMessage("change-world-inv-name"));
+        inventory = Bukkit.createInventory(null, 54, BAirDrop.getConfigMessage().getMessage("change-world-inv-name"));
         generate();
     }
     private void generate(){
@@ -46,7 +44,7 @@ public class ChangeWorld implements Listener {
             else itemStack = new ItemStack(Material.COMMAND_BLOCK);
             ItemMeta im = itemStack.getItemMeta();
             im.setDisplayName(Message.messageBuilder("&7Мир №" + slot));
-            List<String> lore = new ArrayList<>(Config.getList("world-lore"));
+            List<String> lore = new ArrayList<>(BAirDrop.getConfigMessage().getList("world-lore"));
             lore.replaceAll(s -> s.replace("{type}", world.getEnvironment() + "").replace("{name}", world.getName()));
             lore.replaceAll(ChangeWorld::locate);
             lore.replaceAll(Message::messageBuilder);
@@ -60,10 +58,10 @@ public class ChangeWorld implements Listener {
         }
     }
     public static String locate(String string){
-        string = string.replace("NORMAL", Config.getMessage("NORMAL"));
-        string = string.replace("NETHER", Config.getMessage("NETHER"));
-        string = string.replace("THE_END", Config.getMessage("THE_END"));
-        string = string.replace("CUSTOM", Config.getMessage("CUSTOM"));
+        string = string.replace("NORMAL", BAirDrop.getConfigMessage().getMessage("NORMAL"));
+        string = string.replace("NETHER", BAirDrop.getConfigMessage().getMessage("NETHER"));
+        string = string.replace("THE_END", BAirDrop.getConfigMessage().getMessage("THE_END"));
+        string = string.replace("CUSTOM", BAirDrop.getConfigMessage().getMessage("CUSTOM"));
         return string;
     }
     @EventHandler
@@ -73,7 +71,7 @@ public class ChangeWorld implements Listener {
             ItemMeta im = e.getCurrentItem().getItemMeta();
             String world = im.getPersistentDataContainer().get(NamespacedKey.fromString("world"), PersistentDataType.STRING);
             if(world == null){
-                Message.sendMsg((Player) e.getWhoClicked(), Config.getMessage("error"));
+                Message.sendMsg((Player) e.getWhoClicked(), BAirDrop.getConfigMessage().getMessage("error"));
                 inventory.clear();
                 generate();
                 return;
@@ -83,7 +81,7 @@ public class ChangeWorld implements Listener {
             airDrop.setFutureLocation(null);
             World world1 = Bukkit.getWorld(world);
             airDrop.setWorld(world1);
-            Message.sendMsg((Player) e.getWhoClicked(), Config.getMessage("world-changed"));
+            Message.sendMsg((Player) e.getWhoClicked(), BAirDrop.getConfigMessage().getMessage("world-changed"));
 
             airDrop.save();
             EditAirMenu em = new EditAirMenu(airDrop);

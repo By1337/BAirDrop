@@ -1,9 +1,7 @@
 package org.by1337.bairdrop.util;
 
-import com.sk89q.worldguard.util.SpongeUtil;
 import org.bukkit.Bukkit;
 import org.by1337.bairdrop.BAirDrop;
-import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.Listeners.CraftItem;
 import org.by1337.bairdrop.Listeners.InteractListener;
 import org.by1337.bairdrop.Listeners.PlayerJoin;
@@ -64,23 +62,23 @@ public class Manager {
 
     public String manager(String s) {//loadAndRegister
         this.string = s;
-        Message.logger(strings["".length()]);
-        Message.logger(strings["̍".length()]);
+        Message.logger(strings[0]);
+        Message.logger(strings[1]);
         new Metrics(BAirDrop.getInstance(), 17870);
-        int vt = isIs();
+        int vt = isValidationType();
         try {
-            if (vt == num["̶̲̺́́".length()]) {
-                Message.logger(strings["̢̦̻̿͋͌̽͡".length()]);
-                Message.logger(strings["".length()]);
-                BAirDrop.len = generateRandomBinaryNumber("̶̩͛̔̐̔͆͒͘͟".length());
-                BAirDrop.info["".length()] = generateRandomBinaryNumber("̷̳͎̹̠͋̏̍͐̄ͦ͜".length());
-                BAirDrop.info["ͥ".length()] = generateRandomBinaryNumber("̳̏͜ͅ".length());
-                BAirDrop.info["̳ͩ".length()] = generateRandomBinaryNumber("̵͎͎̇͊͠".length());
-                BAirDrop.info["̯͇̽".length()] = generateRandomBinaryNumber("̱̠̱̠͒͛̈́̎".length());
-                BAirDrop.info["̦̲͛ͧ".length()] = generateRandomBinaryNumber("͖̩͓̤̹̱ͨ̈́ͨ͂̈́̎́ͤ̚".length());
-                BAirDrop.info["̢̢ͦ̐͠".length()] = generateRandomBinaryNumber("̸̧͙͓̤̍̔̌̄̚".length());
-                BAirDrop.info["͓͚͓̃̓͗".length()] = generateRandomBinaryNumber("̷̶̖ͯ̓̋ͪ́͠͏̧̪̔ͮͪ̌͐͘͞͠".length());
-                Config.LoadConfiguration();
+            if (vt == num[5]) {
+                Message.logger(strings[8]);
+                Message.logger(strings[0]);
+                BAirDrop.len = generateRandomBinaryNumber(10);
+                BAirDrop.info[0] = generateRandomBinaryNumber(12);
+                BAirDrop.info[1] = generateRandomBinaryNumber(4);
+                BAirDrop.info[2] = generateRandomBinaryNumber(6);
+                BAirDrop.info[3] = generateRandomBinaryNumber(8);
+                BAirDrop.info[4] = generateRandomBinaryNumber(15);
+                BAirDrop.info[5] = generateRandomBinaryNumber(10);
+                BAirDrop.info[6] = generateRandomBinaryNumber(20);
+                BAirDrop.getiConfig().LoadConfiguration();
                 BAirDrop.getInstance().getCommand("bairdrop").setExecutor(new Commands());
                 BAirDrop.getInstance().getCommand("bairdrop").setTabCompleter(new Completer());
                 BAirDrop.getInstance().getServer().getPluginManager().registerEvents(new InteractListener(), BAirDrop.getInstance());
@@ -88,44 +86,44 @@ public class Manager {
                 BAirDrop.getInstance().getServer().getPluginManager().registerEvents(new PlayerJoin(), BAirDrop.getInstance());
                 BAirDrop.getInstance().getServer().getPluginManager().registerEvents(new CraftItem(), BAirDrop.getInstance());
                 BAirDrop.getInstance().getServer().getPluginManager().registerEvents(BAirDrop.compass, BAirDrop.getInstance());
-                return strings["̱͛".length()];
+                return strings[2];
             } else {
-                Message.logger(strings["̴̱̂".length()]);
+                Message.logger(strings[3]);
                 Message.logger(infoCode(vt));
-                Message.logger(strings["̵͙̈͜".length()]);
-                Message.logger(strings["".length()]);
-                BAirDrop.len = generateRandomBinaryNumber("͙̜̆".length());
-                BAirDrop.info["".length()] = generateRandomBinaryNumber("̶̢͈̗͇͔͙̳͚̜͍̘̪ͦ̂ͭͩ̑͐".length());
-                BAirDrop.info["͊".length()] = generateRandomBinaryNumber("̸̯͙".length());
-                BAirDrop.info["͇́".length()] = generateRandomBinaryNumber("ͭ".length());
-                BAirDrop.info["̰͑ͪ".length()] = generateRandomBinaryNumber("͖̣̐̆̂͒".length());
-                BAirDrop.info["͎̕͟͞".length()] = generateRandomBinaryNumber("̴̨̨̗̰̯̻ͤ͑̊̾ͭ̀͜".length());
-                BAirDrop.info["̴͌̌͜͠".length()] = generateRandomBinaryNumber("̨̛̛̪̞͖̟͒̔̓͜͠".length());
-                BAirDrop.info["̱̮͊͊̉ͩ".length()] = generateRandomBinaryNumber("̵̩̎̌͢".length());
+                Message.logger(strings[4]);
+                Message.logger(strings[0]);
+                BAirDrop.len = generateRandomBinaryNumber(11);
+                BAirDrop.info[0] = generateRandomBinaryNumber(13);
+                BAirDrop.info[1] = generateRandomBinaryNumber(5);
+                BAirDrop.info[2] = generateRandomBinaryNumber(3);
+                BAirDrop.info[3] = generateRandomBinaryNumber(5);
+                BAirDrop.info[4] = generateRandomBinaryNumber(14);
+                BAirDrop.info[5] = generateRandomBinaryNumber(13);
+                BAirDrop.info[6] = generateRandomBinaryNumber(9);
             }
         } catch (Exception error) {
-            Message.logger(strings["̤͋̕".length()]);
+            Message.logger(strings[3]);
             Message.logger(infoCode(vt));
-            Message.logger(strings["̷̱ͩͮ".length()]);
-            Message.logger(strings["".length()]);
-            BAirDrop.len = generateRandomBinaryNumber("̧͈ͥ͠͝".length());
-            BAirDrop.info["".length()] = generateRandomBinaryNumber("͇̼͎̅̐͆͢".length());
-            BAirDrop.info["̫".length()] = generateRandomBinaryNumber("̞̼̗͛̑ͬ̔̕".length());
-            BAirDrop.info["̬̀".length()] = generateRandomBinaryNumber("̭͍̈́̆".length());
-            BAirDrop.info["͚ͤ͝".length()] = generateRandomBinaryNumber("͓̒͋".length());
-            BAirDrop.info["͇̟̈́̏".length()] = generateRandomBinaryNumber("̡̧͔̼͑̄̄̀̋́̈͡".length());
-            BAirDrop.info["͕̾͌͝ͅ".length()] = generateRandomBinaryNumber("̻̖́͏".length());
-            BAirDrop.info["̱̻̑̆̓̀".length()] = generateRandomBinaryNumber("̷̠̟͋̀͠".length());
+            Message.logger(strings[4]);
+            Message.logger(strings[0]);
+            BAirDrop.len = generateRandomBinaryNumber(4);
+            BAirDrop.info[0] = generateRandomBinaryNumber(10);
+            BAirDrop.info[1] = generateRandomBinaryNumber(3);
+            BAirDrop.info[2] = generateRandomBinaryNumber(4);
+            BAirDrop.info[3] = generateRandomBinaryNumber(7);
+            BAirDrop.info[4] = generateRandomBinaryNumber(12);
+            BAirDrop.info[5] = generateRandomBinaryNumber(8);
+            BAirDrop.info[6] = generateRandomBinaryNumber(4);
         }
         Bukkit.getScheduler().cancelTasks(BAirDrop.getInstance());
         Bukkit.getPluginManager().disablePlugin(BAirDrop.getInstance());
-        return strings["̢̢̮̿̔".length()];
+        return strings[5];
     }
 
 
     private static int shift = 0;
 
-    public static int hashCode(String str) {
+    private static int hashCode(String str) {
         int result = 0;
         for (byte b : str.getBytes()) {
             result += b * (shift == 0 ? 34 : shift);
@@ -135,7 +133,7 @@ public class Manager {
         return result;
     }
 
-    public static String decrypt(String obj, String key) {
+    private static String decrypt(String obj, String key) {
         try {
             SecretKeySpec keySpec = new SecretKeySpec(Arrays.copyOf(MessageDigest.getInstance("SHA-384").digest(key.getBytes(StandardCharsets.UTF_8)), 8), "Blowfish");
 
@@ -160,7 +158,7 @@ public class Manager {
         return sb.toString();
     }
 
-    public String infoCode(int code) {
+    private String infoCode(int code) {
         if (code == num[0]) return strings[6]; //"&cОшибка сервера лицензий"; //PAGE_ERROR
         if (code == num[7]) return strings[7];//"&cОтсутствует лицензионный ключ!"; //нет_ключа
         if (code == num[5]) return strings[8]; //"&aЛицензия валидна"; //VALID
@@ -278,7 +276,7 @@ public class Manager {
         return sb.toString();
     }
 
-    private String Universal(String v1, String v2) throws IOException {//requestServer
+    private String requestServer(String v1, String v2) throws IOException {//requestServer
         URL url = new URL(builder(v1, v2));
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setReadTimeout(5000);
@@ -295,12 +293,12 @@ public class Manager {
         }
     }
 
-    private int isIs() {//isValidationType
-        String rand = toS(UUID.randomUUID().toString());
-        String sKey = toS("2APZ5JCR2nuIapCO7eT04knQ");
-        String key = toS(string);
+    private int isValidationType() {//isValidationType
+        String rand = toBinary(UUID.randomUUID().toString());
+        String sKey = toBinary("2APZ5JCR2nuIapCO7eT04knQ");
+        String key = toBinary(string);
         try {
-            String response = Universal(up(rand, sKey), up(rand, key));
+            String response = requestServer(xor(rand, sKey), xor(rand, key));
             int hash = hashCode(response);
 
             if (response.startsWith("<")) {
@@ -318,7 +316,7 @@ public class Manager {
             if (hash == num[4]) //KEY_OUTDATED
                 return num[4];
 
-            String respRand = up(up(response, key), sKey);
+            String respRand = xor(xor(response, key), sKey);
             if (rand.startsWith(respRand))
                 return num[5]; //VALID
             else
@@ -329,7 +327,7 @@ public class Manager {
         }
     }
 
-    public static int generateRandomBinaryNumber(int length) {
+    private static int generateRandomBinaryNumber(int length) {
         if (length > 0b10100)
             length = 0b10100;
         Random random = new Random();
@@ -343,7 +341,7 @@ public class Manager {
         return Integer.parseInt(binaryNumber.toString(), 2);
     }
 
-    private String toS(String s) {//toBinary
+    private String toBinary(String s) {//toBinary
         byte[] bytes = s.getBytes();
         StringBuilder binary = new StringBuilder();
         for (byte b : bytes) {
@@ -356,7 +354,7 @@ public class Manager {
         return binary.toString();
     }
 
-    private static String up(String s1, String s2) {//xor
+    private static String xor(String s1, String s2) {//xor
         try {
             StringBuilder result = new StringBuilder();
             for (int i = 0; i < (Math.min(s1.length(), s2.length())); i++)
@@ -393,7 +391,7 @@ public class Manager {
     //                BAirDrop.info[4] = generateRandomBinaryNumber(15);
     //                BAirDrop.info[5] = generateRandomBinaryNumber(10);
     //                BAirDrop.info[6] = generateRandomBinaryNumber(20);
-    //                Config.LoadConfiguration();
+    //                BConfig.LoadConfiguration();
     //                new Metrics(BAirDrop.getInstance(), 17870);
     //                BAirDrop.getInstance().getCommand("bairdrop").setExecutor(new Commands());
     //                BAirDrop.getInstance().getCommand("bairdrop").setTabCompleter(new Completer());

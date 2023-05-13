@@ -9,14 +9,17 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
-import org.by1337.bairdrop.ConfigManager.Config;
+import org.by1337.bairdrop.CAirDrop;
 import org.by1337.bairdrop.Listeners.Compass;
 import org.by1337.bairdrop.menu.EditAirMenu;
 import org.by1337.bairdrop.menu.SelectAirMenu;
 import org.by1337.bairdrop.menu.ShowAllListeners;
-import org.by1337.bairdrop.scripts.Manager;
+import org.by1337.bairdrop.scripts.JsScript;
 import org.by1337.bairdrop.customListeners.CustomEvent;
-import org.by1337.bairdrop.util.GeneratorLoc;
+import org.by1337.bairdrop.LocationGenerator.GeneratorLoc;
+import org.by1337.bairdrop.scripts.Script;
+import org.by1337.bairdrop.util.InvalidCharacters;
+import org.by1337.bairdrop.util.InvalidCharactersChecker;
 import org.by1337.bairdrop.util.Message;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,22 +34,22 @@ public class Commands implements CommandExecutor {
         BAirDrop.Log(sender.getName() + " use command: " + Arrays.toString(args));
         if (sender instanceof Player pl) {
             if (args.length == 0) {
-                Message.sendMsg(pl, Config.getMessage("few-arguments"));
+                Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("few-arguments"));
                 return true;
             }
             if (args[0].equals("help")) {
                 if (!pl.hasPermission("bair.help")) {
-                    Message.sendMsg(pl, Config.getMessage("no-prem"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("no-prem"));
                     return true;
                 }
-                for (String str : Config.getList("help-list")) {
+                for (String str : BAirDrop.getConfigMessage().getList("help-list")) {
                     Message.sendMsg(pl, str);
                 }
                 return true;
             }
             if (args[0].equals("compass")) {
                 if (!pl.hasPermission("bair.compass")) {
-                    Message.sendMsg(pl, Config.getMessage("no-prem"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("no-prem"));
                     return true;
                 }
                 Player player = pl;
@@ -72,15 +75,15 @@ public class Commands implements CommandExecutor {
             }
             if (args[0].equals("js")) { // /bair js fire.js <player name>
                 if (!pl.hasPermission("bair.js")) {
-                    Message.sendMsg(pl, Config.getMessage("no-prem"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("no-prem"));
                     return true;
                 }
                 if (args.length < 2) {
-                    Message.sendMsg(pl, Config.getMessage("few-arguments"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("few-arguments"));
                     return true;
                 }
-                if (!Config.scripts.containsKey(args[1])) {
-                    Message.sendMsg(pl, String.format(Config.getMessage("unknown-script"), args[1]));
+                if (!BAirDrop.getiConfig().getScripts().containsKey(args[1])) {
+                    Message.sendMsg(pl, String.format(BAirDrop.getConfigMessage().getMessage("unknown-script"), args[1]));
                 }
                 Player player = pl;
                 if (args.length == 3) {
@@ -92,51 +95,51 @@ public class Commands implements CommandExecutor {
                     public void run() {
                         HashMap<String, Object> map = new HashMap<>();
                         map.put("player", finalPlayer);
-                        Manager manager = new Manager();
-                        manager.runJsScript(args[1], map);
+                        Script manager = new JsScript();
+                        manager.runScript(args[1], map);
                     }
                 }.runTask(getInstance());
                 return true;
             }
             if (args[0].equals("delete")) {
                 if (!pl.hasPermission("bair.delete")) {
-                    Message.sendMsg(pl, Config.getMessage("no-prem"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("no-prem"));
                     return true;
                 }
                 if (args.length == 1) {
-                    Message.sendMsg(pl, Config.getMessage("few-arguments"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("few-arguments"));
                     return true;
                 }
                 if (BAirDrop.airDrops.containsKey(args[1])) {
                     airDrops.get(args[1]).notifyObservers(CustomEvent.UNLOAD, null);
                     if (!airDrops.get(args[1]).delete())
-                        Message.sendMsg(pl, Config.getMessage("delete-fail"));
+                        Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("delete-fail"));
                     else {
                         airDrops.get(args[1]).unload();
-                        Message.sendMsg(pl, Config.getMessage("delete-good"));
+                        Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("delete-good"));
                     }
 
                     return true;
                 } else {
-                    Message.sendMsg(pl, String.format(Config.getMessage("unknown-airdrop"), args[1]));
+                    Message.sendMsg(pl, String.format(BAirDrop.getConfigMessage().getMessage("unknown-airdrop"), args[1]));
                 }
                 return true;
             }
             if (args[0].equals("get")) {
                 if (args.length == 1) {
-                    Message.sendMsg(pl, Config.getMessage("few-arguments"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("few-arguments"));
                     return true;
                 }
                 if (!pl.hasPermission("bair.get")) {
-                    Message.sendMsg(pl, Config.getMessage("no-prem"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("no-prem"));
                     return true;
                 }
                 if (!BAirDrop.summoner.getItems().containsKey(args[1])) {
-                    Message.sendMsg(pl, Config.getMessage("unknown-item"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("unknown-item"));
                     return true;
                 }
                 if (args.length >= 3) {
-                    //  Message.sendMsg(pl, Config.getMessage("few-arguments"));
+                    //  Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("few-arguments"));
                     ItemStack item = BAirDrop.summoner.getItems().get(args[1]).getItem();
                     int amount = 1;
                     if (args.length == 4) {
@@ -153,40 +156,40 @@ public class Commands implements CommandExecutor {
                     }
                     if (player.getInventory().firstEmpty() == -1) {
                         player.getLocation().getWorld().dropItem(player.getLocation(), item);
-                        Message.sendMsg(pl, String.format(Config.getMessage("get-item"), player.getName(), args[1], amount));
+                        Message.sendMsg(pl, String.format(BAirDrop.getConfigMessage().getMessage("get-item"), player.getName(), args[1], amount));
                         // Message.sendMsg(pl,"{PP} &fИгроку " + player.getName() + " был выдан " + args[1] + " x" + amount);
                     } else {
                         player.getInventory().addItem(item);
-                        Message.sendMsg(pl, String.format(Config.getMessage("get-item"), player.getName(), args[1], amount));
+                        Message.sendMsg(pl, String.format(BAirDrop.getConfigMessage().getMessage("get-item"), player.getName(), args[1], amount));
                         // Message.sendMsg(pl,"{PP} &fИгроку " + player.getName() + " был выдан " + args[1] + " x" + amount);
                     }
                     return true;
                 }
                 if (pl.getInventory().firstEmpty() == -1) {
                     pl.getLocation().getWorld().dropItem(pl.getLocation(), BAirDrop.summoner.getItems().get(args[1]).getItem());
-                    Message.sendMsg(pl, String.format(Config.getMessage("get-item"), pl.getName(), args[1], 1));
+                    Message.sendMsg(pl, String.format(BAirDrop.getConfigMessage().getMessage("get-item"), pl.getName(), args[1], 1));
                     // Message.sendMsg(pl,"{PP} &fИгроку " + pl.getName() + " был выдан " + args[1] + " x1");
                 } else {
                     pl.getInventory().addItem(BAirDrop.summoner.getItems().get(args[1]).getItem());
-                    Message.sendMsg(pl, String.format(Config.getMessage("get-item"), pl.getName(), args[1], 1));
+                    Message.sendMsg(pl, String.format(BAirDrop.getConfigMessage().getMessage("get-item"), pl.getName(), args[1], 1));
                     // Message.sendMsg(pl,"{PP} &fИгроку " + pl.getName() + " был выдан " + args[1] + " x1");
                 }
                 return true;
             }
             if (args[0].equals("reload")) {
                 if (!pl.hasPermission("bair.reload")) {
-                    Message.sendMsg(pl, Config.getMessage("no-prem"));//message.yml
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("no-prem"));//message.yml
                     return true;
                 }
                 long x = System.currentTimeMillis();
                 BAirDrop.reload();
-                Message.sendMsg(pl, String.format(Config.getMessage("reload"), System.currentTimeMillis() - x));
+                Message.sendMsg(pl, String.format(BAirDrop.getConfigMessage().getMessage("reload"), System.currentTimeMillis() - x));
                 return true;
             }
 
             if (args[0].equals("menu")) {
                 if (!pl.hasPermission("bair.menu")) {
-                    Message.sendMsg(pl, Config.getMessage("no-prem"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("no-prem"));
                     return true;
                 }
                 if (args.length == 1) {
@@ -205,78 +208,94 @@ public class Commands implements CommandExecutor {
                     pl.openInventory(em.getInventory());
 
                 } else {
-                    Message.sendMsg(pl, String.format(Config.getMessage("unknown-airdrop"), args[1]));
+                    Message.sendMsg(pl, String.format(BAirDrop.getConfigMessage().getMessage("unknown-airdrop"), args[1]));
                 }
                 return true;
             }
             if (args[0].equals("create")) {
 
                 if (!pl.hasPermission("bair.create")) {
-                    Message.sendMsg(pl, Config.getMessage("no-prem"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("no-prem"));
                     return true;
                 }
                 if (args.length == 1) {
-                    Message.sendMsg(pl, Config.getMessage("few-arguments"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("few-arguments"));
                     return true;
                 }
-                BAirDrop.airDrops.put(args[1], new AirDrop(args[1]));
-                Message.sendMsg(pl, String.format(Config.getMessage("air-create"), args[1]));
+                InvalidCharactersChecker invalidCharactersChecker = new InvalidCharacters();
+                String invalidChars = invalidCharactersChecker.getInvalidCharacters(args[1]);
+
+                if (!invalidChars.isEmpty()) {
+                    Message.sendMsg(pl, String.format("&cНедопустимые символы: %s", invalidChars));
+                    return true;
+                }
+                BAirDrop.airDrops.put(args[1], new CAirDrop(args[1]));
+                Message.sendMsg(pl, String.format(BAirDrop.getConfigMessage().getMessage("air-create"), args[1]));
                 return true;
             }
             if (args[0].equals("start")) {
                 if (!pl.hasPermission("bair.start")) {
-                    Message.sendMsg(pl, Config.getMessage("no-prem"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("no-prem"));
                     return true;
                 }
                 if (args.length == 1) {
-                    Message.sendMsg(pl, Config.getMessage("few-arguments"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("few-arguments"));
                     return true;
                 }
                 if (BAirDrop.airDrops.containsKey(args[1])) {
                     if (BAirDrop.airDrops.get(args[1]).isAirDropStarted()) {
-                        Message.sendMsg(pl, Config.getMessage("airdrop-is-started"));
+                        Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("airdrop-is-started"));
                         return true;
                     }
                     BAirDrop.airDrops.get(args[1]).startCommand();
-                    Message.sendMsg(pl, Config.getMessage("starting"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("starting"));
                 } else
-                    Message.sendMsg(pl, String.format(Config.getMessage("unknown-airdrop"), args[1]));
+                    Message.sendMsg(pl, String.format(BAirDrop.getConfigMessage().getMessage("unknown-airdrop"), args[1]));
                 return true;
             }
             if (args[0].equals("stop")) {
                 if (!pl.hasPermission("bair.stop")) {
-                    Message.sendMsg(pl, Config.getMessage("no-prem"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("no-prem"));
                     return true;
                 }
                 if (args.length == 1) {
-                    Message.sendMsg(pl, Config.getMessage("few-arguments"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("few-arguments"));
                     return true;
                 }
                 if (BAirDrop.airDrops.containsKey(args[1])) {
                     if (!BAirDrop.airDrops.get(args[1]).isAirDropStarted()) {
-                        Message.sendMsg(pl, Config.getMessage("airdrop-is-not-started"));
+                        Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("airdrop-is-not-started"));
                         return true;
                     }
-                    Message.sendMsg(pl, Config.getMessage("end"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("end"));
                     BAirDrop.airDrops.get(args[1]).End();
 
                 } else
-                    Message.sendMsg(pl, String.format(Config.getMessage("unknown-airdrop"), args[1]));
+                    Message.sendMsg(pl, String.format(BAirDrop.getConfigMessage().getMessage("unknown-airdrop"), args[1]));
                 return true;
             }
 
 
             if (args[0].equals("clone")) {
                 if (!pl.hasPermission("bair.clone")) {
-                    Message.sendMsg(pl, Config.getMessage("no-prem"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("no-prem"));
                     return true;
                 }
                 if (args.length < 2) {
-                    Message.sendMsg(pl, Config.getMessage("few-arguments"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("few-arguments"));
                     return true;
                 }
 
                 if (BAirDrop.airDrops.containsKey(args[1])) {
+
+                    InvalidCharactersChecker invalidCharactersChecker = new InvalidCharacters();
+                    String invalidChars = invalidCharactersChecker.getInvalidCharacters(args[2]);
+
+                    if (!invalidChars.isEmpty()) {
+                        Message.sendMsg(pl, String.format("&cНедопустимые символы: %s", invalidChars));
+                        return true;
+                    }
+
                     AirDrop air = BAirDrop.airDrops.get(args[1]).clone(args[2]);
                     if (args.length == 4) {
                         if (args[3].equals("-temp")) {
@@ -287,9 +306,9 @@ public class Commands implements CommandExecutor {
                     if (!air.isClone())
                         air.createFile();
                     airDrops.put(air.getId(), air);
-                    Message.sendMsg(pl, Config.getMessage("airdrop-crated"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("airdrop-crated"));
                 } else {
-                    Message.sendMsg(pl, String.format(Config.getMessage("unknown-airdrop"), args[1]));
+                    Message.sendMsg(pl, String.format(BAirDrop.getConfigMessage().getMessage("unknown-airdrop"), args[1]));
                 }
                 return true;
 
@@ -297,33 +316,33 @@ public class Commands implements CommandExecutor {
 
             if (args[0].equals("tp")) {
                 if (!pl.hasPermission("bair.tp")) {
-                    Message.sendMsg(pl, Config.getMessage("no-prem"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("no-prem"));
                     return true;
                 }
                 if (args.length == 1) {
-                    Message.sendMsg(pl, Config.getMessage("few-arguments"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("few-arguments"));
                     return true;
                 }
                 if (BAirDrop.airDrops.containsKey(args[1])) {
                     if (!BAirDrop.airDrops.get(args[1]).isAirDropStarted()) {
-                        Message.sendMsg(pl, Config.getMessage("airdrop-is-not-started"));
+                        Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("airdrop-is-not-started"));
                         return true;
                     }
                     pl.teleport(Objects.requireNonNull(airDrops.get(args[1]).getAirDropLocation()));
-                    Message.sendMsg(pl, Config.getMessage("teleportation"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("teleportation"));
                 } else {
-                    Message.sendMsg(pl, String.format(Config.getMessage("unknown-airdrop"), args[1]));
+                    Message.sendMsg(pl, String.format(BAirDrop.getConfigMessage().getMessage("unknown-airdrop"), args[1]));
                 }
                 return true;
 
             }
             if (args[0].equals("listeners")) {
                 if (!pl.hasPermission("bair.listeners")) {
-                    Message.sendMsg(pl, Config.getMessage("no-prem"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("no-prem"));
                     return true;
                 }
                 if (args.length == 1) {
-                    Message.logger(Config.getMessage("few-arguments"));
+                    Message.logger(BAirDrop.getConfigMessage().getMessage("few-arguments"));
                     return true;
                 }
                 if (BAirDrop.airDrops.containsKey(args[1])) {
@@ -332,30 +351,30 @@ public class Commands implements CommandExecutor {
 
                     pl.openInventory(sae.getInventory());
                 } else {
-                    Message.sendMsg(pl, String.format(Config.getMessage("unknown-airdrop"), args[1]));
+                    Message.sendMsg(pl, String.format(BAirDrop.getConfigMessage().getMessage("unknown-airdrop"), args[1]));
                 }
                 return true;
 
             }
             if (args[0].equals("generate")) {
                 if (!pl.hasPermission("bair.generate")) {
-                    Message.sendMsg(pl, Config.getMessage("no-prem"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("no-prem"));
                     return true;
                 }
                 if (args.length < 3) {
-                    Message.sendMsg(pl, Config.getMessage("few-arguments"));
-                    Message.sendMsg(pl, Config.getMessage("generate-using"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("few-arguments"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("generate-using"));
                     return true;
                 }
                 if (args[2].equals("stop")) {
                     GeneratorLoc.Stop(pl);
                     return true;
                 } else if (args.length < 4) {
-                    Message.sendMsg(pl, Config.getMessage("few-arguments"));
-                    Message.sendMsg(pl, Config.getMessage("generate-using"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("few-arguments"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("generate-using"));
                 }
                 if (!BAirDrop.airDrops.containsKey(args[1])) {
-                    Message.sendMsg(pl, String.format(Config.getMessage("unknown-airdrop"), args[1]));
+                    Message.sendMsg(pl, String.format(BAirDrop.getConfigMessage().getMessage("unknown-airdrop"), args[1]));
                     return true;
                 }
                 int timings;
@@ -364,8 +383,8 @@ public class Commands implements CommandExecutor {
                     timings = Integer.parseInt(args[2]);
                     count = Integer.parseInt(args[3]);
                 } catch (NumberFormatException e) {
-                    Message.sendMsg(pl, Config.getMessage("not-a-number"));
-                    Message.sendMsg(pl, Config.getMessage("generate-using"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("not-a-number"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("generate-using"));
                     return true;
                 }
                 GeneratorLoc.Start(BAirDrop.airDrops.get(args[1]), timings, count, pl);
@@ -373,87 +392,104 @@ public class Commands implements CommandExecutor {
             }
         } else {
             if (args.length == 0) {
-                Message.logger(Config.getMessage("few-arguments"));
+                Message.logger(BAirDrop.getConfigMessage().getMessage("few-arguments"));
                 return true;
             }
             if (args[0].equals("delete")) {
                 if (args.length == 1) {
-                    Message.logger(Config.getMessage("few-arguments"));
+                    Message.logger(BAirDrop.getConfigMessage().getMessage("few-arguments"));
                     return true;
                 }
                 if (BAirDrop.airDrops.containsKey(args[1])) {
                     airDrops.get(args[1]).notifyObservers(CustomEvent.UNLOAD, null);
                     if (!airDrops.get(args[1]).delete()) {
-                        Message.logger(Config.getMessage("delete-fail"));
+                        Message.logger(BAirDrop.getConfigMessage().getMessage("delete-fail"));
                     } else {
                         airDrops.get(args[1]).unload();
-                        Message.logger(Config.getMessage("delete-good"));
+                        Message.logger(BAirDrop.getConfigMessage().getMessage("delete-good"));
                     }
 
                     return true;
                 } else {
-                    Message.logger(String.format(Config.getMessage("unknown-airdrop"), args[1]));
+                    Message.logger(String.format(BAirDrop.getConfigMessage().getMessage("unknown-airdrop"), args[1]));
                 }
                 return true;
             }
             if (args[0].equals("reload")) {
                 long x = System.currentTimeMillis();
                 BAirDrop.reload();
-                Message.logger(String.format(Config.getMessage("reload"), System.currentTimeMillis() - x));
+                Message.logger(String.format(BAirDrop.getConfigMessage().getMessage("reload"), System.currentTimeMillis() - x));
                 return true;
             }
 
             if (args[0].equals("create")) {
                 if (args.length == 1) {
-                    Message.logger(Config.getMessage("few-arguments"));
+                    Message.logger(BAirDrop.getConfigMessage().getMessage("few-arguments"));
                     return true;
                 }
-                BAirDrop.airDrops.put(args[1], new AirDrop(args[1]));
-                Message.logger(String.format(Config.getMessage("air-create"), args[1]));
+                InvalidCharactersChecker invalidCharactersChecker = new InvalidCharacters();
+                String invalidChars = invalidCharactersChecker.getInvalidCharacters(args[1]);
+
+                if (!invalidChars.isEmpty()) {
+                    Message.error( String.format("Недопустимые символы: %s", invalidChars));
+                    return true;
+                }
+
+                BAirDrop.airDrops.put(args[1], new CAirDrop(args[1]));
+                Message.logger(String.format(BAirDrop.getConfigMessage().getMessage("air-create"), args[1]));
                 return true;
             }
             if (args[0].equals("start")) {
                 if (args.length == 1) {
-                    Message.logger(Config.getMessage("few-arguments"));
+                    Message.logger(BAirDrop.getConfigMessage().getMessage("few-arguments"));
                     return true;
                 }
                 if (BAirDrop.airDrops.containsKey(args[1])) {
                     if (BAirDrop.airDrops.get(args[1]).isAirDropStarted()) {
-                        Message.logger(Config.getMessage("airdrop-is-started"));
+                        Message.logger(BAirDrop.getConfigMessage().getMessage("airdrop-is-started"));
                         return true;
                     }
                     BAirDrop.airDrops.get(args[1]).startCommand();
-                    Message.logger(Config.getMessage("starting"));
+                    Message.logger(BAirDrop.getConfigMessage().getMessage("starting"));
                 } else
-                    Message.logger(String.format(Config.getMessage("unknown-airdrop"), args[1]));
+                    Message.logger(String.format(BAirDrop.getConfigMessage().getMessage("unknown-airdrop"), args[1]));
                 return true;
             }
             if (args[0].equals("stop")) {
                 if (args.length == 1) {
-                    Message.logger(Config.getMessage("few-arguments"));
+                    Message.logger(BAirDrop.getConfigMessage().getMessage("few-arguments"));
                     return true;
                 }
                 if (BAirDrop.airDrops.containsKey(args[1])) {
                     if (!BAirDrop.airDrops.get(args[1]).isAirDropStarted()) {
-                        Message.logger(Config.getMessage("airdrop-is-not-started"));
+                        Message.logger(BAirDrop.getConfigMessage().getMessage("airdrop-is-not-started"));
                         return true;
                     }
-                    Message.logger(Config.getMessage("end"));
+                    Message.logger(BAirDrop.getConfigMessage().getMessage("end"));
                     BAirDrop.airDrops.get(args[1]).End();
 
                 } else
-                    Message.logger(String.format(Config.getMessage("unknown-airdrop"), args[1]));
+                    Message.logger(String.format(BAirDrop.getConfigMessage().getMessage("unknown-airdrop"), args[1]));
                 return true;
             }
 
 
             if (args[0].equals("clone")) {////bair clone <air> <newId> -temp
                 if (args.length < 2) {
-                    Message.logger(Config.getMessage("few-arguments"));
+                    Message.logger(BAirDrop.getConfigMessage().getMessage("few-arguments"));
                     return true;
                 }
 
                 if (BAirDrop.airDrops.containsKey(args[1])) {
+
+                    InvalidCharactersChecker invalidCharactersChecker = new InvalidCharacters();
+                    String invalidChars = invalidCharactersChecker.getInvalidCharacters(args[2]);
+
+                    if (!invalidChars.isEmpty()) {
+                        Message.error(String.format("Недопустимые символы: %s", invalidChars));
+                        return true;
+                    }
+
                     AirDrop air = BAirDrop.airDrops.get(args[1]).clone(args[2]);
                     if (args.length == 4) {
                         if (args[3].equals("-temp")) {
@@ -464,28 +500,28 @@ public class Commands implements CommandExecutor {
                     if (!air.isClone())
                         air.createFile();
                     airDrops.put(air.getId(), air);
-                    Message.logger(Config.getMessage("airdrop-crated"));
+                    Message.logger(BAirDrop.getConfigMessage().getMessage("airdrop-crated"));
                     return true;
                 } else {
-                    Message.logger(String.format(Config.getMessage("unknown-airdrop"), args[1]));
+                    Message.logger(String.format(BAirDrop.getConfigMessage().getMessage("unknown-airdrop"), args[1]));
                 }
             }
 
             if (args[0].equals("generate")) {
 
                 if (args.length < 3) {
-                    Message.logger(Config.getMessage("few-arguments"));
-                    Message.logger(Config.getMessage("generate-using"));
+                    Message.logger(BAirDrop.getConfigMessage().getMessage("few-arguments"));
+                    Message.logger(BAirDrop.getConfigMessage().getMessage("generate-using"));
                 }
                 if (args[2].equals("stop")) {
                     GeneratorLoc.Stop(null);
                     return true;
                 } else if (args.length < 4) {
-                    Message.logger(Config.getMessage("few-arguments"));
-                    Message.logger(Config.getMessage("generate-using"));
+                    Message.logger(BAirDrop.getConfigMessage().getMessage("few-arguments"));
+                    Message.logger(BAirDrop.getConfigMessage().getMessage("generate-using"));
                 }
                 if (!BAirDrop.airDrops.containsKey(args[1])) {
-                    Message.logger(String.format(Config.getMessage("unknown-airdrop"), args[1]));
+                    Message.logger(String.format(BAirDrop.getConfigMessage().getMessage("unknown-airdrop"), args[1]));
                     return true;
                 }
                 int timings;
@@ -494,8 +530,8 @@ public class Commands implements CommandExecutor {
                     timings = Integer.parseInt(args[2]);
                     count = Integer.parseInt(args[3]);
                 } catch (NumberFormatException e) {
-                    Message.logger(Config.getMessage("not-a-number"));
-                    Message.logger(Config.getMessage("generate-using"));
+                    Message.logger(BAirDrop.getConfigMessage().getMessage("not-a-number"));
+                    Message.logger(BAirDrop.getConfigMessage().getMessage("generate-using"));
                     return true;
                 }
                 GeneratorLoc.Start(BAirDrop.airDrops.get(args[1]), timings, count, null);
@@ -503,11 +539,11 @@ public class Commands implements CommandExecutor {
             }
             if (args[0].equals("get")) {//bair get item name count
                 if (args.length == 1) {
-                    Message.logger(Config.getMessage("few-arguments"));
+                    Message.logger(BAirDrop.getConfigMessage().getMessage("few-arguments"));
                     return true;
                 }
                 if (!BAirDrop.summoner.getItems().containsKey(args[1])) {
-                    Message.logger(Config.getMessage("unknown-item"));
+                    Message.logger(BAirDrop.getConfigMessage().getMessage("unknown-item"));
                     return true;
                 }
                 if (args.length >= 3) {
@@ -523,16 +559,16 @@ public class Commands implements CommandExecutor {
                     }
                     Player player = Bukkit.getPlayer(args[2]);
                     if (player == null) {
-                        Message.logger(Config.getMessage("unknown-player"));
+                        Message.logger(BAirDrop.getConfigMessage().getMessage("unknown-player"));
                         return true;
                     }
                     if (player.getInventory().firstEmpty() == -1) {
                         player.getLocation().getWorld().dropItem(player.getLocation(), item);
-                        Message.logger(String.format(Config.getMessage("get-item"), player.getName(), args[1], amount));
+                        Message.logger(String.format(BAirDrop.getConfigMessage().getMessage("get-item"), player.getName(), args[1], amount));
                         //  Message.logger("{PP} &fИгроку " + player.getName() + " был выдан " + args[1] + " x" + amount);
                     } else {
                         player.getInventory().addItem(item);
-                        Message.logger(String.format(Config.getMessage("get-item"), player.getName(), args[1], amount));
+                        Message.logger(String.format(BAirDrop.getConfigMessage().getMessage("get-item"), player.getName(), args[1], amount));
                         // Message.logger("{PP} &fИгроку " + player.getName() + " был выдан " + args[1] + " x" + amount);
                     }
                     return true;
@@ -542,11 +578,11 @@ public class Commands implements CommandExecutor {
             if (args[0].equals("js")) { // /bair js fire.js <player name>
                 Player player = null;
                 if (args.length < 2) {
-                    Message.logger(Config.getMessage("few-arguments"));
+                    Message.logger(BAirDrop.getConfigMessage().getMessage("few-arguments"));
                     return true;
                 }
-                if (!Config.scripts.containsKey(args[1])) {
-                    Message.logger(String.format(Config.getMessage("unknown-script"), args[1]));
+                if (!BAirDrop.getiConfig().getScripts().containsKey(args[1])) {
+                    Message.logger(String.format(BAirDrop.getConfigMessage().getMessage("unknown-script"), args[1]));
                 }
                 if (args.length == 3) {
                     player = Bukkit.getPlayer(args[2]);
@@ -557,8 +593,8 @@ public class Commands implements CommandExecutor {
                     public void run() {
                         HashMap<String, Object> map = new HashMap<>();
                         map.put("player", finalPlayer);
-                        Manager manager = new Manager();
-                        manager.runJsScript(args[1], map);
+                        Script manager = new JsScript();
+                        manager.runScript(args[1], map);
                     }
                 }.runTask(getInstance());
                 return true;
@@ -575,7 +611,7 @@ public class Commands implements CommandExecutor {
                     e.printStackTrace();
                 }
                 if (player == null) {
-                    Message.logger(Config.getMessage("unknown-player"));
+                    Message.logger(BAirDrop.getConfigMessage().getMessage("unknown-player"));
                     return true;
                 }
 

@@ -10,19 +10,19 @@ import java.util.HashMap;
 @DontObfuscate
 public record CustomEvent(NamespacedKey key) implements Keyed {
     private static final HashMap<NamespacedKey, CustomEvent> byKey = new HashMap<>();
-    public static CustomEvent CLICK_CLOSE = registerEvent(new CustomEvent(NamespacedKey.fromString("click_close")));
-    public static CustomEvent CLICK_OPEN = registerEvent(new CustomEvent(NamespacedKey.fromString("click_open")));
-    public static CustomEvent TIMER = registerEvent(new CustomEvent(NamespacedKey.fromString("timer")));
-    public static CustomEvent START_EVENT = registerEvent(new CustomEvent(NamespacedKey.fromString("start_event")));
-    public static CustomEvent END_EVENT = registerEvent(new CustomEvent(NamespacedKey.fromString("end_event")));
-    public static CustomEvent UNLOCK_EVENT = registerEvent(new CustomEvent(NamespacedKey.fromString("unlock_event")));
-    public static CustomEvent FIRST_OPEN = registerEvent(new CustomEvent(NamespacedKey.fromString("first_open")));
-    public static CustomEvent SUMMONER = registerEvent(new CustomEvent(NamespacedKey.fromString("summoner")));
-    public static CustomEvent ACTIVATE = registerEvent(new CustomEvent(NamespacedKey.fromString("activate")));
-    public static CustomEvent STOP_WHEN_EMPTY = registerEvent(new CustomEvent(NamespacedKey.fromString("stop_when_empty")));
-    public static CustomEvent NONE = registerEvent(new CustomEvent(NamespacedKey.fromString("none")));
-    public static CustomEvent CRAFT_ITEM = registerEvent(new CustomEvent(NamespacedKey.fromString("craft_item")));
-    public static CustomEvent UNLOAD = registerEvent(new CustomEvent(NamespacedKey.fromString("unload")));
+    public static final CustomEvent CLICK_CLOSE = registerEvent(new CustomEvent(NamespacedKey.fromString("click_close")));
+    public static final CustomEvent CLICK_OPEN = registerEvent(new CustomEvent(NamespacedKey.fromString("click_open")));
+    public static final CustomEvent TIMER = registerEvent(new CustomEvent(NamespacedKey.fromString("timer")));
+    public static final CustomEvent START_EVENT = registerEvent(new CustomEvent(NamespacedKey.fromString("start_event")));
+    public static final CustomEvent END_EVENT = registerEvent(new CustomEvent(NamespacedKey.fromString("end_event")));
+    public static final CustomEvent UNLOCK_EVENT = registerEvent(new CustomEvent(NamespacedKey.fromString("unlock_event")));
+    public static final CustomEvent FIRST_OPEN = registerEvent(new CustomEvent(NamespacedKey.fromString("first_open")));
+    public static final CustomEvent SUMMONER = registerEvent(new CustomEvent(NamespacedKey.fromString("summoner")));
+    public static final CustomEvent ACTIVATE = registerEvent(new CustomEvent(NamespacedKey.fromString("activate")));
+    public static final CustomEvent STOP_WHEN_EMPTY = registerEvent(new CustomEvent(NamespacedKey.fromString("stop_when_empty")));
+    public static final CustomEvent NONE = registerEvent(new CustomEvent(NamespacedKey.fromString("none")));
+    public static final CustomEvent CRAFT_ITEM = registerEvent(new CustomEvent(NamespacedKey.fromString("craft_item")));
+    public static final CustomEvent UNLOAD = registerEvent(new CustomEvent(NamespacedKey.fromString("unload")));
    // public static CustomEvent CLONE_CREATE = registerEvent(new CustomEvent(NamespacedKey.fromString("clone_create")));
     public static CustomEvent LOAD = registerEvent(new CustomEvent(NamespacedKey.fromString("load")));
 

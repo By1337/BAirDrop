@@ -16,6 +16,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
+import org.by1337.bairdrop.CAirDrop;
 import org.by1337.bairdrop.effect.util.RGBHelper;
 import org.by1337.bairdrop.util.Message;
 
@@ -67,10 +68,10 @@ public class Compass implements Listener {
                 if(messageFound != null){
                     Message.sendMsg(pl, airDrop.replaceInternalPlaceholder(messageFound));
                 }
-                AirDrop finalAirDrop = airDrop;
+                AirDrop finalCAirDrop = airDrop;
                 if(itemStack.getType() == Material.COMPASS){
                     CompassMeta compassMeta = (CompassMeta) itemStack.getItemMeta();
-                    compassMeta.setLodestone(finalAirDrop.getAirDropLocation().clone());
+                    compassMeta.setLodestone(finalCAirDrop.getAirDropLocation().clone());
                     compassMeta.setLodestoneTracked(false);
                     itemStack.setItemMeta(compassMeta);
                 }
@@ -78,7 +79,7 @@ public class Compass implements Listener {
                     @Override
                     public void run() {
                         Location playerLocation = pl.getLocation().clone().add(0, 1.5, 0);
-                        Location targetLocation = finalAirDrop.getAirDropLocation().clone();
+                        Location targetLocation = finalCAirDrop.getAirDropLocation().clone();
 
                         Vector direction = targetLocation.toVector().subtract(playerLocation.toVector()).normalize();
                         double distance = 0.0;

@@ -14,23 +14,16 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
+import org.by1337.bairdrop.CAirDrop;
 import org.by1337.bairdrop.util.Message;
 
-import javax.print.DocFlavor;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class SelectAirMenu implements Listener {
     private final Inventory inventory;
-    private final List<String> lore = List.of(
-            "&7id: {id}",
-            "&7До старта: {time-to-start}",
-            "&7До открытия: {time-to-open}",
-            "&7До окончания: {time-to-end}",
-            "&7Мир появления: {world}"
 
-    );
     private final int taskId;
 
     public SelectAirMenu() {
@@ -52,7 +45,7 @@ public class SelectAirMenu implements Listener {
             ItemMeta im = itemStack.getItemMeta();
             im.getPersistentDataContainer().set(NamespacedKey.fromString("air_id"), PersistentDataType.STRING, airDrop.getId());
             im.setDisplayName(Message.messageBuilder(airDrop.getDisplayName()));
-            List<String> lore = new ArrayList<>(this.lore);
+            List<String> lore = new ArrayList<>(BAirDrop.getConfigMessage().getList("select-air-menu-lore"));
             lore.replaceAll(airDrop::replaceInternalPlaceholder);
             lore.replaceAll(Message::messageBuilder);
             im.setLore(lore);
@@ -73,6 +66,7 @@ public class SelectAirMenu implements Listener {
                 String key = im.getPersistentDataContainer().get(NamespacedKey.fromString("air_id"), PersistentDataType.STRING);
                 if(BAirDrop.airDrops.containsKey(key)){
                     EditAirMenu editAirMenu = new EditAirMenu(BAirDrop.airDrops.get(key));
+                    BAirDrop.airDrops.get(key).setEditAirMenu(editAirMenu);
                     e.getWhoClicked().openInventory(editAirMenu.getInventory());
                     return;
                 }

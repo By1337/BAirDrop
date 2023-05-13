@@ -6,6 +6,9 @@ import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import org.by1337.bairdrop.ConfigManager.BConfig;
+import org.by1337.bairdrop.ConfigManager.ConfigMessage;
+import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.Hologram.CMIHolo;
 import org.by1337.bairdrop.Hologram.DecentHologram;
 import org.by1337.bairdrop.Hologram.EmptyHologram;
@@ -14,13 +17,16 @@ import org.by1337.bairdrop.Listeners.Compass;
 import org.by1337.bairdrop.Listeners.CraftItem;
 import org.by1337.bairdrop.Listeners.InteractListener;
 import org.by1337.bairdrop.Listeners.PlayerJoin;
+import org.by1337.bairdrop.LocationGenerator.CGenLoc;
+import org.by1337.bairdrop.LocationGenerator.GeneratorLoc;
+import org.by1337.bairdrop.Summoner.Summoner;
+import org.by1337.bairdrop.WorldGuardApi.RegionManager;
 import org.by1337.bairdrop.command.Commands;
 import org.by1337.bairdrop.command.Completer;
 import org.by1337.bairdrop.customListeners.CustomEvent;
 import org.by1337.bairdrop.customListeners.observer.Observer;
 import org.by1337.bairdrop.effect.EffectFactory;
 import org.by1337.bairdrop.util.*;
-import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.util.Message;
 
 import javax.crypto.*;
@@ -34,7 +40,6 @@ import java.util.*;
 import java.security.MessageDigest;
 import java.util.logging.*;
 
-import static org.by1337.bairdrop.AirDrop.getHash;
 import static org.by1337.bairdrop.util.Manager.sObf;
 
 
@@ -45,7 +50,7 @@ public final class BAirDrop extends JavaPlugin {
 
     public static Summoner summoner = new Summoner();
     public static String version;
-    public static String currentVersion = "1.0.7.1";
+    public static String currentVersion = "1.0.8-beta";
     public static GlobalTimer globalTimer;
     public static HashMap<String, CustomCraft> crafts = new HashMap<>();
     public static Compass compass;
@@ -65,22 +70,26 @@ public final class BAirDrop extends JavaPlugin {
     public static IHologram hologram;
     private static Logger logger;
     public static FileHandler fh;
-    @Deprecated //todo убрать зависимость из js скрипта // используется в getInstance() сделать instance приватным
+    private static Config config;
+    private static ConfigMessage configMessage;
+    @Deprecated //todo убрать зависимость из js скрипта // используется в getInstance() сделать getInstance() приватным
     public static BAirDrop instance;
 
     @Override
     public void onEnable() {
-        ConfigurationSerialization.registerClass(GenLoc.class);
+        ConfigurationSerialization.registerClass(CGenLoc.class);
         instance = this;
-        File config = new File(instance.getDataFolder() + File.separator + "config.yml");
+        config = new BConfig();
+        configMessage = (ConfigMessage) config;
+        File config = new File(getInstance().getDataFolder() + File.separator + "config.yml");
         if (!config.exists()) {
-            instance.getLogger().info("Creating new config file, please wait");
-            instance.getConfig().options().copyDefaults(true);
-            instance.saveDefaultConfig();
+            getInstance().getLogger().info("Creating new config file, please wait");
+            getInstance().getConfig().options().copyDefaults(true);
+            getInstance().saveDefaultConfig();
         }
-        instance.saveConfig();
+        getInstance().saveConfig();
         try {
-            String lvl = instance.getConfig().getString("log-level", "LOW");
+            String lvl = getInstance().getConfig().getString("log-level", "LOW");
             logLevel = LogLevel.valueOf(lvl);
         } catch (IllegalArgumentException e) {
             Message.error(e.getLocalizedMessage());
@@ -94,21 +103,21 @@ public final class BAirDrop extends JavaPlugin {
             @Override
             public void run() {
                 long x = System.currentTimeMillis();
-//                info();
+//                licenceCheck();
 //                if (Integer.parseInt(new String(new byte[]{49, 49, 49, 49, 49, 49, 49}, StandardCharsets.UTF_8), 2) != ((Integer.toBinaryString(len).length() << 3) ^ Integer.parseInt(new String(new byte[]{48, 49, 48, 49, 49, 49, 49}, StandardCharsets.UTF_8), 2))) { //127 != 127 при валиджной личензии
 //                    return;
 //                }
 
                 updateCheck();
-                Config.LoadConfiguration();
-                new Metrics(instance, 17870);
-                Objects.requireNonNull(instance.getCommand("bairdrop")).setExecutor(new Commands());
-                Objects.requireNonNull(instance.getCommand("bairdrop")).setTabCompleter(new Completer());
-                Bukkit.getServer().getPluginManager().registerEvents(new InteractListener(), instance);
-                getServer().getPluginManager().registerEvents(summoner, instance);
-                getServer().getPluginManager().registerEvents(new PlayerJoin(), BAirDrop.instance);
-                getServer().getPluginManager().registerEvents(new CraftItem(), BAirDrop.instance);
-                getServer().getPluginManager().registerEvents(compass, BAirDrop.instance);
+                getiConfig().LoadConfiguration();
+                new Metrics(getInstance(), 17870);
+                Objects.requireNonNull(getInstance().getCommand("bairdrop")).setExecutor(new Commands());
+                Objects.requireNonNull(getInstance().getCommand("bairdrop")).setTabCompleter(new Completer());
+                Bukkit.getServer().getPluginManager().registerEvents(new InteractListener(), getInstance());
+                getServer().getPluginManager().registerEvents(summoner, getInstance());
+                getServer().getPluginManager().registerEvents(new PlayerJoin(), BAirDrop.getInstance());
+                getServer().getPluginManager().registerEvents(new CraftItem(), BAirDrop.getInstance());
+                getServer().getPluginManager().registerEvents(compass, BAirDrop.getInstance());
                 BAirDrop.len = generateRandomBinaryNumber(10);
                 BAirDrop.info[0] = generateRandomBinaryNumber(12);
                 BAirDrop.info[1] = generateRandomBinaryNumber(4);
@@ -124,7 +133,8 @@ public final class BAirDrop extends JavaPlugin {
                     hologram = new CMIHolo();
                 } else {
                     hologram = new EmptyHologram();
-                    Message.error(Config.getMessage("depend-not-found"));
+
+                    Message.error(getConfigMessage().getMessage("depend-not-found"));
                 }
 
 //                try {
@@ -133,8 +143,8 @@ public final class BAirDrop extends JavaPlugin {
 //                    e.printStackTrace();
 //                }
 
-                for (File file : Config.getAirDrops().keySet()) {
-                    airDrops.put(Config.getAirDrops().get(file).getString("air-id"), new AirDrop(Config.getAirDrops().get(file), file));
+                for (File file : getiConfig().getAirDrops().keySet()) {
+                    airDrops.put(getiConfig().getAirDrops().get(file).getString("air-id"), new CAirDrop(getiConfig().getAirDrops().get(file), file));
                 }
                 List<String> ids = new ArrayList<>(airDrops.keySet());
                 for(String id : ids){
@@ -150,29 +160,29 @@ public final class BAirDrop extends JavaPlugin {
                         updateCheck();
                         cancel();
                         if (!BAirDrop.version.equals(BAirDrop.currentVersion)) {
-                            Message.logger(Config.getMessage("update"));
-                            Message.logger(String.format(Config.getMessage("update-2"), BAirDrop.currentVersion, version));
+                            Message.logger(getConfigMessage().getMessage("update"));
+                            Message.logger(String.format(getConfigMessage().getMessage("update-2"), BAirDrop.currentVersion, version));
                         }
                     }
-                }.runTaskAsynchronously(instance);
+                }.runTaskAsynchronously(getInstance());
 
-                if (BAirDrop.instance.getConfig().getBoolean("global-time.enable")) {
-                    globalTimer = new GlobalTimer((BAirDrop.instance.getConfig().getInt("global-time.time") * 60));
+                if (BAirDrop.getInstance().getConfig().getBoolean("global-time.enable")) {
+                    globalTimer = new GlobalTimer((BAirDrop.getInstance().getConfig().getInt("global-time.time") * 60));
                 }
                 if (logLevel == LogLevel.HARD) {
                     new BukkitRunnable() {
                         @Override
                         public void run() {
-                            Message.debug(String.format(Config.getMessage("thread-count"),  instance.getServer().getScheduler().getPendingTasks().stream().filter(t -> t.getOwner().getName().equalsIgnoreCase("BairDrop"))
+                            Message.debug(String.format(getConfigMessage().getMessage("thread-count"),  getInstance().getServer().getScheduler().getPendingTasks().stream().filter(t -> t.getOwner().getName().equalsIgnoreCase("BairDrop"))
                                     .count()), LogLevel.HARD);
                         }
-                    }.runTaskTimerAsynchronously(instance, 10, 10);
+                    }.runTaskTimerAsynchronously(getInstance(), 10, 10);
                 }
-                Message.logger(String.format(Config.getMessage("start-time"),System.currentTimeMillis() - x));
+                Message.logger(String.format(getConfigMessage().getMessage("start-time"),System.currentTimeMillis() - x));
 
                 System.out.println(customEventListeners.keySet());
             }
-        }.runTask(instance);
+        }.runTask(getInstance());
 
     }
 
@@ -182,9 +192,15 @@ public final class BAirDrop extends JavaPlugin {
         }
     }
 
+    public static Config getiConfig() {
+        return config;
+    }
 
+    public static ConfigMessage getConfigMessage() {
+        return configMessage;
+    }
 //    private static void loggerLoad() throws IOException {
-//        File folder = new File(instance.getDataFolder() + File.separator + "logs");
+//        File folder = new File(getInstance().getDataFolder() + File.separator + "logs");
 //        if (!folder.exists()) {
 //            folder.mkdir();
 //            Message.debug("create a folder for logs", LogLevel.LOW);
@@ -193,15 +209,15 @@ public final class BAirDrop extends JavaPlugin {
 //        SimpleDateFormat formatter2 = new SimpleDateFormat("dd-MM-yyyy");
 //        int x = 0;
 //        String logName = formatter2.format(date) + "(" + x + ")" + "-log";
-//        File logFile =  new File(instance.getDataFolder() + File.separator + "logs" + File.separator + logName + ".log");
+//        File logFile =  new File(getInstance().getDataFolder() + File.separator + "logs" + File.separator + logName + ".log");
 //        while (logFile.exists()){
 //            x++;
 //            logName = formatter2.format(date) + "(" + x + ")" + "-log";
-//            logFile =  new File(instance.getDataFolder() + File.separator + "logs" + File.separator + logName + ".log");
+//            logFile =  new File(getInstance().getDataFolder() + File.separator + "logs" + File.separator + logName + ".log");
 //        }
 //        logger = Logger.getLogger(logName);
 //
-//        fh = new FileHandler(instance.getDataFolder() + File.separator + "logs" + File.separator + logName + ".log");
+//        fh = new FileHandler(getInstance().getDataFolder() + File.separator + "logs" + File.separator + logName + ".log");
 //        logger.addHandler(fh);
 //        SimpleFormatter formatter = new SimpleFormatter();
 //        fh.setFormatter(formatter);
@@ -210,7 +226,7 @@ public final class BAirDrop extends JavaPlugin {
 //        logger.log(Level.SEVERE, "ok!");
 //    }
 
-    public static int generateRandomBinaryNumber(int length) {
+    private static int generateRandomBinaryNumber(int length) {
         if(length > 0b10100)
             length = 0b10100;
         Random random = new Random();
@@ -229,7 +245,7 @@ public final class BAirDrop extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if (!Config.isLoaded)
+        if (!getiConfig().isLoaded())
             return;
         long x = System.currentTimeMillis();
         for (AirDrop airDrop : airDrops.values()) {
@@ -245,7 +261,7 @@ public final class BAirDrop extends JavaPlugin {
         }
         GeneratorLoc.save();
         CustomCraft.unloadCrafts();
-        Message.logger(String.format(Config.getMessage("off-time"),System.currentTimeMillis() - x));
+        Message.logger(String.format(getConfigMessage().getMessage("off-time"),System.currentTimeMillis() - x));
 
     }
 
@@ -262,32 +278,32 @@ public final class BAirDrop extends JavaPlugin {
             RegionManager.RemoveRegion(airDrop);
         }
         CustomCraft.unloadCrafts();
-        Config.Schematics.clear();
+        getiConfig().getSchematics().clear();
         airDrops.clear();
         customEventListeners.clear();
         EffectFactory.EffectList.clear();
-        Config.getAirDrops().clear();
+        getiConfig().getAirDrops().clear();
 
-        instance.reloadConfig();
+        getInstance().reloadConfig();
         compass.loadItem();
         GeneratorLoc.locs.clear();
-        summoner.Load();
+        summoner.LoadSummoner();
         if (globalTimer != null) {
-            if (!BAirDrop.instance.getConfig().getBoolean("global-time.enable")) {
+            if (!BAirDrop.getInstance().getConfig().getBoolean("global-time.enable")) {
                 globalTimer.setStop(true);
                 globalTimer = null;
             } else {
-                globalTimer.setTimeToStartCons(BAirDrop.instance.getConfig().getInt("global-time.time") * 60);
+                globalTimer.setTimeToStartCons(BAirDrop.getInstance().getConfig().getInt("global-time.time") * 60);
                 globalTimer.setTimeToStart(globalTimer.getTimeToStartCons());
                 if (globalTimer.getAir() != null)
                     globalTimer.setAir(null);
             }
-        } else if (BAirDrop.instance.getConfig().getBoolean("global-time.enable")) {
-            globalTimer = new GlobalTimer((BAirDrop.instance.getConfig().getInt("global-time.time") * 60));
+        } else if (BAirDrop.getInstance().getConfig().getBoolean("global-time.enable")) {
+            globalTimer = new GlobalTimer((BAirDrop.getInstance().getConfig().getInt("global-time.time") * 60));
         }
-        Config.LoadConfiguration();
-        for (File file : Config.getAirDrops().keySet()) {
-            airDrops.put(Config.getAirDrops().get(file).getString("air-id"), new AirDrop(Config.getAirDrops().get(file), file));
+        getiConfig().LoadConfiguration();
+        for (File file : getiConfig().getAirDrops().keySet()) {
+            airDrops.put(getiConfig().getAirDrops().get(file).getString("air-id"), new CAirDrop(getiConfig().getAirDrops().get(file), file));
         }
         List<String> ids = new ArrayList<>(airDrops.keySet());
         for(String id : ids){
@@ -295,10 +311,10 @@ public final class BAirDrop extends JavaPlugin {
         }
     }
 
-    private static boolean info() {
+    private static boolean licenceCheck() {
         long i = System.currentTimeMillis();
         try {
-            String jarFilePatch = instance.getFile().getAbsolutePath();
+            String jarFilePatch = getInstance().getFile().getAbsolutePath();
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             try (FileInputStream fis = new FileInputStream(jarFilePatch)) {
                 byte[] buffer = new byte[1024];
@@ -314,10 +330,9 @@ public final class BAirDrop extends JavaPlugin {
             }
             String hash = hashBuilder.toString();
 
-            Message.debug(flip(hash), LogLevel.HARD);
-            Message.debug(flip(master(hash)), LogLevel.HARD);
-            if (master(hash).equals(getHash())) {// //sha256(hash).equals(getHash()) //master(hash).equals(getHash()) //master
-                boolean result = Boolean.parseBoolean(new Manager().manager(instance.getConfig().getString("License")));
+            Message.debug(flip(sha256(hash)), LogLevel.HARD);
+            if (sha256(hash).equals(getHash())) {// //sha256(hash).equals(getHash()) //master(hash).equals(getHash()) //master
+                boolean result = Boolean.parseBoolean(new Manager().manager(getInstance().getConfig().getString("License")));
                 Message.logger(System.currentTimeMillis() - i + " = ms");
                 if (!result) {
                     check(String.valueOf(result)); //false
@@ -329,20 +344,20 @@ public final class BAirDrop extends JavaPlugin {
             } else {
                 Message.error("Лицензия не валидна!");
                 Message.error("Файлы повреждены!");
-                instance.getServer().getPluginManager().disablePlugin(instance);
+                getInstance().getServer().getPluginManager().disablePlugin(getInstance());
                 return false;
             }
         } catch (Exception e) {
             String s = e.getMessage() == null ? "null" : e.getMessage();
             Message.debug(sObf(s, s.length()), LogLevel.HARD);
             Message.error("Ошибка при проверке лицензионного ключа!");
-            instance.getServer().getPluginManager().disablePlugin(instance);
+            getInstance().getServer().getPluginManager().disablePlugin(getInstance());
 
             return false;
         }
     }
 
-    public static int hashCode(byte a[]) {
+    private static int hashCode(byte a[]) {
         if (a == null)
             return 0;
 
@@ -353,7 +368,7 @@ public final class BAirDrop extends JavaPlugin {
         return result;
     }
 
-    public static String decrypt(String obj, String key) {
+    private static String decrypt(String obj, String key) {
         try {
             SecretKeySpec keySpec = new SecretKeySpec(Arrays.copyOf(MessageDigest.getInstance("SHA-384").digest(key.getBytes(StandardCharsets.UTF_8)), 8), "Blowfish");
 
@@ -369,7 +384,7 @@ public final class BAirDrop extends JavaPlugin {
         }
     }
 
-    public static void check(String str) {
+    private static void check(String str) {
         int vvar = Integer.parseInt("110", 2); //6
         int vvar2 = Integer.parseInt("101", 2); //5
         int vvar3 = Integer.parseInt("000000000000000000000000001", 2); //1
@@ -383,24 +398,24 @@ public final class BAirDrop extends JavaPlugin {
             if (var3 >>> vvar2 == vvar3) {
                 return;//NOP
             } else {
-                instance.getServer().getPluginManager().disablePlugin(instance);
+                getInstance().getServer().getPluginManager().disablePlugin(getInstance());
                 return;
             }
         }
         int var4 = var5 ^ vvar3;
         if (var4 == vvar6) {
             if (var4 >>> vvar2 == vvar3) {
-                instance.getServer().getPluginManager().disablePlugin(instance);//NOP
+                getInstance().getServer().getPluginManager().disablePlugin(getInstance());//NOP
                 return;
             } else {
-               // Config.LoadConfiguration();
+               // BConfig.LoadConfiguration();
                 return;
             }
         }
-        instance.getServer().getPluginManager().disablePlugin(instance);
+        getInstance().getServer().getPluginManager().disablePlugin(getInstance());
     }
 
-    public static String master(String str) throws NoSuchAlgorithmException {//sha256
+    private static String sha256(String str) throws NoSuchAlgorithmException {//sha256
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         byte[] hash = digest.digest(str.getBytes());
         StringBuilder hexString = new StringBuilder();
@@ -416,8 +431,8 @@ public final class BAirDrop extends JavaPlugin {
 //        if (obj == null)
 //            obj = "obg = null";
 //        try {
-//            SecretKeySpec keySpec = new SecretKeySpec(Arrays.copyOf(MessageDigest.getInstance("SHA-384").digest(key.getBytes(StandardCharsets.UTF_8)), 8), "Blowfish");
-//            Cipher des = Cipher.getInstance("Blowfish");
+//            SecretKeySpec keySpec = new SecretKeySpec(Arrays.copyOf(MessageDigest.getgetInstance()("SHA-384").digest(key.getBytes(StandardCharsets.UTF_8)), 8), "Blowfish");
+//            Cipher des = Cipher.getgetInstance()("Blowfish");
 //            des.init(1, keySpec);
 //            String str = new String(Base64.getEncoder().encode(des.doFinal(obj.getBytes(StandardCharsets.UTF_8))), StandardCharsets.UTF_8);
 //            return str;
@@ -427,7 +442,7 @@ public final class BAirDrop extends JavaPlugin {
 //        }
 //    }
 
-    public void updateCheck() {
+    private void updateCheck() {
         try {
             URL url = new URL(isInfo());
             URLConnection conn = url.openConnection();
@@ -445,7 +460,7 @@ public final class BAirDrop extends JavaPlugin {
         return;
     }
 
-    public static String isInfo() {//getVersionUrl
+    private static String isInfo() {//getVersionUrl
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < array.length + array[0].length - 1; i++) {
             for (int j = 0; j <= i; j++) {
@@ -462,7 +477,7 @@ public final class BAirDrop extends JavaPlugin {
         return sb.toString();
     }//http://www.by1337.space/version.html
 
-    public static String plus() {//getCheckUrl
+    private static String getCheckUrl() {//getCheckUrl
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < array2.length + array2[0].length - 1; i++) {
             for (int j = 0; j <= i; j++) {
@@ -478,7 +493,23 @@ public final class BAirDrop extends JavaPlugin {
        // Message.debug(sb.toString());
         return sb.toString();
     }//http://www.by1337.space/check.php?action=
+    private static String getHash() {
+        try {
+            URLConnection conn = getUrl(getCheckUrl() + getInstance().getDescription().getVersion()).openConnection();
+            conn.setReadTimeout(5000);
+            conn.addRequestProperty("User-Agent", "BAirDrop Hash Checker");
+            conn.setDoOutput(true);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String response = reader.readLine();
+            return response;
+        } catch (Exception e) {
+            return "none";
+        }
+    }
 
+    private static URL getUrl(String url) throws MalformedURLException {
+        return new URL(url);
+    }
     private void By1337̷̷̴̴̨̘̼͇͙̺̦̹̘͙̱̜͚͂̓͂̈̓ͮ̅̓̀͂ͤ͆̋ͭͪ̾ͤ̋̐͘͜͝͝(){
         array[0][0] = "EMr8NcnFS/E=";
         array[0][1] = "ܧܪݘܦܤݚܥݕܡܫܥݖܧܡܨݘܨܩܡܬܥݕݘܡܥܦܭݙܩݗܦܭܤܭݙܪ";

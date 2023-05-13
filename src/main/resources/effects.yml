@@ -56,45 +56,6 @@ effects:
     color-rgb-g: 0
     color-rgb-b: 255
 
-  ef=4: #Deprecated
-    type: PARTICLE_EXPLOSION
-    ticks: 1
-    timeUpdate: 1
-    radius: 1
-    count: 10
-    viewDistance: 30
-    step: 0.05
-    height: 5
-    offset-x: 0.5
-    offset-y: 0.7
-    offset-z: 0.5
-    particle: TOTEM
-    particle2: FIREWORKS_SPARK
-    particle3: FLAME
-    particle4: DRAGON_BREATH
-    particle5: SMOKE_NORMAL
-    #only REDSTONE# #Для партиклов "REDSTONE" необходимо указывать цвет и размер
-    size: 3
-    color-rgb-r: 255
-    color-rgb-g: 0
-    color-rgb-b: 255
-
-    color-rgb-r2: 255
-    color-rgb-g2: 0
-    color-rgb-b2: 255
-
-    color-rgb-r3: 153
-    color-rgb-g3: 51
-    color-rgb-b3: 255
-
-    color-rgb-r4: 0
-    color-rgb-g4: 255
-    color-rgb-b4: 0
-
-    color-rgb-r5: 0
-    color-rgb-g5: 204
-    color-rgb-b5: 255
-
   ef=5:
     type: EXPANDING_CIRCLE #тип эффекта.
     ticks: 36000

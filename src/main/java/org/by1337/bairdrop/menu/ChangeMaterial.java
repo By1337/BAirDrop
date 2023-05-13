@@ -13,13 +13,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
-import org.by1337.bairdrop.ConfigManager.Config;
+
 import org.by1337.bairdrop.util.Message;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.bukkit.Bukkit.getServer;
 
 public class ChangeMaterial implements Listener {
     private final Inventory inventory;
@@ -28,7 +26,7 @@ public class ChangeMaterial implements Listener {
     private final boolean isMaterialLocked;
 
     public ChangeMaterial(AirDrop airDrop, boolean isMaterialLocked) {
-        this.inventory = Bukkit.createInventory(null, 54, String.format(Config.getMessage("mat-change-inv"), airDrop.getId()));
+        this.inventory = Bukkit.createInventory(null, 54, String.format(BAirDrop.getConfigMessage().getMessage("mat-change-inv"), airDrop.getId()));
         this.airDrop = airDrop;
         this.isMaterialLocked = isMaterialLocked;
         generate();
@@ -50,7 +48,7 @@ public class ChangeMaterial implements Listener {
             ItemStack itemStack = new ItemStack(mat);
             ItemMeta im = Bukkit.getItemFactory().getItemMeta(mat);
             assert im != null;
-            im.setDisplayName(Config.getMessage("mat-change-item-name"));
+            im.setDisplayName(BAirDrop.getConfigMessage().getMessage("mat-change-item-name"));
             itemStack.setItemMeta(im);
             inventory.setItem(slot - (52 * page), itemStack);
             slot++;
@@ -58,8 +56,8 @@ public class ChangeMaterial implements Listener {
         if (slot >= 52) {
             ItemStack itemStack = new ItemStack(Material.ARROW);
             ItemMeta im = itemStack.getItemMeta();
-            im.setDisplayName(Config.getMessage("mat-change-arrow-name"));
-            List<String> lore = new ArrayList<>(Config.getList("mat-change-arrow-lore"));
+            im.setDisplayName(BAirDrop.getConfigMessage().getMessage("mat-change-arrow-name"));
+            List<String> lore = new ArrayList<>(BAirDrop.getConfigMessage().getList("mat-change-arrow-lore"));
             lore.replaceAll(Message::messageBuilder);
             im.setLore(lore);
             itemStack.setItemMeta(im);
@@ -67,7 +65,7 @@ public class ChangeMaterial implements Listener {
         }
         ItemStack itemStack = new ItemStack(Material.BARRIER);
         ItemMeta im = itemStack.getItemMeta();
-        im.setDisplayName(Message.messageBuilder(Config.getMessage("mat-change-back-name")));
+        im.setDisplayName(Message.messageBuilder(BAirDrop.getConfigMessage().getMessage("mat-change-back-name")));
         itemStack.setItemMeta(im);
         inventory.setItem(52, itemStack);
     }

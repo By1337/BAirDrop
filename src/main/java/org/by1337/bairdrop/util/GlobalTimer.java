@@ -2,14 +2,13 @@ package org.by1337.bairdrop.util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.by1337.bairdrop.AirDrop;
+import org.by1337.bairdrop.BAirDrop;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
-import org.by1337.bairdrop.AirDrop;
-import org.by1337.bairdrop.ConfigManager.Config;
-import org.by1337.bairdrop.BAirDrop;
 
 public class GlobalTimer {
     private int timeToStart;
@@ -20,23 +19,23 @@ public class GlobalTimer {
     public GlobalTimer(int timeToStartCons) {
         this.timeToStartCons = timeToStartCons;
         this.timeToStart = timeToStartCons;
-        Message.debug(String.format(Config.getMessage("global-timer-to-start"), timeToStart), LogLevel.LOW);
+        Message.debug(String.format(BAirDrop.getConfigMessage().getMessage("global-timer-to-start"), timeToStart), LogLevel.LOW);
         run();
     }
 
     public void run() {
-        Message.debug(Config.getMessage("global-timer-thread-start"), LogLevel.LOW);
+        Message.debug(BAirDrop.getConfigMessage().getMessage("global-timer-thread-start"), LogLevel.LOW);
         new BukkitRunnable() {
             @Override
             public void run() {
                 if (stop) {
                     cancel();
-                    Message.debug(Config.getMessage("global-timer-thread-stop"), LogLevel.LOW);
+                    Message.debug(BAirDrop.getConfigMessage().getMessage("global-timer-thread-stop"), LogLevel.LOW);
                     return;
                 }
                 if (timeToStart <= 0) {
                     if (air == null) {
-                        Message.warning(Config.getMessage("global-timer-failed"));
+                        Message.warning(BAirDrop.getConfigMessage().getMessage("global-timer-failed"));
                         return;
                     }
                     air.setTimeCountingEnabled(true);
@@ -49,7 +48,7 @@ public class GlobalTimer {
                     timeToStart--;
                 }
                 if (BAirDrop.airDrops.isEmpty()) {
-                    Message.error(Config.getMessage("global-timer-failed2"));
+                    Message.error(BAirDrop.getConfigMessage().getMessage("global-timer-failed2"));
                     timeToStart = timeToStartCons;
                     return;
                 }
@@ -59,7 +58,7 @@ public class GlobalTimer {
                     if (air != null) {
                         air.setHideInCompleter(true);
                         BAirDrop.airDrops.put(air.getId(), air);
-                        Message.debug(String.format(Config.getMessage("global-timer"), air.getId()), LogLevel.LOW);
+                        Message.debug(String.format(BAirDrop.getConfigMessage().getMessage("global-timer"), air.getId()), LogLevel.LOW);
                     }
                 }
             }
@@ -89,7 +88,7 @@ public class GlobalTimer {
                 newid = air.getId() + "_clone" + UUID.randomUUID().toString();
 
             AirDrop aair = air.clone(newid);
-            //  AirDrop aair = air.clone(air.getAirId() + "_clone" + ThreadLocalRandom.current().nextInt(99999));
+            //  CAirDrop aair = air.clone(air.getAirId() + "_clone" + ThreadLocalRandom.current().nextInt(99999));
             aair.setClone(true);
             aair.setKill(true);
             return aair;

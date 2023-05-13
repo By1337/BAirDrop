@@ -6,7 +6,6 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
-import org.by1337.bairdrop.ConfigManager.Config;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,7 +26,7 @@ public class Completer implements TabCompleter {
                 if(!airDrop.isHideInCompleter())
                     list.add(airDrop.getId());
             }
-            if (args.length == 2 && args[0].equals("js")) return Config.scripts.values().stream().map(File::getName).collect(Collectors.toList());
+            if (args.length == 2 && args[0].equals("js")) return BAirDrop.getiConfig().getScripts().values().stream().map(File::getName).collect(Collectors.toList());
             if (args.length == 2 && !args[0].equals("get") && !args[0].equals("compass")) return list;
             if (args.length == 1 ) {
                 return List.of("menu", "start", "stop", "tp", "listeners", "generate", "reload", "clone", "get", "delete", "create", "compass", "js", "help");
@@ -35,7 +34,7 @@ public class Completer implements TabCompleter {
             if (args.length == 2) return BAirDrop.summoner.getItems().keySet().stream().toList();
         }else {
             List<String> list = new ArrayList<>(BAirDrop.airDrops.keySet().stream().toList());
-            if (args.length == 2 && args[0].equals("js")) return Config.scripts.values().stream().map(File::getName).collect(Collectors.toList());
+            if (args.length == 2 && args[0].equals("js")) return BAirDrop.getiConfig().getScripts().values().stream().map(File::getName).collect(Collectors.toList());
             if (args.length == 2 && !args[0].equals("get")) return list;
             if (args.length == 1 ) {
                 return List.of("start", "stop", "generate", "reload", "clone", "delete", "create", "get", "compass", "js");

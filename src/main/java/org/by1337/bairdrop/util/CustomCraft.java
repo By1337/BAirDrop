@@ -7,14 +7,15 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.customListeners.CustomEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
-import org.by1337.bairdrop.ConfigManager.Config;
-import org.by1337.bairdrop.BAirDrop;
+
+
 public class CustomCraft {
     private final String id;
     private final NamespacedKey namespacedKey;
@@ -70,7 +71,7 @@ public class CustomCraft {
                 return;
             BAirDrop.customEventListeners.get(listener).update(pl, null, CustomEvent.CRAFT_ITEM, false);
         } catch (StackOverflowError e) {
-            Message.error(Config.getMessage("too-many-call"));
+            Message.error(BAirDrop.getConfigMessage().getMessage("too-many-call"));
         }
     }
 

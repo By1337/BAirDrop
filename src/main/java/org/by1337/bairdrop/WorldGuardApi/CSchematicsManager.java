@@ -1,4 +1,4 @@
-package org.by1337.bairdrop.util;
+package org.by1337.bairdrop.WorldGuardApi;
 
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
@@ -18,32 +18,38 @@ import org.bukkit.util.Vector;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+
 import org.by1337.bairdrop.AirDrop;
-import org.by1337.bairdrop.ConfigManager.Config;
+import org.by1337.bairdrop.BAirDrop;
+import org.by1337.bairdrop.util.LogLevel;
+import org.by1337.bairdrop.util.Message;
 
-import javax.annotation.concurrent.NotThreadSafe;
 
-@NotThreadSafe
-public class SchematicsManager {
+public class CSchematicsManager implements SchematicsManager{
 
-    public static void PasteSchematics(String name, AirDrop airDrop) {
+    /**
+     * Устанавливает схематику
+     * @param name имя схематики в конфиге
+     * @param airDrop АирДроп который спавнит эту схематику
+     */
+    public void PasteSchematics(String name, AirDrop airDrop) {
         try {
             if (airDrop.getEditSession() != null) {
-                Message.error(Config.getMessage("schem-limit"));
+                Message.error(BAirDrop.getConfigMessage().getMessage("schem-limit"));
                 return;
             }
 
             Vector offsets = new Vector(
-                    Config.getSchemConf().getInt(String.format("schematics.%s.offsets-x", name)),
-                    Config.getSchemConf().getInt(String.format("schematics.%s.offsets-y", name)),
-                    Config.getSchemConf().getInt(String.format("schematics.%s.offsets-z", name))
+                    BAirDrop.getiConfig().getSchemConf().getInt(String.format("schematics.%s.offsets-x", name)),
+                    BAirDrop.getiConfig().getSchemConf().getInt(String.format("schematics.%s.offsets-y", name)),
+                    BAirDrop.getiConfig().getSchemConf().getInt(String.format("schematics.%s.offsets-z", name))
             );
-            boolean ignoreAirBlocks = Config.getSchemConf().getBoolean(String.format("schematics.%s.ignore-air-blocks", name));
-            String file = Config.getSchemConf().getString(String.format("schematics.%s.file", name));
+            boolean ignoreAirBlocks = BAirDrop.getiConfig().getSchemConf().getBoolean(String.format("schematics.%s.ignore-air-blocks", name));
+            String file = BAirDrop.getiConfig().getSchemConf().getString(String.format("schematics.%s.file", name));
             Message.debug("paste " + file, LogLevel.LOW);
 
-            if (!Config.Schematics.containsKey(file)) throw new IllegalArgumentException();
-            File schem = Config.Schematics.get(file);
+            if (!BAirDrop.getiConfig().getSchematics().containsKey(file)) throw new IllegalArgumentException();
+            File schem = BAirDrop.getiConfig().getSchematics().get(file);
 
             ClipboardFormat format = ClipboardFormats.findByFile(schem);
 
@@ -64,7 +70,7 @@ public class SchematicsManager {
                     .to(BlockVector3.at(loc.getX() + offsets.getBlockX(), loc.getY() + offsets.getBlockY(), loc.getZ() + +offsets.getBlockZ())).ignoreAirBlocks(ignoreAirBlocks).build();
 
             Operations.complete(operation);
-            editSession.flushSession();
+            editSession.close();
 
             airDrop.setEditSession(editSession);
             editSession.getBlockBag();

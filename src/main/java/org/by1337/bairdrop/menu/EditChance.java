@@ -11,17 +11,20 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.by1337.bairdrop.util.Items;
+import org.by1337.bairdrop.AirDrop;
+import org.by1337.bairdrop.BAirDrop;
+
+import org.by1337.bairdrop.ItemUtil.Items;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.bukkit.Bukkit.getServer;
-import org.by1337.bairdrop.AirDrop;
-import org.by1337.bairdrop.ConfigManager.Config;
+
+
 import org.by1337.bairdrop.util.Message;
-import org.by1337.bairdrop.BAirDrop;
+
 public class EditChance implements Listener {
     private static EditChance editChance = null;
     private final Inventory inv;
@@ -75,7 +78,7 @@ public class EditChance implements Listener {
             if(e.getCurrentItem() == null) return;
             try {
 
-                Items originalItem = null;// = airDrop.getListItems().stream().filter(i -> i.getSlot() == e.getSlot()).findFirst().orElse(null);
+                Items originalItem = null;// = CAirDrop.getListItems().stream().filter(i -> i.getSlot() == e.getSlot()).findFirst().orElse(null);
                 for(Items items : airDrop.getListItems().getOrDefault(invName, new ArrayList<>())){
                     if(items.getSlot() == e.getSlot()){
                         originalItem = items;
@@ -83,7 +86,7 @@ public class EditChance implements Listener {
                     }
                 }
                 if(originalItem == null){
-                    Message.error(Config.getMessage("item-error2"));
+                    Message.error(BAirDrop.getConfigMessage().getMessage("item-error2"));
                     e.setCancelled(true);
                     return;
                 }
@@ -118,7 +121,7 @@ public class EditChance implements Listener {
     }
     private ItemMeta setLore(Integer chance, ItemStack itemStack){
         ItemMeta im = itemStack.getItemMeta();
-        List<String> lore = Config.getList("edit-lore");
+        List<String> lore = BAirDrop.getConfigMessage().getList("edit-lore");
         lore.replaceAll(s -> s.replace("{chance}", chance + ""));
 
         lore.replaceAll(Message::messageBuilder);

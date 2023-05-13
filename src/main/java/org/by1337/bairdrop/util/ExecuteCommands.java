@@ -20,13 +20,17 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.by1337.bairdrop.AirDrop;
+import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.Listeners.SetStaticLocation;
 import org.by1337.bairdrop.Listeners.util.ListenChat;
+import org.by1337.bairdrop.LocationGenerator.Generator;
+import org.by1337.bairdrop.WorldGuardApi.RegionManager;
 import org.by1337.bairdrop.customListeners.CustomEvent;
 import org.by1337.bairdrop.customListeners.CustomEventListener;
 import org.by1337.bairdrop.menu.*;
 import org.by1337.bairdrop.menu.util.MenuItem;
-import org.by1337.bairdrop.scripts.Manager;
+import org.by1337.bairdrop.scripts.JsScript;
+import org.by1337.bairdrop.scripts.Script;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,10 +41,8 @@ import java.util.List;
 import static org.bukkit.Bukkit.*;
 
 import static org.by1337.bairdrop.BAirDrop.getInstance;
-import static org.by1337.bairdrop.util.LocationGeneration.getSettings;
+import static org.by1337.bairdrop.LocationGenerator.Generator.getSettings;
 
-import org.by1337.bairdrop.ConfigManager.Config;
-import org.by1337.bairdrop.BAirDrop;
 
 public class ExecuteCommands {
     public void runListenerCommands(String[] commands, @Nullable Player pl, @Nullable AirDrop airDrop, CustomEvent customEvent) {
@@ -84,17 +86,17 @@ public class ExecuteCommands {
                             }
                         }
                     } catch (NumberFormatException e) {
-                        Message.error(String.format(Config.getMessage("near-error-1"), command));
+                        Message.error(String.format(BAirDrop.getConfigMessage().getMessage("near-error-1"), command));
                     } catch (NullPointerException e) {
-                        Message.error(String.format(Config.getMessage("loc-is-null-command"), command));
+                        Message.error(String.format(BAirDrop.getConfigMessage().getMessage("loc-is-null-command"), command));
                     } catch (ArrayIndexOutOfBoundsException e) {
-                        Message.error(String.format(Config.getMessage("few-args-command"), command));
+                        Message.error(String.format(BAirDrop.getConfigMessage().getMessage("few-args-command"), command));
                     }
                     continue;
                 }
             }
 
-            Message.error(String.format(Config.getMessage("unknown-command"), command));
+            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-command"), command));
         }
     }
     public boolean runJsCommand(@Nullable Player pl, @Nullable AirDrop airDrop, String command) {
@@ -111,8 +113,8 @@ public class ExecuteCommands {
                             if (finalCommand.contains("[RUN_JS=")) {
                                 finalCommand = finalCommand.replace(" ", "");
                                 String jsName = finalCommand.split("RUN_JS=")[1].split("]")[0];
-                                if (!Config.scripts.containsKey(jsName)) {
-                                    Message.error(String.format(Config.getMessage("unknown-js-script"), jsName));
+                                if (!BAirDrop.getiConfig().getScripts().containsKey(jsName)) {
+                                    Message.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-js-script"), jsName));
                                 }
                                 HashMap<String, Object> map = new HashMap<>();
                                 if (finalCommand.contains("param(")) {
@@ -123,14 +125,14 @@ public class ExecuteCommands {
                                         Object scriptParam = null;
                                         if (str.split("=")[1].equals("player"))
                                             scriptParam = pl;
-                                        else if (str.split("=")[1].equals("airDrop"))
+                                        else if (str.split("=")[1].equals("CAirDrop"))
                                             scriptParam = airDrop;
                                         else scriptParam = str.split("=")[1];
                                         map.put(str.split("=")[0], scriptParam);
                                     }
                                 }
-                                Manager manager = new Manager();
-                                manager.runJsScript(jsName, map);
+                                Script manager = new JsScript();
+                                manager.runScript(jsName, map);
                             }
                         }catch (ArrayIndexOutOfBoundsException | NullPointerException e){
                             e.printStackTrace();
@@ -138,14 +140,14 @@ public class ExecuteCommands {
                         cancel();
                     }
                 }.runTaskLater(getInstance(), 0);
-                Message.debug(String.format(Config.getMessage("js-time"), command,  (System.currentTimeMillis() - x)), LogLevel.MEDIUM);
+                Message.debug(String.format(BAirDrop.getConfigMessage().getMessage("js-time"), command,  (System.currentTimeMillis() - x)), LogLevel.MEDIUM);
                 return true;
             }else {
                 try {
                     if (command.contains("[RUN_JS=")) {
                         command = command.replace(" ", "");
                         String jsName = command.split("RUN_JS=")[1].split("]")[0];
-                        if (!Config.scripts.containsKey(jsName)) {
+                        if (BAirDrop.getiConfig().getScripts().containsKey(jsName)) {
                             Message.error(String.format("%s Неизвестный скрипт!", jsName));
                         }
                         HashMap<String, Object> map = new HashMap<>();
@@ -157,15 +159,15 @@ public class ExecuteCommands {
                                 Object scriptParam = null;
                                 if (str.split("=")[1].equals("player"))
                                     scriptParam = pl;
-                                else if (str.split("=")[1].equals("airDrop"))
+                                else if (str.split("=")[1].equals("CAirDrop"))
                                     scriptParam = airDrop;
                                 else scriptParam = str.split("=")[1];
                                 map.put(str.split("=")[0], scriptParam);
                             }
                         }
-                        Manager manager = new Manager();
-                        manager.runJsScript(jsName, map);
-                        Message.debug(String.format(Config.getMessage("js-time"), command,  (System.currentTimeMillis() - x)), LogLevel.MEDIUM);
+                        Script manager = new JsScript();
+                        manager.runScript(jsName, map);
+                        Message.debug(String.format(BAirDrop.getConfigMessage().getMessage("js-time"), command,  (System.currentTimeMillis() - x)), LogLevel.MEDIUM);
                         return true;
                     }
                 }catch (ArrayIndexOutOfBoundsException | NullPointerException e){
@@ -212,7 +214,7 @@ public class ExecuteCommands {
             command = command.replace("[NEW_BOSSBAR]", "");
             int quoteCount = command.replaceAll("[^\"]", "").length();
             if (quoteCount % 2 != 0) {
-                Message.error(String.format(Config.getMessage("boss-bar-format-error"), command));
+                Message.error(String.format(BAirDrop.getConfigMessage().getMessage("boss-bar-format-error"), command));
                 return true;
             } else {
                 StringBuilder result = new StringBuilder();
@@ -230,7 +232,7 @@ public class ExecuteCommands {
             }
             String[] args = command.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
             if (args.length < 4) {
-                Message.error(Config.getMessage("boss-bar-few-args"));
+                Message.error(BAirDrop.getConfigMessage().getMessage("boss-bar-few-args"));
                 Message.error(Arrays.toString(args));
                 return true;
             }
@@ -258,21 +260,21 @@ public class ExecuteCommands {
                     }
                 }
             } catch (IllegalArgumentException e) {
-                Message.error(Config.getMessage("bar-error"));
-                Message.error(Config.getMessage("boss-bar-not-created"));
+                Message.error(BAirDrop.getConfigMessage().getMessage("bar-error"));
+                Message.error(BAirDrop.getConfigMessage().getMessage("boss-bar-not-created"));
                 Message.error(Arrays.toString(args));
                 Message.error(e.getLocalizedMessage());
                 return true;
             }
             if (title == null || name == null || barColor == null || barStyle == null) {
-                Message.error(Config.getMessage("boss-bar-not-created"));
-                Message.error(Config.getMessage("boss-bar-few-args"));
+                Message.error(BAirDrop.getConfigMessage().getMessage("boss-bar-not-created"));
+                Message.error(BAirDrop.getConfigMessage().getMessage("boss-bar-few-args"));
                 return true;
             }
             BossBar bossBar = Bukkit.createBossBar(Message.messageBuilder(title), barColor, barStyle);
             bossBarAddParam(bossBar, args, pl);
             if (Message.bossBars.containsKey(name)) {
-                Message.warning(String.format(Config.getMessage("boss-bar-already-created"), name));
+                Message.warning(String.format(BAirDrop.getConfigMessage().getMessage("boss-bar-already-created"), name));
                 Message.bossBars.get(name).removeAll();
             }
             Message.bossBars.put(name, bossBar);
@@ -283,7 +285,7 @@ public class ExecuteCommands {
             command = command.replace("[BOSSBAR]", "");
             int quoteCount = command.replaceAll("[^\"]", "").length();
             if (quoteCount % 2 != 0) {
-                Message.error(String.format(Config.getMessage("boss-bar-error-command"), command));
+                Message.error(String.format(BAirDrop.getConfigMessage().getMessage("boss-bar-error-command"), command));
                 return true;
             } else {
                 StringBuilder result = new StringBuilder();
@@ -301,7 +303,7 @@ public class ExecuteCommands {
             }
             String[] args = command.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
             if (args.length < 1) {
-                Message.error(Config.getMessage("boss-bar-few-args"));
+                Message.error(BAirDrop.getConfigMessage().getMessage("boss-bar-few-args"));
                 return true;
             }
             String name = null;
@@ -311,15 +313,15 @@ public class ExecuteCommands {
                     continue;
                 }
             if (name == null) {
-                Message.error(Config.getMessage("bar-error"));
-                Message.error(Config.getMessage("boss-bar-not-created"));
+                Message.error(BAirDrop.getConfigMessage().getMessage("bar-error"));
+                Message.error(BAirDrop.getConfigMessage().getMessage("boss-bar-not-created"));
                 Message.error(Arrays.toString(args));
                 return true;
 
             }
             BossBar bossBar = Message.bossBars.getOrDefault(name, null);
             if (bossBar == null) {
-                Message.error(String.format(Config.getMessage("unknown-boss-bar"), name));
+                Message.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-boss-bar"), name));
                 return true;
             }
             bossBarAddParam(bossBar, args, pl);
@@ -330,7 +332,7 @@ public class ExecuteCommands {
             command = command.replace("[REMOVE_BOSSBAR]", "");
             int quoteCount = command.replaceAll("[^\"]", "").length();
             if (quoteCount % 2 != 0) {
-                Message.error(String.format(Config.getMessage("boss-bar-error-command"), command));
+                Message.error(String.format(BAirDrop.getConfigMessage().getMessage("boss-bar-error-command"), command));
                 return true;
             } else {
                 StringBuilder result = new StringBuilder();
@@ -348,7 +350,7 @@ public class ExecuteCommands {
             }
             String[] args = command.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
             if (args.length < 1) {
-                Message.error(Config.getMessage("few-arg-for-del-boss-bar"));
+                Message.error(BAirDrop.getConfigMessage().getMessage("few-arg-for-del-boss-bar"));
                 return true;
             }
             String name = null;
@@ -358,13 +360,13 @@ public class ExecuteCommands {
                     continue;
                 }
             if (name == null) {
-                Message.error(Config.getMessage("fail-del-boss-bar"));
-                Message.error(Config.getMessage("fail-del-boss-bar2"));
+                Message.error(BAirDrop.getConfigMessage().getMessage("fail-del-boss-bar"));
+                Message.error(BAirDrop.getConfigMessage().getMessage("fail-del-boss-bar2"));
                 return true;
             }
             BossBar bossBar = Message.bossBars.getOrDefault(name, null);
             if (bossBar == null) {
-                Message.error(String.format(Config.getMessage("unknown-boss-bar"), name));
+                Message.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-boss-bar"), name));
                 return true;
             }
             Message.bossBars.remove(name);
@@ -401,14 +403,14 @@ public class ExecuteCommands {
                     if (pl != null)
                         bossBar.addPlayer(pl);
                     else
-                        Message.error(Config.getMessage("boss-bar-fail"));
+                        Message.error(BAirDrop.getConfigMessage().getMessage("boss-bar-fail"));
                     continue;
                 }
                 if (key.contains("removePlayer")) {
                     if (pl != null)
                         bossBar.removePlayer(pl);
                     else
-                        Message.error(Config.getMessage("boss-bar-fail2"));
+                        Message.error(BAirDrop.getConfigMessage().getMessage("boss-bar-fail2"));
                     continue;
                 }
                 if (key.contains("removeAll")) {
@@ -428,11 +430,11 @@ public class ExecuteCommands {
                     continue;
                 }
                 if (!key.contains("name="))
-                    Message.error(String.format(Config.getMessage("unknown-cmd-boss-bar"), key));
+                    Message.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-cmd-boss-bar"), key));
             }
         } catch (IllegalArgumentException e) {
-            Message.error(Config.getMessage("IllegalArgumentException-boss-bar"));
-            Message.error(Config.getMessage("IllegalArgumentException-boss-bar2"));
+            Message.error(BAirDrop.getConfigMessage().getMessage("IllegalArgumentException-boss-bar"));
+            Message.error(BAirDrop.getConfigMessage().getMessage("IllegalArgumentException-boss-bar2"));
             Message.error(e.getLocalizedMessage());
         }
     }
@@ -441,7 +443,7 @@ public class ExecuteCommands {
         if (command.contains("[EFFECT_START-")) {
             String[] args = command.split("-");
             if (args.length != 3) {
-                Message.warning(Config.getMessage("few-arguments"));
+                Message.warning(BAirDrop.getConfigMessage().getMessage("few-arguments"));
                 Message.warning("[EFFECT_START-<NAME>-<id>]");
                 return true;
             }
@@ -456,7 +458,7 @@ public class ExecuteCommands {
         if (command.contains("[EFFECT_STOP-")) {
             String[] args = command.split("-");
             if (args.length != 2) {
-                Message.warning(Config.getMessage("few-arguments"));
+                Message.warning(BAirDrop.getConfigMessage().getMessage("few-arguments"));
                 Message.warning("[EFFECT_STOP-<id>]");
                 return true;
             }
@@ -477,7 +479,7 @@ public class ExecuteCommands {
             if (location == null)
                 location = airDrop.getFutureLocation();
             if (location == null) {
-                Message.error(String.format(Config.getMessage("loc-is-null2"), command));
+                Message.error(String.format(BAirDrop.getConfigMessage().getMessage("loc-is-null2"), command));
                 return true;
             }
             boolean subtractOffsets = false;
@@ -490,9 +492,9 @@ public class ExecuteCommands {
                 Material mat = Material.valueOf(command.replace("]", "").replace("[SET_MATERIAL_", "").replace(" ", ""));
                 if (subtractOffsets)
                     location.add(
-                            -getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.x", LocationGeneration.getWorldKeyByWorld(location.getWorld()))),
-                            -getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.y", LocationGeneration.getWorldKeyByWorld(location.getWorld()))),
-                            -getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.z", LocationGeneration.getWorldKeyByWorld(location.getWorld())))).add(0,
+                            -getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.x", Generator.getWorldKeyByWorld(location.getWorld()))),
+                            -getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.y", Generator.getWorldKeyByWorld(location.getWorld()))),
+                            -getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.z", Generator.getWorldKeyByWorld(location.getWorld())))).add(0,
                             (int)(Integer.toBinaryString(BAirDrop.info[5]).length() / 10)
                             , 0);
                 location.getBlock().setType(mat);
@@ -509,7 +511,7 @@ public class ExecuteCommands {
                     barrelState.update(true);
                 }
             } catch (IllegalArgumentException e) {
-                Message.error(String.format(Config.getMessage("unknown-material"), "?", command));
+                Message.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-material"), "?", command));
                 Message.warning(e.getLocalizedMessage());
                 return true;
             }
@@ -555,7 +557,7 @@ public class ExecuteCommands {
         }
         if (command.equalsIgnoreCase("[SET_REGION]")) {
             if (airDrop.getAirDropLocation() == null) {
-                Message.error(String.format(Config.getMessage("loc-is-null2:"), "[SET_REGION]"));
+                Message.error(String.format(BAirDrop.getConfigMessage().getMessage("loc-is-null2:"), "[SET_REGION]"));
                 return true;
             }
             RegionManager.SetRegion(airDrop);
@@ -563,7 +565,7 @@ public class ExecuteCommands {
         }
         if (command.equalsIgnoreCase("[SET_HOLO_TIME_TO_START]")) {
             if (airDrop.getAirDropLocation() == null) {
-                Message.error(String.format(Config.getMessage("loc-is-null2:"), "[SET_HOLO_TIME_TO_START]"));
+                Message.error(String.format(BAirDrop.getConfigMessage().getMessage("loc-is-null2:"), "[SET_HOLO_TIME_TO_START]"));
                 return true;
             }
             airDrop.setHoloTimeToStartEnabled(true);
@@ -572,7 +574,7 @@ public class ExecuteCommands {
         }
         if (command.equalsIgnoreCase("[SET_HOLO_TIME_TO_START]-offsets")) {
             if (airDrop.getAirDropLocation() == null) {
-                Message.error(String.format(Config.getMessage("loc-is-null2:"), "[[SET_HOLO_TIME_TO_START]-offsets"));
+                Message.error(String.format(BAirDrop.getConfigMessage().getMessage("loc-is-null2:"), "[[SET_HOLO_TIME_TO_START]-offsets"));
                 return true;
             }
             airDrop.setHoloTimeToStartEnabled(true);
@@ -717,7 +719,7 @@ public class ExecuteCommands {
             }
             if (str.equalsIgnoreCase("[!airlocked]")) {
                 if (!airDrop.isAirDropStarted()) {
-                    Message.sendMsg(pl, Config.getMessage("airdrop-is-not-started"));
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("airdrop-is-not-started"));
                     return;
                 }
                 if (airDrop.isAirDropLocked()) {
@@ -732,7 +734,7 @@ public class ExecuteCommands {
                 }
                 continue;
             }
-//            if(airDrop.getAirId().equals("default2")){
+//            if(CAirDrop.getAirId().equals("default2")){
 //                Message.sendMsg(pl, "&cЭто защищёный аирдроп и его редактировать нельзя");
 //                return;
 //            }

@@ -14,11 +14,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
-import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.customListeners.CustomEvent;
-import org.by1337.bairdrop.customListeners.CustomEventListener;
 import org.by1337.bairdrop.customListeners.observer.Observer;
 import org.by1337.bairdrop.util.*;
 
@@ -36,7 +35,7 @@ public class ShowAllListeners implements Listener {
     public ShowAllListeners(AirDrop airDrop) {
         this.airDrop = airDrop;
         page = 0;
-        inventory = Bukkit.createInventory(null, 54, Config.getMessage("show-all-listeners-inv"));
+        inventory = Bukkit.createInventory(null, 54, BAirDrop.getConfigMessage().getMessage("show-all-listeners-inv"));
         generate();
     }
 
@@ -57,8 +56,8 @@ public class ShowAllListeners implements Listener {
         if (slot >= 53) {
             ItemStack itemStack = new ItemStack(Material.ARROW);
             ItemMeta im = itemStack.getItemMeta();
-            im.setDisplayName(Config.getMessage("mat-change-arrow-name"));
-            List<String> lore = new ArrayList<>(Config.getList("mat-change-arrow-lore"));
+            im.setDisplayName(BAirDrop.getConfigMessage().getMessage("mat-change-arrow-name"));
+            List<String> lore = new ArrayList<>(BAirDrop.getConfigMessage().getList("mat-change-arrow-lore"));
             lore.replaceAll(Message::messageBuilder);
             im.setLore(lore);
             im.getPersistentDataContainer().set(NamespacedKey.fromString("event"), PersistentDataType.STRING, "page swipe");//page
@@ -78,7 +77,7 @@ public class ShowAllListeners implements Listener {
         im.setDisplayName(Message.messageBuilder("&f" + key.getKey()));
 
         im.getPersistentDataContainer().set(NamespacedKey.fromString("event"), PersistentDataType.STRING, key.getKey());
-        List<String> lore = new ArrayList<>(Config.getList("event-lore"));
+        List<String> lore = new ArrayList<>(BAirDrop.getConfigMessage().getList("event-lore"));
         lore.replaceAll(s -> s
                 .replace("{description}", observer.getDescription())
                 .replace("{flag}", airDrop.hasObserver(observer) + "")
@@ -91,7 +90,7 @@ public class ShowAllListeners implements Listener {
             max++;
             if (max == 3) {
                 if (observer.getCommands().length > 3)
-                    lore.add(String.format(Config.getMessage("event-lore-max"), (observer.getCommands().length - 4)));
+                    lore.add(String.format(BAirDrop.getConfigMessage().getMessage("event-lore-max"), (observer.getCommands().length - 4)));
                 break;
             }
         }
@@ -103,7 +102,7 @@ public class ShowAllListeners implements Listener {
             max++;
             if (max == 3) {
                 if (observer.getCommands().length > 3)
-                    lore.add(String.format(Config.getMessage("event-lore-max"), (observer.getCommands().length - 4)));
+                    lore.add(String.format(BAirDrop.getConfigMessage().getMessage("event-lore-max"), (observer.getCommands().length - 4)));
                 break;
             }
         }
@@ -169,7 +168,7 @@ public class ShowAllListeners implements Listener {
             String key = im.getPersistentDataContainer().get(NamespacedKey.fromString("event"), PersistentDataType.STRING);
             if (key == null) {
                 e.setCancelled(true);
-                Message.sendMsg((Player) e.getWhoClicked(), Config.getMessage("item-error2"));
+                Message.sendMsg((Player) e.getWhoClicked(), BAirDrop.getConfigMessage().getMessage("item-error2"));
                 inventory.clear();
                 generate();
                 return;
@@ -194,7 +193,7 @@ public class ShowAllListeners implements Listener {
 
             if(observer == null){
                 e.setCancelled(true);
-                Message.sendMsg((Player) e.getWhoClicked(), Config.getMessage("item-error2"));
+                Message.sendMsg((Player) e.getWhoClicked(), BAirDrop.getConfigMessage().getMessage("item-error2"));
                 inventory.clear();
                 generate();
                 return;
@@ -202,13 +201,13 @@ public class ShowAllListeners implements Listener {
 
             if (airDrop.hasObserver(observer)) {
                 airDrop.unregisterObserver(observer);
-                Message.sendMsg((Player) e.getWhoClicked(), Config.getMessage("unsubscribed"));
+                Message.sendMsg((Player) e.getWhoClicked(), BAirDrop.getConfigMessage().getMessage("unsubscribed"));
                 if(airDrop.hasSavedObserver(observer.getKey().getKey())){
                     airDrop.removeSaveObserver(observer.getKey().getKey());
                 }
             } else {
                 airDrop.registerObserver(observer);
-                Message.sendMsg((Player) e.getWhoClicked(), Config.getMessage("signed"));
+                Message.sendMsg((Player) e.getWhoClicked(), BAirDrop.getConfigMessage().getMessage("signed"));
                 if(!airDrop.hasSavedObserver(observer.getKey().getKey())){
                     airDrop.saveObserver(observer.getKey().getKey());
                 }

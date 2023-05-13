@@ -2,16 +2,14 @@ package org.by1337.bairdrop.util;
 
 
 import org.bukkit.Location;
+import org.by1337.bairdrop.AirDrop;
+import org.by1337.bairdrop.BAirDrop;
+import org.by1337.bairdrop.CAirDrop;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-
-
-import org.by1337.bairdrop.AirDrop;
-
-import org.by1337.bairdrop.BAirDrop;
 public class AirManager {
     @Nullable
     public static AirDrop getAirDropForLocation(@NotNull Location location) {

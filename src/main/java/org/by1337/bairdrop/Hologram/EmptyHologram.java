@@ -1,7 +1,8 @@
 package org.by1337.bairdrop.Hologram;
 
 import org.bukkit.Location;
-import org.by1337.bairdrop.ConfigManager.Config;
+import org.by1337.bairdrop.BAirDrop;
+
 import org.by1337.bairdrop.util.Message;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,11 +13,11 @@ import java.util.List;
 public class EmptyHologram implements IHologram{
     @Override
     public void createOrUpdateHologram(@NotNull List<String> lines, @NotNull Location location, @NotNull String name) {
-        Message.error(Config.getMessage("holo-update-error"));
+        Message.error(BAirDrop.getConfigMessage().getMessage("holo-update-error"));
     }
 
     @Override
     public void remove(@NotNull String name) {
-        Message.error(Config.getMessage("holo-remove-error"));
+        Message.error(BAirDrop.getConfigMessage().getMessage("holo-remove-error"));
     }
 }

@@ -1,6 +1,7 @@
-package org.by1337.bairdrop.util;
+package org.by1337.bairdrop.ItemUtil;
 
 import org.bukkit.enchantments.Enchantment;
+import org.by1337.bairdrop.util.Message;
 
 public class EnchantInfo {
     private final int chance;

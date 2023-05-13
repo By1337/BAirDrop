@@ -1,22 +1,22 @@
-package org.by1337.bairdrop.util;
+package org.by1337.bairdrop.LocationGenerator;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.util.Vector;
-import org.by1337.bairdrop.ConfigManager.Config;
+import org.by1337.bairdrop.util.Message;
 import org.jetbrains.annotations.NotNull;
 
-import javax.sql.rowset.spi.SyncResolver;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 /**
- * Объект описывает сгенерированную локацию
+ * The object describes the generated location
  */
-public class GenLoc implements ConfigurationSerializable {
+public class CGenLoc implements GenLoc {
     private final Location location;
     private final World world;
     private final Vector offsets;
@@ -24,7 +24,7 @@ public class GenLoc implements ConfigurationSerializable {
     private final UUID uuid;
 
 
-    public GenLoc(Location location, Vector offsets, String airDropId) {
+    public CGenLoc(Location location, Vector offsets, String airDropId) {
         this.location = location;
         this.world = location.getWorld();
         this.offsets = offsets;
@@ -32,7 +32,7 @@ public class GenLoc implements ConfigurationSerializable {
         uuid = UUID.randomUUID();
     }
 
-    public GenLoc(Location location, Vector offsets, String airDropId, UUID uuid) {
+    public CGenLoc(Location location, Vector offsets, String airDropId, UUID uuid) {
         this.location = location;
         this.world = location.getWorld();
         this.offsets = offsets;
@@ -59,6 +59,7 @@ public class GenLoc implements ConfigurationSerializable {
     public UUID getUuid() {
         return uuid;
     }
+
     @NotNull
     @Override
     public Map<String, Object> serialize() {
@@ -73,7 +74,7 @@ public class GenLoc implements ConfigurationSerializable {
         map.put("v", 1);
         map.put("uuid", uuid.toString());
         map.put("air-id", airDropId);
-
+        Message.error("loc = " + location);
         return map;
     }
 
@@ -85,21 +86,23 @@ public class GenLoc implements ConfigurationSerializable {
      * @see ConfigurationSerializable
      */
     @NotNull
-    public static GenLoc deserialize(@NotNull Map<String, Object> map) {
+    public static CGenLoc deserialize(@NotNull Map<String, Object> map) {
+        Message.error(Arrays.toString(map.values().toArray()));
         double loc_x = (double) map.get("x");
         double loc_y = (double) map.get("y");
         double loc_z = (double) map.get("z");
         double offsets_x = (double) map.get("offsets-x");
         double offsets_y = (double) map.get("offsets-y");
         double offsets_z = (double) map.get("offsets-z");
+        Message.debug(loc_x + "");
         World world = Bukkit.getWorld((String) map.get("world"));
         String airId = (String) map.get("air-id");
         UUID uuid = UUID.fromString((String) map.get("uuid"));
-        if(world == null){
+        if (world == null) {
             throw new IllegalArgumentException("world is null!");
         }
         Location loc = new Location(world, loc_x, loc_y, loc_z);
         Vector vector = new Vector(offsets_x, offsets_y, offsets_z);
-        return new GenLoc(loc, vector, airId, uuid);
+        return new CGenLoc(loc.clone(), vector.clone(), airId, uuid);
     }
 }

@@ -7,10 +7,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.by1337.bairdrop.AirDrop;
+import org.by1337.bairdrop.CAirDrop;
 import org.by1337.bairdrop.util.AirManager;
 import org.by1337.bairdrop.util.Message;
-import org.by1337.bairdrop.BAirDrop;
+
 public class ItemUtil {
     public static ItemMeta addLore(ItemStack itemStack, AirDrop airDrop, String... lore){
         ItemMeta im = itemStack.getItemMeta();

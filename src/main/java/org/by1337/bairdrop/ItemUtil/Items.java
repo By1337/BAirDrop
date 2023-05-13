@@ -1,4 +1,4 @@
-package org.by1337.bairdrop.util;
+package org.by1337.bairdrop.ItemUtil;
 
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;

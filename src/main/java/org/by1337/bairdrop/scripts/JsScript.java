@@ -3,9 +3,6 @@ package org.by1337.bairdrop.scripts;
 
 import org.bukkit.Bukkit;
 import org.by1337.bairdrop.BAirDrop;
-import org.by1337.bairdrop.ConfigManager.Config;
-import org.by1337.bairdrop.util.Message;
-import org.by1337.bairdrop.util.Metrics;
 import org.mozilla.javascript.*;
 
 import javax.annotation.Nullable;
@@ -13,11 +10,10 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 
-public class Manager {
-    public Object runJsScript(String scriptName, @Nullable HashMap<String, Object> property) {
+public class JsScript implements Script{
+    public Object runScript(String scriptName, @Nullable HashMap<String, Object> property) {
         Context context = Context.enter();
         context.setOptimizationLevel(-1);
 
@@ -31,8 +27,7 @@ public class Manager {
             }
         }
         try {
-            //return context.evaluateReader(scope, new FileReader(Config.scripts.get(scriptName)), "JavaScript", 1, null);
-            return context.evaluateReader(scope, new InputStreamReader(new FileInputStream(Config.scripts.get(scriptName)), StandardCharsets.UTF_8), "JavaScript", 1, null);
+            return context.evaluateReader(scope, new InputStreamReader(new FileInputStream(BAirDrop.getiConfig().getScripts().get(scriptName)), StandardCharsets.UTF_8), "JavaScript", 1, null);
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,4 +1,4 @@
-package org.by1337.bairdrop.util;
+package org.by1337.bairdrop.Summoner;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -17,20 +17,26 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import static org.by1337.bairdrop.util.LocationGeneration.getSettings;
+import static org.by1337.bairdrop.LocationGenerator.Generator.getSettings;
+
 import org.by1337.bairdrop.AirDrop;
-import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.api.event.AirDropSummonerEvent;
 import org.by1337.bairdrop.customListeners.CustomEvent;
+import org.by1337.bairdrop.ItemUtil.BaseHeadHook;
+import org.by1337.bairdrop.LocationGenerator.Generator;
+import org.by1337.bairdrop.util.Message;
 
 public class Summoner implements Listener {
-    private final HashMap<String, SummonerItem> items = new HashMap<>();
+    public final HashMap<String, SummonerItem> items = new HashMap<>();
     private final HashMap<UUID, Long> auntyDouble = new HashMap<>();
     private final HashMap<UUID, Long> cooldownPlayers = new HashMap<>();
-    private int cooldown;
+    public int cooldown;
 
-    public void Load() {
+    /**
+     * Загрузка предметов из конфига
+     */
+    public void LoadSummoner() {
         items.clear();
         cooldown = BAirDrop.getInstance().getConfig().getInt("summoner-сooldown");
         if (BAirDrop.getInstance().getConfig().getConfigurationSection("summoner") == null)
@@ -71,12 +77,14 @@ public class Summoner implements Listener {
             im.setLore(lore);
             im.getPersistentDataContainer().set(NamespacedKey.fromString("summoner"), PersistentDataType.STRING, key);
             im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-          //  im.addEnchant(Enchantment.ARROW_DAMAGE)
+            //  im.addEnchant(Enchantment.ARROW_DAMAGE)
             item.setItemMeta(im);
-            items.put(key, new SummonerItem(item, airdrop, clone, usePlayerLocation, flatnessCheck, checkUpBlocks, call, ignoreRegion));
+            items.put(key, new CSummonerItem(item, airdrop, clone, usePlayerLocation, flatnessCheck, checkUpBlocks, call, ignoreRegion));
         }
     }
-
+    /**
+     * Прослушивание установок Summoner
+     */
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
         if (e.getAction() == Action.RIGHT_CLICK_BLOCK || BAirDrop.getInstance().getConfig().getBoolean("geyser")) {
@@ -95,27 +103,27 @@ public class Summoner implements Listener {
                 if(!e.getPlayer().isOp()){
                     if(!e.getPlayer().hasCooldown(items.get(key).getItem().getType()) && cooldownPlayers.getOrDefault(e.getPlayer().getUniqueId(),  System.currentTimeMillis() / 50) - (System.currentTimeMillis() / 50) > 0){
                         int cooldown = (int) (cooldownPlayers.get(e.getPlayer().getUniqueId()) - (int) (System.currentTimeMillis() / 50));
-                        Message.sendMsg(e.getPlayer(), String.format(Config.getMessage("summoner-limit"), cooldown / 20));
+                        Message.sendMsg(e.getPlayer(), String.format(BAirDrop.getConfigMessage().getMessage("summoner-limit"), cooldown / 20));
                         e.getPlayer().setCooldown(items.get(key).getItem().getType(), cooldown);
                         return;
                     }else if(e.getPlayer().hasCooldown(items.get(key).getItem().getType())){
                         int cooldown = e.getPlayer().getCooldown(items.get(key).getItem().getType());
-                        Message.sendMsg(e.getPlayer(), String.format(Config.getMessage("summoner-limit"), cooldown / 20));
+                        Message.sendMsg(e.getPlayer(), String.format(BAirDrop.getConfigMessage().getMessage("summoner-limit"), cooldown / 20));
                         return;
                     }
                 }
-                AirDrop airDrop = items.get(key).start(e.getClickedBlock().getLocation(), e.getPlayer());
+                AirDrop airDrop = items.get(key).getAirDrop(e.getClickedBlock().getLocation(), e.getPlayer());
                 if (airDrop != null) {
                     if (items.get(key).isUsePlayerLocation()) {
                         airDrop.setAirDropLocation(e.getClickedBlock().getLocation().add(0, 0, 0).add(
-                                getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.x", LocationGeneration.getWorldKeyByWorld(e.getClickedBlock().getWorld()))),
-                                getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.y", LocationGeneration.getWorldKeyByWorld(e.getClickedBlock().getWorld()))),
-                                getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.z", LocationGeneration.getWorldKeyByWorld(e.getClickedBlock().getWorld())))));
+                                getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.x", Generator.getWorldKeyByWorld(e.getClickedBlock().getWorld()))),
+                                getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.y", Generator.getWorldKeyByWorld(e.getClickedBlock().getWorld()))),
+                                getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.z", Generator.getWorldKeyByWorld(e.getClickedBlock().getWorld())))));
 
                         airDrop.setFutureLocation(e.getClickedBlock().getLocation().add(0, 0, 0).add(
-                                getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.x", LocationGeneration.getWorldKeyByWorld(e.getClickedBlock().getWorld()))),
-                                getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.y", LocationGeneration.getWorldKeyByWorld(e.getClickedBlock().getWorld()))),
-                                getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.z", LocationGeneration.getWorldKeyByWorld(e.getClickedBlock().getWorld())))));
+                                getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.x", Generator.getWorldKeyByWorld(e.getClickedBlock().getWorld()))),
+                                getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.y", Generator.getWorldKeyByWorld(e.getClickedBlock().getWorld()))),
+                                getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.z", Generator.getWorldKeyByWorld(e.getClickedBlock().getWorld())))));
                         airDrop.setUsePlayerLocation(true);
                     }
                     BAirDrop.airDrops.put(airDrop.getId(), airDrop);

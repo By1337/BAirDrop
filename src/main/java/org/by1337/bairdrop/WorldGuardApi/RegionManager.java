@@ -1,4 +1,4 @@
-package org.by1337.bairdrop.util;
+package org.by1337.bairdrop.WorldGuardApi;
 
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -13,15 +13,14 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
-import org.by1337.bairdrop.ConfigManager.Config;
+import org.by1337.bairdrop.util.Message;
 
-import java.util.HashMap;
-import java.util.Map;
+
+import java.util.*;
 
 public class RegionManager {
     private static final HashMap<StateFlag, StateFlag.State> flags = new HashMap<>();
     public static void RemoveRegion(AirDrop airDrop) {
-      //  Message.logger("RemoveRegion " + airDrop.getAirId());
         World world;
         if(airDrop.getAirDropLocation() != null)
             world = airDrop.getAirDropLocation().getWorld();
@@ -29,7 +28,7 @@ public class RegionManager {
             world = airDrop.getFutureLocation().getWorld();
         else world = airDrop.getWorld();
         if(world == null){
-            Message.error(Config.getMessage("unknown-world-region"));
+            Message.error(BAirDrop.getConfigMessage().getMessage("unknown-world-region"));
             return;
         }
 
@@ -47,7 +46,7 @@ public class RegionManager {
     }
 
     public static void SetRegion(AirDrop airDrop) {
-       // Message.logger("SetRegion " + airDrop.getAirId());
+       // Message.logger("SetRegion " + CAirDrop.getAirId());
         ProtectedCuboidRegion rg = GetProtectedCuboidRegion(airDrop);
         World world = airDrop.getAirDropLocation().getWorld();
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
@@ -59,7 +58,7 @@ public class RegionManager {
             for (Map.Entry<StateFlag, StateFlag.State> entry : flags.entrySet())
                 rg.setFlag((Flag)entry.getKey(), entry.getValue());
         }catch (Exception e){
-            Message.error(Config.getMessage("flag-error"));
+            Message.error(BAirDrop.getConfigMessage().getMessage("flag-error"));
         }
         regions.addRegion(rg);
     }

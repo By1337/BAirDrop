@@ -3,7 +3,7 @@ package org.by1337.bairdrop.effect;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import org.by1337.bairdrop.ConfigManager.Config;
+import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.effect.effectImpl.*;
 import org.by1337.bairdrop.util.Message;
 
@@ -31,10 +31,10 @@ public class LoadEffects {
                 if (effectType == EffectType.WRITHING_HELIX){ EffectFactory.EffectList.put(key, new WrithingHelix(file, key)); continue;}
 
             } catch (NullPointerException e) {
-                Message.error(String.format(Config.getMessage("effect-error"), key));
+                Message.error(String.format(BAirDrop.getConfigMessage().getMessage("effect-error"), key));
                 e.printStackTrace();
             } catch (IllegalArgumentException e) {
-                Message.error(String.format(Config.getMessage("effect-error-unknown-type"), key));
+                Message.error(String.format(BAirDrop.getConfigMessage().getMessage("effect-error-unknown-type"), key));
             }
         }
     }

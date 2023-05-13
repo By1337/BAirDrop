@@ -12,8 +12,8 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
-import org.by1337.bairdrop.ConfigManager.Config;
-import org.by1337.bairdrop.util.Items;
+
+import org.by1337.bairdrop.ItemUtil.Items;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ public class AddingItems implements Listener {
         addingItems = this;
         if (airdrop != null) {
             this.airdrop = airdrop;
-            inv = Bukkit.createInventory(null, airdrop.getInventorySize(), Config.getMessage("inv-edit").replace("{id}", airdrop.getId()));
+            inv = Bukkit.createInventory(null, airdrop.getInventorySize(), BAirDrop.getConfigMessage().getMessage("inv-edit").replace("{id}", airdrop.getId()));
             this.invName = invName;
             inv = airdrop.getEditorItemsInventory(inv, invName);
         }

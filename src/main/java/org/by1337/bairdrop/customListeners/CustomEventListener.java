@@ -13,10 +13,9 @@ import java.util.regex.Pattern;
 
 import org.bukkit.scheduler.BukkitRunnable;
 import org.by1337.bairdrop.AirDrop;
-import org.by1337.bairdrop.ConfigManager.Config;
-import org.by1337.bairdrop.customListeners.observer.Observer;
-import org.by1337.bairdrop.scripts.Manager;
 import org.by1337.bairdrop.BAirDrop;
+import org.by1337.bairdrop.customListeners.observer.Observer;
+import org.by1337.bairdrop.scripts.JsScript;
 import org.by1337.bairdrop.util.ExecuteCommands;
 import org.by1337.bairdrop.util.Message;
 import org.jetbrains.annotations.NotNull;
@@ -211,14 +210,14 @@ public class CustomEventListener implements Observer {
             if (args[1].equals("!="))
                 result = (Double.parseDouble(args[0]) != Double.parseDouble(args[2])) + "";
         } catch (NumberFormatException e) {
-            Message.error(String.format(Config.getMessage("numeric_check-error-not-a-number"), reqOld));
+            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("numeric_check-error-not-a-number"), reqOld));
             Message.error(e.getLocalizedMessage()); //.replace("For input string:", "Не число:")
             result = "0.5";
         } catch (ArrayIndexOutOfBoundsException e) {
-            Message.error(String.format(Config.getMessage("numerical_check-few-arguments"), reqOld));
+            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("numerical_check-few-arguments"), reqOld));
             result = "0.5";
         } catch (Exception e) {
-            Message.error(String.format(Config.getMessage("numerical-check-unknown-error"), reqOld));
+            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("numerical-check-unknown-error"), reqOld));
             e.printStackTrace();
             result = "0.5";
         }
@@ -256,7 +255,7 @@ public class CustomEventListener implements Observer {
                     return Double.parseDouble(args[var]) % Double.parseDouble(args[var1]) <= Double.parseDouble(args[var2]);
                 if (args[var3].equals("!="))
                     return Double.parseDouble(args[var]) % Double.parseDouble(args[var1]) != Double.parseDouble(args[var2]);
-                Message.error(String.format(Config.getMessage("numerical-check-unknown-operator"), args[var3], checkId));
+                Message.error(String.format(BAirDrop.getConfigMessage().getMessage("numerical-check-unknown-operator"), args[var3], checkId));
                 return false;
             }
             if (args[var4].equals("=="))
@@ -271,17 +270,17 @@ public class CustomEventListener implements Observer {
                 return Double.parseDouble(args[var]) <= Double.parseDouble(args[var1]);
             if (args[var4].equals("!="))
                 return Double.parseDouble(args[var]) != Double.parseDouble(args[var1]);
-            Message.error(String.format(Config.getMessage("numerical-check-unknown-operator"), args[var4], checkId));
+            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("numerical-check-unknown-operator"), args[var4], checkId));
             return false;
         } catch (NumberFormatException e) {
-            Message.error(String.format(Config.getMessage("numeric_check-error-not-a-number"), checkId));
+            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("numeric_check-error-not-a-number"), checkId));
             Message.error(e.getLocalizedMessage());
             return false;
         } catch (ArrayIndexOutOfBoundsException e) {
-            Message.error(String.format(Config.getMessage("numerical_check-few-arguments"), checkId));
+            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("numerical_check-few-arguments"), checkId));
             return false;
         } catch (Exception e) {
-            Message.error(String.format(Config.getMessage("numerical-check-unknown-error"), checkId));
+            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("numerical-check-unknown-error"), checkId));
             e.printStackTrace();
             return false;
         }
@@ -321,8 +320,8 @@ public class CustomEventListener implements Observer {
             if (command.contains("[RUN_JS=")) {
                 command = command.replace(" ", "");
                 String jsName = command.split("RUN_JS=")[1].split("]")[0];
-                if (!Config.scripts.containsKey(jsName)) {
-                    Message.error(String.format(Config.getMessage("unknown-js-script"), jsName));
+                if (!BAirDrop.getiConfig().getScripts().containsKey(jsName)) {
+                    Message.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-js-script"), jsName));
                 }
                 HashMap<String, Object> map = new HashMap<>();
                 if (command.contains("param(")) {
@@ -333,14 +332,14 @@ public class CustomEventListener implements Observer {
                         Object scriptParam = null;
                         if (str.split("=")[1].equals("player"))
                             scriptParam = pl;
-                        else if (str.split("=")[1].equals("airDrop"))
+                        else if (str.split("=")[1].equals("airdrop"))
                             scriptParam = airDrop;
                         else scriptParam = str.split("=")[1];
                         map.put(str.split("=")[0], scriptParam);
                     }
                 }
-                org.by1337.bairdrop.scripts.Manager manager = new Manager();
-                return (String) manager.runJsScript(jsName, map);
+                JsScript jsScript = new JsScript();
+                return (String) jsScript.runScript(jsName, map);
             }
         } catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
             e.printStackTrace();

@@ -8,6 +8,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import org.by1337.bairdrop.AirDrop;
+import org.by1337.bairdrop.CAirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.api.event.AirDropOpenEvent;
 import org.by1337.bairdrop.customListeners.CustomEvent;

@@ -3,7 +3,6 @@ package org.by1337.bairdrop.util;
 import org.bukkit.OfflinePlayer;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
-import org.by1337.bairdrop.ConfigManager.Config;
 import org.jetbrains.annotations.NotNull;
 
 public class PlaceholderExpansion extends me.clip.placeholderapi.expansion.PlaceholderExpansion{
@@ -65,8 +64,8 @@ public class PlaceholderExpansion extends me.clip.placeholderapi.expansion.Place
                 }
             }
             if(airDrop == null)
-                return Config.getMessage("air-near-none");
-            return Message.messageBuilder(airDrop.replaceInternalPlaceholder(Config.getMessage("air-near").replace("{dist}", dist + "")));
+                return BAirDrop.getConfigMessage().getMessage("air-near-none");
+            return Message.messageBuilder(airDrop.replaceInternalPlaceholder(BAirDrop.getConfigMessage().getMessage("air-near").replace("{dist}", dist + "")));
         }
         if(params.contains("time_to_start_")){ //%bairdrop_time_to_start_<air id>%
             String[] args = params.split("_");

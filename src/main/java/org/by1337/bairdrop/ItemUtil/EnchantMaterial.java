@@ -1,4 +1,4 @@
-package org.by1337.bairdrop.util;
+package org.by1337.bairdrop.ItemUtil;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -30,7 +30,6 @@ public class EnchantMaterial {
         }
 
         for (EnchantInfo ei : enchantInfos) {
-            Message.debug("ei.getMaxLeve(): " + ei.getMaxLevel() + ", ei.getMinLeve(): " + ei.getMinLevel());
             try {
                 if (ei.getChance() > random.nextInt(Integer.toBinaryString(BAirDrop.info[5]).length() * 10)) {//100
                     int level = random.nextInt(ei.getMaxLevel() - ei.getMinLevel() + 1);
