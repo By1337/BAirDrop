@@ -4,6 +4,7 @@ import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 
 import org.by1337.bairdrop.obfuscate.DontObfuscate;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -11,6 +11,7 @@ import org.by1337.bairdrop.ItemUtil.EnchantMaterial;
 import org.by1337.bairdrop.Listeners.Compass;
 import org.by1337.bairdrop.LocationGenerator.CGenLoc;
 import org.by1337.bairdrop.LocationGenerator.GenLoc;
+import org.by1337.bairdrop.Summoner.Summoner;
 import org.by1337.bairdrop.WorldGuardApi.RegionManager;
 import org.by1337.bairdrop.customListeners.CustomEvent;
 import org.by1337.bairdrop.customListeners.CustomEventListener;
@@ -36,18 +37,18 @@ public class BConfig implements Config, ConfigMessage {
     private File fileEffects;
     private FileConfiguration locations;
     private File fileLocations;
-    private  FileConfiguration menu;
-    private  File fileMenu;
-    private  FileConfiguration schemConf;
-    private  File fileSchemConf;
-    private  FileConfiguration generatorSettings;
-    private  File fileGeneratorSettings;
-    private  HashMap<String, File> Schematics = new HashMap<>();
-    private  HashMap<File, FileConfiguration> airDrops = new HashMap<>();
-    private  FileConfiguration message;
-    private  File fileMessage;
-    private  boolean loaded;
-    public  HashMap<String, File> scripts = new HashMap<>();
+    private FileConfiguration menu;
+    private File fileMenu;
+    private FileConfiguration schemConf;
+    private File fileSchemConf;
+    private FileConfiguration generatorSettings;
+    private File fileGeneratorSettings;
+    private HashMap<String, File> Schematics = new HashMap<>();
+    private HashMap<File, FileConfiguration> airDrops = new HashMap<>();
+    private FileConfiguration message;
+    private File fileMessage;
+    private boolean loaded;
+    public HashMap<String, File> scripts = new HashMap<>();
 
     public void LoadConfiguration() {
         fileMenu = new File(getInstance().getDataFolder() + File.separator + "menu.yml");
@@ -146,7 +147,7 @@ public class BConfig implements Config, ConfigMessage {
         loaded = true;
     }
 
-    public  void LoadMenu() {
+    public void LoadMenu() {
         MenuItem.menuItemHashMap.clear();
         for (String tag : menu.getConfigurationSection("main").getKeys(false)) {
             try {
@@ -171,7 +172,7 @@ public class BConfig implements Config, ConfigMessage {
 
     }
 
-    public  void LoadCustomCraft() {
+    public void LoadCustomCraft() {
         if (getInstance().getConfig().getConfigurationSection("custom-crafts.crafts") == null) {
             Message.error(getMessage("craft-list-is-empty"));
             return;
@@ -265,7 +266,7 @@ public class BConfig implements Config, ConfigMessage {
         }
     }
 
-    public  void LoadEnchant() {
+    public void LoadEnchant() {
         EnchantMaterial.materialHashMap.clear();
         if (!getInstance().getConfig().getBoolean("auto-enchant.enable")) return;
         for (String id : getInstance().getConfig().getConfigurationSection("auto-enchant").getKeys(false)) {
@@ -307,7 +308,6 @@ public class BConfig implements Config, ConfigMessage {
             EnchantMaterial.materialHashMap.put(id, new EnchantMaterial(material1, conflictEnchantments, enchantInfos));
         }
     }
-
 
 
     public String getMessage(String path) {
@@ -410,6 +410,7 @@ public class BConfig implements Config, ConfigMessage {
         }
         return new ArrayList<>(file.getStringList(path));
     }
+
     public void LoadLocations() {
         if (locations.getConfigurationSection("locations") == null)
             return;
@@ -418,22 +419,23 @@ public class BConfig implements Config, ConfigMessage {
             world:
             for (String world : locations.getConfigurationSection(String.format("locations.%s", airId)).getKeys(false)) {
                 for (String uuid : locations.getConfigurationSection(String.format("locations.%s.%s", airId, world)).getKeys(false)) {
-
-                    if(locations.getInt(String.format("locations.%s.%s.%s.v", airId, world, uuid)) == 0){
-                        if(!loadOldLoc(airId, world, uuid)){
+                    if (locations.getInt("version") == 0) {
+                        if (!loadOldLoc(airId, world, uuid)) {
                             continue world;
                         }
-                    }else {
-                        CGenLoc genLoc = locations.getSerializable(String.format("locations.%s.%s.%s", airId, world, uuid), CGenLoc.class);
-                        locs.getOrDefault(airId, new ArrayList<>()).add(genLoc);
+                    } else {
+                        GenLoc genLoc = locations.getSerializable(String.format("locations.%s.%s.%s", airId, world, uuid), CGenLoc.class);
+                        List<GenLoc> list = locs.getOrDefault(airId, new ArrayList<>());
+                        list.add(genLoc);
+                        locs.put(airId, list);
                     }
-                    Message.debug("load: " + uuid);
                 }
             }
         }
     }
+
     @Deprecated
-    public boolean loadOldLoc(String airId, String world, String uuid){
+    public boolean loadOldLoc(String airId, String world, String uuid) {
         int offsetsX = locations.getInt(String.format("locations.%s.%s.%s.offsets-x", airId, world, uuid));
         int offsetsY = locations.getInt(String.format("locations.%s.%s.%s.offsets-y", airId, world, uuid));
         int offsetsZ = locations.getInt(String.format("locations.%s.%s.%s.offsets-z", airId, world, uuid));
@@ -452,75 +454,76 @@ public class BConfig implements Config, ConfigMessage {
         locs.getOrDefault(airId, new ArrayList<>()).add(new CGenLoc(location, new Vector(offsetsX, offsetsY, offsetsZ), airId, UUID.fromString(uuid)));
         return true;
     }
-    public  HashMap<File, FileConfiguration> getAirDrops() {
+
+    public HashMap<File, FileConfiguration> getAirDrops() {
         return airDrops;
     }
 
-    public  FileConfiguration getSchemConf() {
+    public FileConfiguration getSchemConf() {
         return schemConf;
     }
 
-    public  FileConfiguration getListeners() {
+    public FileConfiguration getListeners() {
         return listeners;
     }
 
-    public  File getFileListeners() {
+    public File getFileListeners() {
         return fileListeners;
     }
 
-    public  FileConfiguration getEffects() {
+    public FileConfiguration getEffects() {
         return effects;
     }
 
-    public  File getFileEffects() {
+    public File getFileEffects() {
         return fileEffects;
     }
 
-    public  FileConfiguration getLocations() {
+    public FileConfiguration getLocations() {
         return locations;
     }
 
-    public  File getFileLocations() {
+    public File getFileLocations() {
         return fileLocations;
     }
 
-    public  FileConfiguration getMenu() {
+    public FileConfiguration getMenu() {
         return menu;
     }
 
-    public  File getFileMenu() {
+    public File getFileMenu() {
         return fileMenu;
     }
 
-    public  File getFileSchemConf() {
+    public File getFileSchemConf() {
         return fileSchemConf;
     }
 
-    public  File getFileGeneratorSettings() {
+    public File getFileGeneratorSettings() {
         return fileGeneratorSettings;
     }
 
-    public  HashMap<String, File> getSchematics() {
+    public HashMap<String, File> getSchematics() {
         return Schematics;
     }
 
-    public  FileConfiguration getMessage() {
+    public FileConfiguration getMessage() {
         return message;
     }
 
-    public  File getFileMessage() {
+    public File getFileMessage() {
         return fileMessage;
     }
 
-    public  boolean isLoaded() {
+    public boolean isLoaded() {
         return loaded;
     }
 
-    public  HashMap<String, File> getScripts() {
+    public HashMap<String, File> getScripts() {
         return scripts;
     }
 
-    public  FileConfiguration getGeneratorSettings() {
+    public FileConfiguration getGeneratorSettings() {
         return generatorSettings;
     }
 }

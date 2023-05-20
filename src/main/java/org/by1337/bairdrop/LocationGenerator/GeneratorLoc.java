@@ -95,6 +95,7 @@ public class GeneratorLoc {
             }
         }
         try {
+            BAirDrop.getiConfig().getLocations().set("version", 1);
             BAirDrop.getiConfig().getLocations().save(BAirDrop.getiConfig().getFileLocations());
         } catch (IOException e) {
             e.printStackTrace();

@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.util.Vector;
+import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.util.Message;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +17,7 @@ import java.util.UUID;
 /**
  * The object describes the generated location
  */
-public class CGenLoc implements GenLoc {
+public class CGenLoc implements GenLoc{
     private final Location location;
     private final World world;
     private final Vector offsets;
@@ -60,21 +61,15 @@ public class CGenLoc implements GenLoc {
         return uuid;
     }
 
+
     @NotNull
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> map = new HashMap<>();
-        map.put("x", location.getX());
-        map.put("y", location.getY());
-        map.put("z", location.getZ());
-        map.put("offsets-x", offsets.getX());
-        map.put("offsets-y", offsets.getY());
-        map.put("offsets-z", offsets.getZ());
-        map.put("world", location.getWorld().getName());
-        map.put("v", 1);
+        map.put("location", location.clone());
+        map.put("offsets", offsets.clone());
         map.put("uuid", uuid.toString());
         map.put("air-id", airDropId);
-        Message.error("loc = " + location);
         return map;
     }
 
@@ -87,22 +82,20 @@ public class CGenLoc implements GenLoc {
      */
     @NotNull
     public static CGenLoc deserialize(@NotNull Map<String, Object> map) {
-        Message.error(Arrays.toString(map.values().toArray()));
-        double loc_x = (double) map.get("x");
-        double loc_y = (double) map.get("y");
-        double loc_z = (double) map.get("z");
-        double offsets_x = (double) map.get("offsets-x");
-        double offsets_y = (double) map.get("offsets-y");
-        double offsets_z = (double) map.get("offsets-z");
-        Message.debug(loc_x + "");
-        World world = Bukkit.getWorld((String) map.get("world"));
         String airId = (String) map.get("air-id");
         UUID uuid = UUID.fromString((String) map.get("uuid"));
-        if (world == null) {
-            throw new IllegalArgumentException("world is null!");
-        }
-        Location loc = new Location(world, loc_x, loc_y, loc_z);
-        Vector vector = new Vector(offsets_x, offsets_y, offsets_z);
-        return new CGenLoc(loc.clone(), vector.clone(), airId, uuid);
+        Location loc = (Location) map.get("location");
+        Vector vector = (Vector) map.get("offsets");
+        return new CGenLoc(loc, vector, airId, uuid);
     }
+
+
+//    public void Save() {
+//        BAirDrop.getiConfig().getLocations().set(String.format("locations.%s.%s.%s.offsets-x", airDropId, world.getName(), uuid), offsets.getX());
+//        BAirDrop.getiConfig().getLocations().set(String.format("locations.%s.%s.%s.offsets-y", airDropId, world.getName(), uuid), offsets.getY());
+//        BAirDrop.getiConfig().getLocations().set(String.format("locations.%s.%s.%s.offsets-z", airDropId, world.getName(), uuid), offsets.getZ());
+//        BAirDrop.getiConfig().getLocations().set(String.format("locations.%s.%s.%s.x", airDropId, world.getName(), uuid), location.getX());
+//        BAirDrop.getiConfig().getLocations().set(String.format("locations.%s.%s.%s.y", airDropId, world.getName(), uuid), location.getY());
+//        BAirDrop.getiConfig().getLocations().set(String.format("locations.%s.%s.%s.z", airDropId, world.getName(), uuid), location.getZ());
+//    }
 }

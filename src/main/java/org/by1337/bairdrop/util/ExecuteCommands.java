@@ -125,7 +125,7 @@ public class ExecuteCommands {
                                         Object scriptParam = null;
                                         if (str.split("=")[1].equals("player"))
                                             scriptParam = pl;
-                                        else if (str.split("=")[1].equals("CAirDrop"))
+                                        else if (str.split("=")[1].equals("airdrop"))
                                             scriptParam = airDrop;
                                         else scriptParam = str.split("=")[1];
                                         map.put(str.split("=")[0], scriptParam);
@@ -159,7 +159,7 @@ public class ExecuteCommands {
                                 Object scriptParam = null;
                                 if (str.split("=")[1].equals("player"))
                                     scriptParam = pl;
-                                else if (str.split("=")[1].equals("CAirDrop"))
+                                else if (str.split("=")[1].equals("airdrop"))
                                     scriptParam = airDrop;
                                 else scriptParam = str.split("=")[1];
                                 map.put(str.split("=")[0], scriptParam);

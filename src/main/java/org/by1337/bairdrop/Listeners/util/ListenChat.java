@@ -170,7 +170,6 @@ public class ListenChat implements Listener {
                 @Override
                 public void run() {
                     EditAirMenu em = new EditAirMenu(airDrop);
-                   // getServer().getPluginManager().registerEvents(em, BAirDrop.getInstance());
                     airDrop.setEditAirMenu(em);
                     pl.openInventory(em.getInventory());
                     cancel();

@@ -111,9 +111,9 @@ public class CAirDrop implements AirDrop {
     private boolean hideInCompleter;
     private final CAirDrop CAirDropInstance;
     private boolean useOnlyStaticLoc;
-    private List<Observer> observers = new ArrayList<>();
-    private static List<Observer> staticObservers = new ArrayList<>();
-    private SchematicsManager schematicsManager = new CSchematicsManager();
+    private final List<Observer> observers = new ArrayList<>();
+    private static final List<Observer> staticObservers = new ArrayList<>();
+    private final SchematicsManager schematicsManager = new CSchematicsManager();
 
     CAirDrop(FileConfiguration fileConfiguration, File airDropFile) {
         CAirDropInstance = this;

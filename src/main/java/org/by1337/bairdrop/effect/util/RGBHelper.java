@@ -6,9 +6,9 @@ import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.util.Message;
 
 public class RGBHelper {
-    public static Color getColorWithRgb(String rgb){
+    public static Color getColorWithRgb(String rgb) {
         String[] args = rgb.split(":");
-        if(args.length != 3){
+        if (args.length != 3) {
             Message.error(String.format(BAirDrop.getConfigMessage().getMessage("color-error"), rgb));
             return Color.BLACK;
         }
@@ -19,7 +19,7 @@ public class RGBHelper {
                     Integer.parseInt(args[2])
 
             );
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             Message.error(String.format(BAirDrop.getConfigMessage().getMessage("color-error"), rgb));
             e.printStackTrace();
             return Color.BLACK;
