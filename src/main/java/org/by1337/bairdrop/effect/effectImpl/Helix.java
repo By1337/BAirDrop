@@ -115,11 +115,6 @@ public class Helix implements IEffect {
     }
 
     @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
     public IEffect clone() {
         return new WrithingHelix(cs, name);
     }

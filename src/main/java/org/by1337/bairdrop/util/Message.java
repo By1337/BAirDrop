@@ -78,6 +78,13 @@ public class Message {
     }
 
     /**
+     * use only debug
+     */
+    public static void devDebug(String msg){
+        logger(msg);
+    }
+
+    /**
      * Отправляет лог
      * @param msg Сообщение
      */

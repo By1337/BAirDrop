@@ -47,7 +47,6 @@ public class ListenChat implements Listener {
                     return;
                 }
                 airDrop.setInventoryTitle(e.getMessage());
-                airDrop.updateInvName();
                 airDrop.save();
                 Message.sendMsg(pl, String.format(BAirDrop.getConfigMessage().getMessage("named-changed"), e.getMessage()));
             }

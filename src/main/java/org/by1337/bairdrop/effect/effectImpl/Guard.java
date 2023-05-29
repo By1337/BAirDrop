@@ -148,11 +148,6 @@ public class Guard implements IEffect {
     }
 
     @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
     public EffectType getType() {
         return EffectType.SPAWN_GUARD;
     }

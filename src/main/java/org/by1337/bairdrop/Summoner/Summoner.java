@@ -17,14 +17,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import static org.by1337.bairdrop.LocationGenerator.Generator.getSettings;
-
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
+import org.by1337.bairdrop.LocationGenerator.GeneratorUtils;
 import org.by1337.bairdrop.api.event.AirDropSummonerEvent;
 import org.by1337.bairdrop.customListeners.CustomEvent;
 import org.by1337.bairdrop.ItemUtil.BaseHeadHook;
-import org.by1337.bairdrop.LocationGenerator.Generator;
+import org.by1337.bairdrop.LocationGenerator.CGenerator;
 import org.by1337.bairdrop.util.Message;
 
 public class Summoner implements Listener {
@@ -116,34 +115,39 @@ public class Summoner implements Listener {
                 if (airDrop != null) {
                     if (items.get(key).isUsePlayerLocation()) {
                         airDrop.setAirDropLocation(e.getClickedBlock().getLocation().add(0, 0, 0).add(
-                                getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.x", Generator.getWorldKeyByWorld(e.getClickedBlock().getWorld()))),
-                                getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.y", Generator.getWorldKeyByWorld(e.getClickedBlock().getWorld()))),
-                                getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.z", Generator.getWorldKeyByWorld(e.getClickedBlock().getWorld())))));
+                                GeneratorUtils.getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.x", GeneratorUtils.getWorldKeyByWorld(e.getClickedBlock().getWorld()))),
+                                GeneratorUtils.getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.y", GeneratorUtils.getWorldKeyByWorld(e.getClickedBlock().getWorld()))),
+                                GeneratorUtils.getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.z", GeneratorUtils.getWorldKeyByWorld(e.getClickedBlock().getWorld())))));
 
                         airDrop.setFutureLocation(e.getClickedBlock().getLocation().add(0, 0, 0).add(
-                                getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.x", Generator.getWorldKeyByWorld(e.getClickedBlock().getWorld()))),
-                                getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.y", Generator.getWorldKeyByWorld(e.getClickedBlock().getWorld()))),
-                                getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.z", Generator.getWorldKeyByWorld(e.getClickedBlock().getWorld())))));
+                                GeneratorUtils.getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.x", GeneratorUtils.getWorldKeyByWorld(e.getClickedBlock().getWorld()))),
+                                GeneratorUtils.getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.y", GeneratorUtils.getWorldKeyByWorld(e.getClickedBlock().getWorld()))),
+                                GeneratorUtils.getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.z", GeneratorUtils.getWorldKeyByWorld(e.getClickedBlock().getWorld())))));
                         airDrop.setUsePlayerLocation(true);
                     }
+
+
+                    AirDropSummonerEvent airDropSummonerEvent = new AirDropSummonerEvent(airDrop, e.getPlayer());
+                    Bukkit.getServer().getPluginManager().callEvent(airDropSummonerEvent);
+
+                    Message.error(airDropSummonerEvent.isCancelled() + " = airDropSummonerEvent.isCancelled()");
+                    if(airDropSummonerEvent.isCancelled()) {
+                        airDrop.unload();
+                        return;
+                    }
+
                     BAirDrop.airDrops.put(airDrop.getId(), airDrop);
                     e.getPlayer().setCooldown(items.get(key).getItem().getType(), cooldown);
                     cooldownPlayers.put(e.getPlayer().getUniqueId(), (System.currentTimeMillis() / 50 + cooldown));
-                    AirDropSummonerEvent airDropSummonerEvent = new AirDropSummonerEvent(airDrop, e.getPlayer());
-                    Bukkit.getServer().getPluginManager().callEvent(airDropSummonerEvent);
-                    if(airDropSummonerEvent.isCancelled())
-                        return;
+
                     airDrop.notifyObservers(CustomEvent.SUMMONER, e.getPlayer());
                     if (item.getAmount() > 1) {
                         item.setAmount(item.getAmount() - 1);
-
                         e.getPlayer().getInventory().setItemInMainHand(item);
                     } else
                         e.getPlayer().getInventory().removeItem(item);
                 }
                 e.setCancelled(true);
-
-
             }
         }
     }

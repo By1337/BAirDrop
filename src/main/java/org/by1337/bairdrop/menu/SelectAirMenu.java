@@ -65,6 +65,11 @@ public class SelectAirMenu implements Listener {
             if(im.getPersistentDataContainer().has(NamespacedKey.fromString("air_id"), PersistentDataType.STRING)){
                 String key = im.getPersistentDataContainer().get(NamespacedKey.fromString("air_id"), PersistentDataType.STRING);
                 if(BAirDrop.airDrops.containsKey(key)){
+
+                    if (BAirDrop.airDrops.get(key).getEditAirMenu() != null) {
+                        BAirDrop.airDrops.get(key).getEditAirMenu().unReg();
+                    }
+
                     EditAirMenu editAirMenu = new EditAirMenu(BAirDrop.airDrops.get(key));
                     BAirDrop.airDrops.get(key).setEditAirMenu(editAirMenu);
                     e.getWhoClicked().openInventory(editAirMenu.getInventory());

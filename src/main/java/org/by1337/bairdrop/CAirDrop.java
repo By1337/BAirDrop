@@ -19,9 +19,10 @@ import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 import org.by1337.bairdrop.ItemUtil.EnchantMaterial;
 import org.by1337.bairdrop.ItemUtil.Items;
-import org.by1337.bairdrop.LocationGenerator.GeneratorLoc;
 import org.by1337.bairdrop.LocationGenerator.Generator;
-import org.by1337.bairdrop.WorldGuardApi.CSchematicsManager;
+import org.by1337.bairdrop.LocationGenerator.GeneratorLoc;
+import org.by1337.bairdrop.LocationGenerator.CGenerator;
+import org.by1337.bairdrop.LocationGenerator.GeneratorUtils;
 import org.by1337.bairdrop.WorldGuardApi.RegionManager;
 import org.by1337.bairdrop.WorldGuardApi.SchematicsManager;
 import org.by1337.bairdrop.api.event.AirDropEndEvent;
@@ -44,7 +45,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import static org.by1337.bairdrop.BAirDrop.*;
-import static org.by1337.bairdrop.LocationGenerator.Generator.getSettings;
 
 import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.menu.EditAirMenu;
@@ -87,7 +87,7 @@ public class CAirDrop implements AirDrop {
     private boolean flatnessCheck;
     private Location staticLocation;
     private boolean useStaticLoc;
-    private final HashMap<String, IEffect> activeEffects = new HashMap<>();
+    private final HashMap<String, IEffect> loadEfects = new HashMap<>();
     private int pickPreGenLocs;
     private int spawnChance;
     private boolean timeCountingEnabled;
@@ -112,8 +112,8 @@ public class CAirDrop implements AirDrop {
     private final CAirDrop CAirDropInstance;
     private boolean useOnlyStaticLoc;
     private final List<Observer> observers = new ArrayList<>();
-    private static final List<Observer> staticObservers = new ArrayList<>();
-    private final SchematicsManager schematicsManager = new CSchematicsManager();
+
+    private Generator generator;
 
     CAirDrop(FileConfiguration fileConfiguration, File airDropFile) {
         CAirDropInstance = this;
@@ -202,6 +202,7 @@ public class CAirDrop implements AirDrop {
                     fileConfiguration.getDouble("holo-offsets.z")
             );
 
+            generator = new CGenerator();
             if (fileConfiguration.getConfigurationSection("inv") != null) {
                 for (String inv : fileConfiguration.getConfigurationSection("inv").getKeys(false)) {
                     for (String slot : fileConfiguration.getConfigurationSection("inv." + inv).getKeys(false)) {
@@ -323,9 +324,9 @@ public class CAirDrop implements AirDrop {
                                 BAirDrop.hologram.createOrUpdateHologram(lines, airDropLocation.clone().add(holoOffsets), id);
                             } else {
                                 BAirDrop.hologram.createOrUpdateHologram(lines, airDropLocation.clone().add(holoOffsets).add(
-                                        -getSettings(getGeneratorSettings(), String.format("%s.offsets.x", Generator.getWorldKeyByWorld(airDropLocation.getWorld()))),
-                                        -getSettings(getGeneratorSettings(), String.format("%s.offsets.y", Generator.getWorldKeyByWorld(airDropLocation.getWorld()))),
-                                        -getSettings(getGeneratorSettings(), String.format("%s.offsets.z", Generator.getWorldKeyByWorld(airDropLocation.getWorld())))).add(0, 1, 0), id);
+                                        -GeneratorUtils.getSettings(getGeneratorSettings(), String.format("%s.offsets.x", GeneratorUtils.getWorldKeyByWorld(airDropLocation.getWorld()))),
+                                        -GeneratorUtils.getSettings(getGeneratorSettings(), String.format("%s.offsets.y", GeneratorUtils.getWorldKeyByWorld(airDropLocation.getWorld()))),
+                                        -GeneratorUtils.getSettings(getGeneratorSettings(), String.format("%s.offsets.z", GeneratorUtils.getWorldKeyByWorld(airDropLocation.getWorld())))).add(0, 1, 0), id);
                             }
                         }
 
@@ -387,18 +388,21 @@ public class CAirDrop implements AirDrop {
     }
 
     @Override
-    public void startCommand() {
+    public void startCommand(@Nullable Player player) {
         new BukkitRunnable() {
+            int x = 0;
             @Override
             public void run() {
                 locationSearch();
                 if (airDropLocation != null) {
+                    Message.sendMsg(player,"&aStarted");
                     Start();
                     cancel();
-                    //updateEditAirMenu("stats");
-                }
+                }else
+                    Message.sendMsg(player,"&cFail start: " + x);
+                x++;
             }
-        }.runTaskTimer(BAirDrop.getInstance(), 1L, 1L);
+        }.runTaskTimer(BAirDrop.getInstance(), 1L, 10L);
     }
 
     @Override
@@ -679,7 +683,6 @@ public class CAirDrop implements AirDrop {
                 @Override
                 public void run() {
                     try {
-                        Generator generator = new Generator();
                         if (futureLocation == null) {
                             if (usePreGeneratedLocations)
                                 futureLocation = generator.getPreLocation(CAirDropInstance);
@@ -845,32 +848,13 @@ public class CAirDrop implements AirDrop {
             if (sb.indexOf("{z}") != var)
                 sb.replace(sb.indexOf("{z}"), sb.indexOf("{z}") + 3, (getAnyLoc().getZ() + "").replace(".0", ""));
             if (sb.indexOf("{biome}") != var)
-                sb.replace(sb.indexOf("{biome}"), sb.indexOf("{biome}") + 7, Generator.getBiome(getAnyLoc()));
+                sb.replace(sb.indexOf("{biome}"), sb.indexOf("{biome}") + 7, GeneratorUtils.getBiome(getAnyLoc()));
             if (sb.indexOf("{GET_BLOCK_MATERIAL}") != var)
-                sb.replace(sb.indexOf("{GET_BLOCK_MATERIAL}"), sb.indexOf("{GET_BLOCK_MATERIAL}") + 20, String.valueOf(Generator.getBlock(this).getType()));
+                sb.replace(sb.indexOf("{GET_BLOCK_MATERIAL}"), sb.indexOf("{GET_BLOCK_MATERIAL}") + 20, String.valueOf(GeneratorUtils.getBlock(this).getType()));
         }
         return sb.toString();
-    }//staticObservers
-
-    @Override
-    public void registerStaticObserver(Observer observer) {
-        if (staticObservers.contains(observer)) {
-            throw new IllegalArgumentException("this static observer is already registered");
-        }
-        staticObservers.add(observer);
     }
 
-    @Override
-    public void unregisterStaticObserver(Observer observer) {
-        if (!staticObservers.remove(observer)) {
-            throw new IllegalArgumentException("this static observer is not registered yet");
-        }
-    }
-
-    @Override
-    public boolean hasStaticObserver(Observer observer) {
-        return staticObservers.contains(observer);
-    }
 
     @Override
     public void registerObserver(Observer observer) {
@@ -912,8 +896,7 @@ public class CAirDrop implements AirDrop {
         long x = System.currentTimeMillis();
 
         observers.forEach(o -> o.update(pl, this, customEvent, false));
-        staticObservers.forEach(o -> o.update(pl, this, customEvent, false));
-
+        AirDropUtils.staticObservers.forEach(o -> o.update(pl, this, customEvent, false));
 
         if (System.currentTimeMillis() - x < 50)
             Message.debug(String.format(BAirDrop.getConfigMessage().getMessage("event-time"), customEvent.getKey().getKey(), (System.currentTimeMillis() - x)), LogLevel.HARD);
@@ -985,17 +968,17 @@ public class CAirDrop implements AirDrop {
     }
 
     @Override
-    public void addEffect(String name, String id) {
+    public void loadEffect(String name, String id) {
         IEffect ie = EffectFactory.getEffect(name);
         if (ie == null) {
             throw new IllegalArgumentException(String.format(BAirDrop.getConfigMessage().getMessage("unknown-effect"), name));
         }
-        activeEffects.put(id, ie);
+        loadEfects.put(id, ie);
     }
 
     @Override
     public void startEffect(String id) {
-        IEffect ie = activeEffects.getOrDefault(id, null);
+        IEffect ie = loadEfects.getOrDefault(id, null);
         if (ie == null) {
             throw new IllegalArgumentException(String.format(BAirDrop.getConfigMessage().getMessage("unknown-effect"), id));
         }
@@ -1007,26 +990,26 @@ public class CAirDrop implements AirDrop {
 
     @Override
     public boolean isEffectStarted(String id) {
-        if (!activeEffects.containsKey(id))
+        if (!loadEfects.containsKey(id))
             return false;
-        return !activeEffects.get(id).isActive();
+        return !loadEfects.get(id).isActive();
     }
 
     @Override
     public void StopEffect(String id) {
-        if (!activeEffects.containsKey(id)) {
+        if (!loadEfects.containsKey(id)) {
             throw new IllegalArgumentException(String.format(BAirDrop.getConfigMessage().getMessage("effect-not-stated"), id));
         }
-        IEffect ie = activeEffects.get(id);
+        IEffect ie = loadEfects.get(id);
         ie.End();
-        activeEffects.remove(id);
+        loadEfects.remove(id);
     }
 
     @Override
     public void StopAllEffects() {
-        for (IEffect ie : activeEffects.values())
+        for (IEffect ie : loadEfects.values())
             ie.End();
-        activeEffects.clear();
+        loadEfects.clear();
     }
 
 
@@ -1060,6 +1043,8 @@ public class CAirDrop implements AirDrop {
     public AirDrop clone(String id) {
         CAirDrop air = new CAirDrop(fileConfiguration, airDropFile);
         air.setId(id);
+        for(Observer observer : observers)
+            air.registerObserver(observer);
         return air;
     }
 
@@ -1301,9 +1286,8 @@ public class CAirDrop implements AirDrop {
     }
 
     @Override
-    public void schematicsPaste(String name) {
-
-        schematicsManager.PasteSchematics(name, this);
+    public void schematicsPaste(SchematicsManager manager,String name) {
+        manager.PasteSchematics(name, this);
     }
 
     @Override
@@ -1384,13 +1368,9 @@ public class CAirDrop implements AirDrop {
     @Override
     public void setInventoryTitle(String inventoryTitle) {
         this.inventoryTitle = inventoryTitle;
-
-    }
-
-    @Override
-    public void updateInvName() {
         inventory = Bukkit.createInventory(null, inventorySize, Message.messageBuilder(inventoryTitle));
     }
+
 
     @Override
     public String getDisplayName() {
@@ -1604,4 +1584,14 @@ public class CAirDrop implements AirDrop {
     public boolean isAirDropStarted() {
         return airDropStarted;
     }
+
+    @Override
+    public Generator getGenerator() {
+        return generator;
+    }
+    @Override
+    public void setGenerator(Generator generator) {
+        this.generator = generator;
+    }
+
 }

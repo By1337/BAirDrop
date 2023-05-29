@@ -6,7 +6,7 @@ import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import org.by1337.bairdrop.ConfigManager.BConfig;
+import org.by1337.bairdrop.ConfigManager.CConfig;
 import org.by1337.bairdrop.ConfigManager.ConfigMessage;
 import org.by1337.bairdrop.ConfigManager.Config;
 import org.by1337.bairdrop.Hologram.CMIHolo;
@@ -21,6 +21,8 @@ import org.by1337.bairdrop.LocationGenerator.CGenLoc;
 import org.by1337.bairdrop.LocationGenerator.GeneratorLoc;
 import org.by1337.bairdrop.Summoner.Summoner;
 import org.by1337.bairdrop.WorldGuardApi.RegionManager;
+import org.by1337.bairdrop.api.event.DisableEvent;
+import org.by1337.bairdrop.api.event.EnableEvent;
 import org.by1337.bairdrop.command.Commands;
 import org.by1337.bairdrop.command.Completer;
 import org.by1337.bairdrop.customListeners.CustomEvent;
@@ -71,15 +73,18 @@ public final class BAirDrop extends JavaPlugin {
     private static Logger logger;
     public static FileHandler fh;
     private static Config config;
+    private static int attempts = 0;
     private static ConfigMessage configMessage;
-    @Deprecated //todo убрать зависимость из js скрипта // используется в getInstance() сделать getInstance() приватным
+    @Deprecated //todo убрать зависимость из js скрипта // используется в getInstance()
     public static BAirDrop instance;
+
+
 
     @Override
     public void onEnable() {
         ConfigurationSerialization.registerClass(CGenLoc.class);
         instance = this;
-        config = new BConfig();
+        config = new CConfig();
         configMessage = (ConfigMessage) config;
         File config = new File(getInstance().getDataFolder() + File.separator + "config.yml");
         if (!config.exists()) {
@@ -103,10 +108,26 @@ public final class BAirDrop extends JavaPlugin {
             @Override
             public void run() {
                 long x = System.currentTimeMillis();
-//                licenceCheck();
-//                if (Integer.parseInt(new String(new byte[]{49, 49, 49, 49, 49, 49, 49}, StandardCharsets.UTF_8), 2) != ((Integer.toBinaryString(len).length() << 3) ^ Integer.parseInt(new String(new byte[]{48, 49, 48, 49, 49, 49, 49}, StandardCharsets.UTF_8), 2))) { //127 != 127 при валиджной личензии
-//                    return;
+
+//                while (attempts < 5){
+//                    licenceCheck();
+//                    if (Integer.parseInt(new String(new byte[]{49, 49, 49, 49, 49, 49, 49}, StandardCharsets.UTF_8), 2) != ((Integer.toBinaryString(len).length() << 3) ^ Integer.parseInt(new String(new byte[]{48, 49, 48, 49, 49, 49, 49}, StandardCharsets.UTF_8), 2))) { //127 != 127 при валиджной личензии
+//                        Message.error("Не удачная попытка проверить лицензию!: " +attempts);
+//                        attempts++;
+//                        if(attempts >= 5){
+//                            return;
+//                        }
+//                        try {
+//                            Thread.sleep(1000);
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//                        continue;
+//                        // return;
+//                    }
+//                    break;
 //                }
+
 
                 updateCheck();
                 getiConfig().LoadConfiguration();
@@ -133,7 +154,6 @@ public final class BAirDrop extends JavaPlugin {
                     hologram = new CMIHolo();
                 } else {
                     hologram = new EmptyHologram();
-
                     Message.error(getConfigMessage().getMessage("depend-not-found"));
                 }
 
@@ -178,9 +198,12 @@ public final class BAirDrop extends JavaPlugin {
                         }
                     }.runTaskTimerAsynchronously(getInstance(), 10, 10);
                 }
+
+                Bukkit.getPluginManager().callEvent(new EnableEvent());
+
                 Message.logger(String.format(getConfigMessage().getMessage("start-time"),System.currentTimeMillis() - x));
 
-                System.out.println(customEventListeners.keySet());
+
             }
         }.runTask(getInstance());
 
@@ -247,6 +270,7 @@ public final class BAirDrop extends JavaPlugin {
     public void onDisable() {
         if (!getiConfig().isLoaded())
             return;
+        Bukkit.getPluginManager().callEvent(new DisableEvent());
         long x = System.currentTimeMillis();
         for (AirDrop airDrop : airDrops.values()) {
             if (airDrop.isAirDropStarted())
@@ -261,6 +285,9 @@ public final class BAirDrop extends JavaPlugin {
         }
         GeneratorLoc.save();
         CustomCraft.unloadCrafts();
+
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)
+            new PlaceholderExpansion().unregister();
         Message.logger(String.format(getConfigMessage().getMessage("off-time"),System.currentTimeMillis() - x));
 
     }
@@ -391,7 +418,14 @@ public final class BAirDrop extends JavaPlugin {
         int vvar4 = Integer.parseInt("101110010110001100100100011", 2); // 97196323
         int vvar6 = Integer.parseInt("1101100111010110001110", 2); //3569038
         int var = vvar ^ vvar2;
-        int var1 = Integer.toBinaryString(len).length() / vvar2;
+
+      //  int var1 = Integer.toBinaryString(len).length() / vvar2;
+
+        int var1 = (((Integer.toBinaryString(len).length() >> (vvar3 * 2)) + vvar2) + attempts) / vvar2;
+
+        if(attempts != vvar2) {
+            return;
+        }
         int var5 = str.hashCode() ^ var1 ^ var;
         int var3 = var5 ^ vvar3;
         if (var3 == vvar4) {

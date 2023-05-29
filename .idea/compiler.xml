@@ -9,8 +9,6 @@
         <module name="BAirDrop" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="16">
-      <module name="BAirDrop" target="16" />
-    </bytecodeTargetLevel>
+    <bytecodeTargetLevel target="16" />
   </component>
 </project>

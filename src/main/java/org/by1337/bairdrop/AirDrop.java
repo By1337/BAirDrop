@@ -8,6 +8,8 @@ import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.by1337.bairdrop.LocationGenerator.Generator;
+import org.by1337.bairdrop.WorldGuardApi.SchematicsManager;
 import org.by1337.bairdrop.customListeners.CustomEvent;
 import org.by1337.bairdrop.customListeners.observer.Observable;
 import org.by1337.bairdrop.customListeners.observer.Observer;
@@ -20,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface AirDrop extends Observable {
-    void startCommand();
+    void startCommand(Player player);
 
     void save();
 
@@ -32,11 +34,6 @@ public interface AirDrop extends Observable {
 
     String replaceInternalPlaceholder(String str);
 
-    void registerStaticObserver(Observer observer);
-
-    void unregisterStaticObserver(Observer observer);
-
-    boolean hasStaticObserver(Observer observer);
 
     void saveObserver(String observerKey);
 
@@ -56,7 +53,7 @@ public interface AirDrop extends Observable {
 
     void updateEditAirMenu(String tag);
 
-    void addEffect(String name, String id);
+    void loadEffect(String name, String id);
 
     void startEffect(String id);
 
@@ -148,7 +145,7 @@ public interface AirDrop extends Observable {
     @Nullable
     EditSession getEditSession();
 
-    void schematicsPaste(String name);
+    void schematicsPaste(SchematicsManager manager, String name);
 
     boolean isActivated();
 
@@ -181,8 +178,6 @@ public interface AirDrop extends Observable {
     String getInventoryTitle();
 
     void setInventoryTitle(String inventoryTitle);
-
-    void updateInvName();
 
     String getDisplayName();
 
@@ -267,4 +262,8 @@ public interface AirDrop extends Observable {
     void setWasOpened(boolean wasOpened);
 
     boolean isAirDropStarted();
+
+    Generator getGenerator();
+    void setGenerator(Generator generator);
+
 }

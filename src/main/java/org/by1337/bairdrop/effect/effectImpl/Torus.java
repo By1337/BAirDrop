@@ -118,11 +118,6 @@ public class Torus implements IEffect {
     }
 
     @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
     public IEffect clone() {
         return new Torus(cs, name);
     }

@@ -109,11 +109,6 @@ public class circle implements IEffect {
     }
 
     @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
     public EffectType getType() {
         return EffectType.CIRCLE;
     }

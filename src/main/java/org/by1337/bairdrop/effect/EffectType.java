@@ -33,6 +33,12 @@ public record EffectType(NamespacedKey key) implements Keyed {
         byKey.put(effectType.getKey(), effectType);
         return effectType;
     }
+    public static boolean hasEffectType(EffectType effectType){
+        return byKey.containsKey(effectType.getKey());
+    }
+    public static void unRegisterEffectType(EffectType effectType){
+        byKey.remove(effectType.getKey());
+    }
     @NotNull
     @Override
     public NamespacedKey getKey() {

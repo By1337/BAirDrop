@@ -12,8 +12,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
+import org.by1337.bairdrop.LocationGenerator.GeneratorUtils;
 import org.by1337.bairdrop.customListeners.CustomEvent;
-import org.by1337.bairdrop.LocationGenerator.Generator;
+import org.by1337.bairdrop.LocationGenerator.CGenerator;
 import org.by1337.bairdrop.util.Message;
 
 import static org.by1337.bairdrop.BAirDrop.len;
@@ -135,14 +136,14 @@ public class CSummonerItem implements SummonerItem{
             return null;
         }
         if (isUsePlayerLocation() && !isIgnoreRegion()) {
-            if (!Generator.isRegionEmpty(BAirDrop.airDrops.get(key), location)) {
+            if (!GeneratorUtils.isRegionEmpty(BAirDrop.airDrops.get(key), location)) {
                 Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("region-overlapping"));
                 pl.setCooldown(getItem().getType(), 40);
                 return null;
             }
         }
         if(isFlatnessCheck()){
-            if(!new Generator().checkForEvenness(location.clone().add(0, 1, 0), BAirDrop.airDrops.get(key))){
+            if(!new CGenerator().checkForEvenness(location.clone().add(0, 1, 0), BAirDrop.airDrops.get(key))){
                 Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("flatness-check-fail"));
                 pl.setCooldown(getItem().getType(), 40);
                 return null;

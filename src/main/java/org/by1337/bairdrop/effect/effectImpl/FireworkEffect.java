@@ -114,11 +114,6 @@ public class FireworkEffect implements IEffect {
     }
 
     @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
     public EffectType getType() {
         return EffectType.FIREWORK;
     }

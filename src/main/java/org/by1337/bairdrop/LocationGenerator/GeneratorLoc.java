@@ -41,12 +41,12 @@ public class GeneratorLoc {
 
             @Override
             public void run() {
-                Generator generator = new Generator();
-                Location loc = generator.getLocation(finalairDrop, true);
+                CGenerator CGenerator = new CGenerator();
+                Location loc = CGenerator.getLocation(finalairDrop, true);
               //  Message.debug("loc == null =  " + (loc == null));
                 fail++;
                 if (loc != null) {
-                    GenLoc genLoc = new CGenLoc(loc, Generator.getOffsets(finalairDrop), finalairDrop.getId());
+                    GenLoc genLoc = new CGenLoc(loc, GeneratorUtils.getOffsets(finalairDrop), finalairDrop.getId());
                     String airId = finalairDrop.getId();
                     List<GenLoc> existingValues = locs.get(airId);
                     if (existingValues == null) {
@@ -109,7 +109,7 @@ public class GeneratorLoc {
             return null;
         List<GenLoc> locList = locs.get(airDrop.getId()).stream().filter(
                 gl -> gl.getWorld() == airDrop.getWorld() &&
-                        Objects.equals(gl.getOffsets(), Generator.getOffsets(airDrop))).toList();
+                        Objects.equals(gl.getOffsets(), GeneratorUtils.getOffsets(airDrop))).toList();
         if(locList.isEmpty())
             return null;
         Random random = new Random();
@@ -120,7 +120,7 @@ public class GeneratorLoc {
             return 0;
         List<GenLoc> locList = locs.get(airDrop.getId()).stream().filter(
                 gl -> gl.getWorld() == airDrop.getWorld() &&
-                        Objects.equals(gl.getOffsets(), Generator.getOffsets(airDrop))).toList();
+                        Objects.equals(gl.getOffsets(), GeneratorUtils.getOffsets(airDrop))).toList();
         return locList.size();
     }
     public static void removeLoc(Location location, AirDrop airDrop){

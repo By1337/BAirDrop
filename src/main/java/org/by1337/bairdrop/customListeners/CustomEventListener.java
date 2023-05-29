@@ -17,6 +17,7 @@ import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.customListeners.observer.Observer;
 import org.by1337.bairdrop.scripts.JsScript;
 import org.by1337.bairdrop.util.ExecuteCommands;
+import org.by1337.bairdrop.util.LogLevel;
 import org.by1337.bairdrop.util.Message;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,7 +40,7 @@ public class CustomEventListener implements Observer {
 
     @Override
     public void update(@Nullable Player pl, @Nullable AirDrop airDrop, CustomEvent customEvent, boolean ignoreEvent) {
-        if(customEvent != this.customEvent && !ignoreEvent)
+        if (!customEvent.equals(this.customEvent) && !ignoreEvent)
             return;
         if (Arrays.stream(commands).toList().contains("[SCHEDULER]") || Arrays.stream(denyCommands).toList().contains("[SCHEDULER]")) {
             run_SCHEDULER(pl, airDrop, customEvent);
@@ -57,10 +58,12 @@ public class CustomEventListener implements Observer {
             executeCommands.runListenerCommands(denyCommands, pl, airDrop, customEvent);
         }
     }
+
     @Override
     public CustomEvent getEvent() {
         return customEvent;
     }
+
     @Override
     public String[] getCommands() {
         return commands;
@@ -82,7 +85,7 @@ public class CustomEventListener implements Observer {
         return key;
     }
 
-    private void run_SCHEDULER(@Nullable Player pl, @Nullable AirDrop airDrop, CustomEvent customEvent){
+    private void run_SCHEDULER(@Nullable Player pl, @Nullable AirDrop airDrop, CustomEvent customEvent) {
         int time = 0;//[LATER-600]
         List<String> list = new ArrayList<>();
         list.add(Arrays.toString(commands));
@@ -111,7 +114,8 @@ public class CustomEventListener implements Observer {
             }
         }.runTaskLater(BAirDrop.getInstance(), time);
     }
-    private void run_ASYNC(@Nullable Player pl, @Nullable AirDrop airDrop, CustomEvent customEvent){
+
+    private void run_ASYNC(@Nullable Player pl, @Nullable AirDrop airDrop, CustomEvent customEvent) {
         int time = 0;
         List<String> list = new ArrayList<>();
         list.add(Arrays.toString(commands));
@@ -144,6 +148,7 @@ public class CustomEventListener implements Observer {
             }
         }.runTaskLaterAsynchronously(BAirDrop.getInstance(), time);
     }
+
     private boolean checkRequirement(@Nullable AirDrop airDrop, @Nullable Player pl) {
         boolean requirementsMet = true;
         for (String idCheck : requirement.keySet()) {
@@ -313,7 +318,6 @@ public class CustomEventListener implements Observer {
     }
 
 
-
     private String runJs(String command, @Nullable Player pl, @Nullable AirDrop airDrop) {
 
         try {
@@ -351,7 +355,6 @@ public class CustomEventListener implements Observer {
         String regex = "\\{\\[RUN_JS=.*?\\]\\s*(param\\(player=player\\))?(\\-scheduler)?\\}";
         return input.replaceAll(regex, to);
     }
-
 
 
 }

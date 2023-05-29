@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
+<module version="4">
   <component name="FacetManager">
     <facet type="minecraft" name="Minecraft">
       <configuration>
@@ -8,88 +8,5 @@
         </autoDetectTypes>
       </configuration>
     </facet>
-  </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_16">
-    <output url="file://$MODULE_DIR$/target/classes" />
-    <output-test url="file://$MODULE_DIR$/target/test-classes" />
-    <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
-      <excludeFolder url="file://$MODULE_DIR$/target" />
-    </content>
-    <orderEntry type="inheritedJdk" />
-    <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
-      <library name="Maven: com.Zrips.CMI:CMI:9.3.1.5">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/CMI-API9.3.1.5.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven: net.Zrips.CMILib:CMILib:1.2.5.3">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/CMILib1.2.5.3.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="library" scope="PROVIDED" name="Maven: me.clip:placeholderapi:2.11.3" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.jetbrains:annotations:23.0.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.bstats:bstats-bukkit:3.0.1" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.bstats:bstats-base:3.0.1" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: net.kyori:adventure-platform-bukkit:4.3.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: net.kyori:adventure-platform-api:4.3.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: net.kyori:adventure-api:4.13.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: net.kyori:adventure-key:4.13.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: net.kyori:adventure-text-serializer-bungeecord:4.3.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: net.kyori:adventure-text-serializer-legacy:4.13.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: net.kyori:adventure-nbt:4.13.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: net.kyori:examination-api:1.3.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: net.kyori:examination-string:1.3.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: net.kyori:adventure-text-serializer-gson:4.13.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: net.kyori:adventure-text-serializer-gson-legacy-impl:4.13.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: net.kyori:adventure-platform-facet:4.3.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: net.kyori:adventure-platform-viaversion:4.3.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: commons-lang:commons-lang:2.6" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.guava:guava:21.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.code.gson:gson:2.8.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: net.md-5:bungeecord-chat:1.16-R0.4" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.yaml:snakeyaml:1.27" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.sk89q.worldguard:worldguard-bukkit:7.0.5" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.sk89q.worldguard:worldguard-core:7.0.5" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.sk89q.worldguard.worldguard-libs:core:7.0.5" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.flywaydb:flyway-core:3.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.sk89q:commandbook:2.3" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.sk89q.worldedit:worldedit-bukkit:7.2.13" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.sk89q.worldedit:worldedit-core:7.2.13" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.sk89q.worldedit.worldedit-libs:core:7.2.13" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.antlr:antlr4:4.9.1" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.antlr:antlr-runtime:3.5.2" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.antlr:ST4:4.3" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.abego.treelayout:org.abego.treelayout.core:1.0.3" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.glassfish:javax.json:1.0.4" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.ibm.icu:icu4j:61.1" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.mozilla:rhino-runtime:1.7.13" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.antlr:antlr4-runtime:4.9.1" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.sk89q.worldedit.worldedit-libs:bukkit:7.2.13" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: io.papermc:paperlib:1.0.7" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: it.unimi.dsi:fastutil:8.5.9" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.github.decentsoftware-eu:decentholograms:2.7.11" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.mojang:authlib:1.5.21" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.commons:commons-lang3:3.3.2" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.logging.log4j:log4j-core:2.0-beta9" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: commons-codec:commons-codec:1.9" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.logging.log4j:log4j-api:2.0-beta9" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.code.findbugs:jsr305:2.0.1" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: commons-io:commons-io:2.4" level="project" />
-    <orderEntry type="library" name="Maven: org.json:json:20230227" level="project" />
-    <orderEntry type="library" name="Maven: org.mozilla:rhino:1.7.14" level="project" />
   </component>
 </module>

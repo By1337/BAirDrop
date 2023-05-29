@@ -20,14 +20,15 @@ import java.util.*;
 
 public class RegionManager {
     private static final HashMap<StateFlag, StateFlag.State> flags = new HashMap<>();
+
     public static void RemoveRegion(AirDrop airDrop) {
         World world;
-        if(airDrop.getAirDropLocation() != null)
+        if (airDrop.getAirDropLocation() != null)
             world = airDrop.getAirDropLocation().getWorld();
-        else if(airDrop.getFutureLocation() != null)
+        else if (airDrop.getFutureLocation() != null)
             world = airDrop.getFutureLocation().getWorld();
         else world = airDrop.getWorld();
-        if(world == null){
+        if (world == null) {
             Message.error(BAirDrop.getConfigMessage().getMessage("unknown-world-region"));
             return;
         }
@@ -37,6 +38,7 @@ public class RegionManager {
         if (regions.hasRegion(airDrop.getId() + "_region"))
             regions.removeRegion(airDrop.getId() + "_region", RemovalStrategy.REMOVE_CHILDREN);
     }
+
     public static ProtectedCuboidRegion GetProtectedCuboidRegion(AirDrop airDrop) {
         Location point1 = new Location(airDrop.getAirDropLocation().getWorld(), airDrop.getAirDropLocation().getX() + airDrop.getRegionRadius(), airDrop.getAirDropLocation().getY() + airDrop.getRegionRadius(), airDrop.getAirDropLocation().getZ() + airDrop.getRegionRadius());
         Location point2 = new Location(airDrop.getAirDropLocation().getWorld(), airDrop.getAirDropLocation().getX() - airDrop.getRegionRadius(), airDrop.getAirDropLocation().getY() - airDrop.getRegionRadius(), airDrop.getAirDropLocation().getZ() - airDrop.getRegionRadius());
@@ -46,7 +48,6 @@ public class RegionManager {
     }
 
     public static void SetRegion(AirDrop airDrop) {
-       // Message.logger("SetRegion " + CAirDrop.getAirId());
         ProtectedCuboidRegion rg = GetProtectedCuboidRegion(airDrop);
         World world = airDrop.getAirDropLocation().getWorld();
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
@@ -56,8 +57,8 @@ public class RegionManager {
 
         try {
             for (Map.Entry<StateFlag, StateFlag.State> entry : flags.entrySet())
-                rg.setFlag((Flag)entry.getKey(), entry.getValue());
-        }catch (Exception e){
+                rg.setFlag((Flag) entry.getKey(), entry.getValue());
+        } catch (Exception e) {
             Message.error(BAirDrop.getConfigMessage().getMessage("flag-error"));
         }
         regions.addRegion(rg);
@@ -74,6 +75,7 @@ public class RegionManager {
         }
 
     }
+
     private static boolean addFlag(String flagname, boolean state) {
         Flag<?> flag = WorldGuard.getInstance().getFlagRegistry().get(flagname);
         if (flag == null)

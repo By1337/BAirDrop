@@ -247,7 +247,7 @@ public class Commands implements CommandExecutor {
                         Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("airdrop-is-started"));
                         return true;
                     }
-                    BAirDrop.airDrops.get(args[1]).startCommand();
+                    BAirDrop.airDrops.get(args[1]).startCommand(pl);
                     Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("starting"));
                 } else
                     Message.sendMsg(pl, String.format(BAirDrop.getConfigMessage().getMessage("unknown-airdrop"), args[1]));
@@ -449,7 +449,7 @@ public class Commands implements CommandExecutor {
                         Message.logger(BAirDrop.getConfigMessage().getMessage("airdrop-is-started"));
                         return true;
                     }
-                    BAirDrop.airDrops.get(args[1]).startCommand();
+                    BAirDrop.airDrops.get(args[1]).startCommand(null);
                     Message.logger(BAirDrop.getConfigMessage().getMessage("starting"));
                 } else
                     Message.logger(String.format(BAirDrop.getConfigMessage().getMessage("unknown-airdrop"), args[1]));

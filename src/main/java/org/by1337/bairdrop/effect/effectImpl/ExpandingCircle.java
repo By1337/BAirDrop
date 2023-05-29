@@ -120,11 +120,6 @@ public class ExpandingCircle implements IEffect {
     }
 
     @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
     public IEffect clone() {
         return new ExpandingCircle(cs, name);
     }

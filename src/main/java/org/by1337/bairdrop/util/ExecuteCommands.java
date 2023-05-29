@@ -23,7 +23,8 @@ import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.Listeners.SetStaticLocation;
 import org.by1337.bairdrop.Listeners.util.ListenChat;
-import org.by1337.bairdrop.LocationGenerator.Generator;
+import org.by1337.bairdrop.LocationGenerator.GeneratorUtils;
+import org.by1337.bairdrop.WorldGuardApi.CSchematicsManager;
 import org.by1337.bairdrop.WorldGuardApi.RegionManager;
 import org.by1337.bairdrop.customListeners.CustomEvent;
 import org.by1337.bairdrop.customListeners.CustomEventListener;
@@ -41,8 +42,6 @@ import java.util.List;
 import static org.bukkit.Bukkit.*;
 
 import static org.by1337.bairdrop.BAirDrop.getInstance;
-import static org.by1337.bairdrop.LocationGenerator.Generator.getSettings;
-
 
 public class ExecuteCommands {
     public void runListenerCommands(String[] commands, @Nullable Player pl, @Nullable AirDrop airDrop, CustomEvent customEvent) {
@@ -54,10 +53,10 @@ public class ExecuteCommands {
                 command = CustomEventListener.math(command, airDrop, pl);
             if (command.contains("{player-get-item-") && pl != null)
                 command = setPlayerPlaceholder(pl, command);
-            if(command.equalsIgnoreCase("[SCHEDULER]") || command.equalsIgnoreCase("[ASYNC]") || command.contains("[LATER-")){
+            if (command.equalsIgnoreCase("[SCHEDULER]") || command.equalsIgnoreCase("[ASYNC]") || command.contains("[LATER-")) {
                 continue;
             }
-            if(runJsCommand(pl, airDrop, command))
+            if (runJsCommand(pl, airDrop, command))
                 continue;
             if (pl != null)
                 if (execPlayerCommands(pl, command))
@@ -99,14 +98,16 @@ public class ExecuteCommands {
             Message.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-command"), command));
         }
     }
+
     public boolean runJsCommand(@Nullable Player pl, @Nullable AirDrop airDrop, String command) {
         long x = System.currentTimeMillis();
-        if(command.contains("[RUN_JS")){
-            if(command.contains("-scheduler")){
+        if (command.contains("[RUN_JS")) {
+            if (command.contains("-scheduler")) {
                 command = command.replace("-scheduler", "");
                 String preCmd = command;
                 new BukkitRunnable() {
                     String finalCommand = preCmd;
+
                     @Override
                     public void run() {
                         try {
@@ -134,15 +135,15 @@ public class ExecuteCommands {
                                 Script manager = new JsScript();
                                 manager.runScript(jsName, map);
                             }
-                        }catch (ArrayIndexOutOfBoundsException | NullPointerException e){
+                        } catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
                             e.printStackTrace();
                         }
                         cancel();
                     }
                 }.runTaskLater(getInstance(), 0);
-                Message.debug(String.format(BAirDrop.getConfigMessage().getMessage("js-time"), command,  (System.currentTimeMillis() - x)), LogLevel.MEDIUM);
+                Message.debug(String.format(BAirDrop.getConfigMessage().getMessage("js-time"), command, (System.currentTimeMillis() - x)), LogLevel.MEDIUM);
                 return true;
-            }else {
+            } else {
                 try {
                     if (command.contains("[RUN_JS=")) {
                         command = command.replace(" ", "");
@@ -167,16 +168,17 @@ public class ExecuteCommands {
                         }
                         Script manager = new JsScript();
                         manager.runScript(jsName, map);
-                        Message.debug(String.format(BAirDrop.getConfigMessage().getMessage("js-time"), command,  (System.currentTimeMillis() - x)), LogLevel.MEDIUM);
+                        Message.debug(String.format(BAirDrop.getConfigMessage().getMessage("js-time"), command, (System.currentTimeMillis() - x)), LogLevel.MEDIUM);
                         return true;
                     }
-                }catch (ArrayIndexOutOfBoundsException | NullPointerException e){
+                } catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
                     e.printStackTrace();
                 }
             }
         }
         return false;
     }
+
     public static String setPlayerPlaceholder(Player pl, String command) {
         if (command.contains("{player-get-item-")) {
             try {
@@ -448,9 +450,9 @@ public class ExecuteCommands {
                 return true;
             }
             try {
-                airDrop.addEffect(args[1], args[2]);
+                airDrop.loadEffect(args[1], args[2]);
                 airDrop.startEffect(args[2]);
-            }catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 Message.warning(e.getLocalizedMessage());
             }
             return true;
@@ -464,7 +466,7 @@ public class ExecuteCommands {
             }
             try {
                 airDrop.StopEffect(args[1]);
-            }catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 Message.warning(e.getLocalizedMessage());
             }
 
@@ -492,10 +494,10 @@ public class ExecuteCommands {
                 Material mat = Material.valueOf(command.replace("]", "").replace("[SET_MATERIAL_", "").replace(" ", ""));
                 if (subtractOffsets)
                     location.add(
-                            -getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.x", Generator.getWorldKeyByWorld(location.getWorld()))),
-                            -getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.y", Generator.getWorldKeyByWorld(location.getWorld()))),
-                            -getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.z", Generator.getWorldKeyByWorld(location.getWorld())))).add(0,
-                            (int)(Integer.toBinaryString(BAirDrop.info[5]).length() / 10)
+                            -GeneratorUtils.getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.x", GeneratorUtils.getWorldKeyByWorld(location.getWorld()))),
+                            -GeneratorUtils.getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.y", GeneratorUtils.getWorldKeyByWorld(location.getWorld()))),
+                            -GeneratorUtils.getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.z", GeneratorUtils.getWorldKeyByWorld(location.getWorld())))).add(0,
+                            (int) (Integer.toBinaryString(BAirDrop.info[5]).length() / 10)
                             , 0);
                 location.getBlock().setType(mat);
                 if (mat == Material.RESPAWN_ANCHOR) {
@@ -519,7 +521,7 @@ public class ExecuteCommands {
         }
         if (command.contains("[SCHEMATICS_PASTE-")) {
             String schem = command.replace("[SCHEMATICS_PASTE-", "").replace("]", "");
-            airDrop.schematicsPaste(schem);
+            airDrop.schematicsPaste(new CSchematicsManager(), schem);
             return true;
         }
         if (command.equalsIgnoreCase("[SCHEMATICS_REMOVE]")) {
@@ -708,7 +710,7 @@ public class ExecuteCommands {
             if (str.equalsIgnoreCase("[!airdropstarted]")) {
                 if (airDrop.isAirDropStarted())
                     airDrop.End();
-                else airDrop.startCommand();
+                else airDrop.startCommand(pl);
                 continue;
             }
             if (str.equalsIgnoreCase("[teleport]")) {

@@ -10,7 +10,6 @@ public interface IEffect{
     void End();
     void setLifetime(int ticks);
     boolean isActive();
-    String getName();
     IEffect clone();
     EffectType getType();
 }
