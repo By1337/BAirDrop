@@ -18,7 +18,6 @@ public class Completer implements TabCompleter {
     @Nullable
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
-      //  Message.debug(Arrays.toString(args) + " = " + args.length, LogLevel.HARD);
         if(sender instanceof Player pl){
             if(!pl.hasPermission("bair.*")) return null;
             List<String> list = new ArrayList<>();

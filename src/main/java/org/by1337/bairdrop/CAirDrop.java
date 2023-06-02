@@ -38,7 +38,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -87,7 +86,7 @@ public class CAirDrop implements AirDrop {
     private boolean flatnessCheck;
     private Location staticLocation;
     private boolean useStaticLoc;
-    private final HashMap<String, IEffect> loadEfects = new HashMap<>();
+    private HashMap<String, IEffect> loadedEffect = new HashMap<>();
     private int pickPreGenLocs;
     private int spawnChance;
     private boolean timeCountingEnabled;
@@ -248,21 +247,21 @@ public class CAirDrop implements AirDrop {
             minPlayersToStart = 0;
             inventoryTitle = "new air";
             displayName = "new air name";
-            inventorySize = (int) (Integer.toBinaryString(info[6]).length() * 2.7);//54
+            inventorySize = 54;//54
             world = Bukkit.getWorld("world") == null ? Bukkit.getWorlds().get(0) : Bukkit.getWorld("world");
             spawnRadiusMin = -2000;
             spawnRadiusMax = 2000;
-            regionRadius = Integer.toBinaryString(info[4]).length();
+            regionRadius = 15;
             timeToStartCons = 2;
             timeToStopCons = 1;
             timeToUnlockCons = 1;
             searchBeforeStartCons = 1;
-            timeToStart = 2 * Integer.toBinaryString(info[5]).length() * 6; //2 * 60
-            searchBeforeStart = Integer.toBinaryString(info[5]).length() * 6;//60
-            timeToOpen = Integer.toBinaryString(info[5]).length() * 6;//60
+            timeToStart = 2 * 60; //2 * 60
+            searchBeforeStart = 60;//60
+            timeToOpen = 60;//60
             startCountdownAfterClick = false;
             timeStopEventMustGo = false;
-            timeStop = Integer.toBinaryString(info[5]).length() * 6;//60
+            timeStop = 60;//60
             materialLocked = Material.RESPAWN_ANCHOR;
             materialUnlocked = Material.ENDER_CHEST;
             signedListener = new ArrayList<>();
@@ -273,7 +272,7 @@ public class CAirDrop implements AirDrop {
             randomizeSlot = false;
             useOnlyStaticLoc = false;
             generatorSettings = "default";
-            spawnChance = Integer.toBinaryString(info[5]).length() * 5; //50
+            spawnChance = 50; //50
             airHolo = BAirDrop.getConfigMessage().getList("air-holo");
             airHoloOpen = BAirDrop.getConfigMessage().getList("air-holo-open");
             airHoloClickWait = BAirDrop.getConfigMessage().getList("air-holo-click-wait");
@@ -384,7 +383,7 @@ public class CAirDrop implements AirDrop {
                     }
                 }
             }
-        }.runTaskTimer(BAirDrop.getInstance(), Integer.toBinaryString(info[6]).length(), Integer.toBinaryString(info[6]).length());//20 20
+        }.runTaskTimer(BAirDrop.getInstance(), 20, 20);//20 20
     }
 
     @Override
@@ -572,7 +571,7 @@ public class CAirDrop implements AirDrop {
 
     private int getEmptyRandomSlot() {
         int next = 0;
-        while (next <= Integer.toBinaryString(info[6]).length() * 10) {//200
+        while (next <= 200) {//200
             int slot = ThreadLocalRandom.current().nextInt(inventory.getSize());
             if (inventory.getItem(slot) == null) {
                 return slot;
@@ -589,6 +588,9 @@ public class CAirDrop implements AirDrop {
 
     @Override
     public void unlock() {
+        if(!airDropStarted){
+            throw new IllegalArgumentException("airdrop is not started!");
+        }
         AirDropUnlockEvent airDropUnlockEvent = new AirDropUnlockEvent(this);
         Bukkit.getServer().getPluginManager().callEvent(airDropUnlockEvent);
         if (airDropUnlockEvent.isCancelled())
@@ -596,10 +598,6 @@ public class CAirDrop implements AirDrop {
 
         airDropLocked = false;
         timeToOpen = 0;
-        if (airDropLocation == null) {
-            Message.error(BAirDrop.getConfigMessage().getMessage("spawn-error"));
-            return;
-        }
         try {
             airDropLocation.getBlock().setType(materialUnlocked);
             if (materialUnlocked == Material.RESPAWN_ANCHOR) {
@@ -629,6 +627,9 @@ public class CAirDrop implements AirDrop {
 
     @Override
     public void End() {
+        if(!airDropStarted){
+            throw new IllegalArgumentException("airdrop is not started!");
+        }
         AirDropEndEvent airDropEndEvent = new AirDropEndEvent(this);
         Bukkit.getServer().getPluginManager().callEvent(airDropEndEvent);
         if (airDropEndEvent.isCancelled())
@@ -896,7 +897,7 @@ public class CAirDrop implements AirDrop {
         long x = System.currentTimeMillis();
 
         observers.forEach(o -> o.update(pl, this, customEvent, false));
-        AirDropUtils.staticObservers.forEach(o -> o.update(pl, this, customEvent, false));
+        AirDropUtils.getStaticObservers().forEach(o -> o.update(pl, this, customEvent, false));
 
         if (System.currentTimeMillis() - x < 50)
             Message.debug(String.format(BAirDrop.getConfigMessage().getMessage("event-time"), customEvent.getKey().getKey(), (System.currentTimeMillis() - x)), LogLevel.HARD);
@@ -917,7 +918,7 @@ public class CAirDrop implements AirDrop {
     }
 
     @Override
-    public void callListener(NamespacedKey listener, @Nullable Player player, CustomEvent customEvent) {
+    public void InvokeListener(NamespacedKey listener, @Nullable Player player, CustomEvent customEvent) {
         try {
             if (!BAirDrop.customEventListeners.containsKey(listener)) {
                 Message.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-listener"), listener));
@@ -973,12 +974,12 @@ public class CAirDrop implements AirDrop {
         if (ie == null) {
             throw new IllegalArgumentException(String.format(BAirDrop.getConfigMessage().getMessage("unknown-effect"), name));
         }
-        loadEfects.put(id, ie);
+        loadedEffect.put(id, ie);
     }
 
     @Override
     public void startEffect(String id) {
-        IEffect ie = loadEfects.getOrDefault(id, null);
+        IEffect ie = loadedEffect.getOrDefault(id, null);
         if (ie == null) {
             throw new IllegalArgumentException(String.format(BAirDrop.getConfigMessage().getMessage("unknown-effect"), id));
         }
@@ -990,28 +991,34 @@ public class CAirDrop implements AirDrop {
 
     @Override
     public boolean isEffectStarted(String id) {
-        if (!loadEfects.containsKey(id))
+        if (!loadedEffect.containsKey(id))
             return false;
-        return !loadEfects.get(id).isActive();
+        return !loadedEffect.get(id).isActive();
     }
 
     @Override
     public void StopEffect(String id) {
-        if (!loadEfects.containsKey(id)) {
+        if (!loadedEffect.containsKey(id)) {
             throw new IllegalArgumentException(String.format(BAirDrop.getConfigMessage().getMessage("effect-not-stated"), id));
         }
-        IEffect ie = loadEfects.get(id);
+        IEffect ie = loadedEffect.get(id);
         ie.End();
-        loadEfects.remove(id);
+        loadedEffect.remove(id);
     }
 
     @Override
     public void StopAllEffects() {
-        for (IEffect ie : loadEfects.values())
+        for (IEffect ie : loadedEffect.values())
             ie.End();
-        loadEfects.clear();
     }
-
+    @Override
+    public HashMap<String, IEffect> getLoadedEffect() {
+        return loadedEffect;
+    }
+    @Override
+    public void setLoadedEffect(HashMap<String, IEffect> loadedEffect) {
+        this.loadedEffect = loadedEffect;
+    }
 
     /**
      * убирает поставленную схематику, если такая есть
@@ -1082,24 +1089,13 @@ public class CAirDrop implements AirDrop {
      */
     @Override
     @Nullable
-    public Location getAnyLoc() {//todo тут защита
+    public Location getAnyLoc() {
         if (airDropLocation == null) {
             if (futureLocation == null)
                 return null;
-            else {
-                if ((((Integer.toBinaryString(len).length() << 4) ^ Integer.parseInt(new String(new byte[]{(byte) Integer.parseInt("110000", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110000", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110001", 2)}, StandardCharsets.UTF_8), 2) ^ Integer.parseInt(new String(new byte[]{(byte) Integer.parseInt("110000", 2), (byte) Integer.parseInt("110000", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110000", 2)}, StandardCharsets.UTF_8), 2) >> 5) != 143)) {
-                    futureLocation.add(new Random().nextInt(10), new Random().nextInt(10), new Random().nextInt(10));//если лицензия не валидна
-                } else {
-                    futureLocation.clone().add(new Random().nextInt(10), new Random().nextInt(10), new Random().nextInt(10));//nop
-                }
+            else
                 return futureLocation.clone();
-            }
         } else {
-            if ((((Integer.toBinaryString(len).length() << 4) ^ Integer.parseInt(new String(new byte[]{(byte) Integer.parseInt("110000", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110000", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110001", 2)}, StandardCharsets.UTF_8), 2) ^ Integer.parseInt(new String(new byte[]{(byte) Integer.parseInt("110000", 2), (byte) Integer.parseInt("110000", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110001", 2), (byte) Integer.parseInt("110000", 2)}, StandardCharsets.UTF_8), 2) >> 5) != 143)) {
-                airDropLocation.add(new Random().nextInt(10), new Random().nextInt(10), new Random().nextInt(10));//если лицензия не валидна
-            } else {
-                airDropLocation.clone().add(new Random().nextInt(10), new Random().nextInt(10), new Random().nextInt(10));//nop
-            }
             return airDropLocation.clone();
         }
     }

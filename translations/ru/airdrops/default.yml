@@ -1,7 +1,8 @@
-air-name: '&7Ordinary Chest'
-inv-name: '&7Ordinary Chest'
+# https://by1337-developers.gitbook.io/bairdrop/rukovodstvo/nastroiki-airdropov
+air-name: '&7Обычный сундук'
+inv-name: test
 chest-inventory-size: 54
-air-id: 'default'
+air-id: default
 air-spawn-world: world
 air-spawn-radius-min: -2000
 air-spawn-radius-max: 2000
@@ -11,41 +12,37 @@ timeToStart: 2
 use-pre-generated-locations: false
 search-before-start: 1
 stop-when-empty: false
-use-only-static-loc: false
 flatness-check: false
 use-static-loc: false
 static-location:
-  world: world
+  world: world_the_end
   x: 0
   y: 0
   z: 0
 generator-settings: default
 air-holo-to-start:
   - '{air-name}'
-  - '&aTime to start: &f{time-to-start} sec'
+  - '&aДо появления &f{time-to-start} сек'
 air-holo:
   - '{air-name}'
-  - '&cClosed!'
-  - '&aTime to open: &f{time-to-open} sec'
+  - '&cЗакрыт!'
+  - '&aДо открытия &f{time-to-open} сек'
 air-holo-open:
   - '{air-name}'
-  - '&aOpen'
+  - '&aОткрыт'
 air-holo-click-wait:
   - '{air-name}'
-  - '&7Click to activate'
-
-
+  - '&7Нажмите для активации'
 holo-offsets:
   x: 0.5
   y: 2.5
   z: 0.5
-
 openingTime: 1
-start-countdown-after-click: false
+start-countdown-after-click: true
 time-stop-event-must-go: false
 time-stop-event: 1
 chest-material-locked: RESPAWN_ANCHOR
-chest-material-unlocked: CHEST
+chest-material-unlocked: ENDER_CHEST
 min-online-players: 1
 random-slot: false
 signed-events:
@@ -53,11 +50,15 @@ signed-events:
   - spawn-particle
   - alert-start
   - spawn-summoner-alert
-  - ACTIVATE
+  - activate
   - alert-4
   - alert
   - alert-5
-  - alert-end
   - end
   - alert-open
   - spawn-summoner
+  - chest-open
+  - anim
+use-only-static-loc: false
+inv: []
+

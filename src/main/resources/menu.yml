@@ -1,26 +1,32 @@
-# команды
-# [!airDropStarted] - изменить его статус на противоположный (был запущенным, стал остановленным)
-# [!airLocked] - был открытым стал закрытым
-# [edit] - открыть меню редактирования предметов
-# [chance] - открыть меню редактирования шансов предметов
-# [event_list] - открыть меню ивентов
-# [!start-countdown-after-click] - изменить параметр start-countdown-after-click
-# LEFT-CLICK (лкм), SHIFT_LEFT-CLICK (штфт + лкм), RIGHT-CLICK (пкм), SHIFT_RIGHT-CLICK (штфт + пкм), MIDDLE-CLICK (средняя кнопка мыши), DROP-CLICK (q)
+# Commands
+#- '[!airDropStarted]': Change its status to the opposite (was started, now stopped)
+#- '[!airLocked]': Change from open to closed
+#- '[edit]': Open item editing menu
+#- '[chance]': Open item chance editing menu
+#- '[event_list]': Open event menu
+#- '[!start-countdown-after-click]': Toggle the start countdown after click parameter
+#- 'LEFT-CLICK': Left click
+#- 'SHIFT_LEFT-CLICK': Shift + left click
+#- 'RIGHT-CLICK': Right click
+#- 'SHIFT_RIGHT-CLICK': Shift + right click
+#- 'MIDDLE-CLICK': Middle click
+#- 'DROP-CLICK (q)': Drop click
+
 main:
-  "stats": #неизменяемый тег (он используется плагином как константа!)
+  stats: # Immutable tag (used as a constant by the plugin!)
     slot: 13
-    name: '&aИнформация'
+    name: '&aInformation'
     material: KNOWLEDGE_BOOK
     lore:
-      - '&fАирдроп активен:&a {airdrop-is-start}'
-      - '&fДо старта:&a {time-to-start}'
-      - '&fДо остановки:&a {time-to-end}'
-      - '&fАирдроп открыт:&a {airdrop-is-open}'
-      - '&fДо открытия:&a {time-to-open}'
-      - '&fБыл ли аирдроп открыт:&a {it-was-open}'
-      - '&aЛКМ&f запустить/остановить'
-      - '&aПКМ&f открыть/закрыть'
-      - '&aСКМ&f телепортироваться на аирдроп'
+      - '&fAirdrop is active:&a {airdrop-is-start}'
+      - '&fTime to start:&a {time-to-start}'
+      - '&fTime to end:&a {time-to-end}'
+      - '&fAirdrop is open:&a {airdrop-is-open}'
+      - '&fTime to open:&a {time-to-open}'
+      - '&fWas the airdrop opened:&a {it-was-open}'
+      - '&aLEFT-CLICK&f to start/stop'
+      - '&aRIGHT-CLICK&f to open/close'
+      - '&aMIDDLE-CLICK&f to teleport to the airdrop'
     commands:
       LEFT-CLICK:
         - '[!airDropStarted]'
@@ -28,83 +34,84 @@ main:
         - '[!airLocked]'
       MIDDLE-CLICK:
         - '[teleport]'
-  "editor":
+  editor:
     slot: 12
-    name: '&aРедактор предметов'
+    name: '&aItem Editor'
     material: CRAFTING_TABLE
     lore:
-      - '&aЛКМ&f Редактировать предметы'
-      - '&aПКМ&f Редактировать шансы появления предметов'
+      - '&aLEFT-CLICK&f Edit items'
+      - '&aRIGHT-CLICK&f Edit item spawn chances'
     commands:
       LEFT-CLICK:
         - '[edit]'
       RIGHT-CLICK:
         - '[chance]'
-  "event_list":
+  event_list:
     slot: 14
-    name: '&aСписок слушателей'
+    name: '&aListener List'
     material: OBSERVER
     lore:
-      - '&aЛКМ&f Смотреть все слушатели'
+      - '&aLEFT-CLICK&f View all listeners'
     commands:
       LEFT-CLICK:
         - '[event_list]'
-  "boolean-1":
+  boolean-1:
     slot: 23
-    name: '&aОбратный отсчёт после клика'
+    name: '&aCountdown after Click'
     material: OAK_BUTTON
     lore:
-      - '&aАктивно &7- {start-countdown-after-click}'
-      - '&7Обратный отсчёт до открытия'
-      - '&7запустится только после нажатия по аирдропу'
-      - '&aЛКМ &7- изменить на true&7/false'
+      - '&aActive &7- {start-countdown-after-click}'
+      - '&7Countdown to open'
+      - '&7will only start after clicking on the airdrop'
+      - '&aLEFT-CLICK &7- toggle true/false'
     commands:
       LEFT-CLICK:
         - '[!start-countdown-after-click]'
-  "change-material":
+  change-material:
     slot: 21
-    name: '&aИзменить материал аирдропа'
+    name: '&aChange Airdrop Material'
     material: CLOCK
     lore:
-      - '&7Изменить материал когда аирдроп закрыт'
-      - '&7Сейчас установлен {material-locked}'
-      - '&aЛКМ &7- изменить'
+      - '&7Change the material when the airdrop is locked'
+      - '&7Currently set to {material-locked}'
+      - '&aLEFT-CLICK &7- change'
     commands:
       LEFT-CLICK:
         - '[change-locked-material]'
+
   "change-material-2":
     slot: 22
-    name: '&aИзменить материал аирдропа'
+    name: '&aChange Airdrop Material'
     material: CLOCK
     lore:
-      - '&7Изменить материал когда аирдроп открыт'
-      - '&7Сейчас установлен {material-unlocked}'
-      - '&aЛКМ &7- изменить'
+      - '&7Change the material when the airdrop is open'
+      - '&7Currently set to {material-unlocked}'
+      - '&aLEFT-CLICK &7- change'
     commands:
       LEFT-CLICK:
         - '[change-unlocked-material]'
   "change-World":
     slot: 33
-    name: '&aИзменить мир'
+    name: '&aChange World'
     material: basehead-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzY5MTk2YjMzMGM2Yjg5NjJmMjNhZDU2MjdmYjZlY2NlNDcyZWFmNWM5ZDQ0Zjc5MWY2NzA5YzdkMGY0ZGVjZSJ9fX0=
     lore:
-      - '&7Изменить мир появления аирдропа'
-      - '&7Сейчас установлен {world}'
-      - '&aЛКМ &7- изменить'
+      - '&7Change the airdrop spawn world'
+      - '&7Currently set to {world}'
+      - '&aLEFT-CLICK &7- change'
     commands:
       LEFT-CLICK:
         - '[change-world]'
   "usePreGeneratedLocations":
     slot: 32
-    name: '&aИспользовать заранее сгенерированные локации'
+    name: '&aUse Pre-Generated Locations'
     material: GRASS_BLOCK
     lore:
-      - '&7Использовать: {use-pre-generated-locations}'
-      - '&7Для мира {world} сгенерировано {world-loc} локаций'
-      - '&aЛКМ &7- Изменить true&7/false'
-      - '&ashift + лкм &7- Сгенерировать 50 локаций'
-      - '&ashift + пкм &7- Остановить генерацию'
-    commands: #/bair test generate 1 50
+      - '&7Use: {use-pre-generated-locations}'
+      - '&7{world} has {world-loc} pre-generated locations'
+      - '&aLEFT-CLICK &7- Toggle true/false'
+      - '&aSHIFT + LEFT-CLICK &7- Generate 50 locations'
+      - '&aSHIFT + RIGHT-CLICK &7- Stop generation'
+    commands:
       LEFT-CLICK:
         - '[!usePreGeneratedLocations]'
       SHIFT_RIGHT-CLICK:
@@ -113,140 +120,139 @@ main:
         - '[PLAYER] bair generate {id} 1 50'
   "flatnessCheck":
     slot: 29
-    name: '&aПроверять локацию на ровность'
+    name: '&aCheck Location Flatness'
     material: SMOOTH_STONE
     lore:
-      - '&7Использовать: {flatness-check}'
-      - '&eРекомендуется использовать вместе с'
-      - '&eЗаренее сгенерированными локациями!'
+      - '&7Use: {flatness-check}'
+      - '&eRecommended to use together with'
+      - '&ePre-Generated Locations!'
     commands:
       LEFT-CLICK:
         - '[!flatnessCheck]'
   "time-stop-event-must-go":
     slot: 30
-    name: '&aИгнорировать активацию '
+    name: '&aIgnore Activation'
     material: REDSTONE_LAMP
     lore:
-      - '&7Использовать: {time-stop-event-must-go}'
-      - '&7Аирдроп будет отсчитывать время до конца'
-      - '&7ивента даже если его не активировали'
-      - '&7Рекомендуется с параметром "Обратный отсчёт после клика"'
-      - '&eПри этом рекомендуется увеличить время до остановки'
+      - '&7Use: {time-stop-event-must-go}'
+      - '&7The airdrop will continue counting time until the end'
+      - '&7of the event even if it is not activated'
+      - '&7Recommended to use with "Start Countdown After Click"'
+      - '&eIt is recommended to increase the time until the end'
     commands:
       LEFT-CLICK:
         - '[!time-stop-event-must-go]'
   "edtAirName":
     slot: 41
-    name: '&aИзменить имя аирдропа'
+    name: '&aChange Airdrop Name'
     material: NAME_TAG
     lore:
-      - '&aЛКМ &7- Изменить имя'
-      - '&7Сейчас: {air-name}'
+      - '&aLEFT-CLICK &7- Change the name'
+      - '&7Current: {air-name}'
     commands:
       LEFT-CLICK:
         - '[change-AirName]'
   "editInvName":
     slot: 38
-    name: '&aИзменить название инвентаря аирдропа'
+    name: '&aChange Airdrop Inventory Name'
     material: NAME_TAG
     lore:
-      - '&aЛКМ &7- Изменить название инвентаря'
-      - '&7Сейчас: {inv-name}'
+      - '&aLEFT-CLICK &7- Change the inventory name'
+      - '&7Current: {inv-name}'
     commands:
       LEFT-CLICK:
         - '[change-invName]'
+
   "editSpawnMin":
     slot: 39
-    name: '&aИзменить минимальный радиус'
+    name: '&aChange Minimum Radius'
     material: NAME_TAG
     lore:
-      - '&aЛКМ &7- Изменить минимальный радиус спавна'
-      - '&7Сейчас: {spawn-min}'
+      - '&aLEFT-CLICK &7- Change the minimum spawn radius'
+      - '&7Current: {spawn-min}'
     commands:
       LEFT-CLICK:
         - '[change-spawnMin]'
   "editSpawnMaxn":
     slot: 40
-    name: '&aИзменить максимальный радиус'
+    name: '&aChange Maximum Radius'
     material: NAME_TAG
     lore:
-      - '&aЛКМ &7- Изменить максимальный радиус спавна'
-      - '&7Сейчас: {spawn-max}'
+      - '&aLEFT-CLICK &7- Change the maximum spawn radius'
+      - '&7Current: {spawn-max}'
     commands:
       LEFT-CLICK:
         - '[change-spawnMax]'
   "editAirProtect":
     slot: 42
-    name: '&aИзменить радиус защиты'
+    name: '&aChange Protection Radius'
     material: NAME_TAG
     lore:
-      - '&aЛКМ &7- Изменить радиус защиты'
-      - '&7Сейчас: {air-protect}'
+      - '&aLEFT-CLICK &7- Change the protection radius'
+      - '&7Current: {air-protect}'
     commands:
       LEFT-CLICK:
         - '[change-airProtect]'
   "editTimeToStart":
     slot: 51
-    name: '&aИзменить время до старта'
+    name: '&aChange Time Until Start'
     material: NAME_TAG
     lore:
-      - '&aЛКМ &7- Изменить время до старта'
-      - '&7Сейчас: {time-to-start-cons}'
+      - '&aLEFT-CLICK &7- Change the time until start'
+      - '&7Current: {time-to-start-cons}'
     commands:
-      LEFT-CLICK:
-        - '[change-timeToStart]'
   "editSearchBeforeStart":
     slot: 47
-    name: '&aИзменить время до начала поиска локации'
+    name: '&aChange Time Before Location Search'
     material: NAME_TAG
     lore:
-      - '&aЛКМ &7- Изменить время до начала поиска локации'
-      - '&eВсегда меньше чем время до старта!'
-      - '&7Сейчас: {search-before-start-cons}'
+      - '&aLEFT-CLICK &7- Change the time before location search'
+      - '&eAlways less than the time until start!'
+      - '&7Current: {search-before-start-cons}'
     commands:
       LEFT-CLICK:
         - '[change-searchBeforeStart]'
   "editTimeToOpen":
     slot: 48
-    name: '&aИзменить время открытия'
+    name: '&aChange Opening Time'
     material: NAME_TAG
     lore:
-      - '&aЛКМ &7- Изменить время открытия'
-      - '&7Сейчас: {time-to-open-cons}'
+      - '&aLEFT-CLICK &7- Change the opening time'
+      - '&7Current: {time-to-open-cons}'
     commands:
       LEFT-CLICK:
         - '[change-timeToOpen]'
   "editTimeStop":
     slot: 49
-    name: '&aИзменить время остановки'
+    name: '&aChange Stop Time'
     material: NAME_TAG
     lore:
-      - '&aЛКМ &7- Изменить время остановки'
-      - '&7Сейчас: {time-to-end-cons}'
+      - '&aLEFT-CLICK &7- Change the stop time'
+      - '&7Current: {time-to-end-cons}'
     commands:
       LEFT-CLICK:
         - '[change-timeStop]'
   "editMinOnlinePlayers":
     slot: 50
-    name: '&aИзменить минимальное количество онлайна'
+    name: '&aChange Minimum Online Players'
     material: NAME_TAG
     lore:
-      - '&aЛКМ &7- Изменить минимальное количество онлайна'
-      - '&7Для старта ивента'
-      - '&7Сейчас: {min-online-players}'
+      - '&aLEFT-CLICK &7- Change the minimum online players'
+      - '&7for the event to start'
+      - '&7Current: {min-online-players}'
     commands:
       LEFT-CLICK:
         - '[change-minOnlinePlayers]'
   "setStaticLoc":
     slot: 31
-    name: '&aСтатическая локация'
+    name: '&aStatic Location'
     material: BEDROCK
     lore:
-      - '&aСейчас:&7 {use-static-loc}'
-      - '&aЛКМ&7- что бы включить/выключить'
-      - '&aПКМ&7- что бы установить'
-      - '&aShift + ЛКМ &7- Использовать только статическую локацию: {use-only-static-loc}'
-      - '&7Координаты статической локации'
+      - '&aCurrent: &7{use-static-loc}'
+      - '&aLEFT-CLICK&7- Enable/Disable'
+      - '&aRIGHT-CLICK&7- Set'
+      - '&aSHIFT + LEFT-CLICK&7- Use Only Static Location: {use-only-static-loc}'
+      - '&7Static Location Coordinates'
       - '&7{stat-world}, {stat-x}, {stat-y}, {stat-z}'
     commands:
       SHIFT_LEFT-CLICK:

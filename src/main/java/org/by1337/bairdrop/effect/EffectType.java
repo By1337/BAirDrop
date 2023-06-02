@@ -21,11 +21,21 @@ public record EffectType(NamespacedKey key) implements Keyed {
     public static EffectType WRITHING_HELIX = registerEffect(new EffectType(NamespacedKey.fromString("writhing_helix")));
     public static EffectType HELIX = registerEffect(new EffectType(NamespacedKey.fromString("helix")));
 
+    /**
+     * @param key NamespacedKey of the event
+     * @return null if the EffectType does not exist, otherwise returns EffectType
+     */
     @Nullable
     public static EffectType getByKey(NamespacedKey key) {
         return byKey.getOrDefault(key, null);
     }
 
+    /**
+     * Registers a custom event
+     * @param effectType the effectType to register
+     * @return the registered effectType object
+     * @throws IllegalArgumentException if this effectType is already registered
+     */
     public static EffectType registerEffect(EffectType effectType) {
         if (byKey.containsKey(effectType.getKey())) {
             throw new IllegalArgumentException("Cannot set already-set effectType: " + effectType.getKey().getKey());
@@ -33,6 +43,7 @@ public record EffectType(NamespacedKey key) implements Keyed {
         byKey.put(effectType.getKey(), effectType);
         return effectType;
     }
+
     public static boolean hasEffectType(EffectType effectType){
         return byKey.containsKey(effectType.getKey());
     }

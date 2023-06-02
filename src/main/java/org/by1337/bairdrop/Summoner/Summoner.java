@@ -33,8 +33,9 @@ public class Summoner implements Listener {
     public int cooldown;
 
     /**
-     * Загрузка предметов из конфига
+     * Loading items from the configuration
      */
+
     public void LoadSummoner() {
         items.clear();
         cooldown = BAirDrop.getInstance().getConfig().getInt("summoner-сooldown");
@@ -82,8 +83,9 @@ public class Summoner implements Listener {
         }
     }
     /**
-     * Прослушивание установок Summoner
+     * Listening for Summoner settings
      */
+
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
         if (e.getAction() == Action.RIGHT_CLICK_BLOCK || BAirDrop.getInstance().getConfig().getBoolean("geyser")) {

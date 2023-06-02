@@ -8,8 +8,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 /**
- * Если отсутствуют нужные библиотеки для работы с голограммами, то вместо них будет этот класс
-**/
+ * If the required libraries for working with holograms are missing, this class will be used instead
+ **/
+
 public class EmptyHologram implements IHologram{
     @Override
     public void createOrUpdateHologram(@NotNull List<String> lines, @NotNull Location location, @NotNull String name) {

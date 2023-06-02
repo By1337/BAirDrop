@@ -66,7 +66,6 @@ public class CConfig implements Config, ConfigMessage {
         File shemDir = new File(getInstance().getDataFolder() + File.separator + "Schematics");
         if (!shemDir.exists()) {
             shemDir.mkdir();
-            //  getInstance().saveResource("Schematics" + File.separator + "air1.schem", true);
         }
 
         fileSchemConf = new File(getInstance().getDataFolder() + File.separator + "Schematics" + File.separator + "schemConf.yml");

@@ -1,9 +1,8 @@
-#https://by1337-developers.gitbook.io/bairdrop/rukovodstvo/schematics
 #schematics:
-#  air1: #Имя
-#    file: 'air1.schem' #фаил
+#  air1: #Name
+#    file: 'air1.schem' #file
 #    ignore-air-blocks: true
-#    offsets-x: 0 # смещение
+#    offsets-x: 0 # offset
 #    offsets-y: 0
 #    offsets-z: 0
 schematics:

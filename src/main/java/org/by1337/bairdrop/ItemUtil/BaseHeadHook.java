@@ -7,7 +7,6 @@ import org.by1337.bairdrop.ItemUtil.SkullUtils;
 import org.by1337.bairdrop.util.Message;
 
 public class BaseHeadHook {
-
     public static ItemStack getItem(String... arguments) {
         if(arguments == null){
             Message.error("material is null!");

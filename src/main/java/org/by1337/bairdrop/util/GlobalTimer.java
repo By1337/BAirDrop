@@ -69,8 +69,7 @@ public class GlobalTimer {
     private AirDrop getRandomAir() {
         for (AirDrop air : BAirDrop.airDrops.values()) {
             if (!air.isAirDropStarted() && !air.isClone() && (Bukkit.getOnlinePlayers().size() >= air.getMinPlayersToStart()))
-                if (ThreadLocalRandom.current().nextInt(0, Integer.toBinaryString(BAirDrop.info[5]).length() * 10) <= air.getSpawnChance()) {//100
-                    //if(!air.isClone()){
+                if (ThreadLocalRandom.current().nextInt(0, 100) <= air.getSpawnChance()) {//100
                     String newid = air.getId() + "_clone" + ThreadLocalRandom.current().nextInt(99999);
                     while (BAirDrop.airDrops.containsKey(newid))
                         newid = air.getId() + "_clone" + ThreadLocalRandom.current().nextInt(99999);
@@ -79,7 +78,6 @@ public class GlobalTimer {
                     aair.setClone(true);
                     aair.setKill(true);
                     return aair;
-                    //  }else return null;
                 }
         }
         for (AirDrop air : BAirDrop.airDrops.values()) {
@@ -88,7 +86,6 @@ public class GlobalTimer {
                 newid = air.getId() + "_clone" + UUID.randomUUID().toString();
 
             AirDrop aair = air.clone(newid);
-            //  CAirDrop aair = air.clone(air.getAirId() + "_clone" + ThreadLocalRandom.current().nextInt(99999));
             aair.setClone(true);
             aair.setKill(true);
             return aair;

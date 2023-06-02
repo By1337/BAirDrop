@@ -6,16 +6,21 @@
 
     <groupId>org.by1337</groupId>
     <artifactId>BAirDrop</artifactId>
-    <version>1.0.8-beta</version>
+    <version>1.0.8</version>
     <packaging>jar</packaging>
 
     <name>BAirDrop</name>
+
+
 
     <description>airdrop</description>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+<!--    <modules>-->
+<!--        <module>v1_16_R3</module>-->
+<!--    </modules>-->
 
     <build>
         <plugins>

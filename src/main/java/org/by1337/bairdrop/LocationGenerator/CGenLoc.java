@@ -77,7 +77,7 @@ public class CGenLoc implements GenLoc{
      * Required method for configuration serialization
      *
      * @param map map to deserialize
-     * @return deserialized item stack
+     * @return deserialized CGenLoc
      * @see ConfigurationSerializable
      */
     @NotNull
@@ -88,14 +88,4 @@ public class CGenLoc implements GenLoc{
         Vector vector = (Vector) map.get("offsets");
         return new CGenLoc(loc, vector, airId, uuid);
     }
-
-
-//    public void Save() {
-//        BAirDrop.getiConfig().getLocations().set(String.format("locations.%s.%s.%s.offsets-x", airDropId, world.getName(), uuid), offsets.getX());
-//        BAirDrop.getiConfig().getLocations().set(String.format("locations.%s.%s.%s.offsets-y", airDropId, world.getName(), uuid), offsets.getY());
-//        BAirDrop.getiConfig().getLocations().set(String.format("locations.%s.%s.%s.offsets-z", airDropId, world.getName(), uuid), offsets.getZ());
-//        BAirDrop.getiConfig().getLocations().set(String.format("locations.%s.%s.%s.x", airDropId, world.getName(), uuid), location.getX());
-//        BAirDrop.getiConfig().getLocations().set(String.format("locations.%s.%s.%s.y", airDropId, world.getName(), uuid), location.getY());
-//        BAirDrop.getiConfig().getLocations().set(String.format("locations.%s.%s.%s.z", airDropId, world.getName(), uuid), location.getZ());
-//    }
 }

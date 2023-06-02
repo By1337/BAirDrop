@@ -8,7 +8,6 @@ import org.by1337.bairdrop.obfuscate.DontObfuscate;
 public interface IEffect{
     void Start(AirDrop airDrop);
     void End();
-    void setLifetime(int ticks);
     boolean isActive();
     IEffect clone();
     EffectType getType();

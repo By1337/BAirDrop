@@ -24,15 +24,16 @@ public class Message {
     private static final String AUTHOR = "&#a612cb&lB&#9a17d2&ly&#8d1bd9&l1&#8120e1&l3&#7424e8&l3&#6829ef&l7";
     private static final String prefixPlugin = "&#a600f4[&#a70bf5B&#a815f6A&#a920f7i&#aa2bf8r&#aa35f8d&#ab40f9r&#ac4bfao&#ad55fbp&#ae60fc]";
     private static final Pattern RAW_HEX_REGEX = Pattern.compile("&(#[a-f0-9]{6})", Pattern.CASE_INSENSITIVE);
+
     /**
-     * Босс-бары созданые командой [NEW_BOSSBAR]
+     * Boss bars created with the [NEW_BOSSBAR] command
      */
     public static HashMap<String, BossBar> bossBars = new HashMap<>();
 
     /**
-     * Отправляет игроку сообщение если он не равен null иначе отправляет лог в консоль
-     * @param pl Игрок, которому отправить сообщение
-     * @param msg Сообщение
+     * Sends a message to the player if they are not null, otherwise logs it to the console
+     * @param pl The player to send the message to
+     * @param msg The message
      */
     public static void sendMsg(@Nullable Player pl, String msg) {
         msg = setPlaceholders(pl, msg);
@@ -54,15 +55,14 @@ public class Message {
     }
 
     /**
-     * Отправляет debug сообщение в консоль
-     * @param msg debug сообщение
-     * @param logLevel Уровень debug
+     * Sends a debug message to the console
+     * @param msg The debug message
+     * @param logLevel The debug level
      */
     public static void debug(String msg, LogLevel logLevel) {
         if (BAirDrop.logLevel.getLvl() >= logLevel.getLvl()) {
             if (BAirDrop.getInstance().getConfig().getBoolean("debug")) {
                 logger("&7[DEBUG] " + msg);
-                BAirDrop.Log("&7[DEBUG] " + msg);
             }
         }
     }
@@ -78,24 +78,25 @@ public class Message {
     }
 
     /**
-     * use only debug
+     * This method should only be used for debugging
+     * @param msg The message
      */
     public static void devDebug(String msg){
         logger(msg);
     }
 
     /**
-     * Отправляет лог
-     * @param msg Сообщение
+     * Sends a log
+     * @param msg The message
      */
     public static void logger(String msg) {
         SENDER.sendMessage(messageBuilder(msg));
     }
 
     /**
-     * Отправляет сообщение ошибки в консоль
-     * Также отправляет сообщение всем op игрокам
-     * @param msg Сообщение
+     * Sends an error message to the console
+     * Also sends the message to all op players
+     * @param msg The message
      */
     public static void error(String msg) {
         BAirDrop.getInstance().getLogger().log(Level.SEVERE, msg);
@@ -104,8 +105,8 @@ public class Message {
     }
 
     /**
-     * Отправляет всем op игрокам сообщение
-     * @param msg Сообщение
+     * Sends a message to all op players
+     * @param msg The message
      */
     public static void sendAllOp(String msg) {
         for (Player pl : Bukkit.getOnlinePlayers()) {
@@ -116,25 +117,25 @@ public class Message {
     }
 
     /**
-     * Отправляет warning сообщение
-     * @param msg Сообщение
+     * Sends a warning message
+     * @param msg The message
      */
     public static void warning(String msg) {
         BAirDrop.getInstance().getLogger().warning(messageBuilder(msg));
     }
 
     /**
-     * Отправляет ActionBar сообщение игроку
-     * @param pl Игрок которому нужно отправить сообщение
-     * @param msg Сообщение
+     * Sends an ActionBar message to the player
+     * @param pl The player to send the message to
+     * @param msg The message
      */
     public static void sendActionBar(Player pl, String msg) {
         pl.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(messageBuilder(msg)));
     }
 
     /**
-     * Отправляет ActionBar сообщение всем игрокам
-     * @param msg Сообщение
+     * Sends an ActionBar message to all players
+     * @param msg The message
      */
     public static void sendAllActionBar(String msg) {
         for (Player pl : Bukkit.getOnlinePlayers())
@@ -156,32 +157,32 @@ public class Message {
     }
 
     /**
-     * Отправляет title игроку
-     * @param pl Игрок которому нужно отправить сообщение
-     * @param title Сообщение
-     * @param subTitle Суб-сообщение
-     * @param fadeIn Время появления title
-     * @param stay Время, которое продержится этот title
-     * @param fadeOut Время исчезания title
+     * Sends a title message to the player
+     * @param pl The player to send the message to
+     * @param title The title message
+     * @param subTitle The subtitle message
+     * @param fadeIn The fade-in time for the title
+     * @param stay The duration the title will stay on screen
+     * @param fadeOut The fade-out time for the title
      */
     public static void sendTitle(Player pl, String title, String subTitle, int fadeIn, int stay, int fadeOut) {
         pl.sendTitle(messageBuilder(title), messageBuilder(subTitle), fadeIn, stay, fadeOut);
     }
 
     /**
-     * Отправляет title игроку с заранее заданными fadeIn, stay и fadeOut
-     * @param pl Игрок
-     * @param title Сообщение
-     * @param subTitle суб-сообщение
+     * Sends a title message to the player with pre-defined fadeIn, stay, and fadeOut values
+     * @param pl The player
+     * @param title The title message
+     * @param subTitle The subtitle message
      */
     public static void sendTitle(Player pl, String title, String subTitle) {
         pl.sendTitle(messageBuilder(title), messageBuilder(subTitle), 10, 20, 10);
     }
 
     /**
-     * Отправляет title всем игрокам
-     * @param title Сообщение
-     * @param subTitle суб-сообщение
+     * Sends a title message to all players
+     * @param title The title message
+     * @param subTitle The subtitle message
      */
     public static void sendAllTitle(String title, String subTitle) {
         for (Player pl : Bukkit.getOnlinePlayers())
@@ -189,9 +190,9 @@ public class Message {
     }
 
     /**
-     * Применяет цвета к сообщению
-     * @param msg Необработанное сообщение
-     * @return Сообщение с применёнными цветами
+     * Applies colors to the message
+     * @param msg The raw message
+     * @return The message with applied colors
      */
     public static String messageBuilder(String msg) {
         if (msg == null)
@@ -203,8 +204,8 @@ public class Message {
     }
 
     /**
-     * Отправляет сообщение всем игрокам
-     * @param msg Сообщение
+     * Sends a message to all players
+     * @param msg The message
      */
     public static void sendAllMsg(String msg) {
         for (Player pl : Bukkit.getOnlinePlayers())
@@ -213,10 +214,10 @@ public class Message {
     }
 
     /**
-     * Применяет placeholders к сообщению
-     * @param player Игрок
-     * @param string Сообщение
-     * @return Сообщение с применёнными placeholders
+     * Applies placeholders to the message
+     * @param player The player
+     * @param string The message
+     * @return The message with applied placeholders
      */
     public static String setPlaceholders(@Nullable Player player, String string) {
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
@@ -229,9 +230,9 @@ public class Message {
     }
 
     /**
-     * Отправляет звук игроку
-     * @param pl Игрок
-     * @param sound Звук в виде строки
+     * Sends a sound to the player
+     * @param pl The player
+     * @param sound The sound as a string
      */
     public static void sendSound(Player pl, String sound) {
         try {
@@ -242,9 +243,9 @@ public class Message {
     }
 
     /**
-     * Отправляет звук игроку
-     * @param pl Игрок
-     * @param sound Отправляет звук из enum Sound
+     * Sends a sound to the player
+     * @param pl The player
+     * @param sound The sound from the Sound enum
      * @see org.bukkit.Sound
      */
     public static void sendSound(Player pl, Sound sound) {
@@ -252,8 +253,8 @@ public class Message {
     }
 
     /**
-     * Отправляет звук всем игрокам
-     * @param sound Звук в виде строки
+     * Sends a sound to all players
+     * @param sound The sound as a string
      */
     public static void sendAllSound(String sound) {
         try {
@@ -265,9 +266,9 @@ public class Message {
     }
 
     /**
-     * Применяет hex цвет к сообщению
-     * @param message raw message
-     * @return обработанное сообщение
+     * Applies a hex color to the message
+     * @param message The raw message
+     * @return The processed message
      */
     private static String hex(String message) {
         Matcher m = RAW_HEX_REGEX.matcher(message);

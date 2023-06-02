@@ -1,19 +1,19 @@
-#Вы можете заспанить эффект до появления аирдропа но локация должна быть сгенерирована заранее! за это отвечает параметр search-before-start
+# You can spawn the effect before the airdrop appears, but the location must be pre-generated! The parameter "search-before-start" is responsible for that.
 effects:
-  ef=1: #имя эффекта. Запрещены (., -)
-    type: CIRCLE #тип эффекта.
-    ticks: 36000 #время жизни в тиках (я предполагаю что вы будете отключать эффект через ивент, но если вы забудете это сделать то эфект сам отключится через 36000 тиков (30 минут)) увеличите ели надо
-    timeUpdate: 10 #как часто в тиках спавнить новые партиклы
-    radius: 1.5 #радиус круга
-    count: 0 #количество партиклов ставьте 0 чтобы партиклы не разлетались, или можете поиграться с этим и получить необычный эффект
-    #viewDistance: 30 #с какого расстояния будут видны партиклы
-    step: 0.05 #расстояние между партиклами, напрямую влияет на их количество!
-    offset-x: 0.5 #смещение по координатам
+  ef=1: # Effect name. Forbidden characters: (., -)
+    type: CIRCLE # Type of effect.
+    ticks: 36000 # Lifetime in ticks (assuming you will disable the effect through an event, but if you forget to do so, the effect will automatically disable after 36000 ticks (30 minutes)). Increase if necessary.
+    timeUpdate: 10 # How often in ticks to spawn new particles.
+    radius: 1.5 # Circle radius.
+    count: 0 # Number of particles. Set to 0 to prevent particle dispersion, or you can experiment with this value to achieve an unusual effect.
+    viewDistance: 30 # From what distance the particles will be visible.
+    step: 0.05 # Distance between particles, directly affecting their quantity!
+    offset-x: 0.5 # Offset along the coordinates.
     offset-y: 0.3
     offset-z: 0.5
-    number-of-steps: 6.5 #влияет на количество партиклов  6.5 / 0.05 = 130 заспавненых партиклов (number-of-steps / step)
+    number-of-steps: 6.5 # Influences the number of particles. 6.5 / 0.05 = 130 spawned particles (number-of-steps / step).
     particle: REDSTONE
-    #only REDSTONE# #Для партиклов "REDSTONE" необходимо указывать цвет и размер
+    # To specify color and size for particles "REDSTONE", you need to include the color and size parameters.
     size: 3
     color-rgb-r: 0
     color-rgb-g: 255
@@ -24,7 +24,7 @@ effects:
     timeUpdate: 10
     radius: 2
     count: 0
-   # viewDistance: 30
+    viewDistance: 30
     step: 0.05
     offset-x: 0.5
     offset-y: 0.7
@@ -43,69 +43,68 @@ effects:
     timeUpdate: 15
     radius: 1
     count: 0
-   # viewDistance: 30
+    viewDistance: 30
     step: 0.05
     height: 30
     offset-x: 0.5
     offset-y: 0.7
     offset-z: 0.5
     particle: REDSTONE
-    #only REDSTONE# #Для партиклов "REDSTONE" необходимо указывать цвет и размер
+    #To specify color and size for particles "REDSTONE", you need to include the color and size parameters.
     size: 3
     color-rgb-r: 255
     color-rgb-g: 0
     color-rgb-b: 255
-
   ef=5:
-    type: EXPANDING_CIRCLE #тип эффекта.
+    type: EXPANDING-CIRCLE # Type of effect.
     ticks: 36000
     timeUpdate: 4
-    radius: 1.5 #начальный радиус
-    end-radius: 7 #конечный радиус
-    step-radius: 0.3 #на сколько увеличивать промежуточный радиус за timeUpdate
+    radius: 1.5 # Initial radius.
+    end-radius: 7 # End radius.
+    step-radius: 0.3 # Amount to increase intermediate radius by per timeUpdate.
     count: 0
-   # viewDistance: 30
+    viewDistance: 30
     step: 0.05
     offset-x: 0.5
     offset-y: 0.7
     offset-z: 0.5
     number-of-steps: 6.5
     particle: FLAME
-    #only REDSTONE# #Для партиклов "REDSTONE" необходимо указывать цвет и размер
+    # To specify color and size for particles "REDSTONE", you need to include the color and size parameters.
     size: 3
     color-rgb-r: 0
     color-rgb-g: 255
     color-rgb-b: 255
 
   ef=5=1:
-    type: EXPANDING_CIRCLE #тип эффекта.
+    type: EXPANDING_CIRCLE # Type of effect.
     ticks: 36000
     timeUpdate: 4
-    radius: 1.5 #начальный радиус
-    end-radius: 7 #конечный радиус
-    step-radius: 0.3 #на сколько увеличивать промежуточный радиус за timeUpdate
+    radius: 1.5 # Initial radius.
+    end-radius: 7 # End radius.
+    step-radius: 0.3 # Amount to increase intermediate radius by per timeUpdate.
     count: 0
-   # viewDistance: 30
+    viewDistance: 30
     step: 0.05
     offset-x: 0.5
     offset-y: 0.7
     offset-z: 0.5
     number-of-steps: 6.5
     particle: SOUL_FIRE_FLAME
-    #only REDSTONE# #Для партиклов "REDSTONE" необходимо указывать цвет и размер
+    #To specify color and size for particles "REDSTONE", you need to include the color and size parameters.
     size: 3
     color-rgb-r: 0
     color-rgb-g: 255
     color-rgb-b: 255
 
   ef=6:
-    type: RANDOM_PARTICLE #Не поддерживается REDSTONE
+    type: RANDOM_PARTICLE #The "REDSTONE" particle is not supported.
     ticks: 36000
-    timeUpdate: 2 #как часто в тиках спавнить новые партиклы
-    radius: 7 #радиус спавна
+    timeUpdate: 2 #The frequency of spawning new particles is measured in ticks.
+    radius: 7 #Spawn radius
     count: 0
-   # viewDistance: 30
-    particle: #Можно добавлять неограниченное количество партиклов. Если в списке 10 штук, то за timeUpdate заспанится 10 партиклов
+    viewDistance: 30
+    particle: #You can add an unlimited number of particles. If you have a list of 10 particles, all 10 particles will be spawned during the "timeUpdate" event.
       - FLAME
       - PORTAL
       - FALLING_OBSIDIAN_TEAR
@@ -118,7 +117,7 @@ effects:
     timeUpdate: 1
     radius: 5
     count: 5
-    name: '&cХранитель'
+    name: '&cGuardian'
     heal: 40
 
   ef=8:
@@ -151,7 +150,7 @@ effects:
     offset-y: 0.7
     offset-z: 0.5
     particle: REDSTONE
-    #only REDSTONE# #Для партиклов "REDSTONE" необходимо указывать цвет и размер
+    #To specify color and size for particles "REDSTONE", you need to include the color and size parameters.
     size: 3
     color-rgb-r: 255
     color-rgb-g: 0
@@ -162,15 +161,33 @@ effects:
     timeUpdate: 1
     radius: 1
     count: 0
-   # viewDistance: 30
+    viewDistance: 30
     step: 0.05
     height: 15
     offset-x: 0.5
     offset-y: 0.7
     offset-z: 0.5
     particle: REDSTONE
-    #only REDSTONE# #Для партиклов "REDSTONE" необходимо указывать цвет и размер
+    #To specify color and size for particles "REDSTONE", you need to include the color and size parameters.
     size: 0.5
+    color-rgb-r: 255
+    color-rgb-g: 0
+    color-rgb-b: 255
+  ef=11:
+    type: HELIX
+    ticks: 36000
+    timeUpdate: 15
+    radius: 15
+    count: 0
+    viewDistance: 30
+    step: 0.05
+    height: 30
+    offset-x: 0.5
+    offset-y: 0.7
+    offset-z: 0.5
+    particle: REDSTONE
+    #To specify color and size for particles "REDSTONE", you need to include the color and size parameters.
+    size: 3
     color-rgb-r: 255
     color-rgb-g: 0
     color-rgb-b: 255

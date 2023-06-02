@@ -17,15 +17,16 @@ import org.by1337.bairdrop.BAirDrop;
 
 public class CGenerator implements Generator{
     /**
-     * Задержка debug сообщений
+     * Delay for debug messages
      */
+
     private static final HashMap<String, Long> cd = new HashMap<>();
     private World world;
 
     /**
-     * Вернёт заранее сгенерированную локацию
-     * @param airDrop АирДроп для которого необходимо получить локацию
-     * @return Заранее сгенерирована локация
+     * Returns a pre-generated location
+     * @param airDrop The AirDrop for which to obtain the location
+     * @return Pre-generated location
      * @see GeneratorLoc
      * @see CGenLoc
      */
@@ -47,17 +48,17 @@ public class CGenerator implements Generator{
     }
 
     /**
-     * Основной метод генерации локаций
-     * @param airDrop АирДроп которому необходимо сгенерировать локацию
-     * @param isGenerator Если это генератор генерирует локации, то лога не будет
-     * @return Сгенерированая локация
+     * Main method for generating locations
+     * @param airDrop The AirDrop for which to generate the location
+     * @param isGenerator If this is a generator generating locations, there will be no logging
+     * @return Generated location
      */
     @Override
     @Nullable
     public Location getLocation(@NotNull AirDrop airDrop, boolean isGenerator) {
         world = airDrop.getWorld();
         double x = ThreadLocalRandom.current().nextInt(airDrop.getSpawnRadiusMin(), airDrop.getSpawnRadiusMax());
-        double y = Integer.toBinaryString(BAirDrop.info[5]).length() * 100;//100
+        double y = 100;//100
         double z = ThreadLocalRandom.current().nextInt(airDrop.getSpawnRadiusMin(), airDrop.getSpawnRadiusMax());
 
         Location loc1 = new Location(world, x, y, z);

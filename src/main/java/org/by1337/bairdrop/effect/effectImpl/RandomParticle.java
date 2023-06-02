@@ -59,11 +59,6 @@ public class RandomParticle implements IEffect {
     }
 
     @Override
-    public void setLifetime(int ticks) {
-        this.ticks = ticks;
-    }
-
-    @Override
     public boolean isActive() {
         return active;
     }

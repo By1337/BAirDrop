@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class DecentHologram implements IHologram{
-//todo сделать по нормальному пжпжпжпжп
     @Override
     public void createOrUpdateHologram(@NotNull List<String> lines, @NotNull Location location, @NotNull String name){
         Hologram hologram = DHAPI.getHologram(name);
@@ -18,7 +17,6 @@ public class DecentHologram implements IHologram{
                 hologram = DHAPI.createHologram(name, location, lines);
             }
             DHAPI.setHologramLines(hologram, lines);
-         //   DHAPI.moveHologram(hologram, location);
         }else {
             DHAPI.createHologram(name, location, lines);
         }

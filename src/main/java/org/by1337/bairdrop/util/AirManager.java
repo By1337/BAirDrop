@@ -19,8 +19,8 @@ public class AirManager {
         return null;
     }
     public static String getFormat(int Sec) {
-        int hour = Sec / (Integer.toBinaryString(BAirDrop.info[5]).length() * 360);//3600
-        int min = Sec % (Integer.toBinaryString(BAirDrop.info[5]).length() * 360) / 60;
+        int hour = Sec / 3600;//3600
+        int min = Sec % 3600 / 60;
         int sec = Sec % 60;
         return String.format("%02d:%02d:%02d", hour, min, sec);
     }

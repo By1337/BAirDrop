@@ -41,7 +41,6 @@ public class SkullUtils {
         return head;
 
     }
-
     @NotNull
     public static GameProfile getGameProfile(@NotNull String url) {
         GameProfile profile = new GameProfile(UUID.randomUUID(), null);

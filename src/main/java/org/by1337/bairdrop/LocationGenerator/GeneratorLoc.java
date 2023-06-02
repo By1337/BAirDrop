@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.util.*;
 
 public class GeneratorLoc {
-    //  public static HashMap<String, List<Location>> locations = new HashMap<>();
     public static HashMap<String, List<GenLoc>> locs = new HashMap<>();
     private static boolean isStarted = false;
 
@@ -43,22 +42,18 @@ public class GeneratorLoc {
             public void run() {
                 CGenerator CGenerator = new CGenerator();
                 Location loc = CGenerator.getLocation(finalairDrop, true);
-              //  Message.debug("loc == null =  " + (loc == null));
                 fail++;
                 if (loc != null) {
                     GenLoc genLoc = new CGenLoc(loc, GeneratorUtils.getOffsets(finalairDrop), finalairDrop.getId());
                     String airId = finalairDrop.getId();
                     List<GenLoc> existingValues = locs.get(airId);
                     if (existingValues == null) {
-                        // Если ключа еще нет в мапе, создаем новый список и добавляем в мапу
                         List<GenLoc> newValues = new ArrayList<>();
                         newValues.add(genLoc);
                         locs.put(airId, newValues);
-                      //  System.out.println("Добавлен новый ключ " + airId + " со значением " + genLoc);
                     } else {
                             existingValues.add(genLoc);
                             locs.put(airId, existingValues);
-                         //   System.out.println("Обновлен ключ " + airId + " (количество элементов: " + existingValues.size() + ")");
                     }
                     count1--;
                     Message.sendMsg(pl, String.format(BAirDrop.getConfigMessage().getMessage("generator"), count1));
@@ -90,7 +85,6 @@ public class GeneratorLoc {
         BAirDrop.getiConfig().getLocations().set("locations", null);
         for (List<GenLoc> locs1 : locs.values()) {
             for (GenLoc genLoc : locs1){
-                //BConfig.locations.set(String.format("locations.%s.%s.%s.offsets-x", airDropId, world.getName(), uuid), offsets.getX());
                 BAirDrop.getiConfig().getLocations().set(String.format("locations.%s.%s.%s", genLoc.getAirDropId(), genLoc.getWorld().getName(), genLoc.getUuid().toString()), genLoc);
             }
         }

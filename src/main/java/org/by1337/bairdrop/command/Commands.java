@@ -31,7 +31,6 @@ import static org.by1337.bairdrop.BAirDrop.*;
 public class Commands implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        BAirDrop.Log(sender.getName() + " use command: " + Arrays.toString(args));
         if (sender instanceof Player pl) {
             if (args.length == 0) {
                 Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("few-arguments"));

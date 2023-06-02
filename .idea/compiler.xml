@@ -9,6 +9,11 @@
         <module name="BAirDrop" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="16" />
+    <bytecodeTargetLevel target="16">
+      <module name="Toas_1_16_R3" target="1.8" />
+      <module name="Toast_v16_R3" target="1.8" />
+      <module name="Toast_v1_16_R3" target="1.8" />
+      <module name="v1_16_R3" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

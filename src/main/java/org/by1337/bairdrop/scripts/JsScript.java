@@ -1,6 +1,5 @@
 package org.by1337.bairdrop.scripts;
 
-
 import org.bukkit.Bukkit;
 import org.by1337.bairdrop.BAirDrop;
 import org.mozilla.javascript.*;

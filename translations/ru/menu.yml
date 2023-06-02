@@ -1,0 +1,260 @@
+# команды
+# [!airDropStarted] - изменить его статус на противоположный (был запущенным, стал остановленным)
+# [!airLocked] - был открытым стал закрытым
+# [edit] - открыть меню редактирования предметов
+# [chance] - открыть меню редактирования шансов предметов
+# [event_list] - открыть меню ивентов
+# [!start-countdown-after-click] - изменить параметр start-countdown-after-click
+# LEFT-CLICK (лкм), SHIFT_LEFT-CLICK (штфт + лкм), RIGHT-CLICK (пкм), SHIFT_RIGHT-CLICK (штфт + пкм), MIDDLE-CLICK (средняя кнопка мыши), DROP-CLICK (q)
+main:
+  "stats": #неизменяемый тег (он используется плагином как константа!)
+    slot: 13
+    name: '&aИнформация'
+    material: KNOWLEDGE_BOOK
+    lore:
+      - '&fАирдроп активен:&a {airdrop-is-start}'
+      - '&fДо старта:&a {time-to-start}'
+      - '&fДо остановки:&a {time-to-end}'
+      - '&fАирдроп открыт:&a {airdrop-is-open}'
+      - '&fДо открытия:&a {time-to-open}'
+      - '&fБыл ли аирдроп открыт:&a {it-was-open}'
+      - '&aЛКМ&f запустить/остановить'
+      - '&aПКМ&f открыть/закрыть'
+      - '&aСКМ&f телепортироваться на аирдроп'
+    commands:
+      LEFT-CLICK:
+        - '[!airDropStarted]'
+      RIGHT-CLICK:
+        - '[!airLocked]'
+      MIDDLE-CLICK:
+        - '[teleport]'
+  "editor":
+    slot: 12
+    name: '&aРедактор предметов'
+    material: CRAFTING_TABLE
+    lore:
+      - '&aЛКМ&f Редактировать предметы'
+      - '&aПКМ&f Редактировать шансы появления предметов'
+    commands:
+      LEFT-CLICK:
+        - '[edit]'
+      RIGHT-CLICK:
+        - '[chance]'
+  "event_list":
+    slot: 14
+    name: '&aСписок слушателей'
+    material: OBSERVER
+    lore:
+      - '&aЛКМ&f Смотреть все слушатели'
+    commands:
+      LEFT-CLICK:
+        - '[event_list]'
+  "boolean-1":
+    slot: 23
+    name: '&aОбратный отсчёт после клика'
+    material: OAK_BUTTON
+    lore:
+      - '&aАктивно &7- {start-countdown-after-click}'
+      - '&7Обратный отсчёт до открытия'
+      - '&7запустится только после нажатия по аирдропу'
+      - '&aЛКМ &7- изменить на true&7/false'
+    commands:
+      LEFT-CLICK:
+        - '[!start-countdown-after-click]'
+  "change-material":
+    slot: 21
+    name: '&aИзменить материал аирдропа'
+    material: CLOCK
+    lore:
+      - '&7Изменить материал когда аирдроп закрыт'
+      - '&7Сейчас установлен {material-locked}'
+      - '&aЛКМ &7- изменить'
+    commands:
+      LEFT-CLICK:
+        - '[change-locked-material]'
+  "change-material-2":
+    slot: 22
+    name: '&aИзменить материал аирдропа'
+    material: CLOCK
+    lore:
+      - '&7Изменить материал когда аирдроп открыт'
+      - '&7Сейчас установлен {material-unlocked}'
+      - '&aЛКМ &7- изменить'
+    commands:
+      LEFT-CLICK:
+        - '[change-unlocked-material]'
+  "change-World":
+    slot: 33
+    name: '&aИзменить мир'
+    material: basehead-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzY5MTk2YjMzMGM2Yjg5NjJmMjNhZDU2MjdmYjZlY2NlNDcyZWFmNWM5ZDQ0Zjc5MWY2NzA5YzdkMGY0ZGVjZSJ9fX0=
+    lore:
+      - '&7Изменить мир появления аирдропа'
+      - '&7Сейчас установлен {world}'
+      - '&aЛКМ &7- изменить'
+    commands:
+      LEFT-CLICK:
+        - '[change-world]'
+  "usePreGeneratedLocations":
+    slot: 32
+    name: '&aИспользовать заранее сгенерированные локации'
+    material: GRASS_BLOCK
+    lore:
+      - '&7Использовать: {use-pre-generated-locations}'
+      - '&7Для мира {world} сгенерировано {world-loc} локаций'
+      - '&aЛКМ &7- Изменить true&7/false'
+      - '&ashift + лкм &7- Сгенерировать 50 локаций'
+      - '&ashift + пкм &7- Остановить генерацию'
+    commands: #/bair test generate 1 50
+      LEFT-CLICK:
+        - '[!usePreGeneratedLocations]'
+      SHIFT_RIGHT-CLICK:
+        - '[PLAYER] bair generate {id} stop'
+      SHIFT_LEFT-CLICK:
+        - '[PLAYER] bair generate {id} 1 50'
+  "flatnessCheck":
+    slot: 29
+    name: '&aПроверять локацию на ровность'
+    material: SMOOTH_STONE
+    lore:
+      - '&7Использовать: {flatness-check}'
+      - '&eРекомендуется использовать вместе с'
+      - '&eЗаренее сгенерированными локациями!'
+    commands:
+      LEFT-CLICK:
+        - '[!flatnessCheck]'
+  "time-stop-event-must-go":
+    slot: 30
+    name: '&aИгнорировать активацию '
+    material: REDSTONE_LAMP
+    lore:
+      - '&7Использовать: {time-stop-event-must-go}'
+      - '&7Аирдроп будет отсчитывать время до конца'
+      - '&7ивента даже если его не активировали'
+      - '&7Рекомендуется с параметром "Обратный отсчёт после клика"'
+      - '&eПри этом рекомендуется увеличить время до остановки'
+    commands:
+      LEFT-CLICK:
+        - '[!time-stop-event-must-go]'
+  "edtAirName":
+    slot: 41
+    name: '&aИзменить имя аирдропа'
+    material: NAME_TAG
+    lore:
+      - '&aЛКМ &7- Изменить имя'
+      - '&7Сейчас: {air-name}'
+    commands:
+      LEFT-CLICK:
+        - '[change-AirName]'
+  "editInvName":
+    slot: 38
+    name: '&aИзменить название инвентаря аирдропа'
+    material: NAME_TAG
+    lore:
+      - '&aЛКМ &7- Изменить название инвентаря'
+      - '&7Сейчас: {inv-name}'
+    commands:
+      LEFT-CLICK:
+        - '[change-invName]'
+  "editSpawnMin":
+    slot: 39
+    name: '&aИзменить минимальный радиус'
+    material: NAME_TAG
+    lore:
+      - '&aЛКМ &7- Изменить минимальный радиус спавна'
+      - '&7Сейчас: {spawn-min}'
+    commands:
+      LEFT-CLICK:
+        - '[change-spawnMin]'
+  "editSpawnMaxn":
+    slot: 40
+    name: '&aИзменить максимальный радиус'
+    material: NAME_TAG
+    lore:
+      - '&aЛКМ &7- Изменить максимальный радиус спавна'
+      - '&7Сейчас: {spawn-max}'
+    commands:
+      LEFT-CLICK:
+        - '[change-spawnMax]'
+  "editAirProtect":
+    slot: 42
+    name: '&aИзменить радиус защиты'
+    material: NAME_TAG
+    lore:
+      - '&aЛКМ &7- Изменить радиус защиты'
+      - '&7Сейчас: {air-protect}'
+    commands:
+      LEFT-CLICK:
+        - '[change-airProtect]'
+  "editTimeToStart":
+    slot: 51
+    name: '&aИзменить время до старта'
+    material: NAME_TAG
+    lore:
+      - '&aЛКМ &7- Изменить время до старта'
+      - '&7Сейчас: {time-to-start-cons}'
+    commands:
+      LEFT-CLICK:
+        - '[change-timeToStart]'
+  "editSearchBeforeStart":
+    slot: 47
+    name: '&aИзменить время до начала поиска локации'
+    material: NAME_TAG
+    lore:
+      - '&aЛКМ &7- Изменить время до начала поиска локации'
+      - '&eВсегда меньше чем время до старта!'
+      - '&7Сейчас: {search-before-start-cons}'
+    commands:
+      LEFT-CLICK:
+        - '[change-searchBeforeStart]'
+  "editTimeToOpen":
+    slot: 48
+    name: '&aИзменить время открытия'
+    material: NAME_TAG
+    lore:
+      - '&aЛКМ &7- Изменить время открытия'
+      - '&7Сейчас: {time-to-open-cons}'
+    commands:
+      LEFT-CLICK:
+        - '[change-timeToOpen]'
+  "editTimeStop":
+    slot: 49
+    name: '&aИзменить время остановки'
+    material: NAME_TAG
+    lore:
+      - '&aЛКМ &7- Изменить время остановки'
+      - '&7Сейчас: {time-to-end-cons}'
+    commands:
+      LEFT-CLICK:
+        - '[change-timeStop]'
+  "editMinOnlinePlayers":
+    slot: 50
+    name: '&aИзменить минимальное количество онлайна'
+    material: NAME_TAG
+    lore:
+      - '&aЛКМ &7- Изменить минимальное количество онлайна'
+      - '&7Для старта ивента'
+      - '&7Сейчас: {min-online-players}'
+    commands:
+      LEFT-CLICK:
+        - '[change-minOnlinePlayers]'
+  "setStaticLoc":
+    slot: 31
+    name: '&aСтатическая локация'
+    material: BEDROCK
+    lore:
+      - '&aСейчас:&7 {use-static-loc}'
+      - '&aЛКМ&7- что бы включить/выключить'
+      - '&aПКМ&7- что бы установить'
+      - '&aShift + ЛКМ &7- Использовать только статическую локацию: {use-only-static-loc}'
+      - '&7Координаты статической локации'
+      - '&7{stat-world}, {stat-x}, {stat-y}, {stat-z}'
+    commands:
+      SHIFT_LEFT-CLICK:
+        - '[!use-only-static-loc]'
+      LEFT-CLICK:
+        - '[!use-static-loc]'
+      RIGHT-CLICK:
+        - '[set-static-loc]'
+
+
+

@@ -27,7 +27,7 @@ public class SelectAirMenu implements Listener {
     private final int taskId;
 
     public SelectAirMenu() {
-       inventory = Bukkit.createInventory(null, 54, Message.messageBuilder("&7Меню выбора аирдропа"));
+       inventory = Bukkit.createInventory(null, 54, Message.messageBuilder(BAirDrop.getConfigMessage().getMessage("menu-air-select")));
         taskId = new BukkitRunnable() {
             @Override
             public void run() {

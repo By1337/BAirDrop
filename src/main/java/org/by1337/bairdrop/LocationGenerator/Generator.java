@@ -6,27 +6,29 @@ import org.jetbrains.annotations.NotNull;
 
 public interface Generator {
     /**
-     * Вернёт заранее сгенерированную локацию
-     * @param airDrop АирДроп для которого необходимо получить локацию
-     * @return Заранее сгенерирована локация
+     * Returns a pre-generated location
+     * @param airDrop The AirDrop for which to obtain the location
+     * @return Pre-generated location
      * @see GeneratorLoc
      * @see CGenLoc
      */
+
     Location getPreLocation(@NotNull AirDrop airDrop);
 
     /**
-     * Основной метод генерации локаций
-     * @param airDrop АирДроп которому необходимо сгенерировать локацию
-     * @param isGenerator Если это генератор генерирует локации, то лога не будет
-     * @return Сгенерированая локация
+     * Main method for generating locations
+     * @param airDrop The AirDrop for which to generate the location
+     * @param isGenerator If this is a generator generating locations, there will be no logging
+     * @return Generated location
      */
+
     Location getLocation(@NotNull AirDrop airDrop, boolean isGenerator);
 
     /**
-     * Проверяет ровность локаций
-     * @param location локация где необходимо проверить ровность
-     * @param airDrop аирдроп настройки которого будут использоваться
-     * @return вернёт true если локация ровна иначе false
+     * Checks the flatness of a location
+     * @param location The location to check for flatness
+     * @param airDrop The AirDrop whose settings will be used
+     * @return Returns true if the location is flat, otherwise false
      */
     boolean checkForEvenness(@NotNull Location location, AirDrop airDrop);
 

@@ -7,7 +7,7 @@ public class Items {
     private int slot;
     private int chance;
     private ItemStack item;
-    private String inv;
+    private final String inv;
 
     public Items(int slot, int chance, @NotNull ItemStack item, String inv) {
         this.slot = slot;

@@ -105,18 +105,13 @@ public class Helix implements IEffect {
 
 
     @Override
-    public void setLifetime(int ticks) {
-        this.ticks = ticks;
-    }
-
-    @Override
     public boolean isActive() {
         return active;
     }
 
     @Override
     public IEffect clone() {
-        return new WrithingHelix(cs, name);
+        return new Helix(cs, name);
     }
 
     @Override

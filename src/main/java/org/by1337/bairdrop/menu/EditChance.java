@@ -78,7 +78,7 @@ public class EditChance implements Listener {
             if(e.getCurrentItem() == null) return;
             try {
 
-                Items originalItem = null;// = CAirDrop.getListItems().stream().filter(i -> i.getSlot() == e.getSlot()).findFirst().orElse(null);
+                Items originalItem = null;
                 for(Items items : airDrop.getListItems().getOrDefault(invName, new ArrayList<>())){
                     if(items.getSlot() == e.getSlot()){
                         originalItem = items;

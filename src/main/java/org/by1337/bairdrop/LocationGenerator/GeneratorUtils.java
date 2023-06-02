@@ -65,8 +65,7 @@ public class GeneratorUtils {
 
             List<ProtectedRegion> overlapping = region.getIntersectingRegions(candidates);
 
-
-            return overlapping.size() == 0; //&& !ECRGAPI.hasRegionAtLocations(point1, point2)
+            return overlapping.size() == 0;
 
         } catch (Exception e) {
             Message.error(BAirDrop.getConfigMessage().getMessage("overlapping-error"));

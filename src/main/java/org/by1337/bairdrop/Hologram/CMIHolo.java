@@ -22,7 +22,7 @@ public class CMIHolo implements IHologram{
             holo.setLines(lines);
             holo.setLoc(location);
             holo.update();
-            if(size != lines.size())//проблемы с api у cmi, или я додик
+            if(size != lines.size())
                 holo.refresh();
         }
     }

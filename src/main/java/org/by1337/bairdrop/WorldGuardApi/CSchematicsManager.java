@@ -28,9 +28,9 @@ import org.by1337.bairdrop.util.Message;
 public class CSchematicsManager implements SchematicsManager{
 
     /**
-     * Устанавливает схематику
-     * @param name имя схематики в конфиге
-     * @param airDrop АирДроп который спавнит эту схематику
+     * Sets the schematic
+     * @param name The name of the schematic in the config
+     * @param airDrop The AirDrop that spawns this schematic
      */
     public void PasteSchematics(String name, AirDrop airDrop) {
         try {
@@ -38,7 +38,6 @@ public class CSchematicsManager implements SchematicsManager{
                 Message.error(BAirDrop.getConfigMessage().getMessage("schem-limit"));
                 return;
             }
-
             Vector offsets = new Vector(
                     BAirDrop.getiConfig().getSchemConf().getInt(String.format("schematics.%s.offsets-x", name)),
                     BAirDrop.getiConfig().getSchemConf().getInt(String.format("schematics.%s.offsets-y", name)),

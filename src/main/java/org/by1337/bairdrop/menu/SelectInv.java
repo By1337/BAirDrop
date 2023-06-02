@@ -122,9 +122,7 @@ public class SelectInv implements Listener {
 
                     @Override
                     public void run() {
-
                         EditAirMenu em = new EditAirMenu(air);
-                      //  getServer().getPluginManager().registerEvents(em, BAirDrop.getInstance());
                         air.setEditAirMenu(em);
                         e.getPlayer().openInventory(em.getInventory());
                         cancel();

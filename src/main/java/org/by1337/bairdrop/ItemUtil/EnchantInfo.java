@@ -15,7 +15,7 @@ public class EnchantInfo {
         this.maxLevel = maxLevel;
         this.enchantment = enchantment;
         if(maxLevel < minLevel){
-            Message.error("max-level не может быть меньше min-level. " + enchantment);
+            Message.error("max-level cannot be less than min-level." + enchantment);
             maxLevel = minLevel+1;
         }
     }

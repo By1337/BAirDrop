@@ -71,7 +71,7 @@ public class ExecuteCommands {
             if (airDrop != null) {
                 if (command.contains("[CALL-")) {
                     String str = command.replace("[CALL-", "").replace("]", "");
-                    airDrop.callListener(NamespacedKey.fromString(str), pl, customEvent);
+                    airDrop.InvokeListener(NamespacedKey.fromString(str), pl, customEvent);
                     continue;
                 }
                 if (command.contains("[NEAR-PLAYERS=")) {
@@ -79,7 +79,7 @@ public class ExecuteCommands {
                         int range = Integer.parseInt(command.split("=")[1].split("]")[0]);
                         for (Entity entity : airDrop.getAnyLoc().getWorld().getNearbyEntities(airDrop.getAnyLoc(), range, range, range)) {
                             if (entity instanceof Player player) {
-                                airDrop.callListener(NamespacedKey.fromString(command
+                                airDrop.InvokeListener(NamespacedKey.fromString(command
                                         .replace(String.format("[NEAR-PLAYERS=%s] {CALL-", range), "")
                                         .replace("}", "")), player, customEvent);
                             }
@@ -474,6 +474,7 @@ public class ExecuteCommands {
         }
         if (command.equalsIgnoreCase("[EFFECT_STOP_ALL]")) {
             airDrop.StopAllEffects();
+            airDrop.setLoadedEffect(new HashMap<>());
             return true;
         }
         if (command.contains("[SET_MATERIAL_")) {
@@ -497,7 +498,7 @@ public class ExecuteCommands {
                             -GeneratorUtils.getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.x", GeneratorUtils.getWorldKeyByWorld(location.getWorld()))),
                             -GeneratorUtils.getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.y", GeneratorUtils.getWorldKeyByWorld(location.getWorld()))),
                             -GeneratorUtils.getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.z", GeneratorUtils.getWorldKeyByWorld(location.getWorld())))).add(0,
-                            (int) (Integer.toBinaryString(BAirDrop.info[5]).length() / 10)
+                            1
                             , 0);
                 location.getBlock().setType(mat);
                 if (mat == Material.RESPAWN_ANCHOR) {
