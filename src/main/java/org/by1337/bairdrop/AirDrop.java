@@ -53,7 +53,6 @@ public interface AirDrop extends Observable {
     /**
      * Stops the airdrop.
      *
-     * @throws IllegalArgumentException if the airdrop was not started.
      */
     void End();
 

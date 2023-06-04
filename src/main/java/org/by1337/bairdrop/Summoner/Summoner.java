@@ -131,8 +131,6 @@ public class Summoner implements Listener {
 
                     AirDropSummonerEvent airDropSummonerEvent = new AirDropSummonerEvent(airDrop, e.getPlayer());
                     Bukkit.getServer().getPluginManager().callEvent(airDropSummonerEvent);
-
-                    Message.error(airDropSummonerEvent.isCancelled() + " = airDropSummonerEvent.isCancelled()");
                     if(airDropSummonerEvent.isCancelled()) {
                         airDrop.unload();
                         return;

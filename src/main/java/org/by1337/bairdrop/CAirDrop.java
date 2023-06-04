@@ -278,7 +278,7 @@ public class CAirDrop implements AirDrop {
             airHoloClickWait = BAirDrop.getConfigMessage().getList("air-holo-click-wait");
             airHoloToStart = BAirDrop.getConfigMessage().getList("air-holo-to-start");
             holoOffsets = new Vector(0.5, 2.5, 0.5);
-
+            generator = new CGenerator();
             inventory = Bukkit.createInventory(null, inventorySize, inventoryTitle);
             Message.logger(BAirDrop.getConfigMessage().getMessage("air-loaded").replace("{id}", this.id));
         } catch (Exception var3) {
@@ -627,9 +627,6 @@ public class CAirDrop implements AirDrop {
 
     @Override
     public void End() {
-        if(!airDropStarted){
-            throw new IllegalArgumentException("airdrop is not started!");
-        }
         AirDropEndEvent airDropEndEvent = new AirDropEndEvent(this);
         Bukkit.getServer().getPluginManager().callEvent(airDropEndEvent);
         if (airDropEndEvent.isCancelled())
@@ -1020,9 +1017,6 @@ public class CAirDrop implements AirDrop {
         this.loadedEffect = loadedEffect;
     }
 
-    /**
-     * убирает поставленную схематику, если такая есть
-     */
     @Override
     public void schematicsUndo() {
         if (editSession != null) {
@@ -1043,22 +1037,17 @@ public class CAirDrop implements AirDrop {
         this.editSession = editSession;
     }
 
-    /**
-     * создаёт клон себя, устанавливает ему id и возвращает его
-     */
     @Override
     public AirDrop clone(String id) {
         CAirDrop air = new CAirDrop(fileConfiguration, airDropFile);
         air.setId(id);
         for(Observer observer : observers)
             air.registerObserver(observer);
+        air.setGenerator(generator);
         return air;
     }
 
 
-    /**
-     * создаёт файл аирдропа
-     */
     @Override
     public void createFile() {
         File air = new File(getInstance().getDataFolder() + File.separator + "airdrops" + File.separator + getId() + ".yml");
@@ -1066,9 +1055,6 @@ public class CAirDrop implements AirDrop {
         this.fileConfiguration = YamlConfiguration.loadConfiguration(air);
     }
 
-    /**
-     * Удаляет файл аирдропа
-     */
     @Override
     public boolean delete() {
         File air = new File(getInstance().getDataFolder() + File.separator + "airdrops" + File.separator + getId() + ".yml");
@@ -1084,9 +1070,6 @@ public class CAirDrop implements AirDrop {
         airDrops.remove(getId());
     }
 
-    /**
-     * @return вернёт airDropLocation или futureLocation если они будут null вернёт null
-     */
     @Override
     @Nullable
     public Location getAnyLoc() {
@@ -1188,9 +1171,6 @@ public class CAirDrop implements AirDrop {
         return listItems;
     }
 
-    /**
-     * при установке на true аир будет приминят оффсеты к holoTimeToStart
-     */
     @Override
     public void setHoloTimeToStartMinusOffsets(boolean holoTimeToStartMinusOffsets) {
         this.holoTimeToStartMinusOffsets = holoTimeToStartMinusOffsets;
