@@ -8,11 +8,6 @@
     </remote-repository>
     <remote-repository>
       <option name="id" value="central" />
-      <option name="name" value="central" />
-      <option name="url" value="https://repo.maven.apache.org/maven2" />
-    </remote-repository>
-    <remote-repository>
-      <option name="id" value="central" />
       <option name="name" value="Central Repository" />
       <option name="url" value="https://repo.maven.apache.org/maven2" />
     </remote-repository>
@@ -32,11 +27,6 @@
       <option name="url" value="https://github.com/hyperdefined/RandomEnchant" />
     </remote-repository>
     <remote-repository>
-      <option name="id" value="spigotmc-repo" />
-      <option name="name" value="spigotmc-repo" />
-      <option name="url" value="https://hub.spigotmc.org/nexus/content/repositories/snapshots/" />
-    </remote-repository>
-    <remote-repository>
       <option name="id" value="placeholderapi" />
       <option name="name" value="placeholderapi" />
       <option name="url" value="https://repo.extendedclip.com/content/repositories/placeholderapi/" />
@@ -47,6 +37,26 @@
       <option name="url" value="https://repo1.maven.org/maven2" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="sk89q-repo" />
+      <option name="name" value="sk89q-repo" />
+      <option name="url" value="https://maven.enginehub.org/repo/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="central" />
+      <option name="name" value="central" />
+      <option name="url" value="https://repo.maven.apache.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="dmulloy2-repo" />
+      <option name="name" value="dmulloy2-repo" />
+      <option name="url" value="https://repo.dmulloy2.net/repository/public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="spigotmc-repo" />
+      <option name="name" value="spigotmc-repo" />
+      <option name="url" value="https://hub.spigotmc.org/nexus/content/repositories/snapshots/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="jboss.community" />
       <option name="name" value="JBoss Community repository" />
       <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
@@ -55,11 +65,6 @@
       <option name="id" value="minecraft-repo" />
       <option name="name" value="minecraft-repo" />
       <option name="url" value="https://libraries.minecraft.net/" />
-    </remote-repository>
-    <remote-repository>
-      <option name="id" value="sk89q-repo" />
-      <option name="name" value="sk89q-repo" />
-      <option name="url" value="https://maven.enginehub.org/repo/" />
     </remote-repository>
   </component>
 </project>
