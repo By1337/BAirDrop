@@ -26,6 +26,7 @@ import org.by1337.bairdrop.Listeners.util.ListenChat;
 import org.by1337.bairdrop.LocationGenerator.GeneratorUtils;
 import org.by1337.bairdrop.WorldGuardApi.CSchematicsManager;
 import org.by1337.bairdrop.WorldGuardApi.RegionManager;
+import org.by1337.bairdrop.api.event.ExecuteCommandEvent;
 import org.by1337.bairdrop.customListeners.CustomEvent;
 import org.by1337.bairdrop.customListeners.CustomEventListener;
 import org.by1337.bairdrop.menu.*;
@@ -35,6 +36,7 @@ import org.by1337.bairdrop.scripts.Script;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -44,8 +46,42 @@ import static org.bukkit.Bukkit.*;
 import static org.by1337.bairdrop.BAirDrop.getInstance;
 
 public class ExecuteCommands {
+    private static List<String> ignoreCommands = new ArrayList<>();
+
+    public static boolean hasIgnoreCommand(String command) {
+        return ignoreCommands.contains(command);
+    }
+
+    public static void registerIgnoreCommand(String command) {
+        if (hasIgnoreCommand(command)) {
+            throw new IllegalArgumentException("This command is already being ignored");
+        }
+        ignoreCommands.add(command);
+    }
+
+    public static void unregisterIgnoreCommand(String command) {
+        ignoreCommands.remove(command);
+    }
+
+    private static boolean isIgnore(String command) {
+        for (String str : ignoreCommands) {
+            if (command.contains(str)) return true;
+        }
+        return false;
+    }
+
     public void runListenerCommands(String[] commands, @Nullable Player pl, @Nullable AirDrop airDrop, CustomEvent customEvent) {
+        ExecuteCommandEvent event = new ExecuteCommandEvent(airDrop, commands, pl, customEvent);
+        Bukkit.getPluginManager().callEvent(event);
+        if (event.isCancelled()) {
+            return;
+        }
+
         for (String command : commands) {
+            if (isIgnore(command)) {
+                Message.debug("ignore " + command, LogLevel.HARD);
+                continue;
+            }
             if (airDrop != null)
                 command = airDrop.replaceInternalPlaceholder(command);
             command = Message.setPlaceholders(pl, command);
@@ -53,9 +89,10 @@ public class ExecuteCommands {
                 command = CustomEventListener.math(command, airDrop, pl);
             if (command.contains("{player-get-item-") && pl != null)
                 command = setPlayerPlaceholder(pl, command);
-            if (command.equalsIgnoreCase("[SCHEDULER]") || command.equalsIgnoreCase("[ASYNC]") || command.contains("[LATER-")) {
-                continue;
-            }
+
+//            if (command.equalsIgnoreCase("[SCHEDULER]") || command.equalsIgnoreCase("[ASYNC]") || command.contains("[LATER-")) {
+//                continue;
+//            }
             if (runJsCommand(pl, airDrop, command))
                 continue;
             if (pl != null)

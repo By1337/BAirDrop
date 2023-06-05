@@ -88,20 +88,20 @@ public final class BAirDrop extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new CraftItem(), BAirDrop.getInstance());
         getServer().getPluginManager().registerEvents(compass, BAirDrop.getInstance());
 
-        if (Bukkit.getPluginManager().getPlugin("DecentHolograms") != null) {
-            hologram = new DecentHologram();
-        } else
-            hologram = new EmptyHologram();
-        Message.error(getConfigMessage().getMessage("depend-not-found"));
+//        if (Bukkit.getPluginManager().getPlugin("DecentHolograms") != null) {
+//            hologram = new DecentHologram();
+//        } else
+//            hologram = new EmptyHologram();
+//        Message.error(getConfigMessage().getMessage("depend-not-found"));
 
 
-        //        if (Bukkit.getPluginManager().getPlugin("ProtocolLib") != null) {
-        //            protocolManager = ProtocolLibrary.getProtocolManager();
-        //            hologram = new ProtocolHoloManager();
-        //        } else {
-        //            hologram = new EmptyHologram();
-        //            Message.error(getConfigMessage().getMessage("depend-not-found"));
-        //        }
+                if (Bukkit.getPluginManager().getPlugin("ProtocolLib") != null) {
+                    protocolManager = ProtocolLibrary.getProtocolManager();
+                    hologram = new ProtocolHoloManager();
+                } else {
+                    hologram = new EmptyHologram();
+                    Message.error(getConfigMessage().getMessage("depend-not-found"));
+                }
 
         for (File file : getiConfig().getAirDrops().keySet()) {
             airDrops.put(getiConfig().getAirDrops().get(file).getString("air-id"), new CAirDrop(getiConfig().getAirDrops().get(file), file));
@@ -129,8 +129,14 @@ public final class BAirDrop extends JavaPlugin {
             }.runTaskTimerAsynchronously(getInstance(), 10, 10);
         }
 
+        ExecuteCommands.registerIgnoreCommand("[SCHEDULER]");
+        ExecuteCommands.registerIgnoreCommand("[ASYNC]");
+        ExecuteCommands.registerIgnoreCommand("[LATER-");
+
         Bukkit.getPluginManager().callEvent(new EnableEvent());
         Message.logger(String.format(getConfigMessage().getMessage("start-time"), System.currentTimeMillis() - x));
+
+        Message.error(Bukkit.getServer().getBukkitVersion());
     }
 
 

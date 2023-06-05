@@ -6,7 +6,7 @@ import org.by1337.bairdrop.obfuscate.DontObfuscate;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Нужен для того чтобы аддоны могли вовремя регистрировать свои объекты
+ * Нужен для того чтобы аддоны могли вовремя реагировать на изменение состояния плагина
  */
 @DontObfuscate
 public class EnableEvent extends Event {

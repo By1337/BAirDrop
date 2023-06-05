@@ -1,31 +1,28 @@
-package org.by1337.bairdrop.Hologram.utils;
+package org.by1337.bairdrop.Hologram.utils.impl;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.ListenerOptions;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
+import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
+import org.by1337.bairdrop.Hologram.utils.IProtocolHolo;
 import org.by1337.bairdrop.util.Message;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
-public class ProtocolHolo implements Listener {
+public class ProtocolHoloV1_18 implements IProtocolHolo { //1.16.5-R0.1-SNAPSHOT
     private List<String> lines;
     private final Location location;
     private final List<Integer> ids = new ArrayList<>();
     private List<PacketContainer> packetSpawn = new ArrayList<>();
     private List<PacketContainer> packetMeta = new ArrayList<>();
 
-    public ProtocolHolo(List<String> lines, Location location) {
+    public ProtocolHoloV1_18(List<String> lines, Location location) {
         this.lines = lines;
-        this.location = location.clone().add(0, -2.5, 0);
+        this.location = location.clone().add(0, -2, 0);
         Random random = new Random();
         double offsets = 0D;
         for(String line : lines){
@@ -65,55 +62,48 @@ public class ProtocolHolo implements Listener {
     }
     private PacketContainer createMeta(int id, String name) {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_METADATA);
-        EasyMetadataPacket metadata = new EasyMetadataPacket(null);
-
-        byte bitmask = 0x00;
-        bitmask |= 0x20;
-
-        metadata.write(0, bitmask);
-
-        metadata.writeOptional(2, WrappedChatComponent.fromText(Message.messageBuilder(name)));
-        metadata.write(3, true);
-        metadata.write(4, false);
-        metadata.write(5, false);
-        metadata.write(7, 0);
 
         packet.getIntegers().write(0, id);
-        packet.getWatchableCollectionModifier().write(0, metadata.export());
+
+        //setInvisible
+        WrappedDataWatcher watcher = new WrappedDataWatcher();
+
+        WrappedDataWatcher.WrappedDataWatcherObject visible = new WrappedDataWatcher.WrappedDataWatcherObject(
+                0, WrappedDataWatcher.Registry.get(Byte.class));
+        watcher.setObject(visible, (byte) 0x20);
+        ///
+
+        //set name
+        Optional<?> opt = Optional.of(WrappedChatComponent.fromChatMessage(Message.messageBuilder(name))[0].getHandle());
+
+        watcher.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(2,
+                WrappedDataWatcher.Registry.getChatComponentSerializer(true)), opt);
+
+        WrappedDataWatcher.WrappedDataWatcherObject nameVisible = new WrappedDataWatcher.WrappedDataWatcherObject(
+                3, WrappedDataWatcher.Registry.get(Boolean.class));
+        watcher.setObject(nameVisible, true);
+        ///
+
+        //setSmall
+        WrappedDataWatcher.WrappedDataWatcherObject small = new WrappedDataWatcher.WrappedDataWatcherObject(
+                15, WrappedDataWatcher.Registry.get(Byte.class));
+        watcher.setObject(small, (byte) 0x01);
+        ///
+
+        packet.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
+
 
         return packet;
     }
 
-//    public void remove() {
-//        PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_DESTROY);
-//        int[] entityIds = new int[ids.size()];
-//        for(int x = 0; x < ids.size(); x++){
-//            entityIds[x] = ids.get(x);
-//        }
-//        packet.getIntegerArrays().write(0, entityIds);
-//
-//        // Отправить пакет удаления всем игрокам
-//        for (Player player : Bukkit.getOnlinePlayers()) {
-//            ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
-//        }
-//
-//
-//    }
 
     public void remove() {
-
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_DESTROY);
-        int[] entityIds = new int[ids.size()];
-        for(int x = 0; x < ids.size(); x++){
-            entityIds[x] = ids.get(x);
-        }
-        packet.getIntegerArrays().write(0, entityIds);
+        packet.getIntLists().write(0, ids);
 
         // Отправить пакет удаления всем игрокам
         for (Player player : Bukkit.getOnlinePlayers()) {
             ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
         }
-
-
     }
 }

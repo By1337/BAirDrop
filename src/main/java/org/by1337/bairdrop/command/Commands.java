@@ -36,6 +36,8 @@ public class Commands implements CommandExecutor {
                 Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("few-arguments"));
                 return true;
             }
+
+
             if (args[0].equals("help")) {
                 if (!pl.hasPermission("bair.help")) {
                     Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("no-prem"));
