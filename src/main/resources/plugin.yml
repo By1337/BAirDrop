@@ -4,6 +4,7 @@ main: org.by1337.bairdrop.BAirDrop
 api-version: 1.16
 authors: [ By1337 ]
 depend: [PlaceholderAPI, WorldGuard, WorldEdit]
+load: POSTWORLD
 description: event airdrop
 commands:
   bairdrop:

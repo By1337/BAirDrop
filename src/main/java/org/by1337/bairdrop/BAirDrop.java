@@ -1,5 +1,7 @@
 package org.by1337.bairdrop;
 
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -9,10 +11,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.by1337.bairdrop.ConfigManager.CConfig;
 import org.by1337.bairdrop.ConfigManager.ConfigMessage;
 import org.by1337.bairdrop.ConfigManager.Config;
-import org.by1337.bairdrop.Hologram.CMIHolo;
-import org.by1337.bairdrop.Hologram.DecentHologram;
-import org.by1337.bairdrop.Hologram.EmptyHologram;
-import org.by1337.bairdrop.Hologram.IHologram;
+import org.by1337.bairdrop.Hologram.*;
 import org.by1337.bairdrop.Listeners.Compass;
 import org.by1337.bairdrop.Listeners.CraftItem;
 import org.by1337.bairdrop.Listeners.InteractListener;
@@ -50,6 +49,7 @@ public final class BAirDrop extends JavaPlugin {
     private static ConfigMessage configMessage;
     private static BAirDrop instance;
 
+    private static ProtocolManager protocolManager = null;
 
     @Override
     public void onEnable() {
@@ -64,6 +64,8 @@ public final class BAirDrop extends JavaPlugin {
             getInstance().saveDefaultConfig();
         }
         getInstance().saveConfig();
+
+
         try {
             String lvl = getInstance().getConfig().getString("log-level", "LOW");
             logLevel = LogLevel.valueOf(lvl);
@@ -76,7 +78,7 @@ public final class BAirDrop extends JavaPlugin {
 
         getiConfig().LoadConfiguration();
 
-        if(this.getConfig().getBoolean("use-metrics"))
+        if (this.getConfig().getBoolean("use-metrics"))
             new Metrics(getInstance(), 17870);
 
         Objects.requireNonNull(getInstance().getCommand("bairdrop")).setExecutor(new Commands());
@@ -88,25 +90,31 @@ public final class BAirDrop extends JavaPlugin {
 
         if (Bukkit.getPluginManager().getPlugin("DecentHolograms") != null) {
             hologram = new DecentHologram();
-        } else if (Bukkit.getPluginManager().getPlugin("CMI") != null) {
-            hologram = new CMIHolo();
-        } else {
+        } else
             hologram = new EmptyHologram();
-            Message.error(getConfigMessage().getMessage("depend-not-found"));
-        }
+        Message.error(getConfigMessage().getMessage("depend-not-found"));
 
+
+        //        if (Bukkit.getPluginManager().getPlugin("ProtocolLib") != null) {
+        //            protocolManager = ProtocolLibrary.getProtocolManager();
+        //            hologram = new ProtocolHoloManager();
+        //        } else {
+        //            hologram = new EmptyHologram();
+        //            Message.error(getConfigMessage().getMessage("depend-not-found"));
+        //        }
 
         for (File file : getiConfig().getAirDrops().keySet()) {
             airDrops.put(getiConfig().getAirDrops().get(file).getString("air-id"), new CAirDrop(getiConfig().getAirDrops().get(file), file));
         }
+
         List<String> ids = new ArrayList<>(airDrops.keySet());
-        for (String id : ids) {
+        for (
+                String id : ids) {
             airDrops.get(id).registerAllSignedObservers();
         }
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)
             new PlaceholderExpansion().register();
-
 
         if (BAirDrop.getInstance().getConfig().getBoolean("global-time.enable")) {
             globalTimer = new GlobalTimer((BAirDrop.getInstance().getConfig().getInt("global-time.time") * 60));
@@ -122,9 +130,7 @@ public final class BAirDrop extends JavaPlugin {
         }
 
         Bukkit.getPluginManager().callEvent(new EnableEvent());
-
         Message.logger(String.format(getConfigMessage().getMessage("start-time"), System.currentTimeMillis() - x));
-
     }
 
 
@@ -215,5 +221,8 @@ public final class BAirDrop extends JavaPlugin {
         }
     }
 
+    public static ProtocolManager getProtocolManager() {
+        return protocolManager;
+    }
 }
 
