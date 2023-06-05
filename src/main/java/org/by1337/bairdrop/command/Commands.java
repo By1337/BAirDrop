@@ -10,6 +10,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.CAirDrop;
+import org.by1337.bairdrop.Hologram.utils.HoloLine;
+import org.by1337.bairdrop.Hologram.utils.impl.HoloLineV1_16;
 import org.by1337.bairdrop.Listeners.Compass;
 import org.by1337.bairdrop.menu.EditAirMenu;
 import org.by1337.bairdrop.menu.SelectAirMenu;
@@ -37,6 +39,19 @@ public class Commands implements CommandExecutor {
                 return true;
             }
 
+            if (args[0].equals("test")) {
+                HoloLine holo = new HoloLineV1_16("test", pl.getLocation());
+                holo.spawn();
+                new BukkitRunnable() {
+                    int x = 0;
+                    @Override
+                    public void run() {
+                        holo.updateName(x + "");
+                        x++;
+                    }
+                }.runTaskTimer(BAirDrop.getInstance(), 5, 5);
+                return true;
+            }
 
             if (args[0].equals("help")) {
                 if (!pl.hasPermission("bair.help")) {

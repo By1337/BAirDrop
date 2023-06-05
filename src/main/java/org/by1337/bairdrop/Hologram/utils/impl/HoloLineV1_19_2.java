@@ -4,56 +4,75 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import com.comphenix.protocol.wrappers.WrappedDataValue;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.by1337.bairdrop.Hologram.utils.IProtocolHolo;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.by1337.bairdrop.BAirDrop;
+import org.by1337.bairdrop.Hologram.utils.HoloLine;
 import org.by1337.bairdrop.util.Message;
 
 import java.util.*;
 
-import static com.comphenix.protocol.injector.StructureCache.newPacket;
+public class HoloLineV1_19_2 implements HoloLine {
+    private String name;
+    private Location location;
+    private final Integer id;
+    private PacketContainer spawnPacket;
+    private PacketContainer metaPacket;
 
-public class ProtocolHoloV1_19_2 implements IProtocolHolo { //1.16.5-R0.1-SNAPSHOT
-    private List<String> lines;
-    private final Location location;
-    private final List<Integer> ids = new ArrayList<>();
-    private List<PacketContainer> packetSpawn = new ArrayList<>();
-    private List<PacketContainer> packetMeta = new ArrayList<>();
-
-    public ProtocolHoloV1_19_2(List<String> lines, Location location) {
-        this.lines = lines;
-        this.location = location.clone().add(0, -2, 0);
-        Random random = new Random();
-        double offsets = 0D;
-        for (String line : lines) {
-            int id = random.nextInt(Integer.MAX_VALUE);
-            packetSpawn.add(create(id, this.location.clone().add(0, -offsets, 0)));
-            packetMeta.add(createMeta(id, line));
-            ids.add(id);
-            offsets += 0.3;
-        }
+    public HoloLineV1_19_2(String name, Location location) {
+        this.name = name;
+        this.location = location;
+        id = new Random().nextInt(Integer.MAX_VALUE);
+        spawnPacket = create();
+        metaPacket = createMeta();
+        Bukkit.getServer().getPluginManager().registerEvents(this, BAirDrop.getInstance());
     }
 
+    @Override
     public void spawn() {
-        for (PacketContainer spawn : packetSpawn) {
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                ProtocolLibrary.getProtocolManager().sendServerPacket(player, spawn);
-            }
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            ProtocolLibrary.getProtocolManager().sendServerPacket(player, spawnPacket);
+            ProtocolLibrary.getProtocolManager().sendServerPacket(player, metaPacket);
         }
-        for (PacketContainer meta : packetMeta) {
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                ProtocolLibrary.getProtocolManager().sendServerPacket(player, meta);
-            }
-        }
-
     }
 
-    private PacketContainer create(int id, Location location) {
+    @Override
+    public void spawn(Player player) {
+        ProtocolLibrary.getProtocolManager().sendServerPacket(player, spawnPacket);
+        ProtocolLibrary.getProtocolManager().sendServerPacket(player, metaPacket);
+    }
 
+    @Override
+    public void remove() {
+        HandlerList.unregisterAll(this);
+
+        PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_DESTROY);
+        packet.getIntLists().write(0, Collections.singletonList(id));
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
+        }
+    }
+
+    @Override
+    public void updateName(String name) {
+        if(!name.equals(this.name)){
+            this.name = name;
+            metaPacket = createMeta();
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                ProtocolLibrary.getProtocolManager().sendServerPacket(player, metaPacket);
+            }
+        }
+    }
+
+    private PacketContainer create() {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.SPAWN_ENTITY);
         packet.getIntegers().write(0, id);
         packet.getUUIDs().write(0, UUID.randomUUID());
@@ -68,7 +87,7 @@ public class ProtocolHoloV1_19_2 implements IProtocolHolo { //1.16.5-R0.1-SNAPSH
         return packet;
     }
 
-    private PacketContainer createMeta(int id, String name) {
+    private PacketContainer createMeta() {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_METADATA);
 
         packet.getIntegers().write(0, id);
@@ -103,13 +122,14 @@ public class ProtocolHoloV1_19_2 implements IProtocolHolo { //1.16.5-R0.1-SNAPSH
 
         return packet;
     }
-
-    public void remove() {
-        PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_DESTROY);
-        packet.getIntLists().write(0, ids);
-
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
-        }
+    @EventHandler
+    public void join(PlayerJoinEvent e){
+        if(Objects.equals(e.getPlayer().getLocation().getWorld(), location.getWorld()))
+            spawn(e.getPlayer());
+    }
+    @EventHandler
+    public void ChangedWorld(PlayerChangedWorldEvent e){
+        if(Objects.equals(e.getPlayer().getLocation().getWorld(), location.getWorld()))
+            spawn(e.getPlayer());
     }
 }
