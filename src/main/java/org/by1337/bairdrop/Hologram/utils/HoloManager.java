@@ -30,20 +30,22 @@ public class HoloManager {
         lines.clear();
     }
 
-    public void setLines(List<String> newLines) {
+    public void setLines(List<String> newLines) { //line 33
         Iterator<HoloLine> holos = lines.listIterator();
 
         double offset = 0D;
+        boolean hasNew = false;
         for (String str : newLines) {
             if (holos.hasNext()) {
                 HoloLine holoLine = holos.next();
                 holoLine.updateName(str);
             } else {
                 create(str, location.clone().add(0, -offset, 0));
+                hasNew = true;
             }
             offset += 0.3D;
         }
-        while (holos.hasNext()) {
+        while (holos.hasNext() && !hasNew) {
             HoloLine holoLine = holos.next();
             holoLine.remove();
             holos.remove();

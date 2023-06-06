@@ -893,7 +893,10 @@ public class CAirDrop implements AirDrop {
     public void notifyObservers(CustomEvent customEvent, @Nullable Player pl) {
         long x = System.currentTimeMillis();
 
-        observers.forEach(o -> o.update(pl, this, customEvent, false));
+        List<Observer> tempObservers = new ArrayList<>(observers);
+
+        tempObservers.forEach(o -> o.update(pl, this, customEvent, false));
+
         AirDropUtils.getStaticObservers().forEach(o -> o.update(pl, this, customEvent, false));
 
         if (System.currentTimeMillis() - x < 50)
@@ -1569,5 +1572,14 @@ public class CAirDrop implements AirDrop {
     public void setGenerator(Generator generator) {
         this.generator = generator;
     }
+
+//    @Override
+//    public boolean equals(Object obj) {
+//        if(obj == null) return false;
+//        if(obj instanceof CAirDrop airDrop){
+//            return this.hashCode() == airDrop.hashCode();
+//        }
+//        return false;
+//    }
 
 }

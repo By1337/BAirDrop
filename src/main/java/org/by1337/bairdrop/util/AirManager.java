@@ -24,9 +24,7 @@ public class AirManager {
         int sec = Sec % 60;
         return String.format("%02d:%02d:%02d", hour, min, sec);
     }
-    public static String getTimeToNextAirdrop() {
-        if (BAirDrop.globalTimer != null)
-            return Message.setPlaceholders(null, "%bairdrop_time_start_format%");
+    public static int getTimeToNextAirdrop() {
         int time = -1;
         for (AirDrop airDrop : BAirDrop.airDrops.values()) {
             if (!airDrop.isAirDropStarted())
@@ -34,7 +32,7 @@ public class AirManager {
                     time = airDrop.getTimeToStart();
                 }
         }
-        return getFormat(time);
+        return time;
     }
     public static String colored(String str) {
         str = str.replace("true", "&atrue");

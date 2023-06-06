@@ -143,17 +143,18 @@ public record CustomEvent(NamespacedKey key) implements Keyed {
         if (obj == null)
             return false;
         if (obj instanceof CustomEvent customEvent) {
-            return this.hashCode(this.key.getKey().getBytes()) == this.hashCode(customEvent.key.getKey().getBytes());
+            return this.hashCode() == customEvent.hashCode();
         } else
             return false;
     }
 
-    private int hashCode(byte[] arr) {
-        if (arr == null)
+    @Override
+    public int hashCode() {
+        if(this.key == null)
             return 0;
 
         int result = 0;
-        for (byte element : arr)
+        for (byte element : this.key.getKey().getBytes())
             result = 45 * result + element;
         return result;
     }

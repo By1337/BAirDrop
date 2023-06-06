@@ -50,7 +50,7 @@ public class LoadEffects {
                     EffectFactory.EffectList.put(key, new WrithingHelix(file, key));
                     continue;
                 }
-
+                throw new IllegalArgumentException();
             } catch (NullPointerException e) {
                 Message.error(String.format(BAirDrop.getConfigMessage().getMessage("effect-error"), key));
                 e.printStackTrace();

@@ -19,13 +19,10 @@ import org.by1337.bairdrop.LocationGenerator.CGenLoc;
 import org.by1337.bairdrop.LocationGenerator.GeneratorLoc;
 import org.by1337.bairdrop.Summoner.Summoner;
 import org.by1337.bairdrop.WorldGuardApi.RegionManager;
-import org.by1337.bairdrop.api.event.DisableEvent;
-import org.by1337.bairdrop.api.event.EnableEvent;
 import org.by1337.bairdrop.command.Commands;
 import org.by1337.bairdrop.command.Completer;
 import org.by1337.bairdrop.customListeners.CustomEvent;
 import org.by1337.bairdrop.customListeners.observer.Observer;
-import org.by1337.bairdrop.effect.EffectFactory;
 import org.by1337.bairdrop.util.*;
 import org.by1337.bairdrop.util.Message;
 
@@ -52,9 +49,13 @@ public final class BAirDrop extends JavaPlugin {
     private static ProtocolManager protocolManager = null;
 
     @Override
+    public void onLoad() {
+        instance = this;
+    }
+
+    @Override
     public void onEnable() {
         ConfigurationSerialization.registerClass(CGenLoc.class);
-        instance = this;
         config = new CConfig();
         configMessage = (ConfigMessage) config;
         File config = new File(getInstance().getDataFolder() + File.separator + "config.yml");
@@ -129,7 +130,6 @@ public final class BAirDrop extends JavaPlugin {
         ExecuteCommands.registerIgnoreCommand("[ASYNC]");
         ExecuteCommands.registerIgnoreCommand("[LATER-");
 
-        Bukkit.getPluginManager().callEvent(new EnableEvent());
         Message.logger(String.format(getConfigMessage().getMessage("start-time"), System.currentTimeMillis() - x));
 
     }
@@ -151,7 +151,6 @@ public final class BAirDrop extends JavaPlugin {
     public void onDisable() {
         if (!getiConfig().isLoaded())
             return;
-        Bukkit.getPluginManager().callEvent(new DisableEvent());
         long x = System.currentTimeMillis();
         for (AirDrop airDrop : airDrops.values()) {
             if (airDrop.isAirDropStarted())
@@ -192,7 +191,7 @@ public final class BAirDrop extends JavaPlugin {
         getiConfig().getSchematics().clear();
         airDrops.clear();
         customEventListeners.clear();
-        EffectFactory.EffectList.clear();
+       // EffectFactory.EffectList.clear();
         getiConfig().getAirDrops().clear();
 
         getInstance().reloadConfig();

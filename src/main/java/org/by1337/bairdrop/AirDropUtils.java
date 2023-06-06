@@ -41,6 +41,6 @@ public class AirDropUtils {
      * @return список зарегистрированных слушателей
      */
     public static List<Observer> getStaticObservers() {
-        return staticObservers;
+        return new ArrayList<>(staticObservers);
     }
 }
