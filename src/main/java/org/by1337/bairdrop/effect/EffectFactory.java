@@ -1,10 +1,9 @@
 package org.by1337.bairdrop.effect;
 
-import org.by1337.bairdrop.obfuscate.DontObfuscate;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
-@DontObfuscate
+
 public class EffectFactory {
     public static HashMap<String, IEffect> EffectList = new HashMap<>();
     @Nullable

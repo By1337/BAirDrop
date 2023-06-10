@@ -57,6 +57,18 @@ public final class BAirDrop extends JavaPlugin {
     public void onEnable() {
         ConfigurationSerialization.registerClass(CGenLoc.class);
         config = new CConfig();
+
+
+        {
+            CConfig cConfig = new CConfig();
+            Class<?>[] parameterTypes = {cConfig.getClass(), int.class};
+        }
+
+        Object cConfig = new CConfig();
+        Class<?>[] parameterTypes = {cConfig.getClass(), int.class};
+
+
+
         configMessage = (ConfigMessage) config;
         File config = new File(getInstance().getDataFolder() + File.separator + "config.yml");
         if (!config.exists()) {

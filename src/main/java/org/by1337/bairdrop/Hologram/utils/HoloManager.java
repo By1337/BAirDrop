@@ -10,9 +10,9 @@ import java.util.Iterator;
 import java.util.List;
 
 public class HoloManager {
-    private List<HoloLine> lines = new ArrayList<>();
+    private final List<HoloLine> lines = new ArrayList<>();
     private final String name;
-    private Location location;
+    private final Location location;
 
     public HoloManager(Location location, List<String> lines, String name) {
         this.location = location.clone();

@@ -7,9 +7,8 @@ import org.bukkit.event.HandlerList;
 
 import org.by1337.bairdrop.AirDrop;
 
-import org.by1337.bairdrop.obfuscate.DontObfuscate;
 import org.jetbrains.annotations.NotNull;
-@DontObfuscate
+
 public class AirDropOpenEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private boolean cancelled;

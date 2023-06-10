@@ -23,9 +23,9 @@ import java.util.UUID;
 
 public class HoloLineV1_16 implements HoloLine {
     private String name;
-    private Location location;
+    private final Location location;
     private final Integer id;
-    private PacketContainer spawnPacket;
+    private final PacketContainer spawnPacket;
     private PacketContainer metaPacket;
 
     public HoloLineV1_16(String name, Location location) {

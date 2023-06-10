@@ -1,11 +1,10 @@
 package org.by1337.bairdrop;
 
 import org.by1337.bairdrop.customListeners.observer.Observer;
-import org.by1337.bairdrop.obfuscate.DontObfuscate;
 
 import java.util.ArrayList;
 import java.util.List;
-@DontObfuscate
+
 public class AirDropUtils {
     private static final List<Observer> staticObservers = new ArrayList<>();
     /**

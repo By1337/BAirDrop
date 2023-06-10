@@ -105,7 +105,7 @@ public class FireworkEffect implements IEffect {
                     }
                 }
             }
-        }.runTaskTimerAsynchronously(BAirDrop.getInstance(), timeUpdate, timeUpdate);
+        }.runTaskTimer(BAirDrop.getInstance(), timeUpdate, timeUpdate);
     }
 
     @Override

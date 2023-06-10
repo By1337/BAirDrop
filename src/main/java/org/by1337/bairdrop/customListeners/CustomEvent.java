@@ -2,21 +2,19 @@ package org.by1337.bairdrop.customListeners;
 
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
-import org.by1337.bairdrop.obfuscate.DontObfuscate;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
-import java.util.List;
 
-@DontObfuscate
 public record CustomEvent(NamespacedKey key) implements Keyed {
     private static final HashMap<NamespacedKey, CustomEvent> byKey = new HashMap<>();
+
     /**
      * when someone clicks on a closed airdrop
      * Player not null, AirDrop not null
      */
-
     public static final CustomEvent CLICK_CLOSE = registerEvent(new CustomEvent(NamespacedKey.fromString("click_close")));
     /**
      * when someone clicks on an open airdrop

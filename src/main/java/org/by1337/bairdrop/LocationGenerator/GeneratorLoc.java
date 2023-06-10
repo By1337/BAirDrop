@@ -40,8 +40,10 @@ public class GeneratorLoc {
 
             @Override
             public void run() {
-                CGenerator CGenerator = new CGenerator();
-                Location loc = CGenerator.getLocation(finalairDrop, true);
+              //  long time = System.currentTimeMillis();
+
+                Location loc = finalairDrop.getGenerator().getLocation(finalairDrop, true);
+             //   Message.warning("time = " + (System.currentTimeMillis() - time));
                 fail++;
                 if (loc != null) {
                     GenLoc genLoc = new CGenLoc(loc, GeneratorUtils.getOffsets(finalairDrop), finalairDrop.getId());
@@ -60,7 +62,6 @@ public class GeneratorLoc {
 
                     if (finalairDrop.getEditAirMenu() != null)
                         finalairDrop.getEditAirMenu().menuGenerate("usePreGeneratedLocations");
-                    loc = null;
                 } else if (fail % 100 == 0) {
                     Message.sendMsg(pl, String.format(BAirDrop.getConfigMessage().getMessage("generator-fail"), fail));
                 }

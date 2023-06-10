@@ -23,8 +23,8 @@ public class InteractListener implements Listener {
     @EventHandler
     public void PlayerClick(PlayerInteractEvent e) {
         Player pl = e.getPlayer();
-        if (e.getAction() == Action.RIGHT_CLICK_BLOCK || BAirDrop.getInstance().getConfig().getBoolean("geyser")) {
-            AirDrop airDrop = AirManager.getAirDropForLocation(Objects.requireNonNull(e.getClickedBlock()).getLocation());
+        if (e.getAction() == Action.RIGHT_CLICK_BLOCK || BAirDrop.getInstance().getConfig().getBoolean("geyser") && e.getClickedBlock() != null) {
+            AirDrop airDrop = AirManager.getAirDropForLocation(e.getClickedBlock().getLocation());
             if(airDrop == null)
                 return;
             e.setCancelled(true);

@@ -1,9 +1,8 @@
 package org.by1337.bairdrop.LocationGenerator;
 
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Biome;
+import org.bukkit.block.Block;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.util.Message;
 import org.jetbrains.annotations.NotNull;
@@ -11,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.by1337.bairdrop.BAirDrop;
@@ -57,11 +57,13 @@ public class CGenerator implements Generator{
     @Nullable
     public Location getLocation(@NotNull AirDrop airDrop, boolean isGenerator) {
         world = airDrop.getWorld();
+
         double x = ThreadLocalRandom.current().nextInt(airDrop.getSpawnRadiusMin(), airDrop.getSpawnRadiusMax());
         double y = 100;//100
         double z = ThreadLocalRandom.current().nextInt(airDrop.getSpawnRadiusMin(), airDrop.getSpawnRadiusMax());
 
         Location loc1 = new Location(world, x, y, z);
+
         String worldType = String.valueOf(world.getEnvironment());
         if (worldType.equals("NORMAL"))
             return getLocation_NORMAL(loc1, airDrop);
@@ -88,17 +90,22 @@ public class CGenerator implements Generator{
 
     @Nullable
     private Location getLocation_NORMAL(@NotNull Location location, AirDrop airDrop) {
-        double y2 = location.getWorld().getHighestBlockAt(location).getLocation().getY();
-        location.setY(y2);
-        if (!checkMaxY(location, airDrop, "world-NORMAL.max-y"))
-            return null;
-        if (isBiomeInBlackList(location)) return null;
-        if ( BAirDrop.getiConfig().getGeneratorSettings().getStringList("black-List").contains(String.valueOf(location.getBlock().getType()))) {
-            return null;
-        }
-        location.add(GeneratorUtils.getOffsets(airDrop));
-        if (GeneratorUtils.isRegionEmpty(airDrop, location))
+        Chunk chunk = location.getChunk();
+        Random random = new Random();
 
+        int x = random.nextInt(16);
+        int z = random.nextInt(16);
+        int y = getHighestBlock(chunk, x, z, GeneratorUtils.getSettings(airDrop.getGeneratorSettings(), "world-NORMAL.max-y"));
+
+        if(y == -1)
+            return null;
+
+        location = chunk.getBlock(x, y, z).getLocation();
+        if (isBiomeInBlackList(location)) return null;
+
+        location.add(GeneratorUtils.getOffsets(airDrop));
+
+        if (GeneratorUtils.isRegionEmpty(airDrop, location))
             if (airDrop.isFlatnessCheck()) {
                 if (checkForEvenness(location, airDrop))
                     return location;
@@ -106,6 +113,31 @@ public class CGenerator implements Generator{
             } else return location;
 
         return null;
+    }
+
+    private int getHighestBlock(Chunk chunk, int x, int z, int maxY){ //world-NORMAL.max-y
+        for(int y = maxY; y > 30; y--){
+            if(!chunk.getBlock(x, y, z).getType().isAir()){
+                if (BAirDrop.getiConfig().getGeneratorSettings().getStringList("black-List").contains(String.valueOf(chunk.getBlock(x, y, z).getType()))) {
+                    return -1;
+                }
+                return y;
+            }
+        }
+
+//        int startY = location.getWorld().getMaxHeight() / 2;
+//        Location tempLoc = location.clone();
+//        tempLoc.setY(startY);
+//        if(tempLoc.getBlock().getType().isAir() && tempLoc.getBlock().getType() != Material.CAVE_AIR){
+//            boolean upIsAir = true;
+//            for (int x = 1; x < 255;x++){
+//                tempLoc.setY(startY - x);
+//                if(!tempLoc.getBlock().getType().isAir() && upIsAir){
+//                    return tempLoc.getBlock();
+//                }
+//            }
+//        }
+        return -1;
     }
 
 
@@ -181,6 +213,9 @@ public class CGenerator implements Generator{
     private boolean checkMaxY(@NotNull Location location, AirDrop airDrop, String path) {
         return GeneratorUtils.getSettings(airDrop.getGeneratorSettings(), path) >= location.getY();
     }
+    private boolean checkMaxY(int y, AirDrop airDrop, String path) {
+        return GeneratorUtils.getSettings(airDrop.getGeneratorSettings(), path) >= y;
+    }
 
     @Override
     public boolean checkForEvenness(@NotNull Location location, AirDrop airDrop) {
@@ -188,7 +223,7 @@ public class CGenerator implements Generator{
             for (int x = GeneratorUtils.getSettings(airDrop.getGeneratorSettings(), "check-for-evenness.poz.start-x"); x < GeneratorUtils.getSettings(airDrop.getGeneratorSettings(), "check-for-evenness.poz.end-x"); x++) {
                 for (int z = GeneratorUtils.getSettings(airDrop.getGeneratorSettings(), "check-for-evenness.poz.start-z"); z < GeneratorUtils.getSettings(airDrop.getGeneratorSettings(), "check-for-evenness.poz.end-z"); z++) {
                     if (x == 0 && y == 0 && z == 0) continue;
-                    if (!location.clone().add(x, y, z).getBlock().isEmpty() && ! BAirDrop.getiConfig().getGeneratorSettings().getStringList("ignored-blocks").contains(String.valueOf(location.clone().add(x, y, z).getBlock().getType())))
+                    if (!location.clone().add(x, y, z).getBlock().getType().isAir() && ! BAirDrop.getiConfig().getGeneratorSettings().getStringList("ignored-blocks").contains(String.valueOf(location.clone().add(x, y, z).getBlock().getType())))
                         return false;
                 }
             }

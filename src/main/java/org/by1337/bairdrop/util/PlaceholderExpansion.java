@@ -59,9 +59,7 @@ public class PlaceholderExpansion extends me.clip.placeholderapi.expansion.Place
             int dist = 0;
             for (AirDrop air : BAirDrop.airDrops.values()) {
                 if (!air.isAirDropStarted()) continue;
-
-                if (air.getAnyLoc().getWorld().equals(player.getPlayer().getWorld())) continue;
-
+                if (!air.getAnyLoc().getWorld().equals(player.getPlayer().getWorld())) continue;
                 if (dist > player.getPlayer().getLocation().distance(air.getAirDropLocation()) || airDrop == null) {
                     dist = (int) player.getPlayer().getLocation().distance(air.getAirDropLocation());
                     airDrop = air;

@@ -321,6 +321,7 @@ public class CustomEventListener implements Observer {
                 String jsName = command.split("RUN_JS=")[1].split("]")[0];
                 if (!BAirDrop.getiConfig().getScripts().containsKey(jsName)) {
                     Message.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-js-script"), jsName));
+                    return "0";
                 }
                 HashMap<String, Object> map = new HashMap<>();
                 if (command.contains("param(")) {

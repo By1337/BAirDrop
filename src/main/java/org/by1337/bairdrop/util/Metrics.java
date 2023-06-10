@@ -32,9 +32,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.by1337.bairdrop.obfuscate.DontObfuscate;
 
-@DontObfuscate
+
 public class Metrics {
 
     private final Plugin plugin;
@@ -143,7 +142,7 @@ public class Metrics {
             return Bukkit.getOnlinePlayers().size();
         }
     }
-    @DontObfuscate
+
     public static class MetricsBase {
 
         /** The version of the Metrics class. */
@@ -372,7 +371,7 @@ public class Metrics {
             return outputStream.toByteArray();
         }
     }
-    @DontObfuscate
+
     public abstract static class CustomChart {
 
         private final String chartId;
@@ -413,7 +412,7 @@ public class Metrics {
      * <p>While this class is neither feature-rich nor the most performant one, it's sufficient enough
      * for its use-case.
      */
-    @DontObfuscate
+
     public static class JsonObjectBuilder {
 
         private StringBuilder builder = new StringBuilder();
@@ -599,7 +598,7 @@ public class Metrics {
          * allow a raw string inputs for methods like {@link JsonObjectBuilder#appendField(String,
          * JsonObject)}.
          */
-        @DontObfuscate
+
         public static class JsonObject {
 
             private final String value;

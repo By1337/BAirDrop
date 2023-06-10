@@ -112,8 +112,10 @@ public class ExecuteCommands {
                     continue;
                 }
                 if (command.contains("[NEAR-PLAYERS=")) {
+                    //[NEAR-PLAYERS=10] {[CONSOLE] say %player_name% ok}
                     try {
                         int range = Integer.parseInt(command.split("=")[1].split("]")[0]);
+                        //  if(command.contains("{CALL-")){
                         for (Entity entity : airDrop.getAnyLoc().getWorld().getNearbyEntities(airDrop.getAnyLoc(), range, range, range)) {
                             if (entity instanceof Player player) {
                                 airDrop.InvokeListener(NamespacedKey.fromString(command
@@ -121,6 +123,14 @@ public class ExecuteCommands {
                                         .replace("}", "")), player, customEvent);
                             }
                         }
+//                        }else {
+//                            for (Entity entity : airDrop.getAnyLoc().getWorld().getNearbyEntities(airDrop.getAnyLoc(), range, range, range)) {
+//                                if (entity instanceof Player player) {
+//                                   String cmd = command.replace(String.format("[NEAR-PLAYERS=%s] {", range), "").replace("}", "");
+//                                   runListenerCommands(new String[]{cmd}, player, airDrop, customEvent);
+//                                }
+//                            }
+//                        }
                     } catch (NumberFormatException e) {
                         Message.error(String.format(BAirDrop.getConfigMessage().getMessage("near-error-1"), command));
                     } catch (NullPointerException e) {
@@ -153,6 +163,7 @@ public class ExecuteCommands {
                                 String jsName = finalCommand.split("RUN_JS=")[1].split("]")[0];
                                 if (!BAirDrop.getiConfig().getScripts().containsKey(jsName)) {
                                     Message.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-js-script"), jsName));
+                                    return;
                                 }
                                 HashMap<String, Object> map = new HashMap<>();
                                 if (finalCommand.contains("param(")) {
@@ -185,8 +196,9 @@ public class ExecuteCommands {
                     if (command.contains("[RUN_JS=")) {
                         command = command.replace(" ", "");
                         String jsName = command.split("RUN_JS=")[1].split("]")[0];
-                        if (BAirDrop.getiConfig().getScripts().containsKey(jsName)) {
-                            Message.error(String.format("%s Неизвестный скрипт!", jsName));
+                        if (!BAirDrop.getiConfig().getScripts().containsKey(jsName)) {
+                            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-js-script"), jsName));
+                            return true;
                         }
                         HashMap<String, Object> map = new HashMap<>();
                         if (command.contains("param(")) {

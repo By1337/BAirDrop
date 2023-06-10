@@ -1,8 +1,6 @@
 package org.by1337.bairdrop.util;
 
-import org.by1337.bairdrop.obfuscate.DontObfuscate;
 
-@DontObfuscate
 public enum LogLevel {
     LOW(0),
     MEDIUM(1),

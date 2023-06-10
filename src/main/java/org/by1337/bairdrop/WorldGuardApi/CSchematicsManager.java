@@ -45,9 +45,13 @@ public class CSchematicsManager implements SchematicsManager{
             );
             boolean ignoreAirBlocks = BAirDrop.getiConfig().getSchemConf().getBoolean(String.format("schematics.%s.ignore-air-blocks", name));
             String file = BAirDrop.getiConfig().getSchemConf().getString(String.format("schematics.%s.file", name));
+
+            if (file == null || !BAirDrop.getiConfig().getSchematics().containsKey(file)) {
+                throw new IllegalArgumentException("unknown schematic: " + name);
+            }
+
             Message.debug("paste " + file, LogLevel.LOW);
 
-            if (!BAirDrop.getiConfig().getSchematics().containsKey(file)) throw new IllegalArgumentException();
             File schem = BAirDrop.getiConfig().getSchematics().get(file);
 
             ClipboardFormat format = ClipboardFormats.findByFile(schem);

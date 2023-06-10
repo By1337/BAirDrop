@@ -3,13 +3,12 @@ package org.by1337.bairdrop.effect;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 
-import org.by1337.bairdrop.obfuscate.DontObfuscate;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
-@DontObfuscate
+
 public record EffectType(NamespacedKey key) implements Keyed {
     private static final HashMap<NamespacedKey, EffectType> byKey = new HashMap<>();
     public static EffectType CIRCLE = registerEffect(new EffectType(NamespacedKey.fromString("circle")));

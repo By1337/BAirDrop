@@ -66,6 +66,12 @@
 # [LOGGER] - Output a log to the console
 # [PLAYER-SET-ITEM-<slot>=<material>] - Set an item to the player's slot
 # [SUB_TITLE] - Subtitle
+# [SCHEDULER] - the listener will execute in a separate thread.
+# [ASYNC] - the listener will execute in a separate asynchronous thread.
+# [LATER-<time>] - the listener will execute with a delay in ticks.
+###
+# [LATER-<time>] - works only in combination with [SCHEDULER] or [ASYNC].
+# [SCHEDULER], [ASYNC], [LATER-<time>] - are executed before checking conditions and it doesn't matter where these commands are placed, whether at the end or at the beginning of all commands.
 ######################################################################################
 listeners:
   #TIMER#
