@@ -69,7 +69,7 @@ public class PlaceholderExpansion extends me.clip.placeholderapi.expansion.Place
                 return BAirDrop.getConfigMessage().getMessage("air-near-none");
             return Message.messageBuilder(airDrop.replaceInternalPlaceholder(BAirDrop.getConfigMessage().getMessage("air-near").replace("{dist}", dist + "")));
         }
-        if (params.contains("time_to_start_")) { //%bairdrop_time_to_start_<air id>%
+        if (params.contains("time_to_start_")) { //%bairdrop_time_to_start_<air_id>%
             String[] args = params.split("_");
             if (args.length != 4) return "error";
             AirDrop airDrop = BAirDrop.airDrops.getOrDefault(args[3], null);

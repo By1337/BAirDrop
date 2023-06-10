@@ -141,7 +141,8 @@ public record CustomEvent(NamespacedKey key) implements Keyed {
         if (obj == null)
             return false;
         if (obj instanceof CustomEvent customEvent) {
-            return this.hashCode() == customEvent.hashCode();
+            return this.key.getKey().equals(customEvent.key.getKey());
+           // return this.hashCode() == customEvent.hashCode();
         } else
             return false;
     }
