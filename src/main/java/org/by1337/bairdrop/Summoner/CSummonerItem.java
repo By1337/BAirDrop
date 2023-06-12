@@ -114,8 +114,8 @@ public class CSummonerItem implements SummonerItem {
         }
         AirDrop air;
         if (isClone()) {
-            String newid = BAirDrop.airDrops.get(key).getId() + "_clone" + UUID.randomUUID();
-            air = BAirDrop.airDrops.get(key).clone(newid);
+            String newId = BAirDrop.airDrops.get(key).getId() + "_clone" + String.valueOf(UUID.randomUUID()).split("-")[0];
+            air = BAirDrop.airDrops.get(key).clone(newId);
             air.setClone(true);
             air.setKill(true);
         } else {

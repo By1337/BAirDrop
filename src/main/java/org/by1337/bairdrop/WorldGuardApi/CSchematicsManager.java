@@ -58,7 +58,9 @@ public class CSchematicsManager implements SchematicsManager{
 
             ClipboardReader reader = format.getReader(new FileInputStream(schem));
 
+
             Clipboard clipboard = reader.read();
+
 
             Location loc = airDrop.getAirDropLocation();
             if (loc == null)

@@ -113,7 +113,6 @@ public class HoloLineV1_19_4 implements HoloLine {
             packet.getDataValueCollectionModifier().write(0, wrappedDataValueList);
 
         } catch (ClassNotFoundException e) {
-
             WrappedDataWatcher.WrappedDataWatcherObject visible = new WrappedDataWatcher.WrappedDataWatcherObject(
                     0, WrappedDataWatcher.Registry.get(Byte.class));
             watcher.setObject(visible, (byte) 0x20);

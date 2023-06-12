@@ -116,12 +116,18 @@ public class CGenerator implements Generator{
     }
 
     private int getHighestBlock(Chunk chunk, int x, int z, int maxY){ //world-NORMAL.max-y
+        boolean apBlockIsAir = false;
         for(int y = maxY; y > 30; y--){
             if(!chunk.getBlock(x, y, z).getType().isAir()){
                 if (BAirDrop.getiConfig().getGeneratorSettings().getStringList("black-List").contains(String.valueOf(chunk.getBlock(x, y, z).getType()))) {
                     return -1;
                 }
-                return y;
+                if(apBlockIsAir)
+                    return y;
+                else
+                    return -1;
+            }else {
+                apBlockIsAir = true;
             }
         }
 

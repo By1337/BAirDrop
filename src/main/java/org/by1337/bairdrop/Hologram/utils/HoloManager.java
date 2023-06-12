@@ -64,6 +64,8 @@ public class HoloManager {
             holoLine = new HoloLineV1_19_2(line, location);
         }else if (Bukkit.getServer().getBukkitVersion().contains("1.19.4")) {
             holoLine = new HoloLineV1_19_4(line, location);
+        }else if (Bukkit.getServer().getBukkitVersion().contains("1.20")) {
+            holoLine = new HoloLineV1_20(line, location);
         } else {
             Message.error("unsupported version");
             return;
