@@ -1,6 +1,8 @@
 geyser: false
 max-experience-pre-generated-location: 50
 use-metrics: true
+debug: false
+log-level: LOW
 settings:
   world-guard-flags:
     allow-flags:

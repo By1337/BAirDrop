@@ -1,12 +1,9 @@
 package org.by1337.bairdrop.Hologram.utils.impl;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.by1337.bairdrop.BAirDrop;
-import org.by1337.bairdrop.Hologram.utils.HoloLine;
 
-import java.util.Random;
+import org.by1337.bairdrop.Hologram.utils.HoloLine;
 
 public class HoloLineV1_20 extends HoloLineV1_19_4 implements HoloLine {
     public HoloLineV1_20(String name, Location location) {

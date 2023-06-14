@@ -116,33 +116,20 @@ public class CGenerator implements Generator{
     }
 
     private int getHighestBlock(Chunk chunk, int x, int z, int maxY){ //world-NORMAL.max-y
-        boolean apBlockIsAir = false;
+        boolean upBlockIsAir = false;
         for(int y = maxY; y > 30; y--){
             if(!chunk.getBlock(x, y, z).getType().isAir()){
                 if (BAirDrop.getiConfig().getGeneratorSettings().getStringList("black-List").contains(String.valueOf(chunk.getBlock(x, y, z).getType()))) {
                     return -1;
                 }
-                if(apBlockIsAir)
+                if(upBlockIsAir)
                     return y;
                 else
                     return -1;
             }else {
-                apBlockIsAir = true;
+                upBlockIsAir = true;
             }
         }
-
-//        int startY = location.getWorld().getMaxHeight() / 2;
-//        Location tempLoc = location.clone();
-//        tempLoc.setY(startY);
-//        if(tempLoc.getBlock().getType().isAir() && tempLoc.getBlock().getType() != Material.CAVE_AIR){
-//            boolean upIsAir = true;
-//            for (int x = 1; x < 255;x++){
-//                tempLoc.setY(startY - x);
-//                if(!tempLoc.getBlock().getType().isAir() && upIsAir){
-//                    return tempLoc.getBlock();
-//                }
-//            }
-//        }
         return -1;
     }
 

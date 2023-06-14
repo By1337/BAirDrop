@@ -30,7 +30,8 @@ public class Helix implements IEffect {
     private final int timeUpdate;
     private int ticks;
     private String name;
-    private boolean active = true;
+    private boolean used;
+    private boolean stop;
     private FileConfiguration cs;
     private AirDrop airDrop;
 
@@ -66,12 +67,13 @@ public class Helix implements IEffect {
             Message.error(String.format(BAirDrop.getConfigMessage().getMessage("effect-error-loc-is-null3"), airDrop.getId()));
             return;
         } else loc = airDrop.getAnyLoc().clone();
+        used = true;
         run();
     }
 
     @Override
     public void End() {
-        active = false;
+        stop = true;
     }
 
     void run() {
@@ -87,7 +89,7 @@ public class Helix implements IEffect {
                         loc.getWorld().spawnParticle(particle, loc.clone().add(offsets).add(x, y, z), count);
 
                 }
-                if (!isActive())
+                if (stop)
                     cancel();
                 if (ticks != -1) {
                     if ((ticks - timeUpdate) > 0) {
@@ -105,8 +107,8 @@ public class Helix implements IEffect {
 
 
     @Override
-    public boolean isActive() {
-        return active;
+    public boolean isUsed() {
+        return used;
     }
 
     @Override

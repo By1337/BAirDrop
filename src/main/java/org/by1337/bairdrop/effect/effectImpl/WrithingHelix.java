@@ -28,7 +28,8 @@ public class WrithingHelix implements IEffect {
     private final int timeUpdate;
     private int ticks;
     private String name;
-    private boolean active = true;
+    private boolean used;
+    private boolean stop;
     private final FileConfiguration cs;
     private AirDrop airDrop;
 
@@ -63,12 +64,13 @@ public class WrithingHelix implements IEffect {
             Message.error(String.format(BAirDrop.getConfigMessage().getMessage("effect-error-loc-is-null3"), airDrop.getId()));
             return;
         } else loc = airDrop.getAnyLoc().clone();
+        used = true;
         run();
     }
 
     @Override
     public void End() {
-        active = false;
+        stop = true;
     }
 
     void run() {
@@ -88,7 +90,7 @@ public class WrithingHelix implements IEffect {
 
                 }
                 angle += 0.1;
-                if (!isActive()){
+                if (stop){
                     cancel();
                 }
                 if (ticks != -1) {
@@ -105,8 +107,8 @@ public class WrithingHelix implements IEffect {
 
 
     @Override
-    public boolean isActive() {
-        return active;
+    public boolean isUsed() {
+        return used;
     }
 
     @Override

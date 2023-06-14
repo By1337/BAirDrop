@@ -13,8 +13,8 @@ public class DecentHologram implements IHologram{
         Hologram hologram = DHAPI.getHologram(name);
         if(hologram != null){
             if(!hologram.getLocation().equals(location)){
-                hologram.delete();
-                hologram = DHAPI.createHologram(name, location, lines);
+                hologram.setLocation(location);
+                hologram.realignLines();
             }
             DHAPI.setHologramLines(hologram, lines);
         }else {

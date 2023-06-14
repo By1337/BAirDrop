@@ -2,6 +2,7 @@ package org.by1337.bairdrop.Hologram.utils.impl;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+
 import org.by1337.bairdrop.Hologram.utils.HoloLine;
 
 public class HoloLineV1_17 extends HoloLineV1_18 implements HoloLine {

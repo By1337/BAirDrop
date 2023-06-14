@@ -995,9 +995,7 @@ public class CAirDrop implements AirDrop {
 
     @Override
     public boolean isEffectStarted(String id) {
-        if (!loadedEffect.containsKey(id))
-            return false;
-        return !loadedEffect.get(id).isActive();
+        return loadedEffect.get(id).isUsed();
     }
 
     @Override

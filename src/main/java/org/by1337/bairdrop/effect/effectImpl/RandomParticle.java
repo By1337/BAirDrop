@@ -20,7 +20,8 @@ public class RandomParticle implements IEffect {
     private int ticks = -1;
     private final int timeUpdate;
     private AirDrop airDrop;
-    private boolean active = true;
+    private boolean used;
+    private boolean stop;
     private final List<Particle> particle = new ArrayList<>();
     private final double radius;
     private final int count;
@@ -50,17 +51,18 @@ public class RandomParticle implements IEffect {
             Message.error(String.format(BAirDrop.getConfigMessage().getMessage("effect-error-loc-is-null3"), airDrop.getId()));
             return;
         } else loc = airDrop.getAnyLoc().clone();
+        used = true;
         run();
     }
 
     @Override
     public void End() {
-        active = false;
+        stop = true;
     }
 
     @Override
-    public boolean isActive() {
-        return active;
+    public boolean isUsed() {
+        return used;
     }
 
     void run() {
@@ -73,7 +75,7 @@ public class RandomParticle implements IEffect {
                     double z = ThreadLocalRandom.current().nextDouble(-radius, radius);
                     loc.getWorld().spawnParticle(pr, loc.clone().add(x, y, z), count);
                 }
-                if (!isActive())
+                if (stop)
                     cancel();
                 if (ticks != -1) {
                     if ((ticks - timeUpdate) > 0) {

@@ -25,7 +25,9 @@ public class Guard implements IEffect {
     private int ticks = -1;
     private final int timeUpdate;
     private AirDrop airDrop;
-    private boolean active = true;
+    private boolean used;
+    private boolean stop;
+
     private final double radius;
     private final double heal;
     private final int count;
@@ -57,18 +59,19 @@ public class Guard implements IEffect {
             Message.error(String.format(BAirDrop.getConfigMessage().getMessage("effect-error-loc-is-null3"), airDrop.getId()));
             return;
         } else loc = airDrop.getAnyLoc().clone();
+        used = true;
         run();
     }
 
     @Override
     public void End() {
-        active = false;
+        stop = true;
         zombies.forEach(Entity::remove);
     }
 
     @Override
-    public boolean isActive() {
-        return active;
+    public boolean isUsed() {
+        return used;
     }
 
     void run() {
@@ -128,7 +131,7 @@ public class Guard implements IEffect {
                     zombie.setGlowing(true);
                     zombie.setCustomNameVisible(true);
                 }
-                if (!isActive())
+                if (stop)
                     cancel();
                 if (ticks != -1) {
                     if ((ticks - timeUpdate) > 0) {

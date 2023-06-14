@@ -19,7 +19,8 @@ public class ExpandingCircle implements IEffect {
     private int ticks = -1;
     private final int timeUpdate;
     private  AirDrop airDrop;
-    private boolean active = true;
+    private boolean used;
+    private boolean stop;
     private final Particle particle;
     private double radius;
     private final double endRadius;
@@ -69,12 +70,13 @@ public class ExpandingCircle implements IEffect {
             Message.error(String.format(BAirDrop.getConfigMessage().getMessage("effect-error-loc-is-null3"), airDrop.getId()));
             return;
         } else loc = airDrop.getAnyLoc().clone();
+        used = true;
         run();
     }
 
     @Override
     public void End() {
-        active = false;
+        stop = true;
     }
 
     void run() {
@@ -89,7 +91,7 @@ public class ExpandingCircle implements IEffect {
                     else
                         loc.getWorld().spawnParticle(particle, loc.clone().add(offsets).add(x, 0, z), count);
                 }
-                if (!isActive())
+                if (stop)
                     cancel();
                 if (ticks != -1) {
                     if ((ticks - timeUpdate) > 0) {
@@ -110,8 +112,8 @@ public class ExpandingCircle implements IEffect {
     }
 
     @Override
-    public boolean isActive() {
-        return active;
+    public boolean isUsed() {
+        return used;
     }
 
     @Override

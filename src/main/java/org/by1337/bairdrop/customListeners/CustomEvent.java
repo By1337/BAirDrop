@@ -16,83 +16,83 @@ public record CustomEvent(NamespacedKey key) implements Keyed {
      * Player not null, AirDrop not null
      */
     public static final CustomEvent CLICK_CLOSE = registerEvent(new CustomEvent(NamespacedKey.fromString("click_close")));
+
     /**
      * when someone clicks on an open airdrop
      * Player not null, AirDrop not null
      */
-
     public static final CustomEvent CLICK_OPEN = registerEvent(new CustomEvent(NamespacedKey.fromString("click_open")));
+
     /**
      * an airdrop is called every second
      * Player null, AirDrop not null
      */
-
     public static final CustomEvent TIMER = registerEvent(new CustomEvent(NamespacedKey.fromString("timer")));
+
     /**
      * when an airdrop spawns
      * Player null, AirDrop not null
      */
-
     public static final CustomEvent START_EVENT = registerEvent(new CustomEvent(NamespacedKey.fromString("start_event")));
+
     /**
      * when the airdrop ends
      * Player null, AirDrop not null
      */
-
     public static final CustomEvent END_EVENT = registerEvent(new CustomEvent(NamespacedKey.fromString("end_event")));
+
     /**
      * when the airdrop opens
      * Player null, AirDrop not null
      */
-
     public static final CustomEvent UNLOCK_EVENT = registerEvent(new CustomEvent(NamespacedKey.fromString("unlock_event")));
+
     /**
      * when someone opens the airdrop for the first time
      * Player not null, AirDrop not null
      */
-
     public static final CustomEvent FIRST_OPEN = registerEvent(new CustomEvent(NamespacedKey.fromString("first_open")));
+
     /**
      * when someone summons the airdrop
      * Player not null, AirDrop not null
      */
-
     public static final CustomEvent SUMMONER = registerEvent(new CustomEvent(NamespacedKey.fromString("summoner")));
+
     /**
      * when someone activates the airdrop
      * Player not null, AirDrop not null
      */
-
     public static final CustomEvent ACTIVATE = registerEvent(new CustomEvent(NamespacedKey.fromString("activate")));
+
     /**
      * when the airdrop ends due to depletion, also triggers END_EVENT
      * Player null, AirDrop not null
      */
-
     public static final CustomEvent STOP_WHEN_EMPTY = registerEvent(new CustomEvent(NamespacedKey.fromString("stop_when_empty")));
+
     /**
      * this event is not triggered and the listeners subscribed to this event are not displayed in the menu
      * Player not null/null, AirDrop not null/null
      */
-
     public static final CustomEvent NONE = registerEvent(new CustomEvent(NamespacedKey.fromString("none")));
+
     /**
      * when someone crafts an item
      * Player not null, AirDrop null
      */
-
     public static final CustomEvent CRAFT_ITEM = registerEvent(new CustomEvent(NamespacedKey.fromString("craft_item")));
+
     /**
      * when the airdrop is unloaded
      * Player null, AirDrop not null
      */
-
     public static final CustomEvent UNLOAD = registerEvent(new CustomEvent(NamespacedKey.fromString("unload")));
+
     /**
      * when the airdrop is loaded
      * Player null, AirDrop not null
      */
-
     public static CustomEvent LOAD = registerEvent(new CustomEvent(NamespacedKey.fromString("load")));
 
     /**

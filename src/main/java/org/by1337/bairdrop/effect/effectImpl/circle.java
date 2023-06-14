@@ -18,7 +18,8 @@ public class circle implements IEffect {
     private int ticks = -1;
     private final int timeUpdate;
     private AirDrop airDrop;
-    private boolean active = true;
+    private boolean used;
+    private boolean stop = false;
     private final Particle particle;
     private final double radius;
     private final int count;
@@ -63,17 +64,18 @@ public class circle implements IEffect {
             Message.error(String.format(BAirDrop.getConfigMessage().getMessage("effect-error-loc-is-null3"), airDrop.getId()));
             return;
         } else loc = airDrop.getAnyLoc().clone();
+        used = true;
         run();
     }
 
     @Override
     public void End() {
-        active = false;
+        stop = true;
     }
 
     @Override
-    public boolean isActive() {
-        return active;
+    public boolean isUsed() {
+        return used;
     }
 
     void run() {
@@ -89,7 +91,7 @@ public class circle implements IEffect {
                     else
                         loc.getWorld().spawnParticle(particle, loc.clone().add(offsets).add(x, 0, z), count);
                 }
-                if (!isActive())
+                if (stop)
                     cancel();
                 if (ticks != -1) {
                     if ((ticks - timeUpdate) > 0) {
