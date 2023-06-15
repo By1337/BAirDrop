@@ -106,8 +106,7 @@ public final class BAirDrop extends JavaPlugin {
         }
 
         List<String> ids = new ArrayList<>(airDrops.keySet());
-        for (
-                String id : ids) {
+        for (String id : ids) {
             airDrops.get(id).registerAllSignedObservers();
         }
 

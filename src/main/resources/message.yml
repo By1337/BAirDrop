@@ -217,3 +217,5 @@ select-air-menu-lore:
   - "&7Time to end: {time-to-end}"
   - "&7Spawn world: {world}"
 menu-air-select: '&7Airdrop Selection Menu'
+lidded-error: 'block cannot be opened/close!'
+rotate-error: 'This block cannot be rotated'

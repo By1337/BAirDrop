@@ -218,3 +218,5 @@ select-air-menu-lore:
   - "&7До окончания: {time-to-end}"
   - "&7Мир появления: {world}"
 menu-air-select: '&7Меню выбора аирдропа'
+lidded-error: 'блок нельзя открыть/закрыть!'
+rotate-error: 'Этот блок не возможно повернуть'

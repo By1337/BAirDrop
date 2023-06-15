@@ -5,8 +5,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.Lidded;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.type.RespawnAnchor;
 import org.bukkit.boss.BarColor;
@@ -40,6 +42,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.bukkit.Bukkit.*;
 
@@ -526,10 +530,65 @@ public class ExecuteCommands {
             airDrop.setLoadedEffect(new HashMap<>());
             return true;
         }
+        if (command.equalsIgnoreCase("[BLOCK_SET_OPEN]")) {
+            Location location = airDrop.getAnyLoc();
+            if (location == null) {
+                Message.error(String.format(BAirDrop.getConfigMessage().getMessage("loc-is-null2"), command));
+                return true;
+            }
+            Block block = location.getBlock();
+            BlockState blockState = block.getState();
+            if (blockState instanceof Lidded lidded) {
+                lidded.open();
+            } else {
+                Message.error(BAirDrop.getConfigMessage().getMessage("lidded-error"));
+            }
+            return true;
+        }
+        if (command.equalsIgnoreCase("[BLOCK_SET_CLOSE]")) {
+            Location location = airDrop.getAnyLoc();
+            if (location == null) {
+                Message.error(String.format(BAirDrop.getConfigMessage().getMessage("loc-is-null2"), command));
+                return true;
+            }
+            Block block = location.getBlock();
+            BlockState blockState = block.getState();
+            if (blockState instanceof Lidded lidded) {
+                lidded.close();
+            } else {
+                Message.error(BAirDrop.getConfigMessage().getMessage("lidded-error"));
+            }
+            return true;
+        }
+        if (command.contains("[SET_BLOCK_FACE_")) { //[SET_BLOCK_FACE_UP]
+            Location location = airDrop.getAnyLoc();
+            if (location == null) {
+                Message.error(String.format(BAirDrop.getConfigMessage().getMessage("loc-is-null2"), command));
+                return true;
+            }
+            Pattern pattern = Pattern.compile("\\[SET_BLOCK_FACE_(.*?)\\]");
+            Matcher matcher = pattern.matcher(command);
+            if (matcher.find()) {
+                String output = matcher.group(1);
+                try {
+                    BlockFace blockFace = BlockFace.valueOf(output);
+                    Block block = location.getBlock();
+                    if (block.getBlockData() instanceof Directional directional) {
+                        BlockState state = block.getState();
+                        directional.setFacing(blockFace);
+                        state.setBlockData(directional);
+                        state.update(true);
+                    } else {
+                        Message.error(BAirDrop.getConfigMessage().getMessage("rotate-error"));
+                    }
+                } catch (IllegalArgumentException e) {
+                    Message.error(e.getLocalizedMessage());
+                }
+            }
+            return true;
+        }
         if (command.contains("[SET_MATERIAL_")) {
-            Location location = airDrop.getAirDropLocation();
-            if (location == null)
-                location = airDrop.getFutureLocation();
+            Location location = airDrop.getAnyLoc();
             if (location == null) {
                 Message.error(String.format(BAirDrop.getConfigMessage().getMessage("loc-is-null2"), command));
                 return true;

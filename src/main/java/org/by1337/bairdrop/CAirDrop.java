@@ -492,7 +492,6 @@ public class CAirDrop implements AirDrop {
         timeToStart = 0;
         futureLocation = null;
         stopWhenEmpty_event = false;
-        notifyObservers(CustomEvent.START_EVENT, null);
 
         try {
             airDropLocation.getBlock().setType(materialLocked);
@@ -500,16 +499,7 @@ public class CAirDrop implements AirDrop {
                 RespawnAnchor ra = (RespawnAnchor) airDropLocation.getBlock().getBlockData();
                 ra.setCharges(4);
                 airDropLocation.getBlock().setBlockData(ra);
-            } else if (materialUnlocked == Material.BARREL) {
-                BlockState barrelState = airDropLocation.getBlock().getState();
-                barrelState.setType(Material.BARREL);
-                Directional directionalData = (Directional) Material.BARREL.createBlockData();
-                directionalData.setFacing(BlockFace.UP);
-                barrelState.setBlockData(directionalData);
-                barrelState.update(true);
             }
-
-
         } catch (IllegalArgumentException e) {
             Message.error(String.format(BAirDrop.getConfigMessage().getMessage("material-error"), materialLocked));
             airDropLocation.getBlock().setType(Material.DIRT);
@@ -570,7 +560,7 @@ public class CAirDrop implements AirDrop {
         }
         airDropStarted = true;
         updateEditAirMenu("stats");
-
+        notifyObservers(CustomEvent.START_EVENT, null);
     }
 
     private int getEmptyRandomSlot() {
