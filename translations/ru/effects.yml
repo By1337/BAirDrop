@@ -162,7 +162,6 @@ effects:
     timeUpdate: 1
     radius: 1
     count: 0
-    viewDistance: 30
     step: 0.05
     height: 15
     offset-x: 0.5
@@ -174,13 +173,13 @@ effects:
     color-rgb-r: 255
     color-rgb-g: 0
     color-rgb-b: 255
+
   ef=11:
     type: HELIX
     ticks: 36000
     timeUpdate: 15
     radius: 15
     count: 0
-    viewDistance: 30
     step: 0.05
     height: 30
     offset-x: 0.5
@@ -192,3 +191,15 @@ effects:
     color-rgb-r: 255
     color-rgb-g: 0
     color-rgb-b: 255
+
+  ef=12: #Не поддерживается REDSTONE
+    type: PARTICLE_EXPLOSION
+    ticks: 1
+    timeUpdate: 1
+    radius: 0.1
+    count: 300
+    speed: 0.15
+    offset-x: 0.5
+    offset-y: 0.7
+    offset-z: 0.5
+    particle: SOUL

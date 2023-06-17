@@ -38,21 +38,6 @@ public class Commands implements CommandExecutor {
                 Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("few-arguments"));
                 return true;
             }
-
-            if (args[0].equals("test")) {
-                HoloLine holo = new HoloLineV1_16("test", pl.getLocation());
-                holo.spawn();
-                new BukkitRunnable() {
-                    int x = 0;
-                    @Override
-                    public void run() {
-                        holo.updateName(x + "");
-                        x++;
-                    }
-                }.runTaskTimer(BAirDrop.getInstance(), 5, 5);
-                return true;
-            }
-
             if (args[0].equals("help")) {
                 if (!pl.hasPermission("bair.help")) {
                     Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("no-prem"));

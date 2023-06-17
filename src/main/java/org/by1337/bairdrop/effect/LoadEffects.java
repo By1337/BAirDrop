@@ -50,6 +50,10 @@ public class LoadEffects {
                     EffectFactory.EffectList.put(key, new WrithingHelix(file, key));
                     continue;
                 }
+                if (effectType == EffectType.PARTICLE_EXPLOSION) {
+                    EffectFactory.EffectList.put(key, new ParticleExplosion(file, key));
+                    continue;
+                }
                 throw new IllegalArgumentException();
             } catch (NullPointerException e) {
                 Message.error(String.format(BAirDrop.getConfigMessage().getMessage("effect-error"), key));

@@ -6,7 +6,6 @@ effects:
     timeUpdate: 10 # How often in ticks to spawn new particles.
     radius: 1.5 # Circle radius.
     count: 0 # Number of particles. Set to 0 to prevent particle dispersion, or you can experiment with this value to achieve an unusual effect.
-    viewDistance: 30 # From what distance the particles will be visible.
     step: 0.05 # Distance between particles, directly affecting their quantity!
     offset-x: 0.5 # Offset along the coordinates.
     offset-y: 0.3
@@ -24,7 +23,6 @@ effects:
     timeUpdate: 10
     radius: 2
     count: 0
-    viewDistance: 30
     step: 0.05
     offset-x: 0.5
     offset-y: 0.7
@@ -43,7 +41,6 @@ effects:
     timeUpdate: 15
     radius: 1
     count: 0
-    viewDistance: 30
     step: 0.05
     height: 30
     offset-x: 0.5
@@ -84,7 +81,6 @@ effects:
     end-radius: 7 # End radius.
     step-radius: 0.3 # Amount to increase intermediate radius by per timeUpdate.
     count: 0
-    viewDistance: 30
     step: 0.05
     offset-x: 0.5
     offset-y: 0.7
@@ -161,7 +157,6 @@ effects:
     timeUpdate: 1
     radius: 1
     count: 0
-    viewDistance: 30
     step: 0.05
     height: 15
     offset-x: 0.5
@@ -179,7 +174,6 @@ effects:
     timeUpdate: 15
     radius: 15
     count: 0
-    viewDistance: 30
     step: 0.05
     height: 30
     offset-x: 0.5
@@ -191,3 +185,15 @@ effects:
     color-rgb-r: 255
     color-rgb-g: 0
     color-rgb-b: 255
+
+  ef=12: #The "REDSTONE" particle is not supported.
+    type: PARTICLE_EXPLOSION
+    ticks: 1
+    timeUpdate: 1
+    radius: 0.1
+    count: 300
+    speed: 0.15
+    offset-x: 0.5
+    offset-y: 0.7
+    offset-z: 0.5
+    particle: SOUL

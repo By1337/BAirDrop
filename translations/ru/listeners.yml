@@ -135,6 +135,7 @@ listeners:
       - '[EFFECT_START-ef=6-ef_rnd]'
     deny-commands:
       - '[CALL-remove_summoner_block]'
+      - '[SET_MATERIAL_{material-locked}]'
 
 
   alert:

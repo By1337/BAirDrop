@@ -19,6 +19,7 @@ public record EffectType(NamespacedKey key) implements Keyed {
     public static EffectType TORUS = registerEffect(new EffectType(NamespacedKey.fromString("torus")));
     public static EffectType WRITHING_HELIX = registerEffect(new EffectType(NamespacedKey.fromString("writhing_helix")));
     public static EffectType HELIX = registerEffect(new EffectType(NamespacedKey.fromString("helix")));
+    public static EffectType PARTICLE_EXPLOSION = registerEffect(new EffectType(NamespacedKey.fromString("particle_explosion")));
 
     /**
      * @param key NamespacedKey of the event

@@ -583,7 +583,7 @@ public class CAirDrop implements AirDrop {
     @Override
     public void unlock() {
         if(!airDropStarted){
-            throw new IllegalArgumentException("airdrop is not started!");
+            throw new IllegalStateException("airdrop is not started!");
         }
         AirDropUnlockEvent airDropUnlockEvent = new AirDropUnlockEvent(this);
         Bukkit.getServer().getPluginManager().callEvent(airDropUnlockEvent);
