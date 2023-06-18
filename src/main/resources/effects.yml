@@ -10,6 +10,10 @@ effects:
     offset-x: 0.5 # Offset along the coordinates.
     offset-y: 0.3
     offset-z: 0.5
+    direction-x: 0 # Направление полёта частиц. Не работает с REDSTONE
+    direction-y: 0
+    direction-z: 0
+    speed: 0 #скорость полёта если есть направление полёта
     number-of-steps: 6.5 # Influences the number of particles. 6.5 / 0.05 = 130 spawned particles (number-of-steps / step).
     particle: REDSTONE
     # To specify color and size for particles "REDSTONE", you need to include the color and size parameters.
@@ -27,6 +31,10 @@ effects:
     offset-x: 0.5
     offset-y: 0.7
     offset-z: 0.5
+    direction-x: 0
+    direction-y: 0
+    direction-z: 0
+    speed: 0
     number-of-steps: 6.5
     particle: REDSTONE
     #only REDSTONE#
@@ -197,3 +205,4 @@ effects:
     offset-y: 0.7
     offset-z: 0.5
     particle: SOUL
+

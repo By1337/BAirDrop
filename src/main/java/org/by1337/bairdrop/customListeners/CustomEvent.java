@@ -94,6 +94,11 @@ public record CustomEvent(NamespacedKey key) implements Keyed {
      * Player null, AirDrop not null
      */
     public static CustomEvent LOAD = registerEvent(new CustomEvent(NamespacedKey.fromString("load")));
+    /**
+     * when the player use cheat steal chest
+     * Player null, AirDrop not null
+     */
+    public static CustomEvent PLAYER_STEAL = registerEvent(new CustomEvent(NamespacedKey.fromString("player_steal")));
 
     /**
      * @param key NamespacedKey of the event

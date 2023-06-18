@@ -14,7 +14,7 @@ import org.by1337.bairdrop.util.Message;
 
 import java.util.Objects;
 
-public class circle implements IEffect {
+public class Circle implements IEffect {
     private int ticks = -1;
     private final int timeUpdate;
     private AirDrop airDrop;
@@ -31,8 +31,10 @@ public class circle implements IEffect {
     private final FileConfiguration cs;
     private Location loc;
     private final String name;
+    private final Vector direction;
+    private final double speed;
 
-    public circle(FileConfiguration cs, String name) throws NullPointerException, IllegalArgumentException {
+    public Circle(FileConfiguration cs, String name) throws NullPointerException, IllegalArgumentException {
         this.cs = cs;
         ticks = cs.getInt(String.format("effects.%s.ticks", name));
         timeUpdate = cs.getInt(String.format("effects.%s.timeUpdate", name));
@@ -47,8 +49,14 @@ public class circle implements IEffect {
                 cs.getDouble(String.format("effects.%s.offset-y", name)),
                 cs.getDouble(String.format("effects.%s.offset-z", name)));
 
+        direction = new Vector(
+                cs.getDouble(String.format("effects.%s.direction-x", name)),
+                cs.getDouble(String.format("effects.%s.direction-y", name)),
+                cs.getDouble(String.format("effects.%s.direction-z", name)));
+
         numberOfSteps = cs.getDouble(String.format("effects.%s.number-of-steps", name));
         size = cs.getDouble(String.format("effects.%s.size", name));
+        speed = cs.getDouble(String.format("effects.%s.speed", name));
         color = Color.fromBGR(
                 cs.getInt(String.format("effects.%s.color-rgb-b", name)),
                 cs.getInt(String.format("effects.%s.color-rgb-g", name)),
@@ -89,7 +97,7 @@ public class circle implements IEffect {
                     if (particle.name().equals("REDSTONE"))
                         loc.getWorld().spawnParticle(particle, loc.clone().add(offsets).add(x, 0, z), count, new org.bukkit.Particle.DustOptions(color, (float) size));
                     else
-                        loc.getWorld().spawnParticle(particle, loc.clone().add(offsets).add(x, 0, z), count);
+                        loc.getWorld().spawnParticle(particle, loc.clone().add(offsets).add(x, 0, z), count, direction.getX(), direction.getY(), direction.getZ(), speed);
                 }
                 if (stop)
                     cancel();
@@ -112,6 +120,6 @@ public class circle implements IEffect {
 
     @Override
     public IEffect clone() {
-        return new circle(cs, name);
+        return new Circle(cs, name);
     }
 }

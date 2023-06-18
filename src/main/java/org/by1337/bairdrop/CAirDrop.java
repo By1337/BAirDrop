@@ -111,6 +111,7 @@ public class CAirDrop implements AirDrop {
     private final CAirDrop CAirDropInstance;
     private boolean useOnlyStaticLoc;
     private final List<Observer> observers = new ArrayList<>();
+    private AntiSteal antiSteal = null;
 
     private Generator generator;
 
@@ -560,6 +561,11 @@ public class CAirDrop implements AirDrop {
         }
         airDropStarted = true;
         updateEditAirMenu("stats");
+        if (BAirDrop.getInstance().getConfig().getBoolean("anti-steal.enable")){
+            if (antiSteal != null) antiSteal.unregister();
+            antiSteal = new AntiSteal(this);
+        }
+
         notifyObservers(CustomEvent.START_EVENT, null);
     }
 
@@ -652,6 +658,10 @@ public class CAirDrop implements AirDrop {
         if (kill) canceled = true;
         setUsePlayerLocation(false);
         summoner = false;
+        if (antiSteal != null){
+            antiSteal.unregister();
+            antiSteal = null;
+        }
     }
 
     private BukkitTask bukkitTask = null;

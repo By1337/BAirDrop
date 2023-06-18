@@ -3,6 +3,13 @@ max-experience-pre-generated-location: 50
 use-metrics: true
 debug: false
 log-level: LOW
+
+anti-steal:
+  enable: true
+  max-interval: 20
+  max-warnings: 5
+  min-interval-to-ignore: 250
+
 settings:
   world-guard-flags:
     allow-flags:
@@ -67,3 +74,25 @@ compass:
   message-found: null
 
 auto-enchant:
+  enable: false
+  en1: # Что угодно в имени
+    material: NETHERITE_PICKAXE # Материал предмета который нужно зачаровать
+    efficiency: #зачарование
+      chance: 70 #Шанс чара
+      min-level: 2 #Минимальный и максимальный уровень чара
+      max-level: 5
+    fortune:
+      chance: 30
+      min-level: 1
+      max-level: 2
+    conflict-enchant: #Конфликтующие чары
+      - silk_touch
+  en2:
+    material: NETHERITE_PICKAXE
+    silk_touch:
+      chance: 70
+      min-level: 1
+      max-level: 1
+    conflict-enchant:
+      - fortune
+      - efficiency

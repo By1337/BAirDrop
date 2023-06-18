@@ -235,3 +235,9 @@ listeners:
     event: 'NONE'
     commands:
       - '[SET_MATERIAL_AIR]-offsets'
+
+  steal:
+    description: '&fwhen the player use cheat steal chest'
+    event: 'PLAYER_STEAL'
+    commands:
+      - '[CONSOLE] kick %player_name% cheat'

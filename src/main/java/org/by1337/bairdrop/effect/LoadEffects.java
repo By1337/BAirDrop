@@ -19,7 +19,7 @@ public class LoadEffects {
                 EffectType effectType = EffectType.getByKey(NamespacedKey.fromString(effType));
 
                 if (effectType == EffectType.CIRCLE) {
-                    EffectFactory.EffectList.put(key, new circle(file, key));
+                    EffectFactory.EffectList.put(key, new Circle(file, key));
                     continue;
                 }
                 if (effectType == EffectType.HELIX) {
