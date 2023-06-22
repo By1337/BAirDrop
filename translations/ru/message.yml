@@ -220,3 +220,4 @@ select-air-menu-lore:
 menu-air-select: '&7Меню выбора аирдропа'
 lidded-error: 'блок нельзя открыть/закрыть!'
 rotate-error: 'Этот блок не возможно повернуть'
+anti-steal-limit-speed: '&cВы забираете предметы из сундука слишком быстро!'

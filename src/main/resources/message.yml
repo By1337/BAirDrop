@@ -219,3 +219,4 @@ select-air-menu-lore:
 menu-air-select: '&7Airdrop Selection Menu'
 lidded-error: 'block cannot be opened/close!'
 rotate-error: 'This block cannot be rotated'
+anti-steal-limit-speed: "&cYou're taking items from the chest too fast!"

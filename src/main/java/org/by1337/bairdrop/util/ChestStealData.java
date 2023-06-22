@@ -6,6 +6,7 @@ public class ChestStealData {
     private int INTERVAL = BAirDrop.getInstance().getConfig().getInt("anti-steal.max-interval");
     private int warnings = 0;
     private long lastInterval = -1;
+    private long lastSteal = -1;
     private long lastTime;
 
     public int getWarnings() {
@@ -25,6 +26,14 @@ public class ChestStealData {
         } else {
             lastInterval = time;
         }
+    }
+
+    public void setLastSteal(long lastSteal) {
+        this.lastSteal = lastSteal;
+    }
+
+    public long getLastSteal() {
+        return lastSteal;
     }
 
     public void reset() {

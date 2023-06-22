@@ -3,8 +3,6 @@ package org.by1337.bairdrop;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import org.bukkit.*;
-import org.bukkit.block.*;
-import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.type.RespawnAnchor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -32,6 +30,9 @@ import org.by1337.bairdrop.customListeners.CustomEvent;
 import org.by1337.bairdrop.customListeners.observer.Observer;
 import org.by1337.bairdrop.effect.EffectFactory;
 import org.by1337.bairdrop.effect.IEffect;
+import org.by1337.bairdrop.serializable.EffectDeserialize;
+import org.by1337.bairdrop.serializable.EffectSerializable;
+import org.by1337.bairdrop.serializable.StateSerializable;
 import org.by1337.bairdrop.util.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -48,7 +49,7 @@ import static org.by1337.bairdrop.BAirDrop.*;
 import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.menu.EditAirMenu;
 
-public class CAirDrop implements AirDrop {
+public class CAirDrop implements AirDrop, StateSerializable {
     private String inventoryTitle;
     private String displayName;
     private int inventorySize;
@@ -312,7 +313,7 @@ public class CAirDrop implements AirDrop {
                         return;
                     }
                     if (!airDropStarted && timeToStart <= 0) {
-                        Start();
+                        start();
                         updateEditAirMenu("stats");
                     } else if (Bukkit.getOnlinePlayers().size() >= minPlayersToStart && !airDropStarted && (timeCountingEnabled || summoner)) {
                         timeToStart--;
@@ -388,22 +389,24 @@ public class CAirDrop implements AirDrop {
     }
 
     private BukkitTask bukkitTaskStart = null;
+
     @Override
     public void startCommand(@Nullable Player player) {
-        if(bukkitTaskStart != null && !bukkitTaskStart.isCancelled()){
+        if (bukkitTaskStart != null && !bukkitTaskStart.isCancelled()) {
             bukkitTaskStart.cancel();
         }
         bukkitTaskStart = new BukkitRunnable() {
             int x = 0;
+
             @Override
             public void run() {
                 locationSearch();
                 if (airDropLocation != null) {
-                    Message.sendMsg(player,"&aStarted");
-                    Start();
+                    Message.sendMsg(player, "&aStarted");
+                    start();
                     cancel();
-                }else
-                    Message.sendMsg(player,"&cFail start: " + x);
+                } else
+                    Message.sendMsg(player, "&cFail start: " + x);
                 x++;
             }
         }.runTaskTimer(BAirDrop.getInstance(), 1L, 10L);
@@ -469,7 +472,7 @@ public class CAirDrop implements AirDrop {
 
     }
 
-    private void Start() {
+    private void start() {
 
         if (listItems.isEmpty()) {
             Message.error(BAirDrop.getConfigMessage().getMessage("items-is-empty"));
@@ -561,7 +564,7 @@ public class CAirDrop implements AirDrop {
         }
         airDropStarted = true;
         updateEditAirMenu("stats");
-        if (BAirDrop.getInstance().getConfig().getBoolean("anti-steal.enable")){
+        if (BAirDrop.getInstance().getConfig().getBoolean("anti-steal.enable")) {
             if (antiSteal != null) antiSteal.unregister();
             antiSteal = new AntiSteal(this);
         }
@@ -588,7 +591,7 @@ public class CAirDrop implements AirDrop {
 
     @Override
     public void unlock() {
-        if(!airDropStarted){
+        if (!airDropStarted) {
             throw new IllegalStateException("airdrop is not started!");
         }
         AirDropUnlockEvent airDropUnlockEvent = new AirDropUnlockEvent(this);
@@ -604,13 +607,6 @@ public class CAirDrop implements AirDrop {
                 RespawnAnchor ra = (RespawnAnchor) airDropLocation.getBlock().getBlockData();
                 ra.setCharges(4);
                 airDropLocation.getBlock().setBlockData(ra);
-            } else if (materialUnlocked == Material.BARREL) {
-                BlockState barrelState = airDropLocation.getBlock().getState();
-                barrelState.setType(Material.BARREL);
-                Directional directionalData = (Directional) Material.BARREL.createBlockData();
-                directionalData.setFacing(BlockFace.UP);
-                barrelState.setBlockData(directionalData);
-                barrelState.update(true);
             }
 
         } catch (IllegalArgumentException e) {
@@ -658,7 +654,7 @@ public class CAirDrop implements AirDrop {
         if (kill) canceled = true;
         setUsePlayerLocation(false);
         summoner = false;
-        if (antiSteal != null){
+        if (antiSteal != null) {
             antiSteal.unregister();
             antiSteal = null;
         }
@@ -923,6 +919,11 @@ public class CAirDrop implements AirDrop {
 
     @Override
     public void InvokeListener(NamespacedKey listener, @Nullable Player player, CustomEvent customEvent) {
+        invokeListener(listener, player, customEvent);
+    }
+
+    @Override
+    public void invokeListener(NamespacedKey listener, @Nullable Player player, CustomEvent customEvent) {
         try {
             if (!BAirDrop.customEventListeners.containsKey(listener)) {
                 Message.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-listener"), listener));
@@ -1013,10 +1014,12 @@ public class CAirDrop implements AirDrop {
         for (IEffect ie : loadedEffect.values())
             ie.End();
     }
+
     @Override
     public HashMap<String, IEffect> getLoadedEffect() {
         return loadedEffect;
     }
+
     @Override
     public void setLoadedEffect(HashMap<String, IEffect> loadedEffect) {
         this.loadedEffect = loadedEffect;
@@ -1046,7 +1049,7 @@ public class CAirDrop implements AirDrop {
     public AirDrop clone(String id) {
         CAirDrop air = new CAirDrop(fileConfiguration, airDropFile);
         air.setId(id);
-        for(Observer observer : observers)
+        for (Observer observer : observers)
             air.registerObserver(observer);
         air.setGenerator(generator);
         return air;
@@ -1113,6 +1116,133 @@ public class CAirDrop implements AirDrop {
             } else {
                 Message.warning("unknown observer: " + listener);
             }
+        }
+    }
+
+    @Override
+    public void stateSerialize() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("version", 1);
+        map.put("timeToStart", timeToStart);
+        map.put("timeToOpen", timeToOpen);
+        map.put("timeStop", timeStop);
+
+        map.put("airDropLocked", airDropLocked);
+        map.put("wasOpened", wasOpened);
+        map.put("airDropStarted", airDropStarted);
+        map.put("activated", activated);
+
+        map.put("airDropLocation", airDropLocation);
+
+        for (int x = 0; x < inventory.getSize(); x++) {
+            ItemStack itemStack = inventory.getItem(x);
+            if (itemStack == null) continue;
+            map.put("item-" + x, itemStack);
+        }
+
+        List<String> effects = new ArrayList<>();
+        for (String key : loadedEffect.keySet()) {
+
+            IEffect effect = loadedEffect.get(key);
+            if (!effect.isUsed()) continue;
+            if (effect instanceof EffectSerializable effectSerializable) {
+                effects.add(effectSerializable.serialize() + ";" + key);
+            }
+        }
+        map.put("effects", effects);
+
+        fileConfiguration.set("state", map);
+    }
+
+    public static final int STATE_VERSION = 1;
+
+    @Override
+    public void stateDeserialize() {
+        try {
+            if (fileConfiguration.getConfigurationSection("state") == null) return;
+            Map<String, Object> map = fileConfiguration.getConfigurationSection("state").getValues(false);
+            int version = (int) map.get("version");
+            if (version < STATE_VERSION) {
+                Message.error("&cУстарелые данные! Невозможно загрузить состояние аирдропа");
+                return;
+            }
+            int S_timeToStart = (int) map.get("timeToStart");
+            int S_timeToOpen = (int) map.get("timeToOpen");
+            int S_timeStop = (int) map.get("timeStop");
+
+            boolean S_airDropLocked = (boolean) map.get("airDropLocked");
+            boolean S_wasOpened = (boolean) map.get("wasOpened");
+            boolean S_airDropStarted = (boolean) map.get("airDropStarted");
+            boolean S_activated = (boolean) map.get("activated");
+
+            Location S_airDropLocation = (Location) map.get("airDropLocation");
+
+
+            for (String key : map.keySet()) {
+                if (key.contains("item-")) {
+                    ItemStack itemStack = (ItemStack) map.get(key);
+                    inventory.setItem(Integer.parseInt(key.replace("item-", "")), itemStack);
+                }
+            }
+            timeToStart = S_timeToStart;
+            timeToOpen = S_timeToOpen;
+            timeStop = S_timeStop;
+
+            wasOpened = S_wasOpened;
+            activated = S_activated;
+            if (S_airDropLocation != null) {
+                airDropLocation = S_airDropLocation;
+                if (S_airDropStarted) {
+
+                    RegionManager.SetRegion(this);
+                    timeToStart = 0;
+                    futureLocation = null;
+                    stopWhenEmpty_event = false;
+
+
+                    airDropLocation.getBlock().setType(materialLocked);
+                    if (materialLocked == Material.RESPAWN_ANCHOR) {
+                        RespawnAnchor ra = (RespawnAnchor) airDropLocation.getBlock().getBlockData();
+                        ra.setCharges(4);
+                        airDropLocation.getBlock().setBlockData(ra);
+                    }
+
+
+                    airDropStarted = true;
+                    updateEditAirMenu("stats");
+                    if (BAirDrop.getInstance().getConfig().getBoolean("anti-steal.enable")) {
+                        if (antiSteal != null) antiSteal.unregister();
+                        antiSteal = new AntiSteal(this);
+                    }
+
+                    if (!S_airDropLocked) {
+
+                        airDropLocked = false;
+                        timeToOpen = 0;
+
+                        airDropLocation.getBlock().setType(materialUnlocked);
+                        if (materialUnlocked == Material.RESPAWN_ANCHOR) {
+                            RespawnAnchor ra = (RespawnAnchor) airDropLocation.getBlock().getBlockData();
+                            ra.setCharges(4);
+                            airDropLocation.getBlock().setBlockData(ra);
+                        }
+
+
+                        List<String> lines = new ArrayList<>(airHoloOpen);
+                        lines.replaceAll(this::replaceInternalPlaceholder);
+                        BAirDrop.hologram.createOrUpdateHologram(lines, airDropLocation.clone().add(holoOffsets), id);
+                    }
+                }
+                List<String> effects = (List<String>) map.get("effects");
+                for (String ef : effects) {
+                    String efId = ef.split(";")[ef.split(";").length - 1];
+                    IEffect effect = EffectDeserialize.deserialize(ef);
+                    loadedEffect.put(efId, effect);
+                    Message.devDebug(efId);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -1267,7 +1397,7 @@ public class CAirDrop implements AirDrop {
     }
 
     @Override
-    public void schematicsPaste(SchematicsManager manager,String name) {
+    public void schematicsPaste(SchematicsManager manager, String name) {
         manager.PasteSchematics(name, this);
     }
 
@@ -1570,18 +1700,11 @@ public class CAirDrop implements AirDrop {
     public Generator getGenerator() {
         return generator;
     }
+
     @Override
     public void setGenerator(Generator generator) {
         this.generator = generator;
     }
 
-//    @Override
-//    public boolean equals(Object obj) {
-//        if(obj == null) return false;
-//        if(obj instanceof CAirDrop airDrop){
-//            return this.hashCode() == airDrop.hashCode();
-//        }
-//        return false;
-//    }
 
 }

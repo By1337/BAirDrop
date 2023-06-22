@@ -112,7 +112,7 @@ public class ExecuteCommands {
             if (airDrop != null) {
                 if (command.contains("[CALL-")) {
                     String str = command.replace("[CALL-", "").replace("]", "");
-                    airDrop.InvokeListener(NamespacedKey.fromString(str), pl, customEvent);
+                    airDrop.invokeListener(NamespacedKey.fromString(str), pl, customEvent);
                     continue;
                 }
                 if (command.contains("[NEAR-PLAYERS=")) {
@@ -122,7 +122,7 @@ public class ExecuteCommands {
                         //  if(command.contains("{CALL-")){
                         for (Entity entity : airDrop.getAnyLoc().getWorld().getNearbyEntities(airDrop.getAnyLoc(), range, range, range)) {
                             if (entity instanceof Player player) {
-                                airDrop.InvokeListener(NamespacedKey.fromString(command
+                                airDrop.invokeListener(NamespacedKey.fromString(command
                                         .replace(String.format("[NEAR-PLAYERS=%s] {CALL-", range), "")
                                         .replace("}", "")), player, customEvent);
                             }
@@ -503,8 +503,9 @@ public class ExecuteCommands {
                 return true;
             }
             try {
-                airDrop.loadEffect(args[1], args[2]);
-                airDrop.startEffect(args[2]);
+                String id = args[2].replace("]", "");
+                airDrop.loadEffect(args[1], id);
+                airDrop.startEffect(id);
             } catch (IllegalArgumentException e) {
                 Message.warning(e.getLocalizedMessage());
             }

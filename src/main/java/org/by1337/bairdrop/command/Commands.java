@@ -10,9 +10,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.CAirDrop;
-import org.by1337.bairdrop.Hologram.utils.HoloLine;
-import org.by1337.bairdrop.Hologram.utils.impl.HoloLineV1_16;
 import org.by1337.bairdrop.Listeners.Compass;
+import org.by1337.bairdrop.effect.IEffect;
 import org.by1337.bairdrop.menu.EditAirMenu;
 import org.by1337.bairdrop.menu.SelectAirMenu;
 import org.by1337.bairdrop.menu.ShowAllListeners;
@@ -37,6 +36,14 @@ public class Commands implements CommandExecutor {
             if (args.length == 0) {
                 Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("few-arguments"));
                 return true;
+            }
+            if (args[0].equals("test")) {
+                try {
+                    Class<?> clazz = Class.forName("org.by1337.bairdrop.effect.effectImpl.Circle");
+
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
             }
             if (args[0].equals("help")) {
                 if (!pl.hasPermission("bair.help")) {

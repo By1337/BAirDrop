@@ -120,4 +120,9 @@ public class Helix implements IEffect {
     public EffectType getType() {
         return EffectType.HELIX;
     }
+
+    @Override
+    public String getConfigName() {
+        return name;
+    }
 }

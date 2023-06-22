@@ -133,7 +133,7 @@ public class CSummonerItem implements SummonerItem {
 
     public void callListeners(AirDrop airDrop, Player pl) {
         for (String str : call)
-            airDrop.InvokeListener(NamespacedKey.fromString(str), pl, CustomEvent.NONE);
+            airDrop.invokeListener(NamespacedKey.fromString(str), pl, CustomEvent.NONE);
     }
 
 }

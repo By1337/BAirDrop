@@ -27,4 +27,10 @@ public interface IEffect {
     IEffect clone();
 
     EffectType getType();
+
+    /**
+     * Используется при сохранении состояния аирдропа, может вернуть не существующие значение например
+     * @return name config selection
+     */
+    String getConfigName();
 }

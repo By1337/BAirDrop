@@ -123,4 +123,9 @@ public class Torus implements IEffect {
     public EffectType getType() {
         return EffectType.TORUS;
     }
+
+    @Override
+    public String getConfigName() {
+        return name;
+    }
 }

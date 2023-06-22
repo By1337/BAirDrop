@@ -97,4 +97,9 @@ public class ParticleExplosion implements IEffect {
     public IEffect clone() {
         return new ParticleExplosion(cs, name);
     }
+
+    @Override
+    public String getConfigName() {
+        return name;
+    }
 }

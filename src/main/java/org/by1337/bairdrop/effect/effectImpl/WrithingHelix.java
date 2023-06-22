@@ -120,4 +120,9 @@ public class WrithingHelix implements IEffect {
     public EffectType getType() {
         return EffectType.WRITHING_HELIX;
     }
+
+    @Override
+    public String getConfigName() {
+        return name;
+    }
 }

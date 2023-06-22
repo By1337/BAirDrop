@@ -118,6 +118,9 @@ public class FireworkEffect implements IEffect {
     @Override
     public IEffect clone() {
         return new FireworkEffect(cs, name);
-
+    }
+    @Override
+    public String getConfigName() {
+        return name;
     }
 }

@@ -98,4 +98,9 @@ public class RandomParticle implements IEffect {
     public IEffect clone() {
         return new RandomParticle(cs, name);
     }
+
+    @Override
+    public String getConfigName() {
+        return name;
+    }
 }

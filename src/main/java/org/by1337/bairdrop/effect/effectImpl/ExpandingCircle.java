@@ -125,4 +125,9 @@ public class ExpandingCircle implements IEffect {
     public EffectType getType() {
         return EffectType.EXPANDING_CIRCLE;
     }
+
+    @Override
+    public String getConfigName() {
+        return name;
+    }
 }

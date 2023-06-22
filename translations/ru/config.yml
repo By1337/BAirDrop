@@ -6,9 +6,10 @@ log-level: LOW
 
 anti-steal:
   enable: true
-  max-interval: 20
+  max-interval: 5
   max-warnings: 5
   min-interval-to-ignore: 250
+  сooldown: 200 #ms
 
 settings:
   world-guard-flags:

@@ -23,6 +23,9 @@ import org.by1337.bairdrop.command.Commands;
 import org.by1337.bairdrop.command.Completer;
 import org.by1337.bairdrop.customListeners.CustomEvent;
 import org.by1337.bairdrop.customListeners.observer.Observer;
+import org.by1337.bairdrop.effect.effectImpl.Circle;
+import org.by1337.bairdrop.serializable.EffectDeserialize;
+import org.by1337.bairdrop.serializable.StateSerializable;
 import org.by1337.bairdrop.util.*;
 import org.by1337.bairdrop.util.Message;
 
@@ -56,15 +59,17 @@ public final class BAirDrop extends JavaPlugin {
     @Override
     public void onEnable() {
         ConfigurationSerialization.registerClass(CGenLoc.class);
+
+        EffectDeserialize.register(Circle.class);
         config = new CConfig();
 
         configMessage = (ConfigMessage) config;
-        File config = new File(getInstance().getDataFolder() + File.separator + "config.yml");
-        if (!config.exists()) {
-            getInstance().getLogger().info("Creating new config file, please wait");
-            getInstance().getConfig().options().copyDefaults(true);
+      //  File config = new File(getInstance().getDataFolder() + File.separator + "config.yml");
+//        if (!config.exists()) {
+//            getInstance().getLogger().info("Creating new config file, please wait");
+//            getInstance().getConfig().options().copyDefaults(true);
             getInstance().saveDefaultConfig();
-        }
+     //   }
         getInstance().saveConfig();
 
 
@@ -102,7 +107,11 @@ public final class BAirDrop extends JavaPlugin {
         }
 
         for (File file : getiConfig().getAirDrops().keySet()) {
-            airDrops.put(getiConfig().getAirDrops().get(file).getString("air-id"), new CAirDrop(getiConfig().getAirDrops().get(file), file));
+            AirDrop airDrop = new CAirDrop(getiConfig().getAirDrops().get(file), file);
+            airDrops.put(getiConfig().getAirDrops().get(file).getString("air-id"), airDrop);
+
+            StateSerializable stateSerializable = (StateSerializable) airDrop;
+            stateSerializable.stateDeserialize();
         }
 
         List<String> ids = new ArrayList<>(airDrops.keySet());
@@ -153,6 +162,8 @@ public final class BAirDrop extends JavaPlugin {
             return;
         long x = System.currentTimeMillis();
         for (AirDrop airDrop : airDrops.values()) {
+            if (airDrop instanceof StateSerializable stateSerializable) stateSerializable.stateSerialize();
+
             if (airDrop.isAirDropStarted())
                 airDrop.End();
             if (airDrop.isClone())

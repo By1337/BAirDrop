@@ -155,4 +155,8 @@ public class Guard implements IEffect {
         return new Guard(cs, name);
     }
 
+    @Override
+    public String getConfigName() {
+        return name;
+    }
 }
