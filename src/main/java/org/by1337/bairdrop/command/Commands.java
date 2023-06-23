@@ -37,14 +37,6 @@ public class Commands implements CommandExecutor {
                 Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("few-arguments"));
                 return true;
             }
-            if (args[0].equals("test")) {
-                try {
-                    Class<?> clazz = Class.forName("org.by1337.bairdrop.effect.effectImpl.Circle");
-
-                } catch (ClassNotFoundException e) {
-                    throw new RuntimeException(e);
-                }
-            }
             if (args[0].equals("help")) {
                 if (!pl.hasPermission("bair.help")) {
                     Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("no-prem"));
@@ -149,6 +141,7 @@ public class Commands implements CommandExecutor {
                 if (args.length >= 3) {
                     //  Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("few-arguments"));
                     ItemStack item = BAirDrop.summoner.getItems().get(args[1]).getItem();
+                    Message.error(item.serialize().values().toString());
                     int amount = 1;
                     if (args.length == 4) {
                         try {
@@ -165,11 +158,11 @@ public class Commands implements CommandExecutor {
                     if (player.getInventory().firstEmpty() == -1) {
                         player.getLocation().getWorld().dropItem(player.getLocation(), item);
                         Message.sendMsg(pl, String.format(BAirDrop.getConfigMessage().getMessage("get-item"), player.getName(), args[1], amount));
-                        // Message.sendMsg(pl,"{PP} &fИгроку " + player.getName() + " был выдан " + args[1] + " x" + amount);
+
                     } else {
                         player.getInventory().addItem(item);
                         Message.sendMsg(pl, String.format(BAirDrop.getConfigMessage().getMessage("get-item"), player.getName(), args[1], amount));
-                        // Message.sendMsg(pl,"{PP} &fИгроку " + player.getName() + " был выдан " + args[1] + " x" + amount);
+
                     }
                     return true;
                 }

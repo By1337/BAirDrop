@@ -13,7 +13,7 @@ import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.BAirDrop;
 
-import java.util.Objects;
+import java.util.Map;
 
 public class WrithingHelix implements IEffect {
     private final double radius;
@@ -32,27 +32,29 @@ public class WrithingHelix implements IEffect {
     private boolean stop;
     private final FileConfiguration cs;
     private AirDrop airDrop;
-
-    public WrithingHelix(FileConfiguration cs, String name) throws NullPointerException, IllegalArgumentException {
-        this.name = name;
-        this.cs = cs;
-        ticks = cs.getInt(String.format("effects.%s.ticks", name));
-        timeUpdate = cs.getInt(String.format("effects.%s.timeUpdate", name));
-        particle = Objects.requireNonNull(Particle.valueOf(cs.getString(String.format("effects.%s.particle", name))));
-        this.name = name;
-        radius = cs.getDouble(String.format("effects.%s.radius", name));
-        height = cs.getDouble(String.format("effects.%s.height", name));
-        count = cs.getInt(String.format("effects.%s.count", name));
-        step = cs.getDouble(String.format("effects.%s.step", name));
+    private final Map<String, Object> map;
+    public WrithingHelix(Map<String, Object> map) {
+        this.map = map;
+        this.cs = null;
+        name = "123";
+        ticks = ((Number) map.getOrDefault("ticks", -1)).intValue();
+        timeUpdate = ((Number) map.getOrDefault("timeUpdate", 0)).intValue();
+        particle = Particle.valueOf((String) map.getOrDefault("particle", "FLAME"));
+        radius = ((Number) map.getOrDefault("radius", 0)).doubleValue();
+        height = ((Number) map.getOrDefault("height", 0)).doubleValue();
+        count = ((Number) map.getOrDefault("count", 0)).intValue();
+        step = ((Number) map.getOrDefault("step", 0)).doubleValue();
         offsets = new Vector(
-                cs.getDouble(String.format("effects.%s.offset-x", name)),
-                cs.getDouble(String.format("effects.%s.offset-y", name)),
-                cs.getDouble(String.format("effects.%s.offset-z", name)));
-        size = cs.getDouble(String.format("effects.%s.size", name));
+                ((Number) map.getOrDefault("offset-x", 0)).doubleValue(),
+                ((Number) map.getOrDefault("offset-y", 0)).doubleValue(),
+                ((Number) map.getOrDefault("offset-z", 0)).doubleValue()
+        );
+        size = ((Number) map.getOrDefault("size", 1)).doubleValue();
         color = Color.fromBGR(
-                cs.getInt(String.format("effects.%s.color-rgb-b", name)),
-                cs.getInt(String.format("effects.%s.color-rgb-g", name)),
-                cs.getInt(String.format("effects.%s.color-rgb-r", name)));
+                ((Number) map.getOrDefault("color-rgb-b", 255)).intValue(),
+                ((Number) map.getOrDefault("color-rgb-g", 255)).intValue(),
+                ((Number) map.getOrDefault("color-rgb-r", 255)).intValue()
+        );
     }
 
     @Override
@@ -113,7 +115,7 @@ public class WrithingHelix implements IEffect {
 
     @Override
     public IEffect clone() {
-        return new WrithingHelix(cs, name);
+        return new WrithingHelix(map);
     }
 
     @Override
@@ -121,8 +123,4 @@ public class WrithingHelix implements IEffect {
         return EffectType.WRITHING_HELIX;
     }
 
-    @Override
-    public String getConfigName() {
-        return name;
-    }
 }

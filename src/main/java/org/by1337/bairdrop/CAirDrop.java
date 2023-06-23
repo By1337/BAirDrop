@@ -4,6 +4,7 @@ import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import org.bukkit.*;
 import org.bukkit.block.data.type.RespawnAnchor;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.HumanEntity;
@@ -979,6 +980,9 @@ public class CAirDrop implements AirDrop, StateSerializable {
         if (ie == null) {
             throw new IllegalArgumentException(String.format(BAirDrop.getConfigMessage().getMessage("unknown-effect"), name));
         }
+        if (loadedEffect.containsKey(id)){
+            throw new IllegalArgumentException(String.format(BAirDrop.getConfigMessage().getMessage("effect-replace-error"), id));
+        }
         loadedEffect.put(id, ie);
     }
 
@@ -1140,17 +1144,26 @@ public class CAirDrop implements AirDrop, StateSerializable {
             map.put("item-" + x, itemStack);
         }
 
-        List<String> effects = new ArrayList<>();
+     //   List<Object> effects = new ArrayList<>();
+
+        Map<String, Object> effects = new HashMap<>();
+
         for (String key : loadedEffect.keySet()) {
 
             IEffect effect = loadedEffect.get(key);
             if (!effect.isUsed()) continue;
             if (effect instanceof EffectSerializable effectSerializable) {
-                effects.add(effectSerializable.serialize() + ";" + key);
+                effects.put(key, effectSerializable.serialize());
             }
         }
         map.put("effects", effects);
-
+//        Map<String, Object> mm = new HashMap<>();
+//        for (String key : map.keySet()){
+//            mm.put(key, map.get(key));
+//        }
+     //   mm.put("oke", new ArrayList<>(effects));
+//        mm.put("item", new ItemStack(Material.CREEPER_HEAD));
+//        map.put("okeeeey", mm);
         fileConfiguration.set("state", map);
     }
 
@@ -1161,6 +1174,11 @@ public class CAirDrop implements AirDrop, StateSerializable {
         try {
             if (fileConfiguration.getConfigurationSection("state") == null) return;
             Map<String, Object> map = fileConfiguration.getConfigurationSection("state").getValues(false);
+
+//            Map<String, Object> map2 = (Map<String, Object>) map.get("map");
+//            for (String key : map2.keySet()){
+//                Message.error(key);
+//            }
             int version = (int) map.get("version");
             if (version < STATE_VERSION) {
                 Message.error("&cУстарелые данные! Невозможно загрузить состояние аирдропа");
@@ -1233,12 +1251,16 @@ public class CAirDrop implements AirDrop, StateSerializable {
                         BAirDrop.hologram.createOrUpdateHologram(lines, airDropLocation.clone().add(holoOffsets), id);
                     }
                 }
-                List<String> effects = (List<String>) map.get("effects");
-                for (String ef : effects) {
-                    String efId = ef.split(";")[ef.split(";").length - 1];
+                Map<String, Object> effects = ((ConfigurationSection) map.get("effects")).getValues(false);
+                for (String key : effects.keySet()) {
+                    Map<String, Object> ef = ((ConfigurationSection) effects.get(key)).getValues(false);
                     IEffect effect = EffectDeserialize.deserialize(ef);
-                    loadedEffect.put(efId, effect);
-                    Message.devDebug(efId);
+                    if (effect == null){
+                        Message.error(key + " Не получилось десериализовать эффект");
+                        continue;
+                    }
+                    loadedEffect.put(key, effect);
+                    Message.devDebug(key);
                 }
             }
         } catch (Exception e) {

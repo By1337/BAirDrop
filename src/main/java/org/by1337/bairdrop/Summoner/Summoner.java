@@ -65,19 +65,18 @@ public class Summoner implements Listener {
                 continue;
             }
 
+            ItemMeta im = item.getItemMeta();
 
             if (nbt != null) {
-                ItemMeta im = item.getItemMeta();
                 im.setCustomModelData(Integer.parseInt(nbt.replace("{CustomModelData:", "").replace("}", "")));
-                item.setItemMeta(im);
             }
-            ItemMeta im = item.getItemMeta();
+
             im.setDisplayName(Message.messageBuilder(name));
             lore.replaceAll(Message::messageBuilder);
             im.setLore(lore);
             im.getPersistentDataContainer().set(NamespacedKey.fromString("summoner"), PersistentDataType.STRING, key);
             im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-            //  im.addEnchant(Enchantment.ARROW_DAMAGE)
+
             item.setItemMeta(im);
             items.put(key, new CSummonerItem(item, airdrop, clone, usePlayerLocation, flatnessCheck, checkUpBlocks, call, ignoreRegion));
         }

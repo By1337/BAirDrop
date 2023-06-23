@@ -28,9 +28,4 @@ public interface IEffect {
 
     EffectType getType();
 
-    /**
-     * Используется при сохранении состояния аирдропа, может вернуть не существующие значение например
-     * @return name config selection
-     */
-    String getConfigName();
 }

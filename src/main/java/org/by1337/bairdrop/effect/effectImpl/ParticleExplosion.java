@@ -1,6 +1,5 @@
 package org.by1337.bairdrop.effect.effectImpl;
 
-import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -10,9 +9,10 @@ import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.effect.EffectType;
 import org.by1337.bairdrop.effect.IEffect;
+import org.by1337.bairdrop.serializable.EffectSerializable;
 import org.by1337.bairdrop.util.Message;
 
-import java.util.Objects;
+import java.util.Map;
 
 public class ParticleExplosion implements IEffect {
     private int ticks = -1;
@@ -28,23 +28,24 @@ public class ParticleExplosion implements IEffect {
     private final String name;
     private final double speed;
     private final int timeUpdate;
-
-    public ParticleExplosion(FileConfiguration cs, String name) throws NullPointerException, IllegalArgumentException {
-        this.cs = cs;
-        ticks = cs.getInt(String.format("effects.%s.ticks", name));
-        particle = Objects.requireNonNull(Particle.valueOf(cs.getString(String.format("effects.%s.particle", name))));
-        this.name = name;
-
-        radius = cs.getDouble(String.format("effects.%s.radius", name));
-        count = cs.getInt(String.format("effects.%s.count", name));
+    private final Map<String, Object> map;
+    public ParticleExplosion(Map<String, Object> map) {
+        this.map = map;
+        this.cs = null;
+        name = "123";
+        ticks = ((Number) map.getOrDefault("ticks", -1)).intValue();
+        particle = Particle.valueOf((String) map.getOrDefault("particle", "FLAME"));
+        radius = ((Number) map.getOrDefault("radius", 0)).doubleValue();
+        count = ((Number) map.getOrDefault("count", 0)).intValue();
         offsets = new Vector(
-                cs.getDouble(String.format("effects.%s.offset-x", name)),
-                cs.getDouble(String.format("effects.%s.offset-y", name)),
-                cs.getDouble(String.format("effects.%s.offset-z", name)));
-        speed = cs.getDouble(String.format("effects.%s.radius", name));
-        timeUpdate = cs.getInt(String.format("effects.%s.timeUpdate", name));
-
+                ((Number) map.getOrDefault("offset-x", 0)).doubleValue(),
+                ((Number) map.getOrDefault("offset-y", 0)).doubleValue(),
+                ((Number) map.getOrDefault("offset-z", 0)).doubleValue()
+        );
+        speed = ((Number) map.getOrDefault("speed", 0)).doubleValue();
+        timeUpdate = ((Number) map.getOrDefault("timeUpdate", 0)).intValue();
     }
+
 
     @Override
     public void Start(AirDrop airDrop) {
@@ -95,11 +96,23 @@ public class ParticleExplosion implements IEffect {
 
     @Override
     public IEffect clone() {
-        return new ParticleExplosion(cs, name);
+        return new ParticleExplosion(map);
     }
 
-    @Override
-    public String getConfigName() {
-        return name;
+
+    public String serialize() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(ticks).append(",");
+        sb.append(used).append(",");
+        sb.append(stop).append(",");
+        sb.append(particle.name()).append(",");
+        sb.append(radius).append(",");
+        sb.append(count).append(",");
+        sb.append(offsets.getX()).append(",").append(offsets.getY()).append(",").append(offsets.getZ()).append(",");
+        sb.append(loc.getX()).append(",").append(loc.getY()).append(",").append(loc.getZ()).append(",");
+        sb.append(name).append(",");
+        sb.append(speed).append(",");
+        sb.append(timeUpdate);
+        return sb.toString();
     }
 }

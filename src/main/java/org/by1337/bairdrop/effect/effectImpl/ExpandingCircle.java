@@ -11,14 +11,17 @@ import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.effect.EffectType;
 import org.by1337.bairdrop.effect.IEffect;
 import org.by1337.bairdrop.AirDrop;
+import org.by1337.bairdrop.serializable.DeserializeUtils;
+import org.by1337.bairdrop.serializable.EffectSerializable;
 import org.by1337.bairdrop.util.Message;
 
-import java.util.Objects;
+import java.util.HashMap;
+import java.util.Map;
 
-public class ExpandingCircle implements IEffect {
+public class ExpandingCircle implements IEffect, EffectSerializable {
     private int ticks = -1;
     private final int timeUpdate;
-    private  AirDrop airDrop;
+    private AirDrop airDrop;
     private boolean used;
     private boolean stop;
     private final Particle particle;
@@ -31,35 +34,51 @@ public class ExpandingCircle implements IEffect {
     private final double numberOfSteps;
     private final double size;
     private final Color color;
-    private final FileConfiguration cs;
     private Location loc;
-    private final String name;
+    private final Map<String, Object> map;
 
-    public ExpandingCircle(FileConfiguration cs, String name) throws NullPointerException, IllegalArgumentException {
-        this.cs = cs;
-        ticks = cs.getInt(String.format("effects.%s.ticks", name));
-        timeUpdate = cs.getInt(String.format("effects.%s.timeUpdate", name));
-        particle = Objects.requireNonNull(Particle.valueOf(cs.getString(String.format("effects.%s.particle", name))));
-        this.name = name;
-
-        radius = cs.getDouble(String.format("effects.%s.radius", name));
-        endRadius = cs.getDouble(String.format("effects.%s.end-radius", name));
-        stepRadius = cs.getDouble(String.format("effects.%s.step-radius", name));
-
-        count = cs.getInt(String.format("effects.%s.count", name));
-        step = cs.getDouble(String.format("effects.%s.step", name));
+    public ExpandingCircle(Map<String, Object> map) {
+        this.map = map;
+        ticks = ((Number) map.getOrDefault("ticks", -1)).intValue();
+        timeUpdate = ((Number) map.getOrDefault("timeUpdate", 0)).intValue();
+        particle = Particle.valueOf((String) map.getOrDefault("particle", "FLAME"));
+        radius = ((Number) map.getOrDefault("radius", 0)).doubleValue();
+        endRadius = ((Number) map.getOrDefault("end-radius", 0)).doubleValue();
+        stepRadius = ((Number) map.getOrDefault("step-radius", 0)).doubleValue();
+        count = ((Number) map.getOrDefault("count", -1)).intValue();
+        step = ((Number) map.getOrDefault("step", 0)).doubleValue();
         offsets = new Vector(
-                cs.getDouble(String.format("effects.%s.offset-x", name)),
-                cs.getDouble(String.format("effects.%s.offset-y", name)),
-                cs.getDouble(String.format("effects.%s.offset-z", name)));
-
-        numberOfSteps = cs.getDouble(String.format("effects.%s.number-of-steps", name));
-        size = cs.getDouble(String.format("effects.%s.size", name));
+                ((Number) map.getOrDefault("offset-x", 0)).doubleValue(),
+                ((Number) map.getOrDefault("offset-y", 0)).doubleValue(),
+                ((Number) map.getOrDefault("offset-z", 0)).doubleValue()
+        );
+        numberOfSteps = ((Number) map.getOrDefault("number-of-steps", 0.5D)).doubleValue();
+        size = ((Number) map.getOrDefault("size", 1)).doubleValue();
         color = Color.fromBGR(
-                cs.getInt(String.format("effects.%s.color-rgb-b", name)),
-                cs.getInt(String.format("effects.%s.color-rgb-g", name)),
-                cs.getInt(String.format("effects.%s.color-rgb-r", name)));
+                ((Number) map.getOrDefault("color-rgb-b", 255)).intValue(),
+                ((Number) map.getOrDefault("color-rgb-g", 255)).intValue(),
+                ((Number) map.getOrDefault("color-rgb-r", 255)).intValue()
+        );
     }
+    private ExpandingCircle(Map<String, Object> map, boolean ser) {
+        this.map = map;
+        ticks = ((Number) map.getOrDefault("ticks", -1)).intValue();
+        timeUpdate = ((Number) map.getOrDefault("timeUpdate", 0)).intValue();
+        particle = Particle.valueOf((String) map.getOrDefault("particle", "FLAME"));
+        radius = ((Number) map.getOrDefault("radius", 0)).doubleValue();
+        endRadius = ((Number) map.getOrDefault("end-radius", 0)).doubleValue();
+        stepRadius = ((Number) map.getOrDefault("step-radius", 0)).doubleValue();
+        count = ((Number) map.getOrDefault("count", 0)).intValue();
+        step = ((Number) map.getOrDefault("step", 0)).doubleValue();
+        offsets = (Vector) map.getOrDefault("offsets", new Vector(0, 0, 0));
+        numberOfSteps = ((Number) map.getOrDefault("number-of-steps", 0.5D)).doubleValue();
+        size = ((Number) map.getOrDefault("size", 1)).doubleValue();
+        color = (Color) map.getOrDefault("color", Color.fromRGB(255, 255, 255));
+        loc = (Location) map.getOrDefault("loc", null);
+        used = (boolean) map.getOrDefault("used", false);
+        stop = (boolean) map.getOrDefault("stop", false);
+    }
+
 
     @Override
     public void Start(AirDrop airDrop) {
@@ -102,7 +121,7 @@ public class ExpandingCircle implements IEffect {
                     }
                 }
                 radius += stepRadius;
-                if (radius >= endRadius){
+                if (radius >= endRadius) {
                     End();
                     cancel();
                 }
@@ -118,7 +137,7 @@ public class ExpandingCircle implements IEffect {
 
     @Override
     public IEffect clone() {
-        return new ExpandingCircle(cs, name);
+        return new ExpandingCircle(map);
     }
 
     @Override
@@ -126,8 +145,36 @@ public class ExpandingCircle implements IEffect {
         return EffectType.EXPANDING_CIRCLE;
     }
 
+
     @Override
-    public String getConfigName() {
-        return name;
+    public Map<String, Object> serialize() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("class", this.getClass().getName());
+        map.put("ticks", ticks);
+        map.put("timeUpdate", timeUpdate);
+        map.put("used", used);
+        map.put("stop", stop);
+        map.put("particle", particle.name());
+        map.put("radius", radius);
+        map.put("end-radius", endRadius);
+        map.put("step-radius", stepRadius);
+        map.put("count", count);
+        map.put("step", step);
+        map.put("offsets", offsets);
+        map.put("number-of-steps", numberOfSteps);
+        map.put("size", size);
+        map.put("color", color);
+        map.put("loc", loc);
+        return map;
     }
+
+    public static IEffect deserialize(Map<String, Object> map) {
+
+        ExpandingCircle expandingCircle = new ExpandingCircle(map, true);
+        if (!expandingCircle.stop && expandingCircle.used && expandingCircle.loc != null && expandingCircle.loc.getWorld() != null){
+            expandingCircle.run();
+        }
+        return null;
+    }
+
 }

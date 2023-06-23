@@ -18,6 +18,7 @@ import org.by1337.bairdrop.BAirDrop;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -27,27 +28,22 @@ public class Guard implements IEffect {
     private AirDrop airDrop;
     private boolean used;
     private boolean stop;
-
     private final double radius;
     private final double heal;
     private final int count;
-    private final FileConfiguration cs;
     private Location loc;
-    private final String name;
     private final String entityName;
     private final List<Zombie> zombies = new ArrayList<>();
+    private final Map<String, Object> map;
 
-    public Guard(FileConfiguration cs, String name) throws NullPointerException, IllegalArgumentException {
-        this.cs = cs;
-        ticks = cs.getInt(String.format("effects.%s.ticks", name));
-        timeUpdate = cs.getInt(String.format("effects.%s.timeUpdate", name));
-        this.name = name;
-
-        radius = cs.getDouble(String.format("effects.%s.radius", name));
-        heal = cs.getDouble(String.format("effects.%s.heal", name));
-        count = cs.getInt(String.format("effects.%s.count", name));
-
-        entityName = Objects.requireNonNull(cs.getString(String.format("effects.%s.name", name)));
+    public Guard(Map<String, Object> map) {
+        this.map = map;
+        ticks = ((Number) map.getOrDefault("ticks", -1)).intValue();
+        timeUpdate = ((Number) map.getOrDefault("timeUpdate", 0)).intValue();
+        radius = ((Number) map.getOrDefault("radius", 0)).doubleValue();
+        heal = ((Number) map.getOrDefault("heal", 0)).doubleValue();
+        count = ((Number) map.getOrDefault("count", 0)).intValue();
+        entityName = Objects.requireNonNull((String) map.getOrDefault("name", ""));
     }
 
     @Override
@@ -152,11 +148,7 @@ public class Guard implements IEffect {
 
     @Override
     public IEffect clone() {
-        return new Guard(cs, name);
+        return new Guard(map);
     }
 
-    @Override
-    public String getConfigName() {
-        return name;
-    }
 }

@@ -24,6 +24,9 @@ import org.by1337.bairdrop.command.Completer;
 import org.by1337.bairdrop.customListeners.CustomEvent;
 import org.by1337.bairdrop.customListeners.observer.Observer;
 import org.by1337.bairdrop.effect.effectImpl.Circle;
+import org.by1337.bairdrop.effect.effectImpl.ExpandingCircle;
+import org.by1337.bairdrop.effect.effectImpl.FireworkEffect;
+import org.by1337.bairdrop.effect.effectImpl.Helix;
 import org.by1337.bairdrop.serializable.EffectDeserialize;
 import org.by1337.bairdrop.serializable.StateSerializable;
 import org.by1337.bairdrop.util.*;
@@ -61,6 +64,10 @@ public final class BAirDrop extends JavaPlugin {
         ConfigurationSerialization.registerClass(CGenLoc.class);
 
         EffectDeserialize.register(Circle.class);
+        EffectDeserialize.register(ExpandingCircle.class);
+        EffectDeserialize.register(FireworkEffect.class);
+        EffectDeserialize.register(Helix.class);
+
         config = new CConfig();
 
         configMessage = (ConfigMessage) config;

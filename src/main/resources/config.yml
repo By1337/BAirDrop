@@ -29,6 +29,7 @@ global-time:
 summoner-сooldown: 1200
 summoner:
   item-1:
+    nbt: null
     material: SOUL_CAMPFIRE
     name: '&aAirdrop beacon'
     lore:
@@ -42,6 +43,7 @@ summoner:
     ignore-region: false
     call: []
   item-2:
+    nbt: null
     material: SOUL_CAMPFIRE
     name: '&aAirdrop beacon'
     lore:

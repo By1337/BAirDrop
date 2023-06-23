@@ -14,6 +14,7 @@ import org.by1337.bairdrop.BAirDrop;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class RandomParticle implements IEffect {
@@ -28,19 +29,24 @@ public class RandomParticle implements IEffect {
     private final FileConfiguration cs;
     private Location loc;
     private final String name;
+    private final Map<String, Object> map;
 
-    public RandomParticle(FileConfiguration cs, String name) throws NullPointerException, IllegalArgumentException {
-        this.cs = cs;
-        ticks = cs.getInt(String.format("effects.%s.ticks", name));
-        timeUpdate = cs.getInt(String.format("effects.%s.timeUpdate", name));
-        for (String pr : cs.getStringList(String.format("effects.%s.particle", name))) {
-            particle.add(Particle.valueOf(pr));
+    public RandomParticle(Map<String, Object> map) {
+        this.map = map;
+        this.cs = null;
+        name = "123";
+        ticks = ((Number) map.getOrDefault("ticks", -1)).intValue();
+        timeUpdate = ((Number) map.getOrDefault("timeUpdate", 0)).intValue();
+        radius = ((Number) map.getOrDefault("radius", 0)).doubleValue();
+        count = ((Number) map.getOrDefault("count", -1)).intValue();
+
+        List<String> particles = (List<String>) map.getOrDefault("particle", new ArrayList<String>());
+
+        for (String particle : particles) {
+            this.particle.add(Particle.valueOf(particle));
         }
-        this.name = name;
-
-        radius = cs.getDouble(String.format("effects.%s.radius", name));
-        count = cs.getInt(String.format("effects.%s.count", name));
     }
+
 
     @Override
     public void Start(AirDrop airDrop) {
@@ -96,11 +102,7 @@ public class RandomParticle implements IEffect {
 
     @Override
     public IEffect clone() {
-        return new RandomParticle(cs, name);
+        return new RandomParticle(map);
     }
 
-    @Override
-    public String getConfigName() {
-        return name;
-    }
 }

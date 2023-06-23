@@ -13,7 +13,7 @@ import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.BAirDrop;
 
-import java.util.Objects;
+import java.util.Map;
 
 public class Torus implements IEffect {
     private final double step;
@@ -32,30 +32,37 @@ public class Torus implements IEffect {
     private AirDrop airDrop;
     private final double innerRadius;
     private final double outerRadius;
+    private final Map<String, Object> map;
 
-    public Torus(FileConfiguration cs, String name) throws NullPointerException, IllegalArgumentException {
-        this.name = name;
-        this.cs = cs;
-        ticks = cs.getInt(String.format("effects.%s.ticks", name));
-        timeUpdate = cs.getInt(String.format("effects.%s.timeUpdate", name));
-        particle = Objects.requireNonNull(Particle.valueOf(cs.getString(String.format("effects.%s.particle", name))));
-        this.name = name;
-        count = cs.getInt(String.format("effects.%s.count", name));
-        step = cs.getDouble(String.format("effects.%s.step", name));
-        innerRadius = cs.getDouble(String.format("effects.%s.inner-radius", name));
-        outerRadius = cs.getDouble(String.format("effects.%s.outer-radius", name));
+    public Torus(Map<String, Object> map)  {
+        this.map = map;
+        this.cs = null;
+        name = "123";
+        Message.error(map.values().toString());
+        ticks = ((Number) map.getOrDefault("ticks", -1)).intValue();
+        timeUpdate = ((Number) map.getOrDefault("timeUpdate", 0)).intValue();
+        particle = Particle.valueOf((String) map.getOrDefault("particle", "FLAME"));
+
+        innerRadius = ((Number) map.getOrDefault("inner-radius", 0)).doubleValue();
+        outerRadius = ((Number) map.getOrDefault("outer-radius", 0)).doubleValue();
+
+        count = ((Number) map.getOrDefault("count", -1)).intValue();
+        step = ((Number) map.getOrDefault("step", 0)).doubleValue();
         offsets = new Vector(
-                cs.getDouble(String.format("effects.%s.offset-x", name)),
-                cs.getDouble(String.format("effects.%s.offset-y", name)),
-                cs.getDouble(String.format("effects.%s.offset-z", name)));
-        size = cs.getDouble(String.format("effects.%s.size", name));
+                ((Number) map.getOrDefault("offset-x", 0)).doubleValue(),
+                ((Number) map.getOrDefault("offset-x", 0)).doubleValue(),
+                ((Number) map.getOrDefault("offset-x", 0)).doubleValue()
+        );
+
+
+        size = ((Number) map.getOrDefault("size", 1)).doubleValue();
+
         color = Color.fromBGR(
-                cs.getInt(String.format("effects.%s.color-rgb-b", name)),
-                cs.getInt(String.format("effects.%s.color-rgb-g", name)),
-                cs.getInt(String.format("effects.%s.color-rgb-r", name)));
-
+                ((Number) map.getOrDefault("color-rgb-b", 255)).intValue(),
+                ((Number) map.getOrDefault("color-rgb-g", 255)).intValue(),
+                ((Number) map.getOrDefault("color-rgb-r", 255)).intValue()
+        );
     }
-
     @Override
     public void Start(AirDrop airDrop) {
         this.airDrop = airDrop;
@@ -116,7 +123,7 @@ public class Torus implements IEffect {
 
     @Override
     public IEffect clone() {
-        return new Torus(cs, name);
+        return new Torus(map);
     }
 
     @Override
@@ -124,8 +131,4 @@ public class Torus implements IEffect {
         return EffectType.TORUS;
     }
 
-    @Override
-    public String getConfigName() {
-        return name;
-    }
 }

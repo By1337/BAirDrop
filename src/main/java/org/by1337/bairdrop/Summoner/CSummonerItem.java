@@ -44,7 +44,7 @@ public class CSummonerItem implements SummonerItem {
     }
 
     public ItemStack getItem() {
-        return item;
+        return item.clone();
     }
 
 

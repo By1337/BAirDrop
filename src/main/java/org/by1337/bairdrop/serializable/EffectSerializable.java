@@ -1,5 +1,7 @@
 package org.by1337.bairdrop.serializable;
 
+import java.util.Map;
+
 public interface EffectSerializable {
-    String serialize();
+    Map<String, Object> serialize();
 }
