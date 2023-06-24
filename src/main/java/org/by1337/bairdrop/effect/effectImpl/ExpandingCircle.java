@@ -3,7 +3,6 @@ package org.by1337.bairdrop.effect.effectImpl;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -11,7 +10,6 @@ import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.effect.EffectType;
 import org.by1337.bairdrop.effect.IEffect;
 import org.by1337.bairdrop.AirDrop;
-import org.by1337.bairdrop.serializable.DeserializeUtils;
 import org.by1337.bairdrop.serializable.EffectSerializable;
 import org.by1337.bairdrop.util.Message;
 

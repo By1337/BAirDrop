@@ -2,7 +2,6 @@ package org.by1337.bairdrop.effect.effectImpl;
 
 import org.bukkit.Color;
 import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.inventory.meta.FireworkMeta;
@@ -13,7 +12,6 @@ import org.by1337.bairdrop.effect.EffectType;
 import org.by1337.bairdrop.effect.IEffect;
 import org.by1337.bairdrop.effect.util.RGBHelper;
 import org.by1337.bairdrop.AirDrop;
-import org.by1337.bairdrop.serializable.DeserializeUtils;
 import org.by1337.bairdrop.serializable.EffectSerializable;
 import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.BAirDrop;

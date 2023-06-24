@@ -9,44 +9,59 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.by1337.bairdrop.effect.EffectType;
 import org.by1337.bairdrop.effect.IEffect;
 import org.by1337.bairdrop.AirDrop;
+import org.by1337.bairdrop.serializable.EffectSerializable;
 import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.BAirDrop;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class RandomParticle implements IEffect {
+public class RandomParticle implements IEffect, EffectSerializable {
     private int ticks = -1;
     private final int timeUpdate;
     private AirDrop airDrop;
     private boolean used;
     private boolean stop;
-    private final List<Particle> particle = new ArrayList<>();
+    private final List<Particle> particle;
     private final double radius;
     private final int count;
-    private final FileConfiguration cs;
     private Location loc;
-    private final String name;
     private final Map<String, Object> map;
 
     public RandomParticle(Map<String, Object> map) {
         this.map = map;
-        this.cs = null;
-        name = "123";
         ticks = ((Number) map.getOrDefault("ticks", -1)).intValue();
         timeUpdate = ((Number) map.getOrDefault("timeUpdate", 0)).intValue();
         radius = ((Number) map.getOrDefault("radius", 0)).doubleValue();
         count = ((Number) map.getOrDefault("count", -1)).intValue();
-
         List<String> particles = (List<String>) map.getOrDefault("particle", new ArrayList<String>());
-
+        particle = new ArrayList<>();
         for (String particle : particles) {
             this.particle.add(Particle.valueOf(particle));
         }
     }
 
+    private RandomParticle(Map<String, Object> map, boolean ser) {
+        this.map = map;
+        ticks = ((Number) map.getOrDefault("ticks", -1)).intValue();
+        timeUpdate = ((Number) map.getOrDefault("timeUpdate", 0)).intValue();
+        radius = ((Number) map.getOrDefault("radius", 0)).doubleValue();
+        count = ((Number) map.getOrDefault("count", -1)).intValue();
+        List<String> particles = (List<String>) map.getOrDefault("particle", new ArrayList<String>());
+
+        particle = new ArrayList<>();
+        for (String particle : particles) {
+            this.particle.add(Particle.valueOf(particle));
+        }
+
+        loc = (Location) map.getOrDefault("loc", null);
+        used = (boolean) map.getOrDefault("used", false);
+        stop = (boolean) map.getOrDefault("stop", false);
+
+    }
 
     @Override
     public void Start(AirDrop airDrop) {
@@ -104,5 +119,27 @@ public class RandomParticle implements IEffect {
     public IEffect clone() {
         return new RandomParticle(map);
     }
-
+    @Override
+    public Map<String, Object> serialize() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("class", this.getClass().getName());
+        map.put("ticks", ticks);
+        map.put("timeUpdate", timeUpdate);
+        map.put("used", used);
+        map.put("stop", stop);
+        map.put("radius", radius);
+        map.put("count", count);
+        List<String> part = new ArrayList<>();
+        particle.forEach(p -> part.add(p.name()));
+        map.put("particle", part);
+        map.put("loc", loc);
+        return map;
+    }
+    public static IEffect deserialize(Map<String, Object> map) {
+        RandomParticle randomParticle = new RandomParticle(map, true);
+        if (!randomParticle.stop && randomParticle.used && randomParticle.loc != null && randomParticle.loc.getWorld() != null){
+            randomParticle.run();
+        }
+        return randomParticle;
+    }
 }

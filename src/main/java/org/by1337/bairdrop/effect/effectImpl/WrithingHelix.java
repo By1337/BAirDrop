@@ -10,12 +10,14 @@ import org.bukkit.util.Vector;
 import org.by1337.bairdrop.effect.EffectType;
 import org.by1337.bairdrop.effect.IEffect;
 import org.by1337.bairdrop.AirDrop;
+import org.by1337.bairdrop.serializable.EffectSerializable;
 import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.BAirDrop;
 
+import java.util.HashMap;
 import java.util.Map;
 
-public class WrithingHelix implements IEffect {
+public class WrithingHelix implements IEffect, EffectSerializable {
     private final double radius;
     private final double height;
     private final double step;
@@ -27,16 +29,13 @@ public class WrithingHelix implements IEffect {
     private final int count;
     private final int timeUpdate;
     private int ticks;
-    private String name;
     private boolean used;
     private boolean stop;
-    private final FileConfiguration cs;
     private AirDrop airDrop;
     private final Map<String, Object> map;
     public WrithingHelix(Map<String, Object> map) {
         this.map = map;
-        this.cs = null;
-        name = "123";
+
         ticks = ((Number) map.getOrDefault("ticks", -1)).intValue();
         timeUpdate = ((Number) map.getOrDefault("timeUpdate", 0)).intValue();
         particle = Particle.valueOf((String) map.getOrDefault("particle", "FLAME"));
@@ -55,6 +54,23 @@ public class WrithingHelix implements IEffect {
                 ((Number) map.getOrDefault("color-rgb-g", 255)).intValue(),
                 ((Number) map.getOrDefault("color-rgb-r", 255)).intValue()
         );
+    }
+
+    private WrithingHelix(Map<String, Object> map, boolean ser) {
+        this.map = map;
+        ticks = ((Number) map.getOrDefault("ticks", -1)).intValue();
+        timeUpdate = ((Number) map.getOrDefault("timeUpdate", 0)).intValue();
+        particle = Particle.valueOf((String) map.getOrDefault("particle", "FLAME"));
+        radius = ((Number) map.getOrDefault("radius", 0)).doubleValue();
+        height = ((Number) map.getOrDefault("height", 0)).doubleValue();
+        count = ((Number) map.getOrDefault("count", -1)).intValue();
+        step = ((Number) map.getOrDefault("step", 0)).doubleValue();
+        offsets = (Vector) map.getOrDefault("offsets", new Vector(0, 0, 0));
+        size = ((Number) map.getOrDefault("size", 1)).doubleValue();
+        color = (Color) map.getOrDefault("color", Color.fromRGB(255, 255, 255));
+        loc = (Location) map.getOrDefault("loc", null);
+        used = (boolean) map.getOrDefault("used", false);
+        stop = (boolean) map.getOrDefault("stop", false);
     }
 
     @Override
@@ -123,4 +139,30 @@ public class WrithingHelix implements IEffect {
         return EffectType.WRITHING_HELIX;
     }
 
+    @Override
+    public Map<String, Object> serialize() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("class", this.getClass().getName());
+        map.put("ticks", ticks);
+        map.put("timeUpdate", timeUpdate);
+        map.put("used", used);
+        map.put("stop", stop);
+        map.put("particle", particle.name());
+        map.put("radius", radius);
+        map.put("count", count);
+        map.put("step", step);
+        map.put("offsets", offsets);
+        map.put("size", size);
+        map.put("color", color);
+        map.put("loc", loc);
+        map.put("height", height);
+        return map;
+    }
+    public static IEffect deserialize(Map<String, Object> map) {
+        WrithingHelix helix = new WrithingHelix(map, true);
+        if (!helix.stop && helix.used && helix.loc != null && helix.loc.getWorld() != null){
+            helix.run();
+        }
+        return helix;
+    }
 }

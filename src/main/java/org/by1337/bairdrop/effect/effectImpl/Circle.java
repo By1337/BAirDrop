@@ -7,7 +7,6 @@ import org.bukkit.util.Vector;
 import org.by1337.bairdrop.*;
 import org.by1337.bairdrop.effect.EffectType;
 import org.by1337.bairdrop.effect.IEffect;
-import org.by1337.bairdrop.serializable.DeserializeUtils;
 import org.by1337.bairdrop.serializable.EffectSerializable;
 import org.by1337.bairdrop.util.Message;
 
@@ -37,7 +36,6 @@ public class Circle implements IEffect, EffectSerializable {
 
     public Circle(Map<String, Object> map)  {
         this.map = map;
-        Message.error(map.values().toString());
         ticks = ((Number) map.getOrDefault("ticks", -1)).intValue();
         timeUpdate = ((Number) map.getOrDefault("timeUpdate", 0)).intValue();
         particle = Particle.valueOf((String) map.getOrDefault("particle", "FLAME"));

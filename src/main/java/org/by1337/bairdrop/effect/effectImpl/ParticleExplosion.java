@@ -99,20 +99,4 @@ public class ParticleExplosion implements IEffect {
         return new ParticleExplosion(map);
     }
 
-
-    public String serialize() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(ticks).append(",");
-        sb.append(used).append(",");
-        sb.append(stop).append(",");
-        sb.append(particle.name()).append(",");
-        sb.append(radius).append(",");
-        sb.append(count).append(",");
-        sb.append(offsets.getX()).append(",").append(offsets.getY()).append(",").append(offsets.getZ()).append(",");
-        sb.append(loc.getX()).append(",").append(loc.getY()).append(",").append(loc.getZ()).append(",");
-        sb.append(name).append(",");
-        sb.append(speed).append(",");
-        sb.append(timeUpdate);
-        return sb.toString();
-    }
 }
