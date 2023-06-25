@@ -34,6 +34,7 @@ public class Helix implements IEffect, EffectSerializable {
     private boolean stop;
     private AirDrop airDrop;
     private final Map<String, Object> map;
+    private boolean ser;
     public Helix(Map<String, Object> map) {
         this.map = map;
         ticks = ((Number) map.getOrDefault("ticks", -1)).intValue();
@@ -57,6 +58,7 @@ public class Helix implements IEffect, EffectSerializable {
     }
     private Helix(Map<String, Object> map, boolean ser) {
         this.map = map;
+        this.ser = ser;
         ticks = ((Number) map.getOrDefault("ticks", -1)).intValue();
         timeUpdate = ((Number) map.getOrDefault("timeUpdate", 0)).intValue();
         particle = Particle.valueOf((String) map.getOrDefault("particle", "FLAME"));
@@ -128,6 +130,8 @@ public class Helix implements IEffect, EffectSerializable {
 
     @Override
     public IEffect clone() {
+        if (ser)
+            return new Helix(map, true);
         return new Helix(map);
     }
 

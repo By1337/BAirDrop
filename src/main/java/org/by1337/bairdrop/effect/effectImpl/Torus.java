@@ -33,10 +33,10 @@ public class Torus implements IEffect, EffectSerializable {
     private final double innerRadius;
     private final double outerRadius;
     private final Map<String, Object> map;
+    private boolean ser;
 
     public Torus(Map<String, Object> map)  {
         this.map = map;
-        Message.error(map.values().toString());
         ticks = ((Number) map.getOrDefault("ticks", -1)).intValue();
         timeUpdate = ((Number) map.getOrDefault("timeUpdate", 0)).intValue();
         particle = Particle.valueOf((String) map.getOrDefault("particle", "FLAME"));
@@ -62,6 +62,7 @@ public class Torus implements IEffect, EffectSerializable {
         );
     }
     public Torus(Map<String, Object> map, boolean ser)  {
+        this.ser = ser;
         this.map = map;
         ticks = ((Number) map.getOrDefault("ticks", -1)).intValue();
         timeUpdate = ((Number) map.getOrDefault("timeUpdate", 0)).intValue();
@@ -139,6 +140,8 @@ public class Torus implements IEffect, EffectSerializable {
 
     @Override
     public IEffect clone() {
+        if (ser)
+            return new Torus(map, true);
         return new Torus(map);
     }
 

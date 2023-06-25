@@ -56,6 +56,9 @@ public class Summoner implements Listener {
             boolean checkUpBlocks = BAirDrop.getInstance().getConfig().getBoolean(String.format("summoner.%s.check-up-blocks", key));
             boolean ignoreRegion = BAirDrop.getInstance().getConfig().getBoolean(String.format("summoner.%s.ignore-region", key));
 
+            int minY = BAirDrop.getInstance().getConfig().getInt(String.format("summoner.%s.min-y", key));
+            int maxY = BAirDrop.getInstance().getConfig().getInt(String.format("summoner.%s.max-y", key));
+
             try {
                 if (material.contains("basehead-"))
                     item = BaseHeadHook.getItem(material);
@@ -78,7 +81,7 @@ public class Summoner implements Listener {
             im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
             item.setItemMeta(im);
-            items.put(key, new CSummonerItem(item, airdrop, clone, usePlayerLocation, flatnessCheck, checkUpBlocks, call, ignoreRegion));
+            items.put(key, new CSummonerItem(item, airdrop, clone, usePlayerLocation, ignoreRegion, flatnessCheck, checkUpBlocks, call, minY, maxY));
         }
     }
     /**

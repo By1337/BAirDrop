@@ -140,6 +140,8 @@ public class Circle implements IEffect, EffectSerializable {
 
     @Override
     public IEffect clone() {
+        if (ser)
+            return new Circle(map, true);
         return new Circle(map);
     }
 
@@ -165,7 +167,6 @@ public class Circle implements IEffect, EffectSerializable {
         return map;
     }
     public static IEffect deserialize(Map<String, Object> map) {
-
         Circle circle = new Circle(map, true);
         if (!circle.stop && circle.used && circle.loc != null && circle.loc.getWorld() != null){
             circle.run();

@@ -114,7 +114,6 @@ public class CAirDrop implements AirDrop, StateSerializable {
     private boolean useOnlyStaticLoc;
     private final List<Observer> observers = new ArrayList<>();
     private AntiSteal antiSteal = null;
-
     private Generator generator;
 
     CAirDrop(FileConfiguration fileConfiguration, File airDropFile) {
@@ -335,7 +334,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
                         updateEditAirMenu("stats");
                     }
 
-                    if (airDropLocked && timeToOpen <= 0) {
+                    if (airDropStarted && airDropLocked && timeToOpen <= 0) {
                         unlock();
                         updateEditAirMenu("stats");
                     } else if (airDropStarted && airDropLocked && (!startCountdownAfterClick || activated)) {
@@ -726,7 +725,9 @@ public class CAirDrop implements AirDrop, StateSerializable {
             if (sb.indexOf("{!flatness-check}") != -1)
                 sb.replace(sb.indexOf("{!flatness-check}"), sb.indexOf("{!flatness-check}") + 17, String.valueOf(!flatnessCheck));
         }
-
+        //activated
+        if (sb.indexOf("{activated}") != -1)
+            sb.replace(sb.indexOf("{activated}"), sb.indexOf("{activated}") + "{activated}".length(), String.valueOf(activated));
         if (sb.indexOf("{use-only-static-loc}") != -1)
             sb.replace(sb.indexOf("{use-only-static-loc}"), sb.indexOf("{use-only-static-loc}") + 21, String.valueOf(useOnlyStaticLoc));
         if (sb.indexOf("{time-to-open}") != -1)
@@ -1175,10 +1176,6 @@ public class CAirDrop implements AirDrop, StateSerializable {
             if (fileConfiguration.getConfigurationSection("state") == null) return;
             Map<String, Object> map = fileConfiguration.getConfigurationSection("state").getValues(false);
 
-//            Map<String, Object> map2 = (Map<String, Object>) map.get("map");
-//            for (String key : map2.keySet()){
-//                Message.error(key);
-//            }
             int version = (int) map.get("version");
             if (version < STATE_VERSION) {
                 Message.error("&cУстарелые данные! Невозможно загрузить состояние аирдропа");
@@ -1234,7 +1231,6 @@ public class CAirDrop implements AirDrop, StateSerializable {
                     }
 
                     if (!S_airDropLocked) {
-
                         airDropLocked = false;
                         timeToOpen = 0;
 
@@ -1260,9 +1256,9 @@ public class CAirDrop implements AirDrop, StateSerializable {
                         continue;
                     }
                     loadedEffect.put(key, effect);
-                    Message.devDebug(key);
                 }
             }
+            notifyObservers(CustomEvent.DESERIALIZE, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1727,6 +1723,5 @@ public class CAirDrop implements AirDrop, StateSerializable {
     public void setGenerator(Generator generator) {
         this.generator = generator;
     }
-
 
 }

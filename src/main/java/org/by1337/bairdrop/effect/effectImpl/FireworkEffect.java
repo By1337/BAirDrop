@@ -35,6 +35,7 @@ public class FireworkEffect implements IEffect, EffectSerializable{
     private final List<Color> colors;
     private final Vector offsets;
     private final Map<String, Object> map;
+    private boolean ser;
     public FireworkEffect(Map<String, Object> map) {
         this.map = map;
         ticks = ((Number) map.getOrDefault("ticks", -1)).intValue();
@@ -55,6 +56,7 @@ public class FireworkEffect implements IEffect, EffectSerializable{
         stepHeight = ((Number) map.getOrDefault("step-height", 0)).doubleValue();
     }
     private FireworkEffect(Map<String, Object> map, boolean ser) {
+        this.ser = ser;
         this.map = map;
         ticks = (int) map.getOrDefault("ticks", -1);
         timeUpdate = (int) map.getOrDefault("timeUpdate", 1);
@@ -134,6 +136,8 @@ public class FireworkEffect implements IEffect, EffectSerializable{
 
     @Override
     public IEffect clone() {
+        if (ser)
+            return new FireworkEffect(map, true);
         return new FireworkEffect(map);
     }
 

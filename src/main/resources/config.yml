@@ -3,7 +3,7 @@ max-experience-pre-generated-location: 50
 use-metrics: true
 debug: false
 log-level: LOW
-
+state-serializable: true
 anti-steal:
   enable: true
   max-interval: 5 #ms
@@ -41,6 +41,8 @@ summoner:
     check-up-blocks: false
     flatness-check: false
     ignore-region: false
+    min-y: 0
+    max-y: 0
     call: []
   item-2:
     nbt: null
@@ -54,6 +56,8 @@ summoner:
     flatness-check: false
     use-player-location: false
     ignore-region: false
+    min-y: 0
+    max-y: 0
     call: []
 custom-crafts:
   enable: false

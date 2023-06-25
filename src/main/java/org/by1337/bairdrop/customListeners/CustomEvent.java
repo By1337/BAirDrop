@@ -99,6 +99,11 @@ public record CustomEvent(NamespacedKey key) implements Keyed {
      * Player null, AirDrop not null
      */
     public static CustomEvent PLAYER_STEAL = registerEvent(new CustomEvent(NamespacedKey.fromString("player_steal")));
+    /**
+     * when airdrop deserialize
+     * Player null, AirDrop not null
+     */
+    public static CustomEvent DESERIALIZE = registerEvent(new CustomEvent(NamespacedKey.fromString("deserialize")));
 
     /**
      * @param key NamespacedKey of the event

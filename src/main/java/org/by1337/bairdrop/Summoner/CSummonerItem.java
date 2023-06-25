@@ -27,8 +27,10 @@ public class CSummonerItem implements SummonerItem {
     private final boolean flatnessCheck;
     private final boolean checkUpBlocks;
     private final List<String> call;
+    private final int minY;
+    private final int maxY;
 
-    public CSummonerItem(ItemStack item, String summonerAirDropId, boolean clone, boolean usePlayerLocation, boolean flatnessCheck, boolean checkUpBlocks, List<String> call, boolean ignoreRegion) {
+    public CSummonerItem(ItemStack item, String summonerAirDropId, boolean clone, boolean usePlayerLocation, boolean ignoreRegion, boolean flatnessCheck, boolean checkUpBlocks, List<String> call, int minY, int maxY) {
         this.item = item;
         this.summonerAirDropId = summonerAirDropId;
         this.clone = clone;
@@ -37,7 +39,10 @@ public class CSummonerItem implements SummonerItem {
         this.checkUpBlocks = checkUpBlocks;
         this.call = call;
         this.ignoreRegion = ignoreRegion;
+        this.minY = minY;
+        this.maxY = maxY;
     }
+
 
     public boolean isUsePlayerLocation() {
         return usePlayerLocation;
@@ -90,6 +95,18 @@ public class CSummonerItem implements SummonerItem {
             Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("impossible-to-call"));
             pl.setCooldown(getItem().getType(), 40);
             return null;
+        }
+        if (minY != 0){
+            if (location.getY() < minY){
+                Message.sendMsg(pl, String.format(BAirDrop.getConfigMessage().getMessage("summoner-min-y"), minY));
+                return null;
+            }
+        }
+        if (maxY != 0){
+            if (location.getY() > maxY){
+                Message.sendMsg(pl, String.format(BAirDrop.getConfigMessage().getMessage("summoner-max-y"), maxY));
+                return null;
+            }
         }
         if (isUsePlayerLocation() && !isIgnoreRegion()) {
             if (!GeneratorUtils.isRegionEmpty(BAirDrop.airDrops.get(key), location)) {

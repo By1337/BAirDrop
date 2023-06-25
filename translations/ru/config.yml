@@ -3,7 +3,7 @@ max-experience-pre-generated-location: 50
 use-metrics: true
 debug: false
 log-level: LOW
-
+state-serializable: true
 anti-steal:
   enable: true
   max-interval: 5
@@ -39,6 +39,8 @@ summoner:
     use-player-location: true
     check-up-blocks: false
     flatness-check: false
+    min-y: 0
+    max-y: 0
     call: []
   item-2:
     material: SOUL_CAMPFIRE
@@ -50,6 +52,8 @@ summoner:
     clone: true
     flatness-check: false
     use-player-location: false
+    min-y: 0
+    max-y: 0
     call: []
 custom-crafts:
   enable: false

@@ -23,16 +23,12 @@ public class ParticleExplosion implements IEffect {
     private final double radius;
     private final int count;
     private final Vector offsets;
-    private final FileConfiguration cs;
     private Location loc;
-    private final String name;
     private final double speed;
     private final int timeUpdate;
     private final Map<String, Object> map;
     public ParticleExplosion(Map<String, Object> map) {
         this.map = map;
-        this.cs = null;
-        name = "123";
         ticks = ((Number) map.getOrDefault("ticks", -1)).intValue();
         particle = Particle.valueOf((String) map.getOrDefault("particle", "FLAME"));
         radius = ((Number) map.getOrDefault("radius", 0)).doubleValue();

@@ -30,6 +30,7 @@ public class RandomParticle implements IEffect, EffectSerializable {
     private final int count;
     private Location loc;
     private final Map<String, Object> map;
+    private boolean ser;
 
     public RandomParticle(Map<String, Object> map) {
         this.map = map;
@@ -45,6 +46,7 @@ public class RandomParticle implements IEffect, EffectSerializable {
     }
 
     private RandomParticle(Map<String, Object> map, boolean ser) {
+        this.ser = ser;
         this.map = map;
         ticks = ((Number) map.getOrDefault("ticks", -1)).intValue();
         timeUpdate = ((Number) map.getOrDefault("timeUpdate", 0)).intValue();
@@ -117,6 +119,8 @@ public class RandomParticle implements IEffect, EffectSerializable {
 
     @Override
     public IEffect clone() {
+        if (ser)
+            return new RandomParticle(map, true);
         return new RandomParticle(map);
     }
     @Override

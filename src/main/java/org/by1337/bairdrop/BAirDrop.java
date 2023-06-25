@@ -71,12 +71,7 @@ public final class BAirDrop extends JavaPlugin {
         config = new CConfig();
 
         configMessage = (ConfigMessage) config;
-      //  File config = new File(getInstance().getDataFolder() + File.separator + "config.yml");
-//        if (!config.exists()) {
-//            getInstance().getLogger().info("Creating new config file, please wait");
-//            getInstance().getConfig().options().copyDefaults(true);
-            getInstance().saveDefaultConfig();
-     //   }
+        getInstance().saveDefaultConfig();
         getInstance().saveConfig();
 
 
@@ -116,9 +111,11 @@ public final class BAirDrop extends JavaPlugin {
         for (File file : getiConfig().getAirDrops().keySet()) {
             AirDrop airDrop = new CAirDrop(getiConfig().getAirDrops().get(file), file);
             airDrops.put(getiConfig().getAirDrops().get(file).getString("air-id"), airDrop);
+            if(instance.getConfig().getBoolean("state-serializable")){
+                StateSerializable stateSerializable = (StateSerializable) airDrop;
+                stateSerializable.stateDeserialize();
+            }
 
-            StateSerializable stateSerializable = (StateSerializable) airDrop;
-            stateSerializable.stateDeserialize();
         }
 
         List<String> ids = new ArrayList<>(airDrops.keySet());
@@ -169,7 +166,7 @@ public final class BAirDrop extends JavaPlugin {
             return;
         long x = System.currentTimeMillis();
         for (AirDrop airDrop : airDrops.values()) {
-            if (airDrop instanceof StateSerializable stateSerializable) stateSerializable.stateSerialize();
+            if (instance.getConfig().getBoolean("state-serializable") && airDrop instanceof StateSerializable stateSerializable) stateSerializable.stateSerialize();
 
             if (airDrop.isAirDropStarted())
                 airDrop.End();
@@ -209,7 +206,7 @@ public final class BAirDrop extends JavaPlugin {
         getiConfig().getSchematics().clear();
         airDrops.clear();
         customEventListeners.clear();
-       // EffectFactory.EffectList.clear();
+        // EffectFactory.EffectList.clear();
         getiConfig().getAirDrops().clear();
 
         getInstance().reloadConfig();

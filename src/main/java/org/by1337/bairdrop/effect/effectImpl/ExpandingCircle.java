@@ -34,6 +34,7 @@ public class ExpandingCircle implements IEffect, EffectSerializable {
     private final Color color;
     private Location loc;
     private final Map<String, Object> map;
+    private boolean ser;
 
     public ExpandingCircle(Map<String, Object> map) {
         this.map = map;
@@ -59,6 +60,7 @@ public class ExpandingCircle implements IEffect, EffectSerializable {
         );
     }
     private ExpandingCircle(Map<String, Object> map, boolean ser) {
+        this.ser = ser;
         this.map = map;
         ticks = ((Number) map.getOrDefault("ticks", -1)).intValue();
         timeUpdate = ((Number) map.getOrDefault("timeUpdate", 0)).intValue();
@@ -135,6 +137,8 @@ public class ExpandingCircle implements IEffect, EffectSerializable {
 
     @Override
     public IEffect clone() {
+        if (ser)
+            return new ExpandingCircle(map, true);
         return new ExpandingCircle(map);
     }
 

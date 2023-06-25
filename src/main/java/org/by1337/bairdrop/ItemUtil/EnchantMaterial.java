@@ -22,7 +22,6 @@ public class EnchantMaterial {
     }
 
     public ItemStack enchant(@NotNull ItemStack itemStack) {
-        if (itemStack.getItemMeta() == null) return itemStack;
         ItemMeta im = itemStack.getItemMeta();
         for (Map.Entry<Enchantment, Integer> map : im.getEnchants().entrySet()) {
             if (conflictEnchantments.contains(map.getKey())) return itemStack;
@@ -30,7 +29,7 @@ public class EnchantMaterial {
 
         for (EnchantInfo ei : enchantInfos) {
             try {
-                if (ei.getChance() > 100) {
+                if (ei.getChance() > random.nextInt(100)) {
                     int level = random.nextInt(ei.getMaxLevel() - ei.getMinLevel() + 1);
                     level += ei.getMinLevel();
                     im.addEnchant(ei.getEnchantment(), level, true);
@@ -39,8 +38,6 @@ public class EnchantMaterial {
                 e.printStackTrace();
             }
         }
-
-
         itemStack.setItemMeta(im);
         return itemStack;
     }

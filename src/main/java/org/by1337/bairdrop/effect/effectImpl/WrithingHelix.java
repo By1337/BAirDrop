@@ -33,6 +33,7 @@ public class WrithingHelix implements IEffect, EffectSerializable {
     private boolean stop;
     private AirDrop airDrop;
     private final Map<String, Object> map;
+    private boolean ser;
     public WrithingHelix(Map<String, Object> map) {
         this.map = map;
 
@@ -57,6 +58,7 @@ public class WrithingHelix implements IEffect, EffectSerializable {
     }
 
     private WrithingHelix(Map<String, Object> map, boolean ser) {
+        this.ser = ser;
         this.map = map;
         ticks = ((Number) map.getOrDefault("ticks", -1)).intValue();
         timeUpdate = ((Number) map.getOrDefault("timeUpdate", 0)).intValue();
@@ -131,6 +133,8 @@ public class WrithingHelix implements IEffect, EffectSerializable {
 
     @Override
     public IEffect clone() {
+        if (ser)
+            return new WrithingHelix(map, true);
         return new WrithingHelix(map);
     }
 
