@@ -338,10 +338,10 @@ public class CAirDrop implements AirDrop, StateSerializable {
                         unlock();
                         updateEditAirMenu("stats");
                     } else if (airDropStarted && airDropLocked && (!startCountdownAfterClick || activated)) {
+                        timeToOpen--;
                         List<String> lines = new ArrayList<>(airHolo);
                         lines.replaceAll(s -> replaceInternalPlaceholder(s));
                         BAirDrop.hologram.createOrUpdateHologram(lines, airDropLocation.clone().add(holoOffsets), id);
-                        timeToOpen--;
                         updateEditAirMenu("stats");
                     } else if (startCountdownAfterClick && airDropLocked && airDropStarted) {
                         List<String> lines = new ArrayList<>(airHoloClickWait);
@@ -704,6 +704,9 @@ public class CAirDrop implements AirDrop, StateSerializable {
     public String replaceInternalPlaceholder(String str) {
         if (!str.contains("{"))
             return str;
+        if (str.contains("\\{")){
+            return str.replace("\\", "");
+        }
         StringBuilder sb = new StringBuilder(str);
 
         //int var = -1;

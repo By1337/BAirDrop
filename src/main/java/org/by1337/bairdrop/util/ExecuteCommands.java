@@ -51,6 +51,7 @@ import static org.by1337.bairdrop.BAirDrop.getInstance;
 
 public class ExecuteCommands {
     private static List<String> ignoreCommands = new ArrayList<>();
+    public static HashMap<String, EasyBossBar> easyBossBarHashMap = new HashMap<>();
 
     public static boolean hasIgnoreCommand(String command) {
         return ignoreCommands.contains(command);
@@ -495,6 +496,17 @@ public class ExecuteCommands {
     }
 
     public boolean executeAirdropCommand(@NotNull AirDrop airDrop, String command) {
+        if (command.contains("[EasyBossBar=")) {
+            String param = EasyBossBar.getParam(command);
+            if (easyBossBarHashMap.containsKey(param)){
+                easyBossBarHashMap.get(param).execCommands(command);
+            }else {
+                EasyBossBar easyBossBar = new EasyBossBar(airDrop, param);
+                easyBossBarHashMap.put(param,easyBossBar);
+                easyBossBar.execCommands(command);
+            }
+            return true;
+        }
         if (command.contains("[EFFECT_START-")) {
             String[] args = command.split("-");
             if (args.length != 3) {
