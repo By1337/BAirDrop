@@ -497,7 +497,7 @@ public class ExecuteCommands {
 
     public boolean executeAirdropCommand(@NotNull AirDrop airDrop, String command) {
         if (command.contains("[EasyBossBar=")) {
-            String param = EasyBossBar.getParam(command);
+            String param = airDrop.replaceInternalPlaceholder(EasyBossBar.getParam(command));
             if (easyBossBarHashMap.containsKey(param)){
                 easyBossBarHashMap.get(param).execCommands(command);
             }else {
