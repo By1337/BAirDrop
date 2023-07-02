@@ -26,6 +26,7 @@ public class AntiSteal implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (event.getInventory().equals(airDrop.getInventory())) {
+            if (event.getCurrentItem() == null) return;
             Player player = (Player) event.getWhoClicked();
             ChestStealData chestStealData = chestStealDataMap.getOrDefault(player.getUniqueId(), new ChestStealData());
             long currentTime = System.currentTimeMillis();

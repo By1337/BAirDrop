@@ -8,17 +8,17 @@ import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import org.by1337.bairdrop.ConfigManager.CConfig;
-import org.by1337.bairdrop.ConfigManager.ConfigMessage;
-import org.by1337.bairdrop.ConfigManager.Config;
-import org.by1337.bairdrop.Hologram.*;
-import org.by1337.bairdrop.Listeners.Compass;
-import org.by1337.bairdrop.Listeners.CraftItem;
-import org.by1337.bairdrop.Listeners.InteractListener;
-import org.by1337.bairdrop.LocationGenerator.CGenLoc;
-import org.by1337.bairdrop.LocationGenerator.GeneratorLoc;
-import org.by1337.bairdrop.Summoner.Summoner;
-import org.by1337.bairdrop.WorldGuardApi.RegionManager;
+import org.by1337.bairdrop.configManager.CConfig;
+import org.by1337.bairdrop.configManager.ConfigMessage;
+import org.by1337.bairdrop.configManager.Config;
+import org.by1337.bairdrop.hologram.*;
+import org.by1337.bairdrop.listeners.Compass;
+import org.by1337.bairdrop.listeners.CraftItem;
+import org.by1337.bairdrop.listeners.InteractListener;
+import org.by1337.bairdrop.locationGenerator.CGenLoc;
+import org.by1337.bairdrop.locationGenerator.GeneratorLoc;
+import org.by1337.bairdrop.summoner.Summoner;
+import org.by1337.bairdrop.worldGuardHook.RegionManager;
 import org.by1337.bairdrop.command.Commands;
 import org.by1337.bairdrop.command.Completer;
 import org.by1337.bairdrop.customListeners.CustomEvent;
@@ -85,7 +85,7 @@ public final class BAirDrop extends JavaPlugin {
 
         long x = System.currentTimeMillis();
 
-        getiConfig().LoadConfiguration();
+        getiConfig().loadConfiguration();
 
         if (this.getConfig().getBoolean("use-metrics"))
             new Metrics(getInstance(), 17870);
@@ -226,7 +226,7 @@ public final class BAirDrop extends JavaPlugin {
         } else if (BAirDrop.getInstance().getConfig().getBoolean("global-time.enable")) {
             globalTimer = new GlobalTimer((BAirDrop.getInstance().getConfig().getInt("global-time.time") * 60));
         }
-        getiConfig().LoadConfiguration();
+        getiConfig().loadConfiguration();
         for (File file : getiConfig().getAirDrops().keySet()) {
             airDrops.put(getiConfig().getAirDrops().get(file).getString("air-id"), new CAirDrop(getiConfig().getAirDrops().get(file), file));
         }

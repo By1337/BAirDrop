@@ -8,8 +8,8 @@ import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.by1337.bairdrop.LocationGenerator.Generator;
-import org.by1337.bairdrop.WorldGuardApi.SchematicsManager;
+import org.by1337.bairdrop.locationGenerator.Generator;
+import org.by1337.bairdrop.worldGuardHook.SchematicsManager;
 import org.by1337.bairdrop.customListeners.CustomEvent;
 import org.by1337.bairdrop.customListeners.observer.Observable;
 import org.by1337.bairdrop.effect.IEffect;
@@ -292,8 +292,8 @@ public interface AirDrop extends Observable {
      * Returns true if the airdrop uses the player's location as the spawn location.
      *
      * @return true if the airdrop uses the player's location.
-     * @see org.by1337.bairdrop.Summoner.Summoner
-     * @see org.by1337.bairdrop.Summoner.SummonerItem
+     * @see org.by1337.bairdrop.summoner.Summoner
+     * @see org.by1337.bairdrop.summoner.SummonerItem
      */
     boolean isUsePlayerLocation();
 
@@ -323,7 +323,7 @@ public interface AirDrop extends Observable {
      * Returns true if the airdrop was summoned by a summoning item.
      *
      * @return true if the airdrop was summoned by a summoning item.
-     * @see org.by1337.bairdrop.Summoner.Summoner
+     * @see org.by1337.bairdrop.summoner.Summoner
      */
     boolean isSummoner();
 
