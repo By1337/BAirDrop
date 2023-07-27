@@ -223,3 +223,5 @@ anti-steal-limit-speed: "&cYou're taking items from the chest too fast!"
 effect-replace-error: 'An effect with this id has already been created! %s'
 summoner-min-y: '&cAirdrop can be summoned at least %s in height!'
 summoner-max-y: '&cAirdrop can be summoned up to %s height!'
+summoner-error-it-airdrop-is-already-started: "&cCan't call this airdrop because it's already started"
+dec-info: '&7Summoned: %s'

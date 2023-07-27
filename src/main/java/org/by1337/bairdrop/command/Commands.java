@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
+import static org.bukkit.Bukkit.createWorld;
 import static org.bukkit.Bukkit.getServer;
 import static org.by1337.bairdrop.BAirDrop.*;
 
@@ -138,9 +139,7 @@ public class Commands implements CommandExecutor {
                     return true;
                 }
                 if (args.length >= 3) {
-                    //  Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("few-arguments"));
                     ItemStack item = BAirDrop.summoner.getItems().get(args[1]).getItem();
-                    Message.error(item.serialize().values().toString());
                     int amount = 1;
                     if (args.length == 4) {
                         try {
@@ -247,6 +246,28 @@ public class Commands implements CommandExecutor {
                         Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("airdrop-is-started"));
                         return true;
                     }
+                    Location location = null;
+                    if (args.length >= 5) {//bair 0start 1air 2x 3y 4z
+                        try {
+                            int x = Integer.parseInt(args[2]);
+                            int y = Integer.parseInt(args[3]);
+                            int z = Integer.parseInt(args[4]);
+                            World world;
+                            if (args.length >= 6){
+                                world = Bukkit.getWorld(args[5]);
+                            }else {
+                                world = BAirDrop.airDrops.get(args[1]).getWorld();
+                            }
+                            if (world == null){
+                                world = BAirDrop.airDrops.get(args[1]).getWorld();
+                            }
+                            location = new Location(world, x, y, z);
+                            BAirDrop.airDrops.get(args[1]).setAirDropLocation(location);
+                            BAirDrop.airDrops.get(args[1]).setFutureLocation(location);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
                     BAirDrop.airDrops.get(args[1]).startCommand(pl);
                     Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("starting"));
                 } else
@@ -297,14 +318,18 @@ public class Commands implements CommandExecutor {
                     }
 
                     AirDrop air = BAirDrop.airDrops.get(args[1]).clone(args[2]);
-                    if (args.length == 4) {
+                    if (args.length >= 4) {
                         if (args[3].equals("-temp")) {
                             air.setClone(true);
                             air.setKill(true);
                         }
                     }
-                    if (!air.isClone())
+
+                    if (!air.isClone()) {
                         air.createFile();
+                        air.setSuperName(args[2]);
+                        air.save();
+                    }
                     airDrops.put(air.getId(), air);
                     Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("airdrop-crated"));
                 } else {
@@ -448,6 +473,28 @@ public class Commands implements CommandExecutor {
                     if (BAirDrop.airDrops.get(args[1]).isAirDropStarted()) {
                         Message.logger(BAirDrop.getConfigMessage().getMessage("airdrop-is-started"));
                         return true;
+                    }
+                    Location location = null;
+                    if (args.length >= 5) {//bair 0start 1air 2x 3y 4z
+                        try {
+                            int x = Integer.parseInt(args[2]);
+                            int y = Integer.parseInt(args[3]);
+                            int z = Integer.parseInt(args[4]);
+                            World world;
+                            if (args.length >= 6){
+                                world = Bukkit.getWorld(args[5]);
+                            }else {
+                                world = BAirDrop.airDrops.get(args[1]).getWorld();
+                            }
+                            if (world == null){
+                                world = BAirDrop.airDrops.get(args[1]).getWorld();
+                            }
+                            location = new Location(world, x, y, z);
+                            BAirDrop.airDrops.get(args[1]).setAirDropLocation(location);
+                            BAirDrop.airDrops.get(args[1]).setFutureLocation(location);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                     }
                     BAirDrop.airDrops.get(args[1]).startCommand(null);
                     Message.logger(BAirDrop.getConfigMessage().getMessage("starting"));

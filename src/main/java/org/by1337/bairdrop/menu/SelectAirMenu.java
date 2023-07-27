@@ -46,6 +46,7 @@ public class SelectAirMenu implements Listener {
             im.getPersistentDataContainer().set(NamespacedKey.fromString("air_id"), PersistentDataType.STRING, airDrop.getId());
             im.setDisplayName(Message.messageBuilder(airDrop.getDisplayName()));
             List<String> lore = new ArrayList<>(BAirDrop.getConfigMessage().getList("select-air-menu-lore"));
+            lore.addAll(airDrop.getDec());
             lore.replaceAll(airDrop::replaceInternalPlaceholder);
             lore.replaceAll(Message::messageBuilder);
             im.setLore(lore);

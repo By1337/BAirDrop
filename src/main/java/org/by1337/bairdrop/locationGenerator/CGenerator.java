@@ -33,11 +33,11 @@ public class CGenerator implements Generator{
     @Nullable
     public Location getPreLocation(@NotNull AirDrop airDrop) {
         world = airDrop.getWorld();
-        if (GeneratorLoc.locs.getOrDefault(airDrop.getId(), new ArrayList<>()).isEmpty()) {
-            if (cd.getOrDefault(airDrop.getId() + "001", 0L) < System.currentTimeMillis()) {
+        if (GeneratorLoc.locs.getOrDefault(airDrop.getSuperName(), new ArrayList<>()).isEmpty()) {
+            if (cd.getOrDefault(airDrop.getSuperName() + "001", 0L) < System.currentTimeMillis()) {
                 Message.warning(String.format(BAirDrop.getConfigMessage().getMessage("locations-are-absent"), world.getName()));
                 Message.warning(BAirDrop.getConfigMessage().getMessage("attempt-use-static-loc"));
-                cd.put(airDrop.getId() + "001", System.currentTimeMillis() + 150000L);//скажем что это error 001
+                cd.put(airDrop.getSuperName() + "001", System.currentTimeMillis() + 150000L);//скажем что это error 001
             }
             if (airDrop.isUseStaticLoc())
                 return airDrop.getStaticLocation();
@@ -69,16 +69,16 @@ public class CGenerator implements Generator{
         if (worldType.equals("THE_END"))
             return getLocation_THE_END(loc1, airDrop);
         if (worldType.equals("NETHER")) {
-            if (!isGenerator && cd.getOrDefault(airDrop.getId() + "002", 0L) < System.currentTimeMillis()) {
-                Message.warning(String.format(BAirDrop.getConfigMessage().getMessage("generation-nether"), airDrop.getId()));
-                cd.put(airDrop.getId() + "002", System.currentTimeMillis() + 150000L);//а это 002
+            if (!isGenerator && cd.getOrDefault(airDrop.getSuperName() + "002", 0L) < System.currentTimeMillis()) {
+                Message.warning(String.format(BAirDrop.getConfigMessage().getMessage("generation-nether"), airDrop.getSuperName()));
+                cd.put(airDrop.getSuperName() + "002", System.currentTimeMillis() + 150000L);//а это 002
             }
             return getLocation_NETHER(loc1, airDrop);
         }
         if (worldType.equals("CUSTOM")) {
-            if (cd.getOrDefault(airDrop.getId() + "003", 0L) < System.currentTimeMillis()) {
+            if (cd.getOrDefault(airDrop.getSuperName() + "003", 0L) < System.currentTimeMillis()) {
                 Message.warning(String.format(BAirDrop.getConfigMessage().getMessage("unknown-world-type"), world.getName()));
-                cd.put(airDrop.getId() + "003", System.currentTimeMillis() + 150000L); //а это 003
+                cd.put(airDrop.getSuperName() + "003", System.currentTimeMillis() + 150000L); //а это 003
             }
             return getLocation_NORMAL(loc1, airDrop);
 
@@ -226,10 +226,10 @@ public class CGenerator implements Generator{
     @Nullable
     private Location PreGeneratedLocations(AirDrop airDrop) {
         if (airDrop.getPickPreGenLocs() >= BAirDrop.getInstance().getConfig().getInt("max-experience-pre-generated-location")) {
-            if (cd.getOrDefault(airDrop.getId() + "004", 0L) < System.currentTimeMillis()) {
+            if (cd.getOrDefault(airDrop.getSuperName() + "004", 0L) < System.currentTimeMillis()) {
                 Message.error(BAirDrop.getConfigMessage().getMessage("search-location-limit"));
-                Message.error(String.format(BAirDrop.getConfigMessage().getMessage("search-location-limit-2"), airDrop.getId()));
-                cd.put(airDrop.getId() + "004", System.currentTimeMillis() + 75000L);//004
+                Message.error(String.format(BAirDrop.getConfigMessage().getMessage("search-location-limit-2"), airDrop.getSuperName()));
+                cd.put(airDrop.getSuperName() + "004", System.currentTimeMillis() + 75000L);//004
             }
             if (airDrop.isUseStaticLoc())
                 return airDrop.getStaticLocation();
@@ -239,7 +239,7 @@ public class CGenerator implements Generator{
 
         Location loc = GeneratorLoc.getLocationForAirDrop(airDrop);
         if (loc == null) {
-            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("gen-loc-is-null"), airDrop.getId()));
+            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("gen-loc-is-null"), airDrop.getSuperName()));
             return null;
         }
         if (loc.clone().add(-GeneratorUtils.getOffsets(airDrop).getX(), -GeneratorUtils.getOffsets(airDrop).getY(), -GeneratorUtils.getOffsets(airDrop).getZ()).getBlock().isEmpty()) {

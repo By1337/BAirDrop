@@ -60,9 +60,11 @@ public class HoloManager {
             holoLine = new HoloLineV1_18(line, location);
         }else if (Bukkit.getServer().getBukkitVersion().contains("1.17")) {
             holoLine = new HoloLineV1_17(line, location);
+        }else if (Bukkit.getServer().getBukkitVersion().contains("1.19.4")) {
+            holoLine = new HoloLineV1_19_4(line, location);
         }else if (Bukkit.getServer().getBukkitVersion().contains("1.19.2")) {
             holoLine = new HoloLineV1_19_2(line, location);
-        }else if (Bukkit.getServer().getBukkitVersion().contains("1.19.4")) {
+        }else if (Bukkit.getServer().getBukkitVersion().contains("1.19.3")) {
             holoLine = new HoloLineV1_19_4(line, location);
         }else if (Bukkit.getServer().getBukkitVersion().contains("1.20")) {
             holoLine = new HoloLineV1_20(line, location);

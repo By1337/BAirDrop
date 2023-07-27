@@ -124,7 +124,7 @@ public final class BAirDrop extends JavaPlugin {
         }
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)
-            new PlaceholderExpansion().register();
+            new PlaceholderHook().register();
 
         if (BAirDrop.getInstance().getConfig().getBoolean("global-time.enable")) {
             globalTimer = new GlobalTimer((BAirDrop.getInstance().getConfig().getInt("global-time.time") * 60));
@@ -182,7 +182,7 @@ public final class BAirDrop extends JavaPlugin {
         CustomCraft.unloadCrafts();
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)
-            new PlaceholderExpansion().unregister();
+            new PlaceholderHook().unregister();
         Message.logger(String.format(getConfigMessage().getMessage("off-time"), System.currentTimeMillis() - x));
 
     }

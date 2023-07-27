@@ -3,11 +3,9 @@ package org.by1337.bairdrop.util;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.by1337.bairdrop.AirDrop;
+import org.by1337.bairdrop.AirDropUtils;
 import org.by1337.bairdrop.BAirDrop;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
+import org.by1337.bairdrop.configManager.Config;
 
 
 public class GlobalTimer {
@@ -33,6 +31,10 @@ public class GlobalTimer {
                     Message.debug(BAirDrop.getConfigMessage().getMessage("global-timer-thread-stop"), LogLevel.LOW);
                     return;
                 }
+                if (air != null && !BAirDrop.airDrops.containsKey(air.getId())){
+                    air = null;
+                    timeToStart = timeToStartCons;
+                }
                 if (timeToStart <= 0) {
                     if (air == null) {
                         Message.warning(BAirDrop.getConfigMessage().getMessage("global-timer-failed"));
@@ -54,9 +56,10 @@ public class GlobalTimer {
                 }
 
                 if (air == null) {
-                    air = getRandomAir();
+                    air = AirDropUtils.getRandomCloneAir();
                     if (air != null) {
                         air.setHideInCompleter(true);
+                        air.addDec(String.format(BAirDrop.getConfigMessage().getMessage("dec-info"), "global timer"));
                         BAirDrop.airDrops.put(air.getId(), air);
                         Message.debug(String.format(BAirDrop.getConfigMessage().getMessage("global-timer"), air.getId()), LogLevel.LOW);
                     }
@@ -65,33 +68,7 @@ public class GlobalTimer {
         }.runTaskTimerAsynchronously(BAirDrop.getInstance(), 20, 20);
     }
 
-    @Nullable
-    private AirDrop getRandomAir() {
-        for (AirDrop air : BAirDrop.airDrops.values()) {
-            if (!air.isAirDropStarted() && !air.isClone() && (Bukkit.getOnlinePlayers().size() >= air.getMinPlayersToStart()))
-                if (ThreadLocalRandom.current().nextInt(0, 100) <= air.getSpawnChance()) {//100
-                    String newid = air.getId() + "_clone" + ThreadLocalRandom.current().nextInt(99999);
-                    while (BAirDrop.airDrops.containsKey(newid))
-                        newid = air.getId() + "_clone" + ThreadLocalRandom.current().nextInt(99999);
 
-                    AirDrop aair = air.clone(newid);
-                    aair.setClone(true);
-                    aair.setKill(true);
-                    return aair;
-                }
-        }
-        for (AirDrop air : BAirDrop.airDrops.values()) {
-            String newid = air.getId() + "_clone" + UUID.randomUUID().toString();
-            while (BAirDrop.airDrops.containsKey(newid))
-                newid = air.getId() + "_clone" + UUID.randomUUID().toString();
-
-            AirDrop aair = air.clone(newid);
-            aair.setClone(true);
-            aair.setKill(true);
-            return aair;
-        }
-        return null;
-    }
 
     public int getTimeToStart() {
         return timeToStart;

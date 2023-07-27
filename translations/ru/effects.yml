@@ -11,6 +11,9 @@ effects:
     offset-x: 0.5 #смещение по координатам
     offset-y: 0.3
     offset-z: 0.5
+    direction-x: 0 # Направление полёта частиц. Не работает с REDSTONE
+    direction-y: 0
+    direction-z: 0
     number-of-steps: 6.5 #влияет на количество партиклов  6.5 / 0.05 = 130 заспавненых партиклов (number-of-steps / step)
     particle: REDSTONE
     #only REDSTONE# #Для партиклов "REDSTONE" необходимо указывать цвет и размер
@@ -29,6 +32,9 @@ effects:
     offset-x: 0.5
     offset-y: 0.7
     offset-z: 0.5
+    direction-x: 0 # Направление полёта частиц. Не работает с REDSTONE
+    direction-y: 0
+    direction-z: 0
     number-of-steps: 6.5
     particle: REDSTONE
     #only REDSTONE#

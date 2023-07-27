@@ -46,8 +46,8 @@ public class GeneratorLoc {
              //   Message.warning("time = " + (System.currentTimeMillis() - time));
                 fail++;
                 if (loc != null) {
-                    GenLoc genLoc = new CGenLoc(loc, GeneratorUtils.getOffsets(finalairDrop), finalairDrop.getId());
-                    String airId = finalairDrop.getId();
+                    GenLoc genLoc = new CGenLoc(loc, GeneratorUtils.getOffsets(finalairDrop), finalairDrop.getSuperName());
+                    String airId = finalairDrop.getSuperName();
                     List<GenLoc> existingValues = locs.get(airId);
                     if (existingValues == null) {
                         List<GenLoc> newValues = new ArrayList<>();
@@ -100,9 +100,9 @@ public class GeneratorLoc {
 
     @Nullable
     public static Location getLocationForAirDrop(AirDrop airDrop) {
-        if (!locs.containsKey(airDrop.getId()))
+        if (!locs.containsKey(airDrop.getSuperName()))
             return null;
-        List<GenLoc> locList = locs.get(airDrop.getId()).stream().filter(
+        List<GenLoc> locList = locs.get(airDrop.getSuperName()).stream().filter(
                 gl -> gl.getWorld() == airDrop.getWorld() &&
                         Objects.equals(gl.getOffsets(), GeneratorUtils.getOffsets(airDrop))).toList();
         if(locList.isEmpty())
@@ -111,16 +111,16 @@ public class GeneratorLoc {
         return locList.get(random.nextInt(locList.size())).getLocation();
     }
     public static int getSizeLocForAirDrop(AirDrop airDrop){
-        if (!locs.containsKey(airDrop.getId()))
+        if (!locs.containsKey(airDrop.getSuperName()))
             return 0;
-        List<GenLoc> locList = locs.get(airDrop.getId()).stream().filter(
+        List<GenLoc> locList = locs.get(airDrop.getSuperName()).stream().filter(
                 gl -> gl.getWorld() == airDrop.getWorld() &&
                         Objects.equals(gl.getOffsets(), GeneratorUtils.getOffsets(airDrop))).toList();
         return locList.size();
     }
     public static void removeLoc(Location location, AirDrop airDrop){
-        if (!locs.containsKey(airDrop.getId())) return;
-        Optional<GenLoc> genLoc = locs.get(airDrop.getId()).stream().findFirst().filter(gl -> gl.getLocation().equals(location));
-        genLoc.ifPresent(loc -> locs.get(airDrop.getId()).remove(loc));
+        if (!locs.containsKey(airDrop.getSuperName())) return;
+        Optional<GenLoc> genLoc = locs.get(airDrop.getSuperName()).stream().findFirst().filter(gl -> gl.getLocation().equals(location));
+        genLoc.ifPresent(loc -> locs.get(airDrop.getSuperName()).remove(loc));
     }
 }

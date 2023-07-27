@@ -493,4 +493,9 @@ public interface AirDrop extends Observable {
 
     void setGenerator(Generator generator);
 
+    String getSuperName();
+    void setSuperName(String superName);
+
+    void addDec(String... s);
+    List<String> getDec();
 }

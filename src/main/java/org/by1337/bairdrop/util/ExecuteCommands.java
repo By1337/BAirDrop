@@ -22,6 +22,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.by1337.bairdrop.AirDrop;
+import org.by1337.bairdrop.AirDropUtils;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.listeners.SetStaticLocation;
 import org.by1337.bairdrop.listeners.util.ListenChat;
@@ -81,7 +82,6 @@ public class ExecuteCommands {
         if (event.isCancelled()) {
             return;
         }
-
         for (String command : commands) {
             if (isIgnore(command)) {
                 Message.debug("ignore " + command, LogLevel.HARD);
@@ -95,9 +95,8 @@ public class ExecuteCommands {
             if (command.contains("{player-get-item-") && pl != null)
                 command = setPlayerPlaceholder(pl, command);
 
-//            if (command.equalsIgnoreCase("[SCHEDULER]") || command.equalsIgnoreCase("[ASYNC]") || command.contains("[LATER-")) {
-//                continue;
-//            }
+            command = AirDropUtils.match(command);
+
             if (runJsCommand(pl, airDrop, command))
                 continue;
             if (pl != null)
@@ -117,10 +116,9 @@ public class ExecuteCommands {
                     continue;
                 }
                 if (command.contains("[NEAR-PLAYERS=")) {
-                    //[NEAR-PLAYERS=10] {[CONSOLE] say %player_name% ok}
                     try {
                         int range = Integer.parseInt(command.split("=")[1].split("]")[0]);
-                        //  if(command.contains("{CALL-")){
+
                         for (Entity entity : airDrop.getAnyLoc().getWorld().getNearbyEntities(airDrop.getAnyLoc(), range, range, range)) {
                             if (entity instanceof Player player) {
                                 airDrop.invokeListener(NamespacedKey.fromString(command
@@ -128,14 +126,6 @@ public class ExecuteCommands {
                                         .replace("}", "")), player, customEvent);
                             }
                         }
-//                        }else {
-//                            for (Entity entity : airDrop.getAnyLoc().getWorld().getNearbyEntities(airDrop.getAnyLoc(), range, range, range)) {
-//                                if (entity instanceof Player player) {
-//                                   String cmd = command.replace(String.format("[NEAR-PLAYERS=%s] {", range), "").replace("}", "");
-//                                   runListenerCommands(new String[]{cmd}, player, airDrop, customEvent);
-//                                }
-//                            }
-//                        }
                     } catch (NumberFormatException e) {
                         Message.error(String.format(BAirDrop.getConfigMessage().getMessage("near-error-1"), command));
                     } catch (NullPointerException e) {
@@ -496,6 +486,10 @@ public class ExecuteCommands {
     }
 
     public boolean executeAirdropCommand(@NotNull AirDrop airDrop, String command) {
+        if (command.equals("[ACTIVATE]")) {
+            airDrop.setActivated(true);
+            return true;
+        }
         if (command.contains("[EasyBossBar=")) {
             String param = airDrop.replaceInternalPlaceholder(EasyBossBar.getParam(command));
             if (easyBossBarHashMap.containsKey(param)){
@@ -531,7 +525,7 @@ public class ExecuteCommands {
                 return true;
             }
             try {
-                airDrop.StopEffect(args[1]);
+                airDrop.StopEffect(args[1].replace("]", ""));
             } catch (IllegalArgumentException e) {
                 Message.warning(e.getLocalizedMessage());
             }

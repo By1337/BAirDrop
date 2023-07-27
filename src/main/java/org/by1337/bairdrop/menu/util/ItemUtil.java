@@ -40,7 +40,7 @@ public class ItemUtil {
         return im;
     }
     public static ItemStack getErrorItem(){
-        ItemStack itemStack = new ItemStack(Material.COMMAND_BLOCK);
+        ItemStack itemStack = new ItemStack(Material.DIRT);
         ItemMeta im = itemStack.getItemMeta();
         im.setDisplayName(Message.messageBuilder("&cERROR"));
         itemStack.setItemMeta(im);

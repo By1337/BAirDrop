@@ -44,8 +44,8 @@ public class Circle implements IEffect, EffectSerializable {
         step = ((Number) map.getOrDefault("step", 0)).doubleValue();
         offsets = new Vector(
                 ((Number) map.getOrDefault("offset-x", 0)).doubleValue(),
-                ((Number) map.getOrDefault("offset-x", 0)).doubleValue(),
-                ((Number) map.getOrDefault("offset-x", 0)).doubleValue()
+                ((Number) map.getOrDefault("offset-y", 0)).doubleValue(),
+                ((Number) map.getOrDefault("offset-z", 0)).doubleValue()
                 );
         direction = new Vector(
                 ((Number) map.getOrDefault("direction-x", 0)).doubleValue(),

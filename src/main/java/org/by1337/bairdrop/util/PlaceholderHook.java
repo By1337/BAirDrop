@@ -5,7 +5,7 @@ import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.jetbrains.annotations.NotNull;
 
-public class PlaceholderExpansion extends me.clip.placeholderapi.expansion.PlaceholderExpansion {
+public class PlaceholderHook extends me.clip.placeholderapi.expansion.PlaceholderExpansion {
     @Override
     public @NotNull String getAuthor() {
         return "By1337";
@@ -68,6 +68,20 @@ public class PlaceholderExpansion extends me.clip.placeholderapi.expansion.Place
             if (airDrop == null)
                 return BAirDrop.getConfigMessage().getMessage("air-near-none");
             return Message.messageBuilder(airDrop.replaceInternalPlaceholder(BAirDrop.getConfigMessage().getMessage("air-near").replace("{dist}", dist + "")));
+        }
+        if (params.contains("time_to_end_format_")) { //%bairdrop_time_to_end_format_<air id>%
+            String[] args = params.split("_");
+            if (args.length != 5) return "error";
+            AirDrop airDrop = BAirDrop.airDrops.getOrDefault(args[4], null);
+            if (airDrop == null) return "error";
+            return AirManager.getFormat(airDrop.getTimeStop());
+        }
+        if (params.contains("time_to_start_format_")) { //%bairdrop_time_to_start_format_<air_id>%
+            String[] args = params.split("_");
+            if (args.length != 5) return "error";
+            AirDrop airDrop = BAirDrop.airDrops.getOrDefault(args[4], null);
+            if (airDrop == null) return "error";
+            return  AirManager.getFormat(airDrop.getTimeToStart());
         }
         if (params.contains("time_to_start_")) { //%bairdrop_time_to_start_<air_id>%
             String[] args = params.split("_");
