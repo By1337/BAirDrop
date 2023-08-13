@@ -176,7 +176,7 @@ public final class BAirDrop extends JavaPlugin {
             BAirDrop.hologram.remove(airDrop.getId());
             airDrop.save();
             airDrop.schematicsUndo();
-            RegionManager.RemoveRegion(airDrop);
+            RegionManager.removeRegion(airDrop);
         }
         GeneratorLoc.save();
         CustomCraft.unloadCrafts();
@@ -200,7 +200,7 @@ public final class BAirDrop extends JavaPlugin {
             BAirDrop.hologram.remove(airDrop.getId());
             airDrop.setCanceled(true);
             airDrop.schematicsUndo();
-            RegionManager.RemoveRegion(airDrop);
+            RegionManager.removeRegion(airDrop);
         }
         CustomCraft.unloadCrafts();
         getiConfig().getSchematics().clear();

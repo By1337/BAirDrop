@@ -6,7 +6,7 @@ air-spawn-world: world
 air-spawn-radius-min: -2000
 air-spawn-radius-max: 2000
 air-radius-protect: 15
-spawn-chance: 50
+spawn-chance: 100
 timeToStart: 2
 use-pre-generated-locations: false
 search-before-start: 1

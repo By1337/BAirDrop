@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 public class AirManager {
+    private static int count = 0;
     @Nullable
     public static AirDrop getAirDropForLocation(@NotNull Location location) {
         for (AirDrop airDrop : BAirDrop.airDrops.values()) {
@@ -40,6 +41,8 @@ public class AirManager {
         str = str.replace(" 0 ", " &c0 ");
         return str;
     }
-
+    public static int getNextId(){
+        return count++;
+    }
 
 }

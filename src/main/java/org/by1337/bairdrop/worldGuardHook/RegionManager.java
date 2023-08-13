@@ -21,7 +21,7 @@ import java.util.*;
 public class RegionManager {
     private static final HashMap<StateFlag, StateFlag.State> flags = new HashMap<>();
 
-    public static void RemoveRegion(AirDrop airDrop) {
+    public static void removeRegion(AirDrop airDrop) {
         World world;
         if (airDrop.getAirDropLocation() != null)
             world = airDrop.getAirDropLocation().getWorld();
@@ -39,7 +39,7 @@ public class RegionManager {
             regions.removeRegion(airDrop.getId() + "_region", RemovalStrategy.REMOVE_CHILDREN);
     }
 
-    public static ProtectedCuboidRegion GetProtectedCuboidRegion(AirDrop airDrop) {
+    public static ProtectedCuboidRegion getProtectedCuboidRegion(AirDrop airDrop) {
         Location point1 = new Location(airDrop.getAirDropLocation().getWorld(), airDrop.getAirDropLocation().getX() + airDrop.getRegionRadius(), airDrop.getAirDropLocation().getY() + airDrop.getRegionRadius(), airDrop.getAirDropLocation().getZ() + airDrop.getRegionRadius());
         Location point2 = new Location(airDrop.getAirDropLocation().getWorld(), airDrop.getAirDropLocation().getX() - airDrop.getRegionRadius(), airDrop.getAirDropLocation().getY() - airDrop.getRegionRadius(), airDrop.getAirDropLocation().getZ() - airDrop.getRegionRadius());
         return new ProtectedCuboidRegion(airDrop.getId() + "_region",
@@ -47,8 +47,8 @@ public class RegionManager {
                 BlockVector3.at(point2.getX(), point2.getY(), point2.getZ()));
     }
 
-    public static void SetRegion(AirDrop airDrop) {
-        ProtectedCuboidRegion rg = GetProtectedCuboidRegion(airDrop);
+    public static void setRegion(AirDrop airDrop) {
+        ProtectedCuboidRegion rg = getProtectedCuboidRegion(airDrop);
         World world = airDrop.getAirDropLocation().getWorld();
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         com.sk89q.worldguard.protection.managers.RegionManager regions = container.get(BukkitAdapter.adapt(world));
@@ -60,11 +60,12 @@ public class RegionManager {
                 rg.setFlag((Flag) entry.getKey(), entry.getValue());
         } catch (Exception e) {
             Message.error(BAirDrop.getConfigMessage().getMessage("flag-error"));
+            e.printStackTrace();
         }
         regions.addRegion(rg);
     }
 
-    public static void LoadFlags() {
+    public static void loadFlags() {
         for (String flag : BAirDrop.getInstance().getConfig().getStringList("settings.world-guard-flags.allow-flags")) {
             if (!addFlag(flag, true))
                 Message.warning("Flag " + flag + " not loaded in");

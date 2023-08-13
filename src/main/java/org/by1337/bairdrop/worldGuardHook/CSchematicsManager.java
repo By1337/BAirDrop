@@ -32,7 +32,7 @@ public class CSchematicsManager implements SchematicsManager{
      * @param name The name of the schematic in the config
      * @param airDrop The AirDrop that spawns this schematic
      */
-    public void PasteSchematics(String name, AirDrop airDrop) {
+    public void pasteSchematics(String name, AirDrop airDrop) {
         try {
             if (airDrop.getEditSession() != null) {
                 Message.error(BAirDrop.getConfigMessage().getMessage("schem-limit"));

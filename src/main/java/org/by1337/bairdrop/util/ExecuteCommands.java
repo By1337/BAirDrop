@@ -678,7 +678,7 @@ public class ExecuteCommands {
                 Message.error(String.format(BAirDrop.getConfigMessage().getMessage("loc-is-null2:"), "[SET_REGION]"));
                 return true;
             }
-            RegionManager.SetRegion(airDrop);
+            RegionManager.setRegion(airDrop);
             return true;
         }
         if (command.equalsIgnoreCase("[SET_HOLO_TIME_TO_START]")) {

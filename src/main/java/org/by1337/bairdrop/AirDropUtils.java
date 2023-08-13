@@ -2,6 +2,7 @@ package org.by1337.bairdrop;
 
 import org.bukkit.Bukkit;
 import org.by1337.bairdrop.customListeners.observer.Observer;
+import org.by1337.bairdrop.util.AirManager;
 import org.by1337.bairdrop.util.Message;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,8 +64,8 @@ public class AirDropUtils {
                 continue;
             }
             if (random.nextInt(100) <= airDrop.getSpawnChance()) {
-                String newid = airDrop.getId() + "_" + UUID.randomUUID();
-                AirDrop clone = airDrop.clone(newid);
+                String newId = airDrop.getId() + "_clone_" + AirManager.getNextId();
+                AirDrop clone = airDrop.clone(newId);
                 clone.setClone(true);
                 clone.setKill(true);
                 return clone;

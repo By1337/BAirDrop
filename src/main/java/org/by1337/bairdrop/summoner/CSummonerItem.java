@@ -115,7 +115,7 @@ public class CSummonerItem implements SummonerItem {
             air = BAirDrop.airDrops.getOrDefault(key, null);
         }
         if (air == null){
-            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-airdrop"), key));
+            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-airdrop"), key + " (air is null!)"));
             Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("impossible-to-call"));
             pl.setCooldown(getItem().getType(), 40);
             return null;

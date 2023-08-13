@@ -135,7 +135,7 @@ public class CConfig implements Config, ConfigMessage {
         loadMenu();
         loadLocations();
         LoadEffect(effects);
-        RegionManager.LoadFlags();
+        RegionManager.loadFlags();
         loadEnchant();
         summoner.LoadSummoner();
         BAirDrop.compass = new Compass();
