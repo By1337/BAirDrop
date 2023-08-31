@@ -1,0 +1,817 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="74b4e88f-8fcd-4bdf-bf73-9df5c90923b7" name="Changes" comment="feat: new clone `id` generator">
+      <change afterPath="$PROJECT_DIR$/Core/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/AirDrop.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/AirDropUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/BAirDrop.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/CAirDrop.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/ItemUtil/BaseHeadHook.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/ItemUtil/EnchantInfo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/ItemUtil/EnchantMaterial.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/ItemUtil/Items.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/ItemUtil/SkullUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/api/event/AirDropEndEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/api/event/AirDropOpenEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/api/event/AirDropStartEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/api/event/AirDropSummonerEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/api/event/AirDropUnlockEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/api/event/ExecuteCommandEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/command/Commands.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/command/Completer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/configManager/CConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/configManager/Config.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/configManager/ConfigMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/customListeners/CustomEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/customListeners/CustomEventListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/customListeners/observer/Observable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/customListeners/observer/Observer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/customListeners/util/CustomEventListenerBuilder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/effect/EffectFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/effect/EffectType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/effect/IEffect.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/effect/LoadEffects.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/effect/effectImpl/Circle.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/effect/effectImpl/ExpandingCircle.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/effect/effectImpl/FireworkEffect.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/effect/effectImpl/Guard.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/effect/effectImpl/Helix.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/effect/effectImpl/ParticleExplosion.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/effect/effectImpl/RandomParticle.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/effect/effectImpl/Torus.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/effect/effectImpl/WrithingHelix.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/effect/util/RGBHelper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/hologram/DecentHologram.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/hologram/EmptyHologram.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/hologram/IHologram.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/hologram/ProtocolHoloManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/hologram/utils/HoloLine.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/hologram/utils/HoloManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/hologram/utils/impl/HoloLineV1_16.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/hologram/utils/impl/HoloLineV1_17.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/hologram/utils/impl/HoloLineV1_18.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/hologram/utils/impl/HoloLineV1_19_2.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/hologram/utils/impl/HoloLineV1_19_4.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/hologram/utils/impl/HoloLineV1_20.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/listeners/Compass.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/listeners/CraftItem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/listeners/InteractListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/listeners/SetStaticLocation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/listeners/util/ListenChat.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/locationGenerator/CGenLoc.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/locationGenerator/CGenerator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/locationGenerator/GenLoc.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/locationGenerator/Generator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/locationGenerator/GeneratorLoc.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/locationGenerator/GeneratorUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/AddingItems.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/ChangeMaterial.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/ChangeWorld.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/EditAirMenu.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/EditChance.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/SelectAirMenu.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/SelectInv.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/ShowAllListeners.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/util/ItemUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/util/MenuItem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/scripts/JsScript.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/scripts/Script.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/serializable/EffectDeserialize.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/serializable/EffectSerializable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/serializable/StateSerializable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/summoner/CSummonerItem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/summoner/Summoner.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/summoner/SummonerItem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/AirManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/AntiSteal.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/ChestStealData.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/CustomCraft.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/EasyBossBar.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/ExecuteCommands.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/GlobalTimer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/InvalidCharacters.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/InvalidCharactersChecker.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/LogLevel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/Message.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/Metrics.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/PlaceholderHook.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/worldGuardHook/CSchematicsManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/worldGuardHook/RegionManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/worldGuardHook/SchematicsManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/resources/Schematics/schemConf.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/resources/airdrops/default.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/resources/config.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/resources/effects.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/resources/generatorSettings.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/resources/listeners.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/resources/locations.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/resources/menu.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/resources/message.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/resources/plugin.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/resources/scripts/diamond.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/translations/ru/Schematics/schemConf.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/translations/ru/airdrops/default.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/translations/ru/config.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/translations/ru/effects.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/translations/ru/generatorSettings.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/translations/ru/listeners.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/translations/ru/locations.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/translations/ru/menu.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/translations/ru/message.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/translations/ru/scripts/diamond.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/discord.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/discord.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/git_toolbox_prj.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/kotlinc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BAirDrop.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/AirDrop.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/AirDropUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/BAirDrop.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/CAirDrop.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/ItemUtil/BaseHeadHook.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/ItemUtil/EnchantInfo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/ItemUtil/EnchantMaterial.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/ItemUtil/Items.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/ItemUtil/SkullUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/api/event/AirDropEndEvent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/api/event/AirDropOpenEvent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/api/event/AirDropStartEvent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/api/event/AirDropSummonerEvent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/api/event/AirDropUnlockEvent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/api/event/ExecuteCommandEvent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/command/Commands.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/command/Completer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/configManager/CConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/configManager/Config.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/configManager/ConfigMessage.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/customListeners/CustomEvent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/customListeners/CustomEventListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/customListeners/observer/Observable.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/customListeners/observer/Observer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/customListeners/util/CustomEventListenerBuilder.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/effect/EffectFactory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/effect/EffectType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/effect/IEffect.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/effect/LoadEffects.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/effect/effectImpl/Circle.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/effect/effectImpl/ExpandingCircle.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/effect/effectImpl/FireworkEffect.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/effect/effectImpl/Guard.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/effect/effectImpl/Helix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/effect/effectImpl/ParticleExplosion.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/effect/effectImpl/RandomParticle.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/effect/effectImpl/Torus.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/effect/effectImpl/WrithingHelix.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/effect/util/RGBHelper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/hologram/DecentHologram.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/hologram/EmptyHologram.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/hologram/IHologram.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/hologram/ProtocolHoloManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/hologram/utils/HoloLine.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/hologram/utils/HoloManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/hologram/utils/impl/HoloLineV1_16.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/hologram/utils/impl/HoloLineV1_17.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/hologram/utils/impl/HoloLineV1_18.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/hologram/utils/impl/HoloLineV1_19_2.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/hologram/utils/impl/HoloLineV1_19_4.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/hologram/utils/impl/HoloLineV1_20.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/listeners/Compass.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/listeners/CraftItem.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/listeners/InteractListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/listeners/SetStaticLocation.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/listeners/util/ListenChat.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/locationGenerator/CGenLoc.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/locationGenerator/CGenerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/locationGenerator/GenLoc.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/locationGenerator/Generator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/locationGenerator/GeneratorLoc.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/locationGenerator/GeneratorUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/menu/AddingItems.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/menu/ChangeMaterial.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/menu/ChangeWorld.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/menu/EditAirMenu.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/menu/EditChance.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/menu/SelectAirMenu.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/menu/SelectInv.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/menu/ShowAllListeners.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/menu/util/ItemUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/menu/util/MenuItem.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/scripts/JsScript.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/scripts/Script.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/serializable/EffectDeserialize.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/serializable/EffectSerializable.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/serializable/StateSerializable.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/summoner/CSummonerItem.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/summoner/Summoner.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/summoner/SummonerItem.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/util/AirManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/util/AntiSteal.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/util/ChestStealData.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/util/CustomCraft.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/util/EasyBossBar.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/util/ExecuteCommands.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/util/GlobalTimer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/util/InvalidCharacters.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/util/InvalidCharactersChecker.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/util/LogLevel.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/util/Message.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/util/Metrics.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/util/PlaceholderHook.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/worldGuardHook/CSchematicsManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/worldGuardHook/RegionManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/worldGuardHook/SchematicsManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/Schematics/schemConf.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/airdrops/default.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/config.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/effects.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/generatorSettings.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/listeners.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/locations.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/menu.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/message.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/scripts/diamond.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/translations/ru/Schematics/schemConf.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/translations/ru/airdrops/default.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/translations/ru/config.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/translations/ru/effects.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/translations/ru/generatorSettings.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/translations/ru/listeners.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/translations/ru/locations.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/translations/ru/menu.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/translations/ru/message.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/translations/ru/scripts/diamond.js" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="AnnotationType" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="PUSH_AUTO_UPDATE" value="true" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="c594dee36b9d64a2dae164cc35afc822ed6df0ad" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitToolBoxStore">
+    <option name="projectConfigVersion" value="5" />
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="v1.1.0" />
+                    <option name="lastUsedInstant" value="1693499793" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="master" />
+                    <option name="lastUsedInstant" value="1693499753" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="jar://$MAVEN_REPOSITORY$/org/spigotmc/spigot-api/1.16.5-R0.1-SNAPSHOT/spigot-api-1.16.5-R0.1-20210611.041013-99-sources.jar!/org/bukkit/World.java" root0="SKIP_INSPECTION" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="C:/Program Files/apache-maven-3.9.2" />
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="jdkForImporter" value="16" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="2O7cUK5hmba4kc2zQqn6bhw9pEA" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;ToolWindowRun.ShowToolbar&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;v1.1.0&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;16&quot;,
+    &quot;jdk.selected.com.intellij.ui.dsl.builder.impl.RowImpl.sdk&quot;: &quot;16&quot;,
+    &quot;last_opened_file_path&quot;: &quot;Q:/cod/idea Java/finder&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.importing&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;jdk.preference.com.intellij.ui.dsl.builder.impl.RowImpl.sdk&quot;: [
+      &quot;16=C:/Program Files/Java/jdk-16.0.2&quot;
+    ]
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="Q:\cod\idea Java\BAirDrop\PomRoot" />
+      <recent name="Q:\cod\idea Java\BAirDrop\translations\en\airdrops" />
+      <recent name="Q:\cod\idea Java\BAirDrop\translations\en" />
+      <recent name="Q:\cod\idea Java\BAirDrop\Main" />
+      <recent name="Q:\cod\idea Java\BAirDrop\src\main\resources" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Maven.PomRoot [clean,package]">
+    <configuration name="BAirDrop package" type="MavenRunConfiguration" factoryName="Maven">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="clean" />
+                <option value="package" />
+              </list>
+            </option>
+            <option name="pomFileName" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
+    <configuration name="PomRoot [clean,package]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="clean" />
+                <option value="package" />
+              </list>
+            </option>
+            <option name="pomFileName" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
+    <configuration name="Unnamed" type="Remote" nameIsGenerated="true">
+      <module name="BAirDrop" />
+      <option name="USE_SOCKET_TRANSPORT" value="true" />
+      <option name="SERVER_MODE" value="false" />
+      <option name="SHMEM_ADDRESS" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="5005" />
+      <option name="AUTO_RESTART" value="false" />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="5005" />
+        <option name="LOCAL" value="false" />
+      </RunnerSettings>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Maven.BAirDrop package" />
+      <item itemvalue="Maven.PomRoot [clean,package]" />
+      <item itemvalue="Remote JVM Debug.Unnamed" />
+    </list>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="74b4e88f-8fcd-4bdf-bf73-9df5c90923b7" name="Changes" comment="" />
+      <created>1680915076318</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1680915076318</updated>
+    </task>
+    <task id="LOCAL-00001" summary="commit 1">
+      <created>1680917140670</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1680917140670</updated>
+    </task>
+    <task id="LOCAL-00002" summary="commit 2">
+      <created>1680918107393</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1680918107393</updated>
+    </task>
+    <task id="LOCAL-00003" summary="1.0.5">
+      <created>1680975144655</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1680975144655</updated>
+    </task>
+    <task id="LOCAL-00004" summary="test new license system">
+      <created>1680999701226</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1680999701226</updated>
+    </task>
+    <task id="LOCAL-00005" summary="java script add">
+      <created>1681334204344</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1681334204344</updated>
+    </task>
+    <task id="LOCAL-00006" summary="хз, бекап перед переводом генераций локаций в асинхронный поток">
+      <created>1681592042131</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1681592042131</updated>
+    </task>
+    <task id="LOCAL-00007" summary="пре релиз, до асинхронных эффектов">
+      <created>1681753360360</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1681753360360</updated>
+    </task>
+    <task id="LOCAL-00008" summary="работает обф, до подтяшивания кучи зависимостей">
+      <created>1682292729543</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1682292729543</updated>
+    </task>
+    <task id="LOCAL-00009" summary="изменённая система лицензий (рабочая)">
+      <created>1682466133609</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1682466133609</updated>
+    </task>
+    <task id="LOCAL-00010" summary="1.0.7">
+      <created>1683058996016</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1683058996016</updated>
+    </task>
+    <task id="LOCAL-00011" summary="1.0.7.1">
+      <created>1683373089793</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1683373089793</updated>
+    </task>
+    <task id="LOCAL-00012" summary="code refactor + new api">
+      <created>1683822096474</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1683822096474</updated>
+    </task>
+    <task id="LOCAL-00013" summary="много">
+      <created>1683991671270</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1683991671270</updated>
+    </task>
+    <task id="LOCAL-00014" summary="не помню, много архитектурных изменений">
+      <created>1684619939224</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1684619939224</updated>
+    </task>
+    <task id="LOCAL-00015" summary="1.0.8">
+      <created>1685368276827</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1685368276827</updated>
+    </task>
+    <task id="LOCAL-00016" summary="new classes">
+      <created>1685368534513</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1685368534513</updated>
+    </task>
+    <task id="LOCAL-00017" summary="1.0.8-release">
+      <created>1685725971127</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1685725971127</updated>
+    </task>
+    <task id="LOCAL-00018" summary="fix">
+      <created>1685917862759</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1685917862759</updated>
+    </task>
+    <task id="LOCAL-00019" summary="remove cmi holograms">
+      <created>1685925532189</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1685925532189</updated>
+    </task>
+    <task id="LOCAL-00020" summary="test protocol holo">
+      <created>1685925702749</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1685925702749</updated>
+    </task>
+    <task id="LOCAL-00021" summary="ProtocolLib holo">
+      <created>1686000185746</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1686000185746</updated>
+    </task>
+    <task id="LOCAL-00022" summary="final ProtocolLib holograms">
+      <created>1686007006877</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1686007006877</updated>
+    </task>
+    <task id="LOCAL-00023" summary="remove lib and fix for jitpack.io">
+      <created>1686008091378</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1686008091378</updated>
+    </task>
+    <task id="LOCAL-00024" summary="1.0.8.2-SNAPSHOT">
+      <created>1686074942313</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1686074942313</updated>
+    </task>
+    <task id="LOCAL-00025" summary="1.0.8.3-SNAPSHOT">
+      <created>1686402471167</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1686402471167</updated>
+    </task>
+    <task id="LOCAL-00026" summary="add jitpack.yml">
+      <created>1686437857543</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1686437857543</updated>
+    </task>
+    <task id="LOCAL-00027" summary="1.20">
+      <created>1686553082727</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1686553082727</updated>
+    </task>
+    <task id="LOCAL-00028" summary="fixes">
+      <created>1686762697804</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1686762697804</updated>
+    </task>
+    <task id="LOCAL-00029" summary="1.0.8.4-SNAPSHOT">
+      <created>1686827001430</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1686827001430</updated>
+    </task>
+    <task id="LOCAL-00030" summary="add effect">
+      <created>1687014116288</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1687014116288</updated>
+    </task>
+    <task id="LOCAL-00031" summary="new effects and anti steal">
+      <created>1687111846913</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1687111846913</updated>
+    </task>
+    <task id="LOCAL-00032" summary="serializable">
+      <created>1687396661094</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1687396661094</updated>
+    </task>
+    <task id="LOCAL-00033" summary="EffectSerializable">
+      <created>1687533552791</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1687533552791</updated>
+    </task>
+    <task id="LOCAL-00034" summary="EffectSerializable 2">
+      <created>1687622361947</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1687622361947</updated>
+    </task>
+    <task id="LOCAL-00035" summary="1.0.8.6-SNAPSHOT">
+      <created>1687712957889</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1687712957889</updated>
+    </task>
+    <task id="LOCAL-00036" summary="EasyBossBar">
+      <created>1687783408191</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1687783408191</updated>
+    </task>
+    <task id="LOCAL-00037" summary="EasyBossBar hotfix">
+      <created>1687783654282</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1687783654282</updated>
+    </task>
+    <task id="LOCAL-00038" summary="rename">
+      <created>1688291332309</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1688291332309</updated>
+    </task>
+    <task id="LOCAL-00039" summary="1.0.9">
+      <created>1690457821856</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1690457821856</updated>
+    </task>
+    <task id="LOCAL-00040" summary="feat: new clone `id` generator">
+      <created>1691889579939</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1691889579939</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+        <option value="Space.CommitStatus" />
+      </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="OPEN_GENERIC_TABS">
+      <map>
+        <entry key="c5927a4e-11c0-45ff-adcc-2aa4a01c46d2" value="TOOL_WINDOW" />
+      </map>
+    </option>
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+        <entry key="c5927a4e-11c0-45ff-adcc-2aa4a01c46d2">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                  <entry key="roots">
+                    <value>
+                      <list>
+                        <option value="$PROJECT_DIR$" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+              <option name="SHOW_ONLY_AFFECTED_CHANGES" value="true" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="new classes" />
+    <MESSAGE value="1.0.8-release" />
+    <MESSAGE value="fix" />
+    <MESSAGE value="remove cmi holograms" />
+    <MESSAGE value="test protocol holo" />
+    <MESSAGE value="ProtocolLib holo" />
+    <MESSAGE value="final ProtocolLib holograms" />
+    <MESSAGE value="remove lib and fix for jitpack.io" />
+    <MESSAGE value="1.0.8.2-SNAPSHOT" />
+    <MESSAGE value="1.0.8.3-SNAPSHOT" />
+    <MESSAGE value="add jitpack.yml" />
+    <MESSAGE value="1.20" />
+    <MESSAGE value="fixes" />
+    <MESSAGE value="1.0.8.4-SNAPSHOT" />
+    <MESSAGE value="add effect" />
+    <MESSAGE value="new effects and anti steal" />
+    <MESSAGE value="serializable" />
+    <MESSAGE value="EffectSerializable" />
+    <MESSAGE value="EffectSerializable 2" />
+    <MESSAGE value="1.0.8.6-SNAPSHOT" />
+    <MESSAGE value="EasyBossBar" />
+    <MESSAGE value="EasyBossBar hotfix" />
+    <MESSAGE value="rename" />
+    <MESSAGE value="1.0.9" />
+    <MESSAGE value="feat: new clone `id` generator" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: new clone `id` generator" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

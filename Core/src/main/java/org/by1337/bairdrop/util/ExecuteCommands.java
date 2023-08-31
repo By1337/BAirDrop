@@ -905,10 +905,6 @@ public class ExecuteCommands {
                 pl.openInventory(cm.getInventory());
             }
             if (str.equalsIgnoreCase("[change-world]")) {
-//                if(true){//todo
-//                    Message.sendMsg(pl, "&cВ демо версии изменение этой настройки запрещены!");
-//                    return;
-//                }
                 pl.closeInventory();
                 ChangeWorld cw = new ChangeWorld(airDrop);
                 getServer().getPluginManager().registerEvents(cw, BAirDrop.getInstance());
@@ -946,10 +942,6 @@ public class ExecuteCommands {
                 getServer().getPluginManager().registerEvents(lc, BAirDrop.getInstance());
                 pl.closeInventory();
             }
-//            if(true){//todo
-//                Message.sendMsg(pl, "&cВ демо версии изменение этой настройки запрещены!");
-//                return;
-//            }
             if (str.equalsIgnoreCase("[change-spawnmin]")) {
                 pl.closeInventory();
                 if (ListenChat.ListenChat != null)
