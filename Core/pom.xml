@@ -140,5 +140,10 @@
             <artifactId>rhino</artifactId>
             <version>1.7.14</version>
         </dependency>
+        <dependency>
+            <groupId>org.by1337</groupId>
+            <artifactId>Lib</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 </project>

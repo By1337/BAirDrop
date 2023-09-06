@@ -8,5 +8,7 @@
     <name>PomRoot</name>
     <modules>
         <module>Core</module>
+        <module>Lib</module>
+        <module>v1_16_5</module>
     </modules>
 </project>
