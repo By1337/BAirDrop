@@ -1,5 +1,6 @@
 package org.by1337.bairdrop.configManager;
 
+import com.google.gson.Gson;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -21,6 +22,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.*;
 
 import static org.by1337.bairdrop.BAirDrop.getInstance;
@@ -44,8 +47,7 @@ public class CConfig implements Config, ConfigMessage {
     private File fileGeneratorSettings;
     private HashMap<String, File> Schematics = new HashMap<>();
     private HashMap<File, FileConfiguration> airDrops = new HashMap<>();
-    private FileConfiguration message;
-    private File fileMessage;
+    private Lang lang;
     private boolean loaded;
     public HashMap<String, File> scripts = new HashMap<>();
 
@@ -101,13 +103,7 @@ public class CConfig implements Config, ConfigMessage {
         }
         listeners = YamlConfiguration.loadConfiguration(fileListeners);
 
-
-        fileMessage = new File(getInstance().getDataFolder() + File.separator + "message.yml");
-        if (!fileMessage.exists()) {
-            getInstance().saveResource("message.yml", true);
-        }
-        message = YamlConfiguration.loadConfiguration(fileMessage);
-
+        loadLang();
 
         File dir = new File(getInstance().getDataFolder() + File.separator + "airdrops");
         if (!dir.exists()) {
@@ -143,6 +139,24 @@ public class CConfig implements Config, ConfigMessage {
         if (getInstance().getConfig().getBoolean("custom-crafts.enable"))
             loadCustomCraft();
         loaded = true;
+    }
+
+    private void loadLang() {
+        String file = BAirDrop.getInstance().getConfig().getString("lang", "en");
+        InputStream resourceStream = getInstance().getResource("lang/" + file + ".json");
+        if (resourceStream == null) {
+            Message.error("file: " + "lang/" + file + ".json" + " not found!");
+            resourceStream = getInstance().getResource("lang/en.json");
+            if (resourceStream == null) {
+                throw new IllegalStateException("Message file not found! Do you have the latest version of the plugin?");
+            }
+        }
+        try (InputStreamReader reader = new InputStreamReader(resourceStream, StandardCharsets.UTF_8)) {
+            Gson gson = new Gson();
+            lang = gson.fromJson(reader, Lang.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void loadMenu() {
@@ -309,98 +323,13 @@ public class CConfig implements Config, ConfigMessage {
 
 
     public String getMessage(String path) {
-        if (message.getString(path) == null) {
-            String MessageFromPlugin = getMessageFromPlugin(path);
-            if (MessageFromPlugin == null) {
-                Message.error(path + " <- this path does not exist!");
-                return Message.messageBuilder("&cСообщения с таким пути нет!, There are no messages with this path!");
-            } else {
-                message.set(path, MessageFromPlugin);
-                try {
-                    message.save(fileMessage);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return Message.messageBuilder(MessageFromPlugin);
-            }
-
-        }
-        return Message.messageBuilder(message.getString(path));
-    }
-
-    @Nullable
-    public String getMessageFromPlugin(String path) {
-        InputStream resourceStream = getInstance().getResource("message.yml");
-        if (resourceStream == null) {
-            return null;
-        }
-        File tempFile;
-        try {
-            tempFile = File.createTempFile("message", ".yml");
-        } catch (IOException e) {
-            return null;
-        }
-        try (FileOutputStream fos = new FileOutputStream(tempFile)) {
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = resourceStream.read(buffer)) != -1) {
-                fos.write(buffer, 0, bytesRead);
-            }
-        } catch (IOException e) {
-            return null;
-        }
-
-        FileConfiguration config = YamlConfiguration.loadConfiguration(tempFile);
-        tempFile.delete();
-        return config.getString(path);
+        return Message.messageBuilder(lang.getMessage(path));
     }
 
     public List<String> getList(String path) {
-        if (message.getStringList(path).isEmpty()) {
-            List<String> list = getListFromPlugin(path);
-            if (!list.isEmpty()) {
-                message.set(path, list);
-                try {
-                    message.save(fileMessage);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return list;
-
-            } else {
-                Message.error(path + " <- this path does not exist!");
-                return Collections.singletonList(Message.messageBuilder("&cСообщения с таким пути нет!, There are no messages with this path!"));
-            }
-        }
-        return new ArrayList<>(message.getStringList(path));
+        return lang.getList(path);
     }
 
-    @NotNull
-    public List<String> getListFromPlugin(String path) {
-        InputStream resourceStream = getInstance().getResource("message.yml");
-        if (resourceStream == null) {
-            return new ArrayList<>();
-        }
-        File tempFile;
-        try {
-            tempFile = File.createTempFile("message", ".yml");
-        } catch (IOException e) {
-            return new ArrayList<>();
-        }
-        try (FileOutputStream fos = new FileOutputStream(tempFile)) {
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = resourceStream.read(buffer)) != -1) {
-                fos.write(buffer, 0, bytesRead);
-            }
-        } catch (IOException e) {
-            return new ArrayList<>();
-        }
-
-        FileConfiguration config = YamlConfiguration.loadConfiguration(tempFile);
-        tempFile.delete();
-        return config.getStringList(path);
-    }
 
     public List<String> getListOrEmpty(String path, FileConfiguration file) {
         if (file.getStringList(path).isEmpty()) {
@@ -505,13 +434,6 @@ public class CConfig implements Config, ConfigMessage {
         return Schematics;
     }
 
-    public FileConfiguration getMessage() {
-        return message;
-    }
-
-    public File getFileMessage() {
-        return fileMessage;
-    }
 
     public boolean isLoaded() {
         return loaded;

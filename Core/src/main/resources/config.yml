@@ -1,5 +1,6 @@
 geyser: false
 max-experience-pre-generated-location: 50
+lang: 'en' # en, ru
 use-metrics: true
 debug: false
 log-level: LOW

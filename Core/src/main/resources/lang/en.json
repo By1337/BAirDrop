@@ -1,0 +1,601 @@
+{
+  "messages": {
+    "loc-is-null": [
+      "Location not found, the airdrop cannot appear!"
+    ],
+    "air-near-none": [
+      "&cThere are no active airdrops nearby"
+    ],
+    "event-time-75": [
+      "&7%s executed in &c%sms"
+    ],
+    "mat-change-arrow-name": [
+      "&aSwap page"
+    ],
+    "summoner-max-y": [
+      "&cAirdrop can be summoned up to %s height!"
+    ],
+    "few-args-command": [
+      "Not enough arguments were entered in [NEAR-PLAYERS=<>]. %s"
+    ],
+    "craft-list-is-empty": [
+      "Craft list is empty!"
+    ],
+    "anti-steal-limit-speed": [
+      "&cYou\"re taking items from the chest too fast!"
+    ],
+    "click-to-teleport": [
+      "&aRight-click to teleport"
+    ],
+    "item-lore-set-static-loc": [
+      "&aLeft-click to set"
+    ],
+    "listeners-error": [
+      "An error occurred while loading the event! Value missing!"
+    ],
+    "attempt-use-static-loc": [
+      "Attempting to use static location! (if enabled)"
+    ],
+    "select-air-menu-lore": [
+      "&7id: {id}",
+      "&7Time to start: {time-to-start}",
+      "&7Time to open: {time-to-open}",
+      "&7Time to end: {time-to-end}",
+      "&7Spawn world: {world}"
+    ],
+    "effect-not-stated": [
+      "Such effect was not started! %s"
+    ],
+    "not-a-number": [
+      "&cYou entered a non-number!"
+    ],
+    "mat-change-back-name": [
+      "&cBack"
+    ],
+    "global-timer-thread-stop": [
+      "[GlobalTimer] Stopping thread"
+    ],
+    "start-time": [
+      "&aPlugin successfully enabled in %sms"
+    ],
+    "edit-canceled": [
+      "&cChanges canceled"
+    ],
+    "get-item": [
+      "{PP} &fPlayer %s has been given %s x%s"
+    ],
+    "inv-edit": [
+      "&7Editing items for Airdrop {id}"
+    ],
+    "teleportation": [
+      "&aTeleportation"
+    ],
+    "signed": [
+      "&aSubscribed"
+    ],
+    "unknown-item": [
+      "&cUnknown item!"
+    ],
+    "too-many-call": [
+      "Too many listeners were called!"
+    ],
+    "generator-already-launched": [
+      "&cLocation generation is already launched!"
+    ],
+    "loc-is-null-command": [
+      "The airdrop has not generated a location yet. %s"
+    ],
+    "depend-not-found": [
+      "DecentHolograms or ProtocolLib is missing!"
+    ],
+    "static-loc-error": [
+      "World error in airdrop %s static location not loaded!"
+    ],
+    "show-all-listeners-inv": [
+      "&7Show All Listeners"
+    ],
+    "unknown-sound": [
+      "Unknown sound! %s"
+    ],
+    "global-timer-thread-start": [
+      "[GlobalTimer] Starting thread"
+    ],
+    "boss-bar-not-created": [
+      "Boss bar not created"
+    ],
+    "help-list": [
+      "&7/bair compass <player> <amount> - give compass",
+      "&7/bair get item-1 <player> <amount> - give airdrop summon item",
+      "&7/bair create <id> - create airdrop",
+      "&7/bair menu <id> - open airdrop menu",
+      "&7/bair generate <id> <time> <amount> - generate locations",
+      "&7/bair listeners <id> - view all listeners",
+      "&7/bair js <script> - execute script",
+      "&7/bair <tp/start/stop> <id>"
+    ],
+    "starting": [
+      "&aStarting..."
+    ],
+    "air-near": [
+      "&7The nearest airdrop is {dist} blocks away. Coordinates: {x},{y},{z}"
+    ],
+    "few-arg-for-del-boss-bar": [
+      "&cInsufficient arguments for deleting boss bar!"
+    ],
+    "item-error": [
+      "&cNo items in slot {slot}!"
+    ],
+    "time-to-start-changed": [
+      "&aTime until start changed to %s"
+    ],
+    "air-holo-to-start": [
+      "{air-name}",
+      "&aTime until start: &f{time-to-start} sec"
+    ],
+    "air-holo-open": [
+      "{air-name}",
+      "&aOpen"
+    ],
+    "generate-using": [
+      "&7Usage -> /bair <airdrop> generate <timings/stop> <amount>"
+    ],
+    "unknown-effect": [
+      "Unknown effect! %s"
+    ],
+    "thread-count": [
+      "plugin threads: %s"
+    ],
+    "mat-change-inv": [
+      "Changing material for airdrop %s"
+    ],
+    "search-location-limit": [
+      "The number of attempts to find a pre-generated location has reached the limit!"
+    ],
+    "list-listeners-is-empty": [
+      "Listeners list is empty!"
+    ],
+    "region-overlapping": [
+      "&cYou cannot summon the airdrop here because it overlaps with another region!"
+    ],
+    "click-to-deactivate": [
+      "&cClick to deactivate"
+    ],
+    "global-timer": [
+      "[GlobalTimer] Selected airdrop: %S"
+    ],
+    "near-error-1": [
+      "A non-number was entered in [NEAR-PLAYERS=<>]. %s"
+    ],
+    "menu-air-select": [
+      "&7Airdrop Selection Menu"
+    ],
+    "few-arguments": [
+      "&cInsufficient arguments"
+    ],
+    "unknown-command": [
+      "Unknown command or this event type does not support this command. %s"
+    ],
+    "NETHER": [
+      "&4Nether"
+    ],
+    "menu-mat-error": [
+      "Invalid material in menu %s"
+    ],
+    "generator-not-started": [
+      "&cLocation generation has not been started yet!"
+    ],
+    "bar-error": [
+      "Invalid BarColor or BarStyle"
+    ],
+    "CUSTOM": [
+      "&7Custom"
+    ],
+    "fail-del-boss-bar": [
+      "Failed to remove boss bar"
+    ],
+    "unknown-script": [
+      "Unknown script %s"
+    ],
+    "generator-good": [
+      "&aAll locations have been generated"
+    ],
+    "unknown-boss-bar": [
+      "Unknown boss bar! %s"
+    ],
+    "change-world-inv-name": [
+      "&aChange Spawn World"
+    ],
+    "delete-fail": [
+      "&cDeletion failed"
+    ],
+    "max-limit": [
+      "Maximum coordinate cannot be smaller than the minimum!"
+    ],
+    "summoner-min-y": [
+      "&cAirdrop can be summoned at least %s in height!"
+    ],
+    "editor": [
+      "&7Airdrop Editor %s"
+    ],
+    "generator-loc-error": [
+      "Location skipped due to error"
+    ],
+    "unknown-airdrop": [
+      "&cUnknown airdrop %s"
+    ],
+    "world-changed": [
+      "&aWorld successfully changed"
+    ],
+    "IllegalArgumentException-boss-bar": [
+      "Invalid data type"
+    ],
+    "unknown-event": [
+      "Unknown event! In listener %s"
+    ],
+    "item-error2": [
+      "Item error!"
+    ],
+    "effect-error-unknown-type": [
+      "Unknown effect type! In effect %s"
+    ],
+    "lidded-error": [
+      "block cannot be opened/close!"
+    ],
+    "holo-update-error": [
+      "Failed to create/update hologram because DecentHolograms/ProtocolLib is missing"
+    ],
+    "boss-bar-fail": [
+      "Player = null! Unable to send boss bar to the player!"
+    ],
+    "IllegalArgumentException-boss-bar2": [
+      "Boss bar not created"
+    ],
+    "summoner-limit": [
+      "&cWait %s seconds before using again."
+    ],
+    "effect-error-loc-is-null3": [
+      "Airdrop %s"
+    ],
+    "max-spawn-changed": [
+      "&aMaximum spawn radius changed to %s"
+    ],
+    "event-lore-max": [
+      "&7...and %s more"
+    ],
+    "unknown-command-in-the-event": [
+      "Unknown command! %s"
+    ],
+    "gen-loc-world-is-null": [
+      "Pre-generated location not loaded due to incorrect world! %s"
+    ],
+    "effect-error-loc-is-null2": [
+      "Effect cannot appear"
+    ],
+    "named-changed": [
+      "&aInventory name successfully changed to %s"
+    ],
+    "items-is-empty": [
+      "The list of items is empty!"
+    ],
+    "unsubscribed": [
+      "&cUnsubscribed"
+    ],
+    "overlapping-error": [
+      "Error checking region for overlapping areas"
+    ],
+    "loc-is-null2": [
+      "Location not yet defined: %s"
+    ],
+    "stop-event-for-edit": [
+      "&cStop the event and try again"
+    ],
+    "material-error": [
+      "Material error - %s"
+    ],
+    "off-time": [
+      "&aPlugin successfully disabled in %sms"
+    ],
+    "boss-bar-error-command": [
+      "Incorrect string format: not all quotes are closed. %s"
+    ],
+    "mat-change-item-name": [
+      "&aLeft-click to set"
+    ],
+    "NORMAL": [
+      "&aNormal"
+    ],
+    "fail-del-boss-bar2": [
+      "Insufficient necessary arguments, specifically name=\"boss bar name\""
+    ],
+    "edit-list": [
+      "&aLeft click to edit this list"
+    ],
+    "craft-skip": [
+      "Craft %s was skipped"
+    ],
+    "license-is-invalid": [
+      "Invalid license!"
+    ],
+    "click-to-activate": [
+      "&aClick to activate"
+    ],
+    "generator-stop": [
+      "&cLocation generation has been stopped"
+    ],
+    "global-timer-to-start": [
+      "[GlobalTimer] Time to start: %s"
+    ],
+    "time-to-stop-changed": [
+      "&aTime until event end changed to %s"
+    ],
+    "unknown-player": [
+      "{PP} &cUnknown player!"
+    ],
+    "airdrop-is-started": [
+      "&cThis airdrop is already started!"
+    ],
+    "click-to-chance": [
+      "&aClick to edit item spawn chances"
+    ],
+    "unknown-world-region": [
+      "Failed to remove region because world is unknown!"
+    ],
+    "boss-bar-already-created": [
+      "Boss bar %s already created!"
+    ],
+    "min-online-players-changed": [
+      "&aMinimum online players changed to %s"
+    ],
+    "inv-select": [
+      "&7Inventory Selection"
+    ],
+    "js-time": [
+      "&7%s executed in %s"
+    ],
+    "not-load": [
+      "Airdrop not loaded!"
+    ],
+    "air-holo-click-wait": [
+      "{air-name}",
+      "&7Click to activate"
+    ],
+    "global-timer-failed": [
+      "[GlobalTimer] Failed to select an airdrop!"
+    ],
+    "list-size": [
+      "&7Items: %s"
+    ],
+    "there-is-already-an-effect": [
+      "This effect already exists! %s"
+    ],
+    "locations-are-absent": [
+      "Locations are not generated for world \"%s\"!"
+    ],
+    "global-timer-failed2": [
+      "[GlobalTimer] Airdrop list is empty!"
+    ],
+    "item-null": [
+      "&cItem in slot {slot} is null! It was skipped!"
+    ],
+    "air-holo": [
+      "{air-name}",
+      "&cClosed!",
+      "&aTime to open: &f{time-to-open} sec"
+    ],
+    "mat-change-arrow-lore": [
+      "&aLMB &7- Next page",
+      "&cRMB &7- Previous page"
+    ],
+    "event-lore": [
+      "&aDescription: {description}",
+      "&aSubscribed: {flag}",
+      "&aEvent: &7{event}",
+      "&aLMB - Subscribe/Unsubscribe",
+      "&aCommands:"
+    ],
+    "effect-error": [
+      "Error loading effect %s. Value missing"
+    ],
+    "craft-unknown-item": [
+      "%s Unknown item!"
+    ],
+    "unknown-cmd-boss-bar": [
+      "Unknown boss bar command! %s"
+    ],
+    "craft-load-error": [
+      "Craft loading error! %s"
+    ],
+    "effect-error-loc-is-null": [
+      "Airdrop location not generated yet"
+    ],
+    "event-is-active": [
+      "&fAirdrop is &aactive"
+    ],
+    "THE_END": [
+      "&dThe End"
+    ],
+    "craft-ingredients-is-empty": [
+      "Craft ingredients list is empty!"
+    ],
+    "no-prem": [
+      "&cInsufficient permissions"
+    ],
+    "click-to-edit": [
+      "&aClick to edit items in the Airdrop"
+    ],
+    "unknown-js-script": [
+      "%s Unknown script!"
+    ],
+    "item-name-set-static-loc": [
+      "&aSet as Static Location"
+    ],
+    "flatness-check-fail": [
+      "&cThe airdrop can only be placed on a flat surface!"
+    ],
+    "generator-start": [
+      "&aLocation generation started..."
+    ],
+    "numerical_check-few-arguments": [
+      "NUMERICAL_CHECK Few arguments! In check \"%s\""
+    ],
+    "impossible-to-call": [
+      "&cIt is currently impossible to call an airdrop"
+    ],
+    "color-error": [
+      "Color error: %s"
+    ],
+    "spawn-error": [
+      "Unable to start the airdrop as the location for it has not been found!"
+    ],
+    "flag-error": [
+      "Error trying to set flag"
+    ],
+    "delete-good": [
+      "&cAirdrop successfully deleted"
+    ],
+    "edit-chat": [
+      "&7Enter a new value or type &ccancel &7to cancel"
+    ],
+    "search-location-limit-2": [
+      "Attempting to use static location! Airdrop \"%s\""
+    ],
+    "gen-loc-is-null": [
+      "No suitable pre-generated location for airdrop %s"
+    ],
+    "generator": [
+      "&aRemaining %s locations"
+    ],
+    "create-new-list": [
+      "&aCreate new"
+    ],
+    "update": [
+      "{PP} &fNew plugin version available!"
+    ],
+    "event-time-50": [
+      "&7%s executed in &e%sms"
+    ],
+    "event-time": [
+      "&7%s executed in %sms"
+    ],
+    "set-static-loc": [
+      "&aStatic location set"
+    ],
+    "error": [
+      "&cError!"
+    ],
+    "summoner-error-it-airdrop-is-already-started": [
+      "&cCan\"t call this airdrop because it\"s already started"
+    ],
+    "airdrop-is-not-started": [
+      "&cThis airdrop is not started!"
+    ],
+    "numerical-check-unknown-operator": [
+      "NUMERICAL_CHECK Unknown operator! \"%s\" in check \"%s\""
+    ],
+    "unknown-listener": [
+      "Unknown listener! %s"
+    ],
+    "air-loaded": [
+      "&aAirdrop {id} loaded!"
+    ],
+    "check-up-blocks-fail": [
+      "&cThere should be no blocks above the airdrop!"
+    ],
+    "reload": [
+      "&aPlugin successfully reloaded in %s ms"
+    ],
+    "menu-error": [
+      "An error occurred while loading the menu! Menu %s, value missing!"
+    ],
+    "numeric_check-error-not-a-number": [
+      "NUMERICAL_CHECK Not a number in check! In check \"%s\""
+    ],
+    "schem-limit": [
+      "Unable to spawn multiple structures at once!"
+    ],
+    "air-create": [
+      "&aAirdrop %s successfully created!"
+    ],
+    "holo-remove-error": [
+      "Failed to remove hologram because DecentHolograms/ProtocolLib is missing"
+    ],
+    "world-lore": [
+      "&7World Type: {type}",
+      "&7World Name: {name}",
+      "&aLMB &7- Select this world"
+    ],
+    "end": [
+      "&aEnd"
+    ],
+    "generation-nether": [
+      "Airdrop \"%s\" generates a location in the Nether! It is recommended to use pre-generated locations"
+    ],
+    "edit-lore": [
+      "&aRight-click +1%",
+      "&aSHIFT+Right-click +10%",
+      "&cLeft-click -1%",
+      "&cSHIFT+Left-click -10%",
+      "&fChance: {chance}%"
+    ],
+    "search-before-start-changed": [
+      "&aSearch location time before start changed to %s"
+    ],
+    "effect-replace-error": [
+      "An effect with this id has already been created! %s"
+    ],
+    "protect-changed": [
+      "&aProtection radius changed to %s"
+    ],
+    "isn-t-number": [
+      "&cYou entered a non-number!"
+    ],
+    "boss-bar-few-args": [
+      "&cNot enough arguments when creating or updating the boss bar!"
+    ],
+    "boss-bar-format-error": [
+      "Incorrect string format: not all quotes are closed. %s"
+    ],
+    "unknown-world-type": [
+      "Unknown world type \"%s\". Generating as a normal world"
+    ],
+    "event-is-not-active": [
+      "&fAirdrop is &cinactive"
+    ],
+    "airdrop-crated": [
+      "&aAirdrop created!"
+    ],
+    "time-to-open-changed": [
+      "&aTime to open changed to %s"
+    ],
+    "rotate-error": [
+      "This block cannot be rotated"
+    ],
+    "boss-bar-fail2": [
+      "Player = null! Unable to remove boss bar from the player!"
+    ],
+    "slot-more": [
+      "There are {size} items in slot {slot} of Airdrop {id}!"
+    ],
+    "min-spawn-changed": [
+      "&aMinimum spawn radius changed to %s"
+    ],
+    "generator-fail": [
+      "&cFailed %s..."
+    ],
+    "unknown-material": [
+      "Unknown material %s. In %s"
+    ],
+    "numerical-check-unknown-error": [
+      "NUMERICAL_CHECK Unknown error! In check \"%s\""
+    ],
+    "update-2": [
+      "{PP} &fCurrent version %s, new version %s"
+    ],
+    "location-isn-t-relevant": [
+      "Location %s, %s, %s, %s is no longer relevant and has been removed"
+    ],
+    "dec-info": [
+      "&7Summoned: %s"
+    ]
+  }
+}

@@ -4,256 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="74b4e88f-8fcd-4bdf-bf73-9df5c90923b7" name="Changes" comment="feat: new clone `id` generator">
-      <change afterPath="$PROJECT_DIR$/Core/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/AirDrop.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/AirDropUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/BAirDrop.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/CAirDrop.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/ItemUtil/BaseHeadHook.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/ItemUtil/EnchantInfo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/ItemUtil/EnchantMaterial.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/ItemUtil/Items.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/ItemUtil/SkullUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/api/event/AirDropEndEvent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/api/event/AirDropOpenEvent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/api/event/AirDropStartEvent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/api/event/AirDropSummonerEvent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/api/event/AirDropUnlockEvent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/api/event/ExecuteCommandEvent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/command/Commands.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/command/Completer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/configManager/CConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/configManager/Config.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/configManager/ConfigMessage.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/customListeners/CustomEvent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/customListeners/CustomEventListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/customListeners/observer/Observable.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/customListeners/observer/Observer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/customListeners/util/CustomEventListenerBuilder.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/effect/EffectFactory.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/effect/EffectType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/effect/IEffect.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/effect/LoadEffects.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/effect/effectImpl/Circle.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/effect/effectImpl/ExpandingCircle.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/effect/effectImpl/FireworkEffect.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/effect/effectImpl/Guard.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/effect/effectImpl/Helix.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/effect/effectImpl/ParticleExplosion.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/effect/effectImpl/RandomParticle.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/effect/effectImpl/Torus.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/effect/effectImpl/WrithingHelix.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/effect/util/RGBHelper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/hologram/DecentHologram.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/hologram/EmptyHologram.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/hologram/IHologram.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/hologram/ProtocolHoloManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/hologram/utils/HoloLine.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/hologram/utils/HoloManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/hologram/utils/impl/HoloLineV1_16.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/hologram/utils/impl/HoloLineV1_17.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/hologram/utils/impl/HoloLineV1_18.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/hologram/utils/impl/HoloLineV1_19_2.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/hologram/utils/impl/HoloLineV1_19_4.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/hologram/utils/impl/HoloLineV1_20.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/listeners/Compass.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/listeners/CraftItem.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/listeners/InteractListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/listeners/SetStaticLocation.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/listeners/util/ListenChat.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/locationGenerator/CGenLoc.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/locationGenerator/CGenerator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/locationGenerator/GenLoc.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/locationGenerator/Generator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/locationGenerator/GeneratorLoc.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/locationGenerator/GeneratorUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/AddingItems.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/ChangeMaterial.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/ChangeWorld.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/EditAirMenu.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/EditChance.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/SelectAirMenu.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/SelectInv.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/ShowAllListeners.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/util/ItemUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/util/MenuItem.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/scripts/JsScript.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/scripts/Script.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/serializable/EffectDeserialize.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/serializable/EffectSerializable.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/serializable/StateSerializable.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/summoner/CSummonerItem.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/summoner/Summoner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/summoner/SummonerItem.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/AirManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/AntiSteal.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/ChestStealData.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/CustomCraft.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/EasyBossBar.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/ExecuteCommands.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/GlobalTimer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/InvalidCharacters.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/InvalidCharactersChecker.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/LogLevel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/Message.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/Metrics.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/PlaceholderHook.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/worldGuardHook/CSchematicsManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/worldGuardHook/RegionManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/worldGuardHook/SchematicsManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/resources/Schematics/schemConf.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/resources/airdrops/default.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/resources/config.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/resources/effects.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/resources/generatorSettings.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/resources/listeners.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/resources/locations.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/resources/menu.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/resources/message.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/resources/plugin.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/resources/scripts/diamond.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/translations/ru/Schematics/schemConf.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/translations/ru/airdrops/default.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/translations/ru/config.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/translations/ru/effects.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/translations/ru/generatorSettings.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/translations/ru/listeners.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/translations/ru/locations.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/translations/ru/menu.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/translations/ru/message.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/translations/ru/scripts/diamond.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/discord.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/discord.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/git_toolbox_prj.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/kotlinc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+    <list default="true" id="74b4e88f-8fcd-4bdf-bf73-9df5c90923b7" name="Changes" comment="refactor: airdrop commands">
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/Lang.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/resources/lang/en.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/test/java/Test.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/BAirDrop.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Core/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lib/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Lib/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/AirDrop.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/AirDropUtils.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/BAirDrop.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/CAirDrop.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/ItemUtil/BaseHeadHook.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/ItemUtil/EnchantInfo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/ItemUtil/EnchantMaterial.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/ItemUtil/Items.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/ItemUtil/SkullUtils.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/api/event/AirDropEndEvent.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/api/event/AirDropOpenEvent.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/api/event/AirDropStartEvent.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/api/event/AirDropSummonerEvent.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/api/event/AirDropUnlockEvent.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/api/event/ExecuteCommandEvent.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/command/Commands.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/command/Completer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/configManager/CConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/configManager/Config.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/configManager/ConfigMessage.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/customListeners/CustomEvent.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/customListeners/CustomEventListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/customListeners/observer/Observable.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/customListeners/observer/Observer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/customListeners/util/CustomEventListenerBuilder.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/effect/EffectFactory.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/effect/EffectType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/effect/IEffect.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/effect/LoadEffects.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/effect/effectImpl/Circle.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/effect/effectImpl/ExpandingCircle.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/effect/effectImpl/FireworkEffect.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/effect/effectImpl/Guard.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/effect/effectImpl/Helix.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/effect/effectImpl/ParticleExplosion.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/effect/effectImpl/RandomParticle.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/effect/effectImpl/Torus.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/effect/effectImpl/WrithingHelix.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/effect/util/RGBHelper.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/hologram/DecentHologram.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/hologram/EmptyHologram.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/hologram/IHologram.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/hologram/ProtocolHoloManager.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/hologram/utils/HoloLine.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/hologram/utils/HoloManager.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/hologram/utils/impl/HoloLineV1_16.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/hologram/utils/impl/HoloLineV1_17.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/hologram/utils/impl/HoloLineV1_18.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/hologram/utils/impl/HoloLineV1_19_2.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/hologram/utils/impl/HoloLineV1_19_4.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/hologram/utils/impl/HoloLineV1_20.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/listeners/Compass.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/listeners/CraftItem.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/listeners/InteractListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/listeners/SetStaticLocation.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/listeners/util/ListenChat.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/locationGenerator/CGenLoc.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/locationGenerator/CGenerator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/locationGenerator/GenLoc.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/locationGenerator/Generator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/locationGenerator/GeneratorLoc.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/locationGenerator/GeneratorUtils.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/menu/AddingItems.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/menu/ChangeMaterial.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/menu/ChangeWorld.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/menu/EditAirMenu.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/menu/EditChance.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/menu/SelectAirMenu.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/menu/SelectInv.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/menu/ShowAllListeners.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/menu/util/ItemUtil.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/menu/util/MenuItem.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/scripts/JsScript.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/scripts/Script.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/serializable/EffectDeserialize.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/serializable/EffectSerializable.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/serializable/StateSerializable.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/summoner/CSummonerItem.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/summoner/Summoner.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/summoner/SummonerItem.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/util/AirManager.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/util/AntiSteal.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/util/ChestStealData.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/util/CustomCraft.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/util/EasyBossBar.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/util/ExecuteCommands.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/util/GlobalTimer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/util/InvalidCharacters.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/util/InvalidCharactersChecker.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/util/LogLevel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/util/Message.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/util/Metrics.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/util/PlaceholderHook.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/worldGuardHook/CSchematicsManager.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/worldGuardHook/RegionManager.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/by1337/bairdrop/worldGuardHook/SchematicsManager.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/Schematics/schemConf.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/airdrops/default.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/config.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/effects.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/generatorSettings.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/listeners.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/locations.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/menu.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/message.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/scripts/diamond.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/translations/ru/Schematics/schemConf.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/translations/ru/airdrops/default.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/translations/ru/config.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/translations/ru/effects.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/translations/ru/generatorSettings.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/translations/ru/listeners.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/translations/ru/locations.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/translations/ru/menu.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/translations/ru/message.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/translations/ru/scripts/diamond.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/v1_16_5/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/v1_16_5/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -332,39 +95,50 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;ToolWindowRun.ShowToolbar&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;v1.1.0&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;16&quot;,
-    &quot;jdk.selected.com.intellij.ui.dsl.builder.impl.RowImpl.sdk&quot;: &quot;16&quot;,
-    &quot;last_opened_file_path&quot;: &quot;Q:/cod/idea Java/finder&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.importing&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "ToolWindowRun.ShowToolbar": "false",
+    "git-widget-placeholder": "v1.1.0",
+    "ignore.virus.scanning.warn.message": "true",
+    "jdk.selected.JAVA_MODULE": "16",
+    "jdk.selected.com.intellij.ui.dsl.builder.impl.RowImpl.sdk": "16",
+    "last_opened_file_path": "Q:/cod/idea Java/BairDropV1.1.0/BAirDrop",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "reference.settings.project.maven.importing"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;jdk.preference.com.intellij.ui.dsl.builder.impl.RowImpl.sdk&quot;: [
-      &quot;16=C:/Program Files/Java/jdk-16.0.2&quot;
+  "keyToStringList": {
+    "jdk.preference.com.intellij.ui.dsl.builder.impl.RowImpl.sdk": [
+      "16=C:/Program Files/Java/jdk-16.0.2",
+      "17=C:/Users/andre/.jdks/corretto-17.0.8.1"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="Q:\cod\idea Java\BairDropV1.1.0\BAirDrop\Core\src" />
       <recent name="Q:\cod\idea Java\BAirDrop\PomRoot" />
       <recent name="Q:\cod\idea Java\BAirDrop\translations\en\airdrops" />
       <recent name="Q:\cod\idea Java\BAirDrop\translations\en" />
       <recent name="Q:\cod\idea Java\BAirDrop\Main" />
-      <recent name="Q:\cod\idea Java\BAirDrop\src\main\resources" />
     </key>
   </component>
-  <component name="RunManager" selected="Maven.PomRoot [clean,package]">
+  <component name="RunManager" selected="JUnit.Test.a">
+    <configuration name="Test.a" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="BAirDrop" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="Test" />
+      <option name="METHOD_NAME" value="a" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="BAirDrop package" type="MavenRunConfiguration" factoryName="Maven">
       <MavenSettings>
         <option name="myGeneralSettings" />
@@ -377,6 +151,31 @@
             <option name="goals">
               <list>
                 <option value="clean" />
+                <option value="package" />
+              </list>
+            </option>
+            <option name="pomFileName" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
+    <configuration name="Lib package" type="MavenRunConfiguration" factoryName="Maven">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
                 <option value="package" />
               </list>
             </option>
@@ -417,6 +216,31 @@
       </MavenSettings>
       <method v="2" />
     </configuration>
+    <configuration name="v1_16_5 package" type="MavenRunConfiguration" factoryName="Maven">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="package" />
+              </list>
+            </option>
+            <option name="pomFileName" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
     <configuration name="Unnamed" type="Remote" nameIsGenerated="true">
       <module name="BAirDrop" />
       <option name="USE_SOCKET_TRANSPORT" value="true" />
@@ -432,10 +256,18 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="JUnit.Test.a" />
+      <item itemvalue="Maven.Lib package" />
+      <item itemvalue="Maven.v1_16_5 package" />
       <item itemvalue="Maven.BAirDrop package" />
       <item itemvalue="Maven.PomRoot [clean,package]" />
       <item itemvalue="Remote JVM Debug.Unnamed" />
     </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.Test.a" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -726,7 +558,14 @@
       <option name="project" value="LOCAL" />
       <updated>1691889579939</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="refactor: airdrop commands">
+      <created>1694035958484</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1694035958484</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -783,7 +622,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="new classes" />
     <MESSAGE value="1.0.8-release" />
     <MESSAGE value="fix" />
     <MESSAGE value="remove cmi holograms" />
@@ -808,7 +646,8 @@
     <MESSAGE value="rename" />
     <MESSAGE value="1.0.9" />
     <MESSAGE value="feat: new clone `id` generator" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: new clone `id` generator" />
+    <MESSAGE value="refactor: airdrop commands" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor: airdrop commands" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

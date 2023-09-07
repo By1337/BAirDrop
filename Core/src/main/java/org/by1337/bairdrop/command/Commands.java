@@ -177,7 +177,7 @@ public class Commands implements CommandExecutor {
             }
             if (args[0].equals("reload")) {
                 if (!pl.hasPermission("bair.reload")) {
-                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("no-prem"));//message.yml
+                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("no-prem"));
                     return true;
                 }
                 long x = System.currentTimeMillis();

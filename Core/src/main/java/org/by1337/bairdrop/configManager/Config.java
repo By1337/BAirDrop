@@ -13,9 +13,7 @@ public interface Config {
     void loadListeners();
     void loadEnchant();
     String getMessage(String path);
-    String getMessageFromPlugin(String path);
     List<String> getList(String path);
-    List<String> getListFromPlugin(String path);
     List<String> getListOrEmpty(String path, FileConfiguration file);
     void loadLocations();
     @Deprecated
@@ -33,8 +31,6 @@ public interface Config {
     File getFileSchemConf();
     File getFileGeneratorSettings();
     HashMap<String, File> getSchematics();
-    FileConfiguration getMessage();
-    File getFileMessage();
     boolean isLoaded();
     HashMap<String, File> getScripts();
     FileConfiguration getGeneratorSettings();

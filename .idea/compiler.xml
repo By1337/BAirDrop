@@ -6,7 +6,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="Lib" />
         <module name="BAirDrop" />
+        <module name="v1_16_5" />
       </profile>
     </annotationProcessing>
   </component>

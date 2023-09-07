@@ -51,6 +51,7 @@ public final class BAirDrop extends JavaPlugin {
 
     private static ProtocolManager protocolManager = null;
 
+
     @Override
     public void onLoad() {
         instance = this;
@@ -68,11 +69,11 @@ public final class BAirDrop extends JavaPlugin {
         EffectDeserialize.register(Torus.class);
         EffectDeserialize.register(WrithingHelix.class);
 
-        config = new CConfig();
-
-        configMessage = (ConfigMessage) config;
         getInstance().saveDefaultConfig();
         getInstance().saveConfig();
+        config = new CConfig();
+        configMessage = (ConfigMessage) config;
+
 
 
         try {
@@ -107,6 +108,9 @@ public final class BAirDrop extends JavaPlugin {
             hologram = new EmptyHologram();
             Message.error(getConfigMessage().getMessage("depend-not-found"));
         }
+
+
+
 
         for (File file : getiConfig().getAirDrops().keySet()) {
             AirDrop airDrop = new CAirDrop(getiConfig().getAirDrops().get(file), file);

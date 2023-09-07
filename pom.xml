@@ -11,4 +11,11 @@
         <module>Lib</module>
         <module>v1_16_5</module>
     </modules>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+        </dependency>
+    </dependencies>
 </project>
