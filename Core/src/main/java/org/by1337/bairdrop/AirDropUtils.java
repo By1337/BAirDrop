@@ -1,14 +1,12 @@
 package org.by1337.bairdrop;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.by1337.bairdrop.customListeners.observer.Observer;
-import org.by1337.bairdrop.util.AirManager;
-import org.by1337.bairdrop.util.Message;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class AirDropUtils {
     private static final List<Observer> staticObservers = new ArrayList<>();
@@ -64,7 +62,7 @@ public class AirDropUtils {
                 continue;
             }
             if (random.nextInt(100) <= airDrop.getSpawnChance()) {
-                String newId = airDrop.getId() + "_clone_" + AirManager.getNextId();
+                String newId = airDrop.getId() + "_clone_" + getAndIncrease();
                 AirDrop clone = airDrop.clone(newId);
                 clone.setClone(true);
                 clone.setKill(true);
@@ -91,49 +89,38 @@ public class AirDropUtils {
         return null;
     }
 
-    private static String getResult(String s) {
-        Pattern pattern = Pattern.compile("(-?\\d+)([-+*/])(-?\\d+)");
-        Matcher matcher = pattern.matcher(s);
-        String total;
 
-        if (matcher.find()) {
-            String number1 = matcher.group(1);
-            String operator = matcher.group(2);
-            String number2 = matcher.group(3);
-
-
-            switch (operator) {
-                case "+" -> total = String.valueOf(Double.parseDouble(number1) + Double.parseDouble(number2));
-                case "-" -> total = String.valueOf(Double.parseDouble(number1) - Double.parseDouble(number2));
-                case "*" -> total = String.valueOf(Double.parseDouble(number1) * Double.parseDouble(number2));
-                case "/" -> total = String.valueOf(Double.parseDouble(number1) / Double.parseDouble(number2));
-                default -> {
-                    Message.error("unknown operator:  " + operator);
-                    total = "0";
-                }
-            }
-
-        } else {
-            Message.error("This is not a mathematical operation!: " + s);
-            total = "0";
+    private static int count = 0;
+    @Nullable
+    public static AirDrop getAirDropForLocation(@NotNull Location location) {
+        for (AirDrop airDrop : BAirDrop.airDrops.values()) {
+            if (Objects.equals(location, airDrop.getAirDropLocation())) return airDrop;
         }
-        return total;
+        return null;
     }
-
-    public static String match(String input) {
-        try {
-            String pattern = "match\\((.*?)\\)";
-            Pattern regexPattern = Pattern.compile(pattern);
-            Matcher matcher = regexPattern.matcher(input);
-
-            while (matcher.find()) {
-                String s = matcher.group(1);
-                s = s.replace(" ", "");
-                input = input.replace(matcher.group(0), getResult(s).replace(".0", ""));
-            }
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+    public static String getFormat(int Sec) {
+        int hour = Sec / 3600;
+        int min = Sec % 3600 / 60;
+        int sec = Sec % 60;
+        return String.format("%02d:%02d:%02d", hour, min, sec);
+    }
+    public static int getTimeToNextAirdrop() {
+        int time = -1;
+        for (AirDrop airDrop : BAirDrop.airDrops.values()) {
+            if (!airDrop.isAirDropStarted())
+                if (time > airDrop.getTimeToStart() || time == -1) {
+                    time = airDrop.getTimeToStart();
+                }
         }
-        return input;
+        return time;
+    }
+    public static String colored(String str) {
+        str = str.replace("true", "&atrue");
+        str = str.replace("false", "&cfalse");
+        str = str.replace(" 0 ", " &c0 ");
+        return str;
+    }
+    public static int getAndIncrease(){
+        return count++;
     }
 }

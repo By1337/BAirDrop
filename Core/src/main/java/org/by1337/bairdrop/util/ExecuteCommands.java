@@ -52,30 +52,7 @@ import static org.bukkit.Bukkit.*;
 import static org.by1337.bairdrop.BAirDrop.getInstance;
 
 public class ExecuteCommands {
-    private static List<String> ignoreCommands = new ArrayList<>();
-    public static HashMap<String, EasyBossBar> easyBossBarHashMap = new HashMap<>();
 
-    public static boolean hasIgnoreCommand(String command) {
-        return ignoreCommands.contains(command);
-    }
-
-    public static void registerIgnoreCommand(String command) {
-        if (hasIgnoreCommand(command)) {
-            throw new IllegalArgumentException("This command is already being ignored");
-        }
-        ignoreCommands.add(command);
-    }
-
-    public static void unregisterIgnoreCommand(String command) {
-        ignoreCommands.remove(command);
-    }
-
-    private static boolean isIgnore(String command) {
-        for (String str : ignoreCommands) {
-            if (command.contains(str)) return true;
-        }
-        return false;
-    }
 
     public void runListenerCommands(String[] commands, @Nullable Player pl, @Nullable AirDrop airDrop, CustomEvent customEvent) {
         ExecuteCommandEvent event = new ExecuteCommandEvent(airDrop, commands, pl, customEvent);
@@ -84,19 +61,10 @@ public class ExecuteCommands {
             return;
         }
         for (String command : commands) {
-            if (isIgnore(command)) {
-                Message.debug("ignore " + command, LogLevel.HARD);
-                continue;
-            }
             if (airDrop != null)
                 command = airDrop.replaceInternalPlaceholder(command);
             command = Message.setPlaceholders(pl, command);
-            if (command.contains("[math#"))
-                command = CustomEventListener.math(command, airDrop, pl);
-            if (command.contains("{player-get-item-") && pl != null)
-                command = setPlayerPlaceholder(pl, command);
-
-            command = AirDropUtils.match(command);
+            command = BMatch.match(command);
 
 
             CommandRegistry.execute(airDrop, pl, command);

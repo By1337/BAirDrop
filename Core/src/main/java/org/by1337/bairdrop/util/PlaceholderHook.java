@@ -2,6 +2,7 @@ package org.by1337.bairdrop.util;
 
 import org.bukkit.OfflinePlayer;
 import org.by1337.bairdrop.AirDrop;
+import org.by1337.bairdrop.AirDropUtils;
 import org.by1337.bairdrop.BAirDrop;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,7 +38,7 @@ public class PlaceholderHook extends me.clip.placeholderapi.expansion.Placeholde
         }
         if (params.equals("time_start")) { //%bairdrop_time_start%
             if (BAirDrop.globalTimer == null)
-                return AirManager.getTimeToNextAirdrop() + "";
+                return AirDropUtils.getTimeToNextAirdrop() + "";
             int time = 0;
             time += BAirDrop.globalTimer.getTimeToStart();
             if (BAirDrop.globalTimer.getAir() != null)
@@ -46,12 +47,12 @@ public class PlaceholderHook extends me.clip.placeholderapi.expansion.Placeholde
         }
         if (params.equals("time_start_format")) { //%bairdrop_time_start_format%
             if (BAirDrop.globalTimer == null)
-                return AirManager.getFormat(AirManager.getTimeToNextAirdrop());
+                return AirDropUtils.getFormat(AirDropUtils.getTimeToNextAirdrop());
             int time = 0;
             time += BAirDrop.globalTimer.getTimeToStart();
             if (BAirDrop.globalTimer.getAir() != null)
                 time += BAirDrop.globalTimer.getAir().getTimeToStart();
-            return AirManager.getFormat(time);
+            return AirDropUtils.getFormat(time);
         }
         if (params.equals("near")) { //%bairdrop_near%
             if (player == null) return "";
@@ -74,14 +75,14 @@ public class PlaceholderHook extends me.clip.placeholderapi.expansion.Placeholde
             if (args.length != 5) return "error";
             AirDrop airDrop = BAirDrop.airDrops.getOrDefault(args[4], null);
             if (airDrop == null) return "error";
-            return AirManager.getFormat(airDrop.getTimeStop());
+            return AirDropUtils.getFormat(airDrop.getTimeStop());
         }
         if (params.contains("time_to_start_format_")) { //%bairdrop_time_to_start_format_<air_id>%
             String[] args = params.split("_");
             if (args.length != 5) return "error";
             AirDrop airDrop = BAirDrop.airDrops.getOrDefault(args[4], null);
             if (airDrop == null) return "error";
-            return  AirManager.getFormat(airDrop.getTimeToStart());
+            return  AirDropUtils.getFormat(airDrop.getTimeToStart());
         }
         if (params.contains("time_to_start_")) { //%bairdrop_time_to_start_<air_id>%
             String[] args = params.split("_");

@@ -9,8 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.by1337.bairdrop.AirDrop;
-import org.by1337.bairdrop.CAirDrop;
-import org.by1337.bairdrop.util.AirManager;
+import org.by1337.bairdrop.AirDropUtils;
 import org.by1337.bairdrop.util.Message;
 
 public class ItemUtil {
@@ -29,7 +28,7 @@ public class ItemUtil {
     public static ItemMeta addLore(ItemStack itemStack, AirDrop airDrop, List<String> newLore){
         ItemMeta im = itemStack.getItemMeta();
         newLore.replaceAll(airDrop::replaceInternalPlaceholder);
-        newLore.replaceAll(AirManager::colored);
+        newLore.replaceAll(AirDropUtils::colored);
         newLore.replaceAll(Message::messageBuilder);
         if(im.getLore() != null) {
             newLore.addAll(im.getLore());

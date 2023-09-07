@@ -1,5 +1,6 @@
 package org.by1337.bairdrop.airdrop.command.impl;
 
+import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.airdrop.command.CommandExecutor;
@@ -11,8 +12,9 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class EasyBossBarCommand implements CommandExecutor {
-
+    @Getter
     private static final HashMap<String, EasyBossBar> easyBossBarHashMap = new HashMap<>();
+
 
     @Override
     public String getCommandPrefix() {

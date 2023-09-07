@@ -16,6 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import org.by1337.bairdrop.AirDrop;
+import org.by1337.bairdrop.AirDropUtils;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.customListeners.CustomEvent;
 import org.by1337.bairdrop.customListeners.observer.Observer;
@@ -145,7 +146,7 @@ public class ShowAllListeners implements Listener {
                     .split("%split%")).toList());
         }
         nweLore.replaceAll(airDrop::replaceInternalPlaceholder);
-        nweLore.replaceAll(AirManager::colored);
+        nweLore.replaceAll(AirDropUtils::colored);
         nweLore.replaceAll(Message::messageBuilder);
 
         im.setLore(nweLore);

@@ -19,13 +19,11 @@ import org.by1337.bairdrop.customListeners.CustomEvent;
 import org.by1337.bairdrop.locationGenerator.GeneratorLoc;
 import org.by1337.bairdrop.scripts.Script;
 import org.by1337.bairdrop.util.InvalidCharacters;
-import org.by1337.bairdrop.util.InvalidCharactersChecker;
 import org.by1337.bairdrop.util.Message;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-import static org.bukkit.Bukkit.createWorld;
 import static org.bukkit.Bukkit.getServer;
 import static org.by1337.bairdrop.BAirDrop.*;
 
@@ -221,8 +219,8 @@ public class Commands implements CommandExecutor {
                     Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("few-arguments"));
                     return true;
                 }
-                InvalidCharactersChecker invalidCharactersChecker = new InvalidCharacters();
-                String invalidChars = invalidCharactersChecker.getInvalidCharacters(args[1]);
+
+                String invalidChars = InvalidCharacters.getInvalidCharacters(args[1]);
 
                 if (!invalidChars.isEmpty()) {
                     Message.sendMsg(pl, String.format("&cНедопустимые символы: %s", invalidChars));
@@ -309,8 +307,7 @@ public class Commands implements CommandExecutor {
 
                 if (BAirDrop.airDrops.containsKey(args[1])) {
 
-                    InvalidCharactersChecker invalidCharactersChecker = new InvalidCharacters();
-                    String invalidChars = invalidCharactersChecker.getInvalidCharacters(args[2]);
+                    String invalidChars = InvalidCharacters.getInvalidCharacters(args[2]);
 
                     if (!invalidChars.isEmpty()) {
                         Message.sendMsg(pl, String.format("&cНедопустимые символы: %s", invalidChars));
@@ -452,8 +449,7 @@ public class Commands implements CommandExecutor {
                     Message.logger(BAirDrop.getConfigMessage().getMessage("few-arguments"));
                     return true;
                 }
-                InvalidCharactersChecker invalidCharactersChecker = new InvalidCharacters();
-                String invalidChars = invalidCharactersChecker.getInvalidCharacters(args[1]);
+                String invalidChars = InvalidCharacters.getInvalidCharacters(args[1]);
 
                 if (!invalidChars.isEmpty()) {
                     Message.error( String.format("Недопустимые символы: %s", invalidChars));
@@ -529,8 +525,7 @@ public class Commands implements CommandExecutor {
 
                 if (BAirDrop.airDrops.containsKey(args[1])) {
 
-                    InvalidCharactersChecker invalidCharactersChecker = new InvalidCharacters();
-                    String invalidChars = invalidCharactersChecker.getInvalidCharacters(args[2]);
+                    String invalidChars = InvalidCharacters.getInvalidCharacters(args[2]);
 
                     if (!invalidChars.isEmpty()) {
                         Message.error(String.format("Недопустимые символы: %s", invalidChars));

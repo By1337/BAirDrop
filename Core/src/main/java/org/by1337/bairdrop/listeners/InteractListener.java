@@ -8,11 +8,10 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import org.by1337.bairdrop.AirDrop;
+import org.by1337.bairdrop.AirDropUtils;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.api.event.AirDropOpenEvent;
 import org.by1337.bairdrop.customListeners.CustomEvent;
-import org.by1337.bairdrop.util.AirManager;
-import org.by1337.bairdrop.util.Message;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -23,7 +22,7 @@ public class InteractListener implements Listener {
     public void PlayerClick(PlayerInteractEvent e) {
         Player pl = e.getPlayer();
         if (e.getAction() == Action.RIGHT_CLICK_BLOCK || BAirDrop.getInstance().getConfig().getBoolean("geyser") && e.getClickedBlock() != null) {
-            AirDrop airDrop = AirManager.getAirDropForLocation(e.getClickedBlock().getLocation());
+            AirDrop airDrop = AirDropUtils.getAirDropForLocation(e.getClickedBlock().getLocation());
 
             if(airDrop == null)
                 return;

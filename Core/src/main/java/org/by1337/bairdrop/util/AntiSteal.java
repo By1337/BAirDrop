@@ -40,7 +40,6 @@ public class AntiSteal implements Listener {
                     chestStealData.addTime(interval);
                 }
                 if (chestStealData.getLastSteal() != -1 && currentTime - chestStealData.getLastSteal() <= BAirDrop.getInstance().getConfig().getInt("anti-steal.сooldown")){
-                  //  chestStealData.setLastSteal(currentTime);
                     event.setCancelled(true);
                     Message.sendMsg(player, BAirDrop.getConfigMessage().getMessage("anti-steal-limit-speed"));
                     if (event.getCurrentItem() != null){
@@ -52,7 +51,6 @@ public class AntiSteal implements Listener {
 
                 if (chestStealData.getWarnings() >= BAirDrop.getInstance().getConfig().getInt("anti-steal.max-warnings")) {
                     airDrop.notifyObservers(CustomEvent.PLAYER_STEAL, player);
-                  //  player.kickPlayer("Вы забираете предметы из сундука слишком быстро!");
                     chestStealData.reset();
                     event.setCancelled(true);
                 } else {

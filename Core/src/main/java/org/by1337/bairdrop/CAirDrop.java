@@ -126,8 +126,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
             id = fileConfiguration.getString("air-id");
             superName = id;
 
-            InvalidCharactersChecker invalidCharactersChecker = new InvalidCharacters();
-            String invalidChars = invalidCharactersChecker.getInvalidCharacters(id);
+            String invalidChars = InvalidCharacters.getInvalidCharacters(id);
 
             if (!invalidChars.isEmpty()) {
                 Message.error(String.format("Недопустимые символы: %s", invalidChars));
@@ -776,15 +775,15 @@ public class CAirDrop implements AirDrop, StateSerializable {
                 continue;
             }
             if (sb.indexOf("{time-to-open-format}") != -1){
-                sb.replace(sb.indexOf("{time-to-open-format}"), sb.indexOf("{time-to-open-format}") + 21, AirManager.getFormat(timeToOpen));
+                sb.replace(sb.indexOf("{time-to-open-format}"), sb.indexOf("{time-to-open-format}") + 21, AirDropUtils.getFormat(timeToOpen));
                 continue;
             }
             if (sb.indexOf("{time-to-start-format}") != -1){
-                sb.replace(sb.indexOf("{time-to-start-format}"), sb.indexOf("{time-to-start-format}") + 22, AirManager.getFormat(timeToStart));
+                sb.replace(sb.indexOf("{time-to-start-format}"), sb.indexOf("{time-to-start-format}") + 22, AirDropUtils.getFormat(timeToStart));
                 continue;
             }
             if (sb.indexOf("{time-to-end-format}") != -1){
-                sb.replace(sb.indexOf("{time-to-end-format}"), sb.indexOf("{time-to-end-format}") + 20, AirManager.getFormat(timeStop));
+                sb.replace(sb.indexOf("{time-to-end-format}"), sb.indexOf("{time-to-end-format}") + 20, AirDropUtils.getFormat(timeStop));
                 continue;
             }
             if (sb.indexOf("{rnd-1}") != -1){

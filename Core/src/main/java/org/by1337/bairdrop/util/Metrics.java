@@ -95,7 +95,6 @@ public class Metrics {
                         logErrors,
                         logSentData,
                         logResponseStatusText);
-      //  new AirManager().loadAndRegister();
     }
 
     /** Shuts down the underlying scheduler service. */

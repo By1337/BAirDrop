@@ -1,8 +1,8 @@
 package org.by1337.bairdrop.util;
 
-public class InvalidCharacters implements InvalidCharactersChecker{
-    @Override
-    public String getInvalidCharacters(String input) {
+public class InvalidCharacters {
+
+    public static String getInvalidCharacters(String input) {
         String pattern = "^[a-zA-Z0-9-_]+$";
         StringBuilder invalidCharacters = new StringBuilder();
 

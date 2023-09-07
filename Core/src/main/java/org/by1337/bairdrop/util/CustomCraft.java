@@ -67,9 +67,9 @@ public class CustomCraft {
 
     public void callListeners(String listener, @NotNull Player pl) {
         try {
-            if (!BAirDrop.customEventListeners.containsKey(listener))
+            if (!BAirDrop.customEventListeners.containsKey(NamespacedKey.fromString(listener)))
                 return;
-            BAirDrop.customEventListeners.get(listener).update(pl, null, CustomEvent.CRAFT_ITEM, false);
+            BAirDrop.customEventListeners.get(NamespacedKey.fromString(listener)).update(pl, null, CustomEvent.CRAFT_ITEM, false);
         } catch (StackOverflowError e) {
             Message.error(BAirDrop.getConfigMessage().getMessage("too-many-call"));
         }

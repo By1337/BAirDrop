@@ -4,18 +4,32 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="74b4e88f-8fcd-4bdf-bf73-9df5c90923b7" name="Changes" comment="refactor: airdrop commands">
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/Lang.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/resources/lang/en.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/test/java/Test.java" afterDir="false" />
+    <list default="true" id="74b4e88f-8fcd-4bdf-bf73-9df5c90923b7" name="Changes" comment="refactor: lang file">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/BMatch.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/test/java/BMatchTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Core/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/AirDropUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/AirDropUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/BAirDrop.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/BAirDrop.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/CAirDrop.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/CAirDrop.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/EasyBossBarCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/EasyBossBarCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/command/Commands.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/command/Commands.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/listeners/InteractListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/listeners/InteractListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/ShowAllListeners.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/ShowAllListeners.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/util/ItemUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/util/ItemUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/AirManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/AntiSteal.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/AntiSteal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/CustomCraft.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/CustomCraft.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/EasyBossBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/EasyBossBar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/ExecuteCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/ExecuteCommands.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/InvalidCharacters.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/InvalidCharacters.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/InvalidCharactersChecker.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/Metrics.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/Metrics.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/PlaceholderHook.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/PlaceholderHook.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/test/java/Test.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Lib/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Lib/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/v1_16_5/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/v1_16_5/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -101,6 +115,7 @@
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "ToolWindowRun.ShowToolbar": "false",
     "git-widget-placeholder": "v1.1.0",
     "ignore.virus.scanning.warn.message": "true",
@@ -128,12 +143,22 @@
       <recent name="Q:\cod\idea Java\BAirDrop\Main" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.Test.a">
-    <configuration name="Test.a" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="JUnit.BMatchTest.run">
+    <configuration name="BMatchTest.a" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="BAirDrop" />
       <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="Test" />
+      <option name="MAIN_CLASS_NAME" value="BMatchTest" />
       <option name="METHOD_NAME" value="a" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="BMatchTest.run" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="BAirDrop" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="BMatchTest" />
+      <option name="METHOD_NAME" value="run" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -256,7 +281,8 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="JUnit.Test.a" />
+      <item itemvalue="JUnit.BMatchTest.a" />
+      <item itemvalue="JUnit.BMatchTest.run" />
       <item itemvalue="Maven.Lib package" />
       <item itemvalue="Maven.v1_16_5 package" />
       <item itemvalue="Maven.BAirDrop package" />
@@ -265,7 +291,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.Test.a" />
+        <item itemvalue="JUnit.BMatchTest.run" />
+        <item itemvalue="JUnit.BMatchTest.a" />
       </list>
     </recent_temporary>
   </component>
@@ -565,7 +592,14 @@
       <option name="project" value="LOCAL" />
       <updated>1694035958484</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="refactor: lang file">
+      <created>1694108391972</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1694108391972</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -622,7 +656,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="1.0.8-release" />
     <MESSAGE value="fix" />
     <MESSAGE value="remove cmi holograms" />
     <MESSAGE value="test protocol holo" />
@@ -647,7 +680,8 @@
     <MESSAGE value="1.0.9" />
     <MESSAGE value="feat: new clone `id` generator" />
     <MESSAGE value="refactor: airdrop commands" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor: airdrop commands" />
+    <MESSAGE value="refactor: lang file" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor: lang file" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
