@@ -12,6 +12,11 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/Lib/pom.xml" />
         <option value="$PROJECT_DIR$/v1_16_5/pom.xml" />
+        <option value="$PROJECT_DIR$/Api/pom.xml" />
+        <option value="$PROJECT_DIR$/v1_17/pom.xml" />
+        <option value="$PROJECT_DIR$/v1_17_1/pom.xml" />
+        <option value="$PROJECT_DIR$/v1_18/pom.xml" />
+        <option value="$PROJECT_DIR$/v1_18_1/pom.xml" />
       </list>
     </option>
   </component>

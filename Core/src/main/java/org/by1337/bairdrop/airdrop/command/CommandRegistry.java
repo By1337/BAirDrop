@@ -66,6 +66,7 @@ public class CommandRegistry {
         registerCommandExecutor(new RemoveBossBarCommand());
         registerCommandExecutor(new CallListenerCommand());
         registerCommandExecutor(new NearPlayersCommand());
+        registerCommandExecutor(new SummonCommand());
     }
 
 }

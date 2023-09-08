@@ -156,6 +156,11 @@
             <version>1.18.20</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.by1337</groupId>
+            <artifactId>Api</artifactId>
+            <version>1.0</version>
+        </dependency>
         <!--tests-->
         <dependency>
             <groupId>junit</groupId>

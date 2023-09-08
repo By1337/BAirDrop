@@ -10,12 +10,10 @@
         <module>Core</module>
         <module>Lib</module>
         <module>v1_16_5</module>
+        <module>Api</module>
+        <module>v1_17</module>
+        <module>v1_17_1</module>
+        <module>v1_18</module>
+        <module>v1_18_1</module>
     </modules>
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.2</version>
-        </dependency>
-    </dependencies>
 </project>

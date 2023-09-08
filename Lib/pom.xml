@@ -76,10 +76,36 @@
             <version>1.0</version>
         </dependency>
         <dependency>
+            <groupId>org.by1337</groupId>
+            <artifactId>v1_17</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.by1337</groupId>
+            <artifactId>v1_17_1</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.by1337</groupId>
+            <artifactId>v1_18</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.by1337</groupId>
+            <artifactId>Api</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.13.2</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.by1337</groupId>
+            <artifactId>v1_18_1</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>
