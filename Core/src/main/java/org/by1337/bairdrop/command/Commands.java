@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.by1337.api.world.BLocation;
+import org.by1337.api.inventory.ItemStackSerialize;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.CAirDrop;
@@ -21,7 +21,7 @@ import org.by1337.bairdrop.locationGenerator.GeneratorLoc;
 import org.by1337.bairdrop.scripts.Script;
 import org.by1337.bairdrop.util.InvalidCharacters;
 import org.by1337.bairdrop.util.Message;
-import org.by1337.lib.SummonCommand;
+import org.by1337.lib.inventory.ItemStackSerializeFactory;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -35,6 +35,14 @@ public class Commands implements CommandExecutor {
         if (sender instanceof Player pl) {
             if (args.length == 0) {
                 Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("few-arguments"));
+                return true;
+            }
+            if (args[0].equals("test")) {
+                ItemStackSerialize itemStackSerialize = ItemStackSerializeFactory.create();
+                ItemStack itemStack = pl.getInventory().getItemInMainHand();
+                String s = itemStackSerialize.serialize(itemStack);
+                System.out.println(s);
+                pl.getLocation().getWorld().dropItem(pl.getLocation(), itemStackSerialize.deserialize(s));
                 return true;
             }
             if (args[0].equals("help")) {

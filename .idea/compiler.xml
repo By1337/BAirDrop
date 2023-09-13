@@ -8,14 +8,25 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="BAirDrop" />
-        <module name="v1_16_5" />
-        <module name="v1_17_1" />
-        <module name="v1_18_1" />
         <module name="Lib" />
+        <module name="V1_16_R3" />
+        <module name="V1_17_R1" />
+        <module name="V1_19_R1" />
+        <module name="V1_18_R1" />
+        <module name="V1_19_R2" />
+        <module name="V1_18_R2" />
+        <module name="V1_19_R3" />
+        <module name="V1_20_R1" />
         <module name="Api" />
-        <module name="v1_17" />
-        <module name="v1_18" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="v1_17_1" target="1.8" />
+      <module name="v1_18_1" target="1.8" />
+      <module name="v1_19" target="1.8" />
+      <module name="v1_19_1" target="1.8" />
+      <module name="v1_19_2" target="1.8" />
+      <module name="v1_19_4" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

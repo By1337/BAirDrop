@@ -28,7 +28,7 @@ public class ItemUtil {
     public static ItemMeta addLore(ItemStack itemStack, AirDrop airDrop, List<String> newLore){
         ItemMeta im = itemStack.getItemMeta();
         newLore.replaceAll(airDrop::replaceInternalPlaceholder);
-        newLore.replaceAll(AirDropUtils::colored);
+        newLore.replaceAll(AirDropUtils::color);
         newLore.replaceAll(Message::messageBuilder);
         if(im.getLore() != null) {
             newLore.addAll(im.getLore());

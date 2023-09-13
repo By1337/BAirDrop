@@ -12,8 +12,6 @@ import org.by1337.bairdrop.util.Message;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,7 +41,7 @@ public class SummonCommand implements CommandExecutor {
         Location loc = airDrop.getAnyLoc();
         Objects.requireNonNull(loc, String.format(BAirDrop.getConfigMessage().getMessage("loc-is-null2"), command));
         BLocation location = new BLocation(args.x, args.y, args.z, loc.getWorld().getName());
-        org.by1337.lib.SummonCommand.execute(args.entityType, location, args.nbt);
+        org.by1337.lib.command.SummonCommand.execute(args.entityType, location, args.nbt);
     }
 
     @ToString

@@ -6,6 +6,7 @@ public class BMatchTest {
     @Test
     public void run() {
         Assert.assertEquals(BMatch.match("match[10 > 9]"), "1");
+        Assert.assertEquals(BMatch.match("match[10 % 5 == 0]"), "1");
         Assert.assertEquals(BMatch.match("match[10 > 10]"), "0");
         Assert.assertEquals(BMatch.match("match[10 >= 10]"), "1");
         Assert.assertEquals(BMatch.match("match[9 <= 10]"), "1");

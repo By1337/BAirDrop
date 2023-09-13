@@ -16,6 +16,7 @@ import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.customListeners.observer.Observer;
 import org.by1337.bairdrop.scripts.JsScript;
+import org.by1337.bairdrop.util.BMatch;
 import org.by1337.bairdrop.util.ExecuteCommands;
 import org.by1337.bairdrop.util.LogLevel;
 import org.by1337.bairdrop.util.Message;
@@ -90,7 +91,7 @@ public class CustomEventListener implements Observer {
         List<String> list = new ArrayList<>();
         list.add(Arrays.toString(commands));
         list.add(Arrays.toString(denyCommands));
-        Pattern laterPattern = Pattern.compile("\\[LATER-(\\d+)\\]");
+        Pattern laterPattern = Pattern.compile("\\[LATER-(\\d+)]");
         for (String str : list) {
             Matcher matcher = laterPattern.matcher(str);
             if (matcher.find()) {
@@ -120,7 +121,7 @@ public class CustomEventListener implements Observer {
         List<String> list = new ArrayList<>();
         list.add(Arrays.toString(commands));
         list.add(Arrays.toString(denyCommands));
-        Pattern laterPattern = Pattern.compile("\\[LATER-(\\d+)\\]");
+        Pattern laterPattern = Pattern.compile("\\[LATER-(\\d+)]");
         for (String str : list) {
             Matcher matcher = laterPattern.matcher(str);
             if (matcher.find()) {
@@ -170,7 +171,7 @@ public class CustomEventListener implements Observer {
     }
 
     private boolean LOGICAL_CHECK(String req, @Nullable AirDrop airDrop, @Nullable Player pl) {//{[RUN_JS=diamond.js] param(player=player)-scheduler}
-        Pattern pattern = Pattern.compile("\\{\\[RUN_JS=.*?\\}");
+        Pattern pattern = Pattern.compile("\\{\\[RUN_JS=.*?}");
         Matcher matcher = pattern.matcher(req);
         if (matcher.find()) {
             req = replaceText(req, runJs(matcher.group(0), pl, airDrop));
@@ -181,56 +182,8 @@ public class CustomEventListener implements Observer {
         return Boolean.parseBoolean(req);
     }
 
-    public static String math(String req, @Nullable AirDrop airDrop, @Nullable Player pl) {
-        String reqOld = req;
-        if (airDrop != null)
-            req = airDrop.replaceInternalPlaceholder(req);
-        req = Message.setPlaceholders(pl, req);
-
-        String mathExp = req.substring(req.indexOf("#") + 1, req.lastIndexOf("#"));
-        String[] args = mathExp.split("\\s+");
-
-        String result = "error";
-        try {
-            if (args[1].equals("%"))
-                result = (Double.parseDouble(args[0]) % Double.parseDouble(args[2])) + "";
-            if (args[1].equals("+"))
-                result = (Double.parseDouble(args[0]) + Double.parseDouble(args[2])) + "";
-            if (args[1].equals("-"))
-                result = (Double.parseDouble(args[0]) - Double.parseDouble(args[2])) + "";
-            if (args[1].equals("/"))
-                result = (Double.parseDouble(args[0]) / Double.parseDouble(args[2])) + "";
-            if (args[1].equals("*"))
-                result = (Double.parseDouble(args[0]) * Double.parseDouble(args[2])) + "";
-            if (args[1].equals("=="))
-                result = (Double.parseDouble(args[0]) == Double.parseDouble(args[2])) + "";
-            if (args[1].equals(">"))
-                result = (Double.parseDouble(args[0]) > Double.parseDouble(args[2])) + "";
-            if (args[1].equals("<"))
-                result = (Double.parseDouble(args[0]) < Double.parseDouble(args[2])) + "";
-            if (args[1].equals(">="))
-                result = (Double.parseDouble(args[0]) >= Double.parseDouble(args[2])) + "";
-            if (args[1].equals("<="))
-                result = (Double.parseDouble(args[0]) <= Double.parseDouble(args[2])) + "";
-            if (args[1].equals("!="))
-                result = (Double.parseDouble(args[0]) != Double.parseDouble(args[2])) + "";
-        } catch (NumberFormatException e) {
-            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("numeric_check-error-not-a-number"), reqOld));
-            Message.error(e.getLocalizedMessage()); //.replace("For input string:", "Не число:")
-            result = "0.5";
-        } catch (ArrayIndexOutOfBoundsException e) {
-            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("numerical_check-few-arguments"), reqOld));
-            result = "0.5";
-        } catch (Exception e) {
-            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("numerical-check-unknown-error"), reqOld));
-            e.printStackTrace();
-            result = "0.5";
-        }
-        return req.replace("[math#" + mathExp + "#]", result);
-    }
-
     private boolean NUMERICAL_CHECK(String checkId, String req, @Nullable AirDrop airDrop, @Nullable Player pl) {
-        Pattern pattern = Pattern.compile("\\{\\[RUN_JS=.*?\\}");
+        Pattern pattern = Pattern.compile("\\{\\[RUN_JS=.*?}");
         Matcher matcher = pattern.matcher(req);
         if (matcher.find()) {
             req = replaceText(req, runJs(matcher.group(0), pl, airDrop));
@@ -238,53 +191,9 @@ public class CustomEventListener implements Observer {
         if (airDrop != null)
             req = airDrop.replaceInternalPlaceholder(req);
         req = Message.setPlaceholders(pl, req);
-        if (req.contains("[math#"))
-            req = CustomEventListener.math(req, airDrop, pl);
-        String[] args = req.split(" ");
-        try {
-            if (args[1].equals("%")) {
-                if (args[3].equals("=="))
-                    return Double.parseDouble(args[0]) % Double.parseDouble(args[2]) == Double.parseDouble(args[4]);
-                if (args[3].equals(">"))
-                    return Double.parseDouble(args[0]) % Double.parseDouble(args[2]) > Double.parseDouble(args[4]);
-                if (args[3].equals("<"))
-                    return Double.parseDouble(args[0]) % Double.parseDouble(args[2]) < Double.parseDouble(args[4]);
-                if (args[3].equals(">="))
-                    return Double.parseDouble(args[0]) % Double.parseDouble(args[2]) >= Double.parseDouble(args[4]);
-                if (args[3].equals("<="))
-                    return Double.parseDouble(args[0]) % Double.parseDouble(args[2]) <= Double.parseDouble(args[4]);
-                if (args[3].equals("!="))
-                    return Double.parseDouble(args[0]) % Double.parseDouble(args[2]) != Double.parseDouble(args[4]);
-                Message.error(String.format(BAirDrop.getConfigMessage().getMessage("numerical-check-unknown-operator"), args[3], checkId));
-                return false;
-            }
-            if (args[1].equals("=="))
-                return Double.parseDouble(args[0]) == Double.parseDouble(args[2]);
-            if (args[1].equals(">"))
-                return Double.parseDouble(args[0]) > Double.parseDouble(args[2]);
-            if (args[1].equals("<"))
-                return Double.parseDouble(args[0]) < Double.parseDouble(args[2]);
-            if (args[1].equals(">="))
-                return Double.parseDouble(args[0]) >= Double.parseDouble(args[2]);
-            if (args[1].equals("<="))
-                return Double.parseDouble(args[0]) <= Double.parseDouble(args[2]);
-            if (args[1].equals("!="))
-                return Double.parseDouble(args[0]) != Double.parseDouble(args[2]);
-            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("numerical-check-unknown-operator"), args[1], checkId));
-            return false;
-        } catch (NumberFormatException e) {
-            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("numeric_check-error-not-a-number"), checkId));
-            Message.error(e.getLocalizedMessage());
-            return false;
-        } catch (ArrayIndexOutOfBoundsException e) {
-            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("numerical_check-few-arguments"), checkId));
-            return false;
-        } catch (Exception e) {
-            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("numerical-check-unknown-error"), checkId));
-            e.printStackTrace();
-            return false;
-        }
+        req = BMatch.match(req);
 
+        return BMatch.match("match[" + req + "]").equals("1");
     }
 
     private boolean STRING_CHECK(String req, @Nullable AirDrop airDrop, @Nullable Player pl) {
@@ -296,8 +205,7 @@ public class CustomEventListener implements Observer {
         if (airDrop != null)
             req = airDrop.replaceInternalPlaceholder(req);
         req = Message.setPlaceholders(pl, req);
-        if (req.contains("[math#"))
-            req = CustomEventListener.math(req, airDrop, pl);
+        req = BMatch.match(req);
         if (req.contains("{player-get") && pl != null)
             req = ExecuteCommands.setPlayerPlaceholder(pl, req);
         String[] args = req.split(" ");
@@ -324,20 +232,10 @@ public class CustomEventListener implements Observer {
                     return "0";
                 }
                 HashMap<String, Object> map = new HashMap<>();
-                if (command.contains("param(")) {
-                    String param = command.split("param")[1];
-                    param = param.replace("(", "").replace(")", "");
-                    String[] args = param.split(",");
-                    for (String str : args) {
-                        Object scriptParam = null;
-                        if (str.split("=")[1].equals("player"))
-                            scriptParam = pl;
-                        else if (str.split("=")[1].equals("airdrop"))
-                            scriptParam = airDrop;
-                        else scriptParam = str.split("=")[1];
-                        map.put(str.split("=")[0], scriptParam);
-                    }
-                }
+
+                map.put("player", pl);
+                map.put("airdrop", airDrop);
+
                 JsScript jsScript = new JsScript();
                 return (String) jsScript.runScript(jsName, map);
             }
@@ -348,7 +246,7 @@ public class CustomEventListener implements Observer {
     }
 
     private String replaceText(String input, String to) {
-        String regex = "\\{\\[RUN_JS=.*?\\]\\s*(param\\(player=player\\))?(\\-scheduler)?\\}";
+        String regex = "\\{\\[RUN_JS=.*?]\\s*(param\\(player=player\\))?(-scheduler)?}";
         return input.replaceAll(regex, to);
     }
 

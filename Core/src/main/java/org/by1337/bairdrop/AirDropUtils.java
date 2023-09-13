@@ -114,7 +114,7 @@ public class AirDropUtils {
         }
         return time;
     }
-    public static String colored(String str) {
+    public static String color(String str) {
         str = str.replace("true", "&atrue");
         str = str.replace("false", "&cfalse");
         str = str.replace(" 0 ", " &c0 ");

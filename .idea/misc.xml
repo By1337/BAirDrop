@@ -17,7 +17,23 @@
         <option value="$PROJECT_DIR$/v1_17_1/pom.xml" />
         <option value="$PROJECT_DIR$/v1_18/pom.xml" />
         <option value="$PROJECT_DIR$/v1_18_1/pom.xml" />
+        <option value="$PROJECT_DIR$/v1_18_2/pom.xml" />
+        <option value="$PROJECT_DIR$/v1_19/pom.xml" />
+        <option value="$PROJECT_DIR$/v1_19_1/pom.xml" />
+        <option value="$PROJECT_DIR$/v1_19_2/pom.xml" />
+        <option value="$PROJECT_DIR$/v1_19_3/pom.xml" />
+        <option value="$PROJECT_DIR$/v1_19_4/pom.xml" />
+        <option value="$PROJECT_DIR$/v1_20/pom.xml" />
+        <option value="$PROJECT_DIR$/v1_20_1/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/v1_17_1/pom.xml" />
+        <option value="$PROJECT_DIR$/v1_18_1/pom.xml" />
+        <option value="$PROJECT_DIR$/v1_19_1/pom.xml" />
+        <option value="$PROJECT_DIR$/v1_19_2/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="17" project-jdk-type="JavaSDK">

@@ -146,7 +146,7 @@ public class ShowAllListeners implements Listener {
                     .split("%split%")).toList());
         }
         nweLore.replaceAll(airDrop::replaceInternalPlaceholder);
-        nweLore.replaceAll(AirDropUtils::colored);
+        nweLore.replaceAll(AirDropUtils::color);
         nweLore.replaceAll(Message::messageBuilder);
 
         im.setLore(nweLore);

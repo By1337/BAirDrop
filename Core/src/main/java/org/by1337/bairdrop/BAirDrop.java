@@ -28,6 +28,7 @@ import org.by1337.bairdrop.serializable.EffectDeserialize;
 import org.by1337.bairdrop.serializable.StateSerializable;
 import org.by1337.bairdrop.util.*;
 import org.by1337.bairdrop.util.Message;
+import org.by1337.lib.Version;
 
 import java.io.*;
 
@@ -59,6 +60,14 @@ public final class BAirDrop extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        try {
+            Version.init();
+            Message.logger("Version detected: " + Version.version);
+        } catch (Version.UnsupportedVersionException e) {
+            Message.error(e.getLocalizedMessage());
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
         ConfigurationSerialization.registerClass(CGenLoc.class);
 
         EffectDeserialize.register(Circle.class);
@@ -73,7 +82,6 @@ public final class BAirDrop extends JavaPlugin {
         getInstance().saveConfig();
         config = new CConfig();
         configMessage = (ConfigMessage) config;
-
 
 
         try {
@@ -110,11 +118,10 @@ public final class BAirDrop extends JavaPlugin {
         }
 
 
-
         for (File file : getiConfig().getAirDrops().keySet()) {
             AirDrop airDrop = new CAirDrop(getiConfig().getAirDrops().get(file), file);
             airDrops.put(getiConfig().getAirDrops().get(file).getString("air-id"), airDrop);
-            if(instance.getConfig().getBoolean("state-serializable")){
+            if (instance.getConfig().getBoolean("state-serializable")) {
                 StateSerializable stateSerializable = (StateSerializable) airDrop;
                 stateSerializable.stateDeserialize();
             }
@@ -165,7 +172,8 @@ public final class BAirDrop extends JavaPlugin {
             return;
         long x = System.currentTimeMillis();
         for (AirDrop airDrop : airDrops.values()) {
-            if (instance.getConfig().getBoolean("state-serializable") && airDrop instanceof StateSerializable stateSerializable) stateSerializable.stateSerialize();
+            if (instance.getConfig().getBoolean("state-serializable") && airDrop instanceof StateSerializable stateSerializable)
+                stateSerializable.stateSerialize();
 
             if (airDrop.isAirDropStarted())
                 airDrop.End();
