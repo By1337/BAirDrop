@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ASMSmaliIdeaPluginConfiguration">
+    <asm skipDebug="true" skipFrames="true" skipCode="false" expandFrames="false" />
+    <groovy codeStyle="LEGACY" />
+  </component>
   <component name="EntryPointsManager">
     <list size="1">
       <item index="0" class="java.lang.String" itemvalue="org.bukkit.event.EventHandler" />
@@ -25,10 +29,33 @@
         <option value="$PROJECT_DIR$/v1_19_4/pom.xml" />
         <option value="$PROJECT_DIR$/v1_20/pom.xml" />
         <option value="$PROJECT_DIR$/v1_20_1/pom.xml" />
+        <option value="$PROJECT_DIR$/V1_16_5/pom.xml" />
+        <option value="$PROJECT_DIR$/V1_17/pom.xml" />
+        <option value="$PROJECT_DIR$/V1_17_1/pom.xml" />
+        <option value="$PROJECT_DIR$/V1_18/pom.xml" />
+        <option value="$PROJECT_DIR$/V1_18_1/pom.xml" />
+        <option value="$PROJECT_DIR$/V1_18_2/pom.xml" />
+        <option value="$PROJECT_DIR$/V1_19/pom.xml" />
+        <option value="$PROJECT_DIR$/V1_19_1/pom.xml" />
+        <option value="$PROJECT_DIR$/V1_19_2/pom.xml" />
+        <option value="$PROJECT_DIR$/V1_19_3/pom.xml" />
+        <option value="$PROJECT_DIR$/V1_19_4/pom.xml" />
+        <option value="$PROJECT_DIR$/V1_10/pom.xml" />
+        <option value="$PROJECT_DIR$/V1_20/pom.xml" />
+        <option value="$PROJECT_DIR$/V1_20_1/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
       <set>
+        <option value="$PROJECT_DIR$/V1_16_R3/pom.xml" />
+        <option value="$PROJECT_DIR$/V1_17_R1/pom.xml" />
+        <option value="$PROJECT_DIR$/V1_18_R1/pom.xml" />
+        <option value="$PROJECT_DIR$/V1_18_R2/pom.xml" />
+        <option value="$PROJECT_DIR$/V1_19_R1/pom.xml" />
+        <option value="$PROJECT_DIR$/V1_19_R2/pom.xml" />
+        <option value="$PROJECT_DIR$/V1_19_R3/pom.xml" />
+        <option value="$PROJECT_DIR$/V1_20/pom.xml" />
+        <option value="$PROJECT_DIR$/V1_20_R1/pom.xml" />
         <option value="$PROJECT_DIR$/v1_17_1/pom.xml" />
         <option value="$PROJECT_DIR$/v1_18_1/pom.xml" />
         <option value="$PROJECT_DIR$/v1_19_1/pom.xml" />

@@ -5,14 +5,18 @@
       <module fileurl="file://$PROJECT_DIR$/Api/Api.iml" filepath="$PROJECT_DIR$/Api/Api.iml" />
       <module fileurl="file://$PROJECT_DIR$/Core/BAirDrop.iml" filepath="$PROJECT_DIR$/Core/BAirDrop.iml" />
       <module fileurl="file://$PROJECT_DIR$/Lib/Lib.iml" filepath="$PROJECT_DIR$/Lib/Lib.iml" />
-      <module fileurl="file://$PROJECT_DIR$/v1_16_5/V1_16_R3.iml" filepath="$PROJECT_DIR$/v1_16_5/V1_16_R3.iml" />
-      <module fileurl="file://$PROJECT_DIR$/V1_17_R1/V1_17_R1.iml" filepath="$PROJECT_DIR$/V1_17_R1/V1_17_R1.iml" />
-      <module fileurl="file://$PROJECT_DIR$/v1_18/V1_18_R1.iml" filepath="$PROJECT_DIR$/v1_18/V1_18_R1.iml" />
-      <module fileurl="file://$PROJECT_DIR$/v1_18_2/V1_18_R2.iml" filepath="$PROJECT_DIR$/v1_18_2/V1_18_R2.iml" />
-      <module fileurl="file://$PROJECT_DIR$/V1_19_R1/V1_19_R1.iml" filepath="$PROJECT_DIR$/V1_19_R1/V1_19_R1.iml" />
-      <module fileurl="file://$PROJECT_DIR$/V1_19_R2/V1_19_R2.iml" filepath="$PROJECT_DIR$/V1_19_R2/V1_19_R2.iml" />
-      <module fileurl="file://$PROJECT_DIR$/V1_19_R3/V1_19_R3.iml" filepath="$PROJECT_DIR$/V1_19_R3/V1_19_R3.iml" />
-      <module fileurl="file://$PROJECT_DIR$/v1_20_1/V1_20_R1.iml" filepath="$PROJECT_DIR$/v1_20_1/V1_20_R1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/V1_16_5/V1_16_5.iml" filepath="$PROJECT_DIR$/V1_16_5/V1_16_5.iml" />
+      <module fileurl="file://$PROJECT_DIR$/V1_17/V1_17.iml" filepath="$PROJECT_DIR$/V1_17/V1_17.iml" />
+      <module fileurl="file://$PROJECT_DIR$/V1_17_1/V1_17_1.iml" filepath="$PROJECT_DIR$/V1_17_1/V1_17_1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/V1_18/V1_18.iml" filepath="$PROJECT_DIR$/V1_18/V1_18.iml" />
+      <module fileurl="file://$PROJECT_DIR$/V1_18_1/V1_18_1.iml" filepath="$PROJECT_DIR$/V1_18_1/V1_18_1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/V1_18_2/V1_18_2.iml" filepath="$PROJECT_DIR$/V1_18_2/V1_18_2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/V1_19/V1_19.iml" filepath="$PROJECT_DIR$/V1_19/V1_19.iml" />
+      <module fileurl="file://$PROJECT_DIR$/V1_19_1/V1_19_1.iml" filepath="$PROJECT_DIR$/V1_19_1/V1_19_1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/V1_19_2/V1_19_2.iml" filepath="$PROJECT_DIR$/V1_19_2/V1_19_2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/V1_19_3/V1_19_3.iml" filepath="$PROJECT_DIR$/V1_19_3/V1_19_3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/V1_19_4/V1_19_4.iml" filepath="$PROJECT_DIR$/V1_19_4/V1_19_4.iml" />
+      <module fileurl="file://$PROJECT_DIR$/V1_20_1/V1_20_1.iml" filepath="$PROJECT_DIR$/V1_20_1/V1_20_1.iml" />
     </modules>
   </component>
 </project>
