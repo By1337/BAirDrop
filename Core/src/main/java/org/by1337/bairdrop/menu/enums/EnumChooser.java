@@ -1,4 +1,4 @@
-package org.by1337.bairdrop.menu;
+package org.by1337.bairdrop.menu.enums;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -30,7 +30,6 @@ public class EnumChooser<T extends Enum<T>> implements Listener {
     private final Inventory inventory;
     private int page = 0;
     private final Class<T> anEnum;
-    @Getter
     private final List<EnumValueFilter<T>> filters = new ArrayList<>();
     private final EnumToItemStackConverter<T> converter;
     private final EnumChooserResult<T> result;
@@ -50,13 +49,12 @@ public class EnumChooser<T extends Enum<T>> implements Listener {
         this.anEnum = anEnum;
         this.inventory = Bukkit.createInventory(null, 54, Message.messageBuilder(lang.title));
         Bukkit.getPluginManager().registerEvents(this, BAirDrop.getInstance());
-        generate();
     }
 
     /**
      * Generates the graphical representation of enum values in the inventory.
      */
-    private void generate() {
+    public void generate() {
         inventory.clear();
         int slot = 0;
         for (T val : anEnum.getEnumConstants()) {
@@ -145,6 +143,15 @@ public class EnumChooser<T extends Enum<T>> implements Listener {
         if (e.getInventory().equals(inventory)) {
             HandlerList.unregisterAll(this);
         }
+    }
+
+    /**
+     * Registers a filter to skip specific enum values when generating the inventory.
+     *
+     * @param filter The EnumValueFilter to register.
+     */
+    public void registerFilter(EnumValueFilter<T> filter){
+        filters.add(filter);
     }
 
     /**

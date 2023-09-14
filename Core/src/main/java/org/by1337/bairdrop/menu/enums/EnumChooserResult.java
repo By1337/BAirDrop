@@ -1,4 +1,4 @@
-package org.by1337.bairdrop.menu;
+package org.by1337.bairdrop.menu.enums;
 
 import javax.annotation.Nullable;
 

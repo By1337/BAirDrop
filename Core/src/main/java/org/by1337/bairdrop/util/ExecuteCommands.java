@@ -2,54 +2,27 @@ package org.by1337.bairdrop.util;
 
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Lidded;
-import org.bukkit.block.data.Directional;
-import org.bukkit.block.data.type.RespawnAnchor;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarFlag;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.by1337.bairdrop.AirDrop;
-import org.by1337.bairdrop.AirDropUtils;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.airdrop.command.CommandRegistry;
 import org.by1337.bairdrop.listeners.SetStaticLocation;
 import org.by1337.bairdrop.listeners.util.ListenChat;
-import org.by1337.bairdrop.locationGenerator.GeneratorUtils;
-import org.by1337.bairdrop.worldGuardHook.CSchematicsManager;
-import org.by1337.bairdrop.worldGuardHook.RegionManager;
+import org.by1337.bairdrop.menu.enums.EnumChooser;
 import org.by1337.bairdrop.api.event.ExecuteCommandEvent;
 import org.by1337.bairdrop.customListeners.CustomEvent;
-import org.by1337.bairdrop.customListeners.CustomEventListener;
 import org.by1337.bairdrop.menu.*;
 import org.by1337.bairdrop.menu.util.MenuItem;
-import org.by1337.bairdrop.scripts.JsScript;
-import org.by1337.bairdrop.scripts.Script;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static org.bukkit.Bukkit.*;
-
-import static org.by1337.bairdrop.BAirDrop.getInstance;
 
 public class ExecuteCommands {
 
@@ -103,8 +76,6 @@ public class ExecuteCommands {
         }
         return command;
     }
-
-
 
 
     public static void execute(AirDrop airDrop, MenuItem menuItem, InventoryClickEvent e) {
@@ -192,15 +163,13 @@ public class ExecuteCommands {
 
             if (str.equalsIgnoreCase("[change-locked-material]")) {
                 pl.closeInventory();
-                ChangeMaterial cm = new ChangeMaterial(airDrop, true);
-                getServer().getPluginManager().registerEvents(cm, BAirDrop.getInstance());
-                pl.openInventory(cm.getInventory());
+                EnumChooser<Material> enumChooser = createMaterialChooser(airDrop, pl, true);
+                pl.openInventory(enumChooser.getInventory());
             }
             if (str.equalsIgnoreCase("[change-unlocked-material]")) {
                 pl.closeInventory();
-                ChangeMaterial cm = new ChangeMaterial(airDrop, false);
-                getServer().getPluginManager().registerEvents(cm, BAirDrop.getInstance());
-                pl.openInventory(cm.getInventory());
+                EnumChooser<Material> enumChooser = createMaterialChooser(airDrop, pl, false);
+                pl.openInventory(enumChooser.getInventory());
             }
             if (str.equalsIgnoreCase("[change-world]")) {
                 pl.closeInventory();
@@ -324,5 +293,29 @@ public class ExecuteCommands {
                 airDrop.getEditAirMenu().menuGenerate("setStaticLoc");
             }
         }
+    }
+
+    @NotNull
+    private static EnumChooser<Material> createMaterialChooser(AirDrop airDrop, Player pl, boolean isLockedMaterial) {
+        EnumChooser<Material> enumChooser = new EnumChooser<>(
+                Material.class,
+                ItemStack::new,
+                result -> {
+                    if (result != null){
+                        if (isLockedMaterial)
+                            airDrop.setMaterialLocked(result);
+                        else
+                            airDrop.setMaterialUnlocked(result);
+                    }
+                    if (airDrop.getEditAirMenu() != null)
+                        airDrop.getEditAirMenu().unReg();
+                    EditAirMenu em = new EditAirMenu(airDrop);
+                    airDrop.setEditAirMenu(em);
+                    pl.openInventory(em.getInventory());
+                }
+                );
+        enumChooser.registerFilter(value -> !value.isBlock() || value.isAir());
+        enumChooser.generate();
+        return enumChooser;
     }
 }

@@ -1,4 +1,4 @@
-package org.by1337.bairdrop.menu;
+package org.by1337.bairdrop.menu.enums;
 
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
