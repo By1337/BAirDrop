@@ -1,5 +1,6 @@
 package org.by1337.bairdrop.menu;
 
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.EventHandler;
@@ -19,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class EditAirMenu implements Listener {
     private static EditAirMenu editAirMenu = null;
+    @Getter
     private final Inventory inventory;
     private final AirDrop airDrop;
 
@@ -82,10 +84,6 @@ public class EditAirMenu implements Listener {
     public MenuItem getMenuItem(String tag) {
         return MenuItem.menuItemHashMap.getOrDefault(tag, null);
 
-    }
-
-    public Inventory getInventory() {
-        return inventory;
     }
     public void unReg(){
         inventory.clear();

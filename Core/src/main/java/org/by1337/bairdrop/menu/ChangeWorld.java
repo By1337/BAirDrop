@@ -43,7 +43,7 @@ public class ChangeWorld implements Listener {
                 itemStack = new ItemStack(Material.END_STONE);
             else itemStack = new ItemStack(Material.COMMAND_BLOCK);
             ItemMeta im = itemStack.getItemMeta();
-            im.setDisplayName(Message.messageBuilder("&7Мир №" + slot));
+            im.setDisplayName(Message.messageBuilder("&7World №" + slot));
             List<String> lore = new ArrayList<>(BAirDrop.getConfigMessage().getList("world-lore"));
             lore.replaceAll(s -> s.replace("{type}", world.getEnvironment() + "").replace("{name}", world.getName()));
             lore.replaceAll(ChangeWorld::locate);

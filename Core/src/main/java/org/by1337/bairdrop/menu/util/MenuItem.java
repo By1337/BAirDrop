@@ -21,25 +21,25 @@ public class MenuItem {
     private final String name;
     private final List<String> lore;
     private final int slot;
-    private final List<String> LEFT_COMMANDS;
-    private final List<String> SHIFT_LEFT_COMMANDS;
-    private final List<String> RIGHT_COMMANDS;
-    private final List<String> SHIFT_RIGHT_COMMANDS;
-    private final List<String> MIDDLE_COMMANDS;
-    private final List<String> DROP_COMMANDS;
+    private final List<String> leftCommands;
+    private final List<String> shiftLeftCommands;
+    private final List<String> rightCommands;
+    private final List<String> shiftRightCommands;
+    private final List<String> middleCommands;
+    private final List<String> dropCommands;
     private final String material;
 
-    public MenuItem(@NotNull String tag, String name, List<String> lore, int slot, List<String> LEFT_COMMANDS, List<String> SHIFT_LEFT_COMMANDS, List<String> RIGHT_COMMANDS, List<String> SHIFT_RIGHT_COMMANDS, List<String> MIDDLE_COMMANDS, List<String> DROP_COMMANDS, String material) {
+    public MenuItem(@NotNull String tag, String name, List<String> lore, int slot, List<String> leftCommands, List<String> shiftLeftCommands, List<String> rightCommands, List<String> shiftRightCommands, List<String> middleCommands, List<String> dropCommands, String material) {
         this.tag = tag;
         this.name = name;
         this.lore = lore;
         this.slot = slot;
-        this.LEFT_COMMANDS = LEFT_COMMANDS;
-        this.SHIFT_LEFT_COMMANDS = SHIFT_LEFT_COMMANDS;
-        this.RIGHT_COMMANDS = RIGHT_COMMANDS;
-        this.SHIFT_RIGHT_COMMANDS = SHIFT_RIGHT_COMMANDS;
-        this.MIDDLE_COMMANDS = MIDDLE_COMMANDS;
-        this.DROP_COMMANDS = DROP_COMMANDS;
+        this.leftCommands = leftCommands;
+        this.shiftLeftCommands = shiftLeftCommands;
+        this.rightCommands = rightCommands;
+        this.shiftRightCommands = shiftRightCommands;
+        this.middleCommands = middleCommands;
+        this.dropCommands = dropCommands;
         this.material = material;
         menuItemHashMap.put(tag, this);
     }
@@ -75,27 +75,27 @@ public class MenuItem {
         return slot;
     }
 
-    public List<String> getLEFT_COMMANDS() {
-        return new ArrayList<>(LEFT_COMMANDS);
+    public List<String> getLeftCommands() {
+        return new ArrayList<>(leftCommands);
     }
 
-    public List<String> getSHIFT_LEFT_COMMANDS() {
-        return new ArrayList<>(SHIFT_LEFT_COMMANDS);
+    public List<String> getShiftLeftCommands() {
+        return new ArrayList<>(shiftLeftCommands);
     }
 
-    public List<String> getRIGHT_COMMANDS() {
-        return new ArrayList<>(RIGHT_COMMANDS);
+    public List<String> getRightCommands() {
+        return new ArrayList<>(rightCommands);
     }
 
-    public List<String> getSHIFT_RIGHT_COMMANDS() {
-        return new ArrayList<>(SHIFT_RIGHT_COMMANDS);
+    public List<String> getShiftRightCommands() {
+        return new ArrayList<>(shiftRightCommands);
     }
 
-    public List<String> getMIDDLE_COMMANDS() {
-        return new ArrayList<>(MIDDLE_COMMANDS);
+    public List<String> getMiddleCommands() {
+        return new ArrayList<>(middleCommands);
     }
 
-    public List<String> getDROP_COMMANDS() {
-        return new ArrayList<>(DROP_COMMANDS);
+    public List<String> getDropCommands() {
+        return new ArrayList<>(dropCommands);
     }
 }

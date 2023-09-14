@@ -1,10 +1,10 @@
-package org.by1337.bairdrop.menu.enums;
+package org.by1337.bairdrop.menu.property;
 
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -21,45 +21,27 @@ import org.by1337.bairdrop.util.Message;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Represents a utility class for choosing enum values from a graphical interface.
- * @param <T> The enum type.
- */
-public class EnumChooser<T extends Enum<T>> implements Listener {
+public class PropertyEditor implements Listener {
+
     @Getter
     private final Inventory inventory;
+    private final EditableProperties editableProperties;
     private int page = 0;
-    private final Class<T> anEnum;
-    private final List<EnumValueFilter<T>> filters = new ArrayList<>();
-    private final EnumToItemStackConverter<T> converter;
-    private final EnumChooserResult<T> result;
-    @Setter
-    private EnumChooserLang lang = new EnumChooserLang();
 
-    /**
-     * Creates an instance of the EnumChooser.
-     *
-     * @param anEnum    The enum class to choose values from.
-     * @param converter A converter for mapping enum values to materials.
-     * @param result    A callback to handle the selected enum value.
-     */
-    public EnumChooser(Class<T> anEnum, EnumToItemStackConverter<T> converter, EnumChooserResult<T> result) {
-        this.result = result;
-        this.converter = converter;
-        this.anEnum = anEnum;
-        this.inventory = Bukkit.createInventory(null, 54, Message.messageBuilder(lang.title));
+    @Setter
+    private PropertyEditLang lang = new PropertyEditLang();
+
+    public PropertyEditor(EditableProperties editableProperties) {
+        this.editableProperties = editableProperties;
+        this.inventory = Bukkit.createInventory(null, 54);
         Bukkit.getPluginManager().registerEvents(this, BAirDrop.getInstance());
+
     }
 
-    /**
-     * Generates the graphical representation of enum values in the inventory.
-     */
     public void generate() {
         inventory.clear();
         int slot = 0;
-        for (T val : anEnum.getEnumConstants()) {
-            if (filters.stream().findFirst().filter(f -> f.isSkip(val)).isPresent())
-                continue;
+        for (Property<?> property : editableProperties.getProperties()) {
             if (page > 0) {
                 if (slot < (52 * page)) {
                     slot++;
@@ -67,14 +49,7 @@ public class EnumChooser<T extends Enum<T>> implements Listener {
                 }
             }
             if (slot - (52 * page) >= 52) break;
-
-            ItemStack itemStack =  converter.convertToMaterial(val);
-            ItemMeta im = itemStack.getItemMeta();
-            assert im != null;
-            im.setDisplayName(Message.messageBuilder(lang.clickToSelect));
-            im.getPersistentDataContainer().set(NamespacedKey.fromString("value"), PersistentDataType.STRING, val.name());
-            itemStack.setItemMeta(im);
-            inventory.setItem(slot - (52 * page), itemStack);
+            inventory.setItem(slot - (52 * page), property.createItem());
             slot++;
         }
         if (slot >= 52) {
@@ -94,19 +69,13 @@ public class EnumChooser<T extends Enum<T>> implements Listener {
         inventory.setItem(52, itemStack);
     }
 
-    /**
-     * Handles inventory click events.
-     *
-     * @param e The InventoryClickEvent.
-     */
     @EventHandler
     public void onClick(InventoryClickEvent e) {
         if (e.getInventory().equals(inventory)) {
             e.setCancelled(true);
             if (e.getCurrentItem() == null) return;
             if (e.getSlot() == 52) {
-                HandlerList.unregisterAll(this);
-                result.result(null);
+                e.getWhoClicked().closeInventory();
                 return;
             }
             if (e.getSlot() == 53) {
@@ -122,22 +91,24 @@ public class EnumChooser<T extends Enum<T>> implements Listener {
             }
             ItemStack itemStack = e.getCurrentItem();
             ItemMeta im = itemStack.getItemMeta();
-            String value = im.getPersistentDataContainer().get(NamespacedKey.fromString("value"), PersistentDataType.STRING);
+            String value = im.getPersistentDataContainer().get(Property.PROPERTY_KEY, PersistentDataType.STRING);
 
             if (value == null){
                 generate();
                 return;
             }
-            result.result(Enum.valueOf(anEnum, value));
-            HandlerList.unregisterAll(this);
+
+            Property<?> property = editableProperties.getProperties().stream().findFirst().filter(p -> p.getName().equals(value)).orElse(null);
+
+            if (property == null){
+                generate();
+                return;
+            }
+            property.editValue((Player) e.getWhoClicked());
+            e.getWhoClicked().closeInventory();
         }
     }
 
-    /**
-     * Handles inventory close events.
-     *
-     * @param e The InventoryCloseEvent.
-     */
     @EventHandler
     public void onClose(InventoryCloseEvent e) {
         if (e.getInventory().equals(inventory)) {
@@ -146,25 +117,14 @@ public class EnumChooser<T extends Enum<T>> implements Listener {
     }
 
     /**
-     * Registers a filter to skip specific enum values when generating the inventory.
-     *
-     * @param filter The EnumValueFilter to register.
+     * Language settings for the PropertyEditor.
      */
-    public void registerFilter(EnumValueFilter<T> filter){
-        filters.add(filter);
-    }
-
-    /**
-     * Represents language settings for the EnumChooser.
-     */
-    public static class EnumChooserLang {
-        private final String clickToSelect = "&aLeft-click to set";
+    public static class PropertyEditLang {
         private final String swapPageName = "&aSwap page";
         private final List<String> swapPageLore = List.of(
                 "&aLMB &7- Next page",
                 "&cRMB &7- Previous page"
         );
         private final String back = "&cBack";
-        private final String title = "&7Changing material";
     }
 }

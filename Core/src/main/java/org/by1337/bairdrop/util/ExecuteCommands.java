@@ -12,7 +12,7 @@ import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.airdrop.command.CommandRegistry;
 import org.by1337.bairdrop.listeners.SetStaticLocation;
 import org.by1337.bairdrop.listeners.util.ListenChat;
-import org.by1337.bairdrop.menu.enums.EnumChooser;
+import org.by1337.bairdrop.menu.property.enums.EnumChooser;
 import org.by1337.bairdrop.api.event.ExecuteCommandEvent;
 import org.by1337.bairdrop.customListeners.CustomEvent;
 import org.by1337.bairdrop.menu.*;
@@ -80,17 +80,17 @@ public class ExecuteCommands {
 
     public static void execute(AirDrop airDrop, MenuItem menuItem, InventoryClickEvent e) {
         if (e.getClick() == ClickType.LEFT)
-            menuCommand(menuItem.getLEFT_COMMANDS(), airDrop, (Player) e.getWhoClicked());
+            menuCommand(menuItem.getLeftCommands(), airDrop, (Player) e.getWhoClicked());
         if (e.getClick() == ClickType.RIGHT)
-            menuCommand(menuItem.getRIGHT_COMMANDS(), airDrop, (Player) e.getWhoClicked());
+            menuCommand(menuItem.getRightCommands(), airDrop, (Player) e.getWhoClicked());
         if (e.getClick() == ClickType.SHIFT_LEFT)
-            menuCommand(menuItem.getSHIFT_LEFT_COMMANDS(), airDrop, (Player) e.getWhoClicked());
+            menuCommand(menuItem.getShiftLeftCommands(), airDrop, (Player) e.getWhoClicked());
         if (e.getClick() == ClickType.SHIFT_RIGHT)
-            menuCommand(menuItem.getSHIFT_RIGHT_COMMANDS(), airDrop, (Player) e.getWhoClicked());
+            menuCommand(menuItem.getShiftRightCommands(), airDrop, (Player) e.getWhoClicked());
         if (e.getClick() == ClickType.MIDDLE)
-            menuCommand(menuItem.getMIDDLE_COMMANDS(), airDrop, (Player) e.getWhoClicked());
+            menuCommand(menuItem.getMiddleCommands(), airDrop, (Player) e.getWhoClicked());
         if (e.getClick() == ClickType.DROP)
-            menuCommand(menuItem.getDROP_COMMANDS(), airDrop, (Player) e.getWhoClicked());
+            menuCommand(menuItem.getDropCommands(), airDrop, (Player) e.getWhoClicked());
     }
 
     private static void menuCommand(List<String> commands, AirDrop airDrop, Player pl) {
@@ -301,11 +301,11 @@ public class ExecuteCommands {
                 Material.class,
                 ItemStack::new,
                 result -> {
-                    if (result != null){
+                    if (result.isPresent()){
                         if (isLockedMaterial)
-                            airDrop.setMaterialLocked(result);
+                            airDrop.setMaterialLocked(result.get());
                         else
-                            airDrop.setMaterialUnlocked(result);
+                            airDrop.setMaterialUnlocked(result.get());
                     }
                     if (airDrop.getEditAirMenu() != null)
                         airDrop.getEditAirMenu().unReg();

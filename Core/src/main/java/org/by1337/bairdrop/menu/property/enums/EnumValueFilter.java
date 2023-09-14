@@ -1,4 +1,4 @@
-package org.by1337.bairdrop.menu.enums;
+package org.by1337.bairdrop.menu.property.enums;
 
 /**
  * Represents a functional interface for filtering enum values.

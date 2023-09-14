@@ -22,6 +22,10 @@ import org.by1337.bairdrop.locationGenerator.Generator;
 import org.by1337.bairdrop.locationGenerator.GeneratorLoc;
 import org.by1337.bairdrop.locationGenerator.CGenerator;
 import org.by1337.bairdrop.locationGenerator.GeneratorUtils;
+import org.by1337.bairdrop.menu.property.EditableProperties;
+import org.by1337.bairdrop.menu.property.ListenChat;
+import org.by1337.bairdrop.menu.property.Property;
+import org.by1337.bairdrop.menu.property.PropertyEditor;
 import org.by1337.bairdrop.worldGuardHook.RegionManager;
 import org.by1337.bairdrop.worldGuardHook.SchematicsManager;
 import org.by1337.bairdrop.api.event.AirDropEndEvent;
@@ -50,7 +54,34 @@ import static org.by1337.bairdrop.BAirDrop.*;
 import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.menu.EditAirMenu;
 
-public class CAirDrop implements AirDrop, StateSerializable {
+public class CAirDrop implements AirDrop, StateSerializable, EditableProperties {
+    //for test
+    private final List<Property<?>> properties = new ArrayList<>();
+    @Override
+    public List<Property<?>> getProperties() {
+        return properties;
+    }
+    private <T> Property<T> registerProperty(Property<T> property){
+        if (properties.stream().findFirst().filter(p -> p.getName().equals(property.getName())).isPresent()){
+            throw new IllegalArgumentException("there is already a property with the same name!");
+        }
+        properties.add(property);
+        return property;
+    }
+    private final Property<String> test = registerProperty(new Property<>("value", "test", List.of("123", "{value}"), Material.OBSERVER, "&7Тестовое значение") {
+        @Override
+        public void editValue(Player player) {
+            new ListenChat((str) -> {
+                str.ifPresent(test::setValue);
+                PropertyEditor propertyEditor = new PropertyEditor(instance);
+                propertyEditor.generate();
+                player.openInventory(propertyEditor.getInventory());
+
+            }, player);
+        }
+
+    });
+    //
     private String inventoryTitle;
     private String displayName;
     private int inventorySize;
@@ -110,7 +141,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
     private boolean summoner;
     private boolean randomizeSlot;
     private boolean hideInCompleter;
-    private final CAirDrop CAirDropInstance;
+    private final CAirDrop instance;
     private boolean useOnlyStaticLoc;
     private final List<Observer> observers = new ArrayList<>();
     private AntiSteal antiSteal = null;
@@ -119,7 +150,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
     private List<String> dec = new ArrayList<>();
 
     CAirDrop(FileConfiguration fileConfiguration, File airDropFile) {
-        CAirDropInstance = this;
+        instance = this;
         try {
             this.airDropFile = airDropFile;
             this.fileConfiguration = fileConfiguration;
@@ -243,7 +274,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
     }
 
     public CAirDrop(String id) {
-        CAirDropInstance = this;
+        instance = this;
         try {
             this.id = id;
             superName = id;
@@ -686,14 +717,14 @@ public class CAirDrop implements AirDrop, StateSerializable {
                     try {
                         if (futureLocation == null) {
                             if (usePreGeneratedLocations)
-                                futureLocation = generator.getPreLocation(CAirDropInstance);
+                                futureLocation = generator.getPreLocation(instance);
                             else
-                                futureLocation = generator.getLocation(CAirDropInstance, false);
+                                futureLocation = generator.getLocation(instance, false);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    CAirDropInstance.setBukkitTask(null);
+                    instance.setBukkitTask(null);
                 }
             }.runTaskAsynchronously(getInstance());
         }
@@ -707,293 +738,293 @@ public class CAirDrop implements AirDrop, StateSerializable {
     public String replaceInternalPlaceholder(String str) {//clown method 🤡
         if (!str.contains("{"))
             return str;
-        if (str.contains("\\{")){
+        if (str.contains("\\{")) {
             return str.replace("\\", "");
         }
         StringBuilder sb = new StringBuilder(str);
 
 
-    //    boolean
-        while (true){
+        //    boolean
+        while (true) {
             if (str.contains("{!")) {
-                if (sb.indexOf("{!clone}") != -1){
+                if (sb.indexOf("{!clone}") != -1) {
                     sb.replace(sb.indexOf("{!clone}"), sb.indexOf("{!clone}") + 8, String.valueOf(!isClone()));
                     continue;
                 }
-                if (sb.indexOf("{!airdrop-is-open}") != -1){
+                if (sb.indexOf("{!airdrop-is-open}") != -1) {
                     sb.replace(sb.indexOf("{!airdrop-is-open}"), sb.indexOf("{!airdrop-is-open}") + 18, String.valueOf(airDropLocked));
                     continue;
                 }
-                if (sb.indexOf("{!airdrop-is-start}") != -1){
+                if (sb.indexOf("{!airdrop-is-start}") != -1) {
                     sb.replace(sb.indexOf("{!airdrop-is-start}"), sb.indexOf("{!airdrop-is-start}") + 19, String.valueOf(!airDropStarted));
                     continue;
                 }
-                if (sb.indexOf("{!it-was-open}") != -1){
+                if (sb.indexOf("{!it-was-open}") != -1) {
                     sb.replace(sb.indexOf("{!it-was-open}"), sb.indexOf("{!it-was-open}") + 14, String.valueOf(!wasOpened));
                     continue;
                 }
-                if (sb.indexOf("{!use-pre-generated-locations}") != -1){
+                if (sb.indexOf("{!use-pre-generated-locations}") != -1) {
                     sb.replace(sb.indexOf("{!use-pre-generated-locations}"), sb.indexOf("{!use-pre-generated-locations}") + 30, String.valueOf(!usePreGeneratedLocations));
                     continue;
                 }
-                if (sb.indexOf("{!time-stop-event-must-go}") != -1){
+                if (sb.indexOf("{!time-stop-event-must-go}") != -1) {
                     sb.replace(sb.indexOf("{!time-stop-event-must-go}"), sb.indexOf("{!time-stop-event-must-go}") + 26, String.valueOf(!timeStopEventMustGo));
                     continue;
                 }
-                if (sb.indexOf("{!use-static-loc}") != -1){
+                if (sb.indexOf("{!use-static-loc}") != -1) {
                     sb.replace(sb.indexOf("{!use-static-loc}"), sb.indexOf("{!use-static-loc}") + 17, String.valueOf(!useStaticLoc));
                     continue;
                 }
-                if (sb.indexOf("{!flatness-check}") != -1){
+                if (sb.indexOf("{!flatness-check}") != -1) {
                     sb.replace(sb.indexOf("{!flatness-check}"), sb.indexOf("{!flatness-check}") + 17, String.valueOf(!flatnessCheck));
                     continue;
                 }
             }
             //activated
-            if (sb.indexOf("{super_name}") != -1){
+            if (sb.indexOf("{super_name}") != -1) {
                 sb.replace(sb.indexOf("{super_name}"), sb.indexOf("{super_name}") + "{super_name}".length(), superName);
                 continue;
             }
-            if (sb.indexOf("{activated}") != -1){
+            if (sb.indexOf("{activated}") != -1) {
                 sb.replace(sb.indexOf("{activated}"), sb.indexOf("{activated}") + "{activated}".length(), String.valueOf(activated));
                 continue;
             }
-            if (sb.indexOf("{use-only-static-loc}") != -1){
+            if (sb.indexOf("{use-only-static-loc}") != -1) {
                 sb.replace(sb.indexOf("{use-only-static-loc}"), sb.indexOf("{use-only-static-loc}") + 21, String.valueOf(useOnlyStaticLoc));
                 continue;
             }
-            if (sb.indexOf("{time-to-open}") != -1){
+            if (sb.indexOf("{time-to-open}") != -1) {
                 sb.replace(sb.indexOf("{time-to-open}"), sb.indexOf("{time-to-open}") + 14, String.valueOf(timeToOpen));
                 continue;
             }
-            if (sb.indexOf("{time-to-start}") != -1){
+            if (sb.indexOf("{time-to-start}") != -1) {
                 sb.replace(sb.indexOf("{time-to-start}"), sb.indexOf("{time-to-start}") + 15, String.valueOf(timeToStart));
                 continue;
             }
-            if (sb.indexOf("{time-to-end}") != -1){
+            if (sb.indexOf("{time-to-end}") != -1) {
                 sb.replace(sb.indexOf("{time-to-end}"), sb.indexOf("{time-to-end}") + 13, String.valueOf(timeStop));
                 continue;
             }
-            if (sb.indexOf("{time-to-open-format}") != -1){
+            if (sb.indexOf("{time-to-open-format}") != -1) {
                 sb.replace(sb.indexOf("{time-to-open-format}"), sb.indexOf("{time-to-open-format}") + 21, AirDropUtils.getFormat(timeToOpen));
                 continue;
             }
-            if (sb.indexOf("{time-to-start-format}") != -1){
+            if (sb.indexOf("{time-to-start-format}") != -1) {
                 sb.replace(sb.indexOf("{time-to-start-format}"), sb.indexOf("{time-to-start-format}") + 22, AirDropUtils.getFormat(timeToStart));
                 continue;
             }
-            if (sb.indexOf("{time-to-end-format}") != -1){
+            if (sb.indexOf("{time-to-end-format}") != -1) {
                 sb.replace(sb.indexOf("{time-to-end-format}"), sb.indexOf("{time-to-end-format}") + 20, AirDropUtils.getFormat(timeStop));
                 continue;
             }
-            if (sb.indexOf("{rnd-1}") != -1){
+            if (sb.indexOf("{rnd-1}") != -1) {
                 sb.replace(sb.indexOf("{rnd-1}"), sb.indexOf("{rnd-1}") + 7, String.valueOf(ThreadLocalRandom.current().nextInt(0, 1)));
                 continue;
             }
-            if (sb.indexOf("{rnd-10}") != -1){
+            if (sb.indexOf("{rnd-10}") != -1) {
                 sb.replace(sb.indexOf("{rnd-10}"), sb.indexOf("{rnd-10}") + 8, String.valueOf(ThreadLocalRandom.current().nextInt(0, 10)));
                 continue;
             }
-            if (sb.indexOf("{rnd-50}") != -1){
+            if (sb.indexOf("{rnd-50}") != -1) {
                 sb.replace(sb.indexOf("{rnd-50}"), sb.indexOf("{rnd-50}") + 8, String.valueOf(ThreadLocalRandom.current().nextInt(0, 50)));
                 continue;
             }
-            if (sb.indexOf("{rnd-100}") != -1){
+            if (sb.indexOf("{rnd-100}") != -1) {
                 sb.replace(sb.indexOf("{rnd-100}"), sb.indexOf("{rnd-100}") + 9, String.valueOf(ThreadLocalRandom.current().nextInt(0, 100)));
                 continue;
             }
-            if (sb.indexOf("{airdrop-is-open}") != -1){
+            if (sb.indexOf("{airdrop-is-open}") != -1) {
                 sb.replace(sb.indexOf("{airdrop-is-open}"), sb.indexOf("{airdrop-is-open}") + 17, String.valueOf(!airDropLocked));
                 continue;
             }
-            if (sb.indexOf("{airdrop-is-start}") != -1){
+            if (sb.indexOf("{airdrop-is-start}") != -1) {
                 sb.replace(sb.indexOf("{airdrop-is-start}"), sb.indexOf("{airdrop-is-start}") + 18, String.valueOf(airDropStarted));
                 continue;
             }
-            if (sb.indexOf("{it-was-open}") != -1){
+            if (sb.indexOf("{it-was-open}") != -1) {
                 sb.replace(sb.indexOf("{it-was-open}"), sb.indexOf("{it-was-open}") + 13, String.valueOf(wasOpened));
                 continue;
             }
-            if (sb.indexOf("{use-pre-generated-locations}") != -1){
+            if (sb.indexOf("{use-pre-generated-locations}") != -1) {
                 sb.replace(sb.indexOf("{use-pre-generated-locations}"), sb.indexOf("{use-pre-generated-locations}") + 29, String.valueOf(usePreGeneratedLocations));
                 continue;
             }
-            if (sb.indexOf("{time-stop-event-must-go}") != -1){
+            if (sb.indexOf("{time-stop-event-must-go}") != -1) {
                 sb.replace(sb.indexOf("{time-stop-event-must-go}"), sb.indexOf("{time-stop-event-must-go}") + 25, String.valueOf(timeStopEventMustGo));
                 continue;
             }
-            if (sb.indexOf("{use-static-loc}") != -1){
+            if (sb.indexOf("{use-static-loc}") != -1) {
                 sb.replace(sb.indexOf("{use-static-loc}"), sb.indexOf("{use-static-loc}") + 16, String.valueOf(useStaticLoc));
                 continue;
             }
-            if (sb.indexOf("{flatness-check}") != -1){
+            if (sb.indexOf("{flatness-check}") != -1) {
                 sb.replace(sb.indexOf("{flatness-check}"), sb.indexOf("{flatness-check}") + 16, String.valueOf(flatnessCheck));
                 continue;
             }
-            if (sb.indexOf("{summoner}") != -1){
+            if (sb.indexOf("{summoner}") != -1) {
                 sb.replace(sb.indexOf("{summoner}"), sb.indexOf("{summoner}") + 10, String.valueOf(summoner));
                 continue;
             }
-            if (sb.indexOf("{id}") != -1){
+            if (sb.indexOf("{id}") != -1) {
                 sb.replace(sb.indexOf("{id}"), sb.indexOf("{id}") + 4, id);
                 continue;
             }
-            if (sb.indexOf("{world}") != -1){
+            if (sb.indexOf("{world}") != -1) {
                 sb.replace(sb.indexOf("{world}"), sb.indexOf("{world}") + 7, world.getName());
                 continue;
             }
-            if (sb.indexOf("{air-name}") != -1){
+            if (sb.indexOf("{air-name}") != -1) {
                 sb.replace(sb.indexOf("{air-name}"), sb.indexOf("{air-name}") + 10, getDisplayName());
                 continue;
             }
-            if (sb.indexOf("{inv-name}") != -1){
+            if (sb.indexOf("{inv-name}") != -1) {
                 sb.replace(sb.indexOf("{inv-name}"), sb.indexOf("{inv-name}") + 10, getInventoryTitle());
                 continue;
             }
-            if (sb.indexOf("{spawn-min}") != -1){
+            if (sb.indexOf("{spawn-min}") != -1) {
                 sb.replace(sb.indexOf("{spawn-min}"), sb.indexOf("{spawn-min}") + 11, String.valueOf(getSpawnRadiusMin()));
                 continue;
             }
-            if (sb.indexOf("{spawn-max}") != -1){
+            if (sb.indexOf("{spawn-max}") != -1) {
                 sb.replace(sb.indexOf("{spawn-max}"), sb.indexOf("{spawn-max}") + 11, String.valueOf(getSpawnRadiusMax()));
                 continue;
             }
-            if (sb.indexOf("{air-protect}") != -1){
+            if (sb.indexOf("{air-protect}") != -1) {
                 sb.replace(sb.indexOf("{air-protect}"), sb.indexOf("{air-protect}") + 13, String.valueOf(getRegionRadius()));
                 continue;
             }
-            if (sb.indexOf("{search-before-start}") != -1){
+            if (sb.indexOf("{search-before-start}") != -1) {
                 sb.replace(sb.indexOf("{search-before-start}"), sb.indexOf("{search-before-start}") + 21, String.valueOf(getSearchBeforeStart()));
                 continue;
             }
-            if (sb.indexOf("{min-online-players}") != -1){
+            if (sb.indexOf("{min-online-players}") != -1) {
                 sb.replace(sb.indexOf("{min-online-players}"), sb.indexOf("{min-online-players}") + 20, String.valueOf(getMinPlayersToStart()));
                 continue;
             }
-            if (sb.indexOf("{material-locked}") != -1){
+            if (sb.indexOf("{material-locked}") != -1) {
                 sb.replace(sb.indexOf("{material-locked}"), sb.indexOf("{material-locked}") + 17, String.valueOf(materialLocked));
                 continue;
             }
-            if (sb.indexOf("{material-unlocked}") != -1){
+            if (sb.indexOf("{material-unlocked}") != -1) {
                 sb.replace(sb.indexOf("{material-unlocked}"), sb.indexOf("{material-unlocked}") + 19, String.valueOf(materialUnlocked));
                 continue;
             }
-            if (sb.indexOf("{world-loc}") != -1){
+            if (sb.indexOf("{world-loc}") != -1) {
                 sb.replace(sb.indexOf("{world-loc}"), sb.indexOf("{world-loc}") + 11, String.valueOf(GeneratorLoc.getSizeLocForAirDrop(this)));
                 continue;
             }
-            if (sb.indexOf("{start-countdown-after-click}") != -1){
+            if (sb.indexOf("{start-countdown-after-click}") != -1) {
                 sb.replace(sb.indexOf("{start-countdown-after-click}"), sb.indexOf("{start-countdown-after-click}") + 29, String.valueOf(isStartCountdownAfterClick()));
                 continue;
             }
-            if (sb.indexOf("{time-to-start-cons}") != -1){
+            if (sb.indexOf("{time-to-start-cons}") != -1) {
                 sb.replace(sb.indexOf("{time-to-start-cons}"), sb.indexOf("{time-to-start-cons}") + 20, String.valueOf(timeToStartCons));
                 continue;
             }
-            if (sb.indexOf("{search-before-start-cons}") != -1){
+            if (sb.indexOf("{search-before-start-cons}") != -1) {
                 sb.replace(sb.indexOf("{search-before-start-cons}"), sb.indexOf("{search-before-start-cons}") + 26, String.valueOf(searchBeforeStartCons));
                 continue;
             }
-            if (sb.indexOf("{time-to-open-cons}") != -1){
+            if (sb.indexOf("{time-to-open-cons}") != -1) {
                 sb.replace(sb.indexOf("{time-to-open-cons}"), sb.indexOf("{time-to-open-cons}") + 19, String.valueOf(timeToUnlockCons));
                 continue;
             }
 
-            if (sb.indexOf("{time-to-end-cons}") != -1){
+            if (sb.indexOf("{time-to-end-cons}") != -1) {
                 sb.replace(sb.indexOf("{time-to-end-cons}"), sb.indexOf("{time-to-end-cons}") + 18, String.valueOf(timeToStopCons));
                 continue;
             }
 
-            if (sb.indexOf("{clone}") != -1){
+            if (sb.indexOf("{clone}") != -1) {
                 sb.replace(sb.indexOf("{clone}"), sb.indexOf("{clone}") + 7, String.valueOf(isClone()));
                 continue;
             }
-            if (sb.indexOf("{stopWhenEmpty}") != -1){
+            if (sb.indexOf("{stopWhenEmpty}") != -1) {
                 sb.replace(sb.indexOf("{stopWhenEmpty}"), sb.indexOf("{stopWhenEmpty}") + 15, String.valueOf(stopWhenEmpty_event));
                 continue;
             }
-            if (sb.indexOf("{use-player-location}") != -1){
+            if (sb.indexOf("{use-player-location}") != -1) {
                 sb.replace(sb.indexOf("{use-player-location}"), sb.indexOf("{use-player-location}") + 21, String.valueOf(isUsePlayerLocation()));
                 continue;
             }
-            if (sb.indexOf("{global-timer}") != -1){
+            if (sb.indexOf("{global-timer}") != -1) {
                 sb.replace(sb.indexOf("{global-timer}"), sb.indexOf("{global-timer}") + 14, BAirDrop.globalTimer != null ? String.valueOf(BAirDrop.globalTimer.getTimeToStart()) : "var");
                 continue;
             }
             if (staticLocation == null) {
-                if (sb.indexOf("{stat-world}") != -1){
+                if (sb.indexOf("{stat-world}") != -1) {
                     sb.replace(sb.indexOf("{stat-world}"), sb.indexOf("{stat-world}") + 12, "?");
                     continue;
                 }
-                if (sb.indexOf("{stat-x}") != -1){
+                if (sb.indexOf("{stat-x}") != -1) {
                     sb.replace(sb.indexOf("{stat-x}"), sb.indexOf("{stat-x}") + 8, "?");
                     continue;
                 }
-                if (sb.indexOf("{stat-y}") != -1){
+                if (sb.indexOf("{stat-y}") != -1) {
                     sb.replace(sb.indexOf("{stat-y}"), sb.indexOf("{stat-y}") + 8, "?");
                     continue;
                 }
-                if (sb.indexOf("{stat-z}") != -1){
+                if (sb.indexOf("{stat-z}") != -1) {
                     sb.replace(sb.indexOf("{stat-z}"), sb.indexOf("{stat-z}") + 8, "?");
                     continue;
                 }
             } else {
-                if (sb.indexOf("{stat-world}") != -1){
+                if (sb.indexOf("{stat-world}") != -1) {
                     sb.replace(sb.indexOf("{stat-world}"), sb.indexOf("{stat-world}") + 12, staticLocation.getWorld().getName());
                     continue;
                 }
-                if (sb.indexOf("{stat-x}") != -1){
+                if (sb.indexOf("{stat-x}") != -1) {
                     sb.replace(sb.indexOf("{stat-x}"), sb.indexOf("{stat-x}") + 8, (String.valueOf(staticLocation.getX())).replace(".0", ""));
                     continue;
                 }
-                if (sb.indexOf("{stat-y}") != -1){
+                if (sb.indexOf("{stat-y}") != -1) {
                     sb.replace(sb.indexOf("{stat-y}"), sb.indexOf("{stat-y}") + 8, (String.valueOf(staticLocation.getY())).replace(".0", ""));
                     continue;
                 }
-                if (sb.indexOf("{stat-z}") != -1){
+                if (sb.indexOf("{stat-z}") != -1) {
                     sb.replace(sb.indexOf("{stat-z}"), sb.indexOf("{stat-z}") + 8, (String.valueOf(staticLocation.getZ())).replace(".0", ""));
                     continue;
                 }
             }
             if (getAnyLoc() == null) {
-                if (sb.indexOf("{x}") != -1){
+                if (sb.indexOf("{x}") != -1) {
                     sb.replace(sb.indexOf("{x}"), sb.indexOf("{x}") + 3, "?");
                     continue;
                 }
-                if (sb.indexOf("{y}") != -1){
+                if (sb.indexOf("{y}") != -1) {
                     sb.replace(sb.indexOf("{y}"), sb.indexOf("{y}") + 3, "?");
                     continue;
                 }
-                if (sb.indexOf("{z}") != -1){
+                if (sb.indexOf("{z}") != -1) {
                     sb.replace(sb.indexOf("{z}"), sb.indexOf("{z}") + 3, "?");
                     continue;
                 }
-                if (sb.indexOf("{biome}") != -1){
+                if (sb.indexOf("{biome}") != -1) {
                     sb.replace(sb.indexOf("{biome}"), sb.indexOf("{biome}") + 7, "NONE");
                     continue;
                 }
-                if (sb.indexOf("{GET_BLOCK_MATERIAL}") != -1){
+                if (sb.indexOf("{GET_BLOCK_MATERIAL}") != -1) {
                     sb.replace(sb.indexOf("{GET_BLOCK_MATERIAL}"), sb.indexOf("{GET_BLOCK_MATERIAL}") + 20, "AIR");
                     continue;
                 }
             } else {
-                if (sb.indexOf("{x}") != -1){
+                if (sb.indexOf("{x}") != -1) {
                     sb.replace(sb.indexOf("{x}"), sb.indexOf("{x}") + 3, (String.valueOf(getAnyLoc().getX())).replace(".0", ""));
                     continue;
                 }
-                if (sb.indexOf("{y}") != -1){
+                if (sb.indexOf("{y}") != -1) {
                     sb.replace(sb.indexOf("{y}"), sb.indexOf("{y}") + 3, (String.valueOf(getAnyLoc().getY())).replace(".0", ""));
                     continue;
                 }
-                if (sb.indexOf("{z}") != -1){
+                if (sb.indexOf("{z}") != -1) {
                     sb.replace(sb.indexOf("{z}"), sb.indexOf("{z}") + 3, (String.valueOf(getAnyLoc().getZ())).replace(".0", ""));
                     continue;
                 }
-                if (sb.indexOf("{biome}") != -1){
+                if (sb.indexOf("{biome}") != -1) {
                     sb.replace(sb.indexOf("{biome}"), sb.indexOf("{biome}") + 7, GeneratorUtils.getBiome(getAnyLoc()));
                     continue;
                 }
-                if (sb.indexOf("{GET_BLOCK_MATERIAL}") != -1){
+                if (sb.indexOf("{GET_BLOCK_MATERIAL}") != -1) {
                     sb.replace(sb.indexOf("{GET_BLOCK_MATERIAL}"), sb.indexOf("{GET_BLOCK_MATERIAL}") + 20, String.valueOf(GeneratorUtils.getBlock(this).getType()));
                     continue;
                 }
@@ -1129,7 +1160,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
         if (ie == null) {
             throw new IllegalArgumentException(String.format(BAirDrop.getConfigMessage().getMessage("unknown-effect"), name));
         }
-        if (loadedEffect.containsKey(id)){
+        if (loadedEffect.containsKey(id)) {
             throw new IllegalArgumentException(String.format(BAirDrop.getConfigMessage().getMessage("effect-replace-error"), id));
         }
         loadedEffect.put(id, ie);
@@ -1294,7 +1325,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
             map.put("item-" + x, itemStack);
         }
 
-     //   List<Object> effects = new ArrayList<>();
+        //   List<Object> effects = new ArrayList<>();
 
         Map<String, Object> effects = new HashMap<>();
 
@@ -1311,7 +1342,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
 //        for (String key : map.keySet()){
 //            mm.put(key, map.get(key));
 //        }
-     //   mm.put("oke", new ArrayList<>(effects));
+        //   mm.put("oke", new ArrayList<>(effects));
 //        mm.put("item", new ItemStack(Material.CREEPER_HEAD));
 //        map.put("okeeeey", mm);
         fileConfiguration.set("state", map);
@@ -1400,7 +1431,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
                 for (String key : effects.keySet()) {
                     Map<String, Object> ef = ((ConfigurationSection) effects.get(key)).getValues(false);
                     IEffect effect = EffectDeserialize.deserialize(ef);
-                    if (effect == null){
+                    if (effect == null) {
                         Message.error(key + " Не получилось десериализовать эффект");
                         continue;
                     }
@@ -1880,9 +1911,10 @@ public class CAirDrop implements AirDrop, StateSerializable {
     public void setSuperName(String superName) {
         this.superName = superName;
     }
+
     @Override
     public String toString() {
-        return this.getClass().getName()  + "{" +
+        return this.getClass().getName() + "{" +
                 "inventoryTitle='" + inventoryTitle + '\'' +
                 ", displayName='" + displayName + '\'' +
                 ", inventorySize=" + inventorySize +
@@ -1935,7 +1967,8 @@ public class CAirDrop implements AirDrop, StateSerializable {
                 ", superName='" + superName + '\'' +
                 '}';
     }
-    public void addDec(String... s){
+
+    public void addDec(String... s) {
         dec.addAll(List.of(s));
     }
 

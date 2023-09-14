@@ -16,6 +16,7 @@ import org.by1337.bairdrop.listeners.Compass;
 import org.by1337.bairdrop.menu.EditAirMenu;
 import org.by1337.bairdrop.menu.SelectAirMenu;
 import org.by1337.bairdrop.menu.ShowAllListeners;
+import org.by1337.bairdrop.menu.property.PropertyEditor;
 import org.by1337.bairdrop.scripts.JsScript;
 import org.by1337.bairdrop.customListeners.CustomEvent;
 import org.by1337.bairdrop.locationGenerator.GeneratorLoc;
@@ -38,14 +39,18 @@ public class Commands implements CommandExecutor {
                 Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("few-arguments"));
                 return true;
             }
-            if (args[0].equals("test")) {
-                ItemStackSerialize itemStackSerialize = ItemStackSerializeFactory.create();
-                ItemStack itemStack = pl.getInventory().getItemInMainHand();
-                String s = itemStackSerialize.serialize(itemStack);
-                System.out.println(s);
-                pl.getLocation().getWorld().dropItem(pl.getLocation(), itemStackSerialize.deserialize(s));
-                return true;
-            }
+//            if (args[0].equals("test")) {
+//                CAirDrop airDrop = (CAirDrop) airDrops.get("default");
+//                PropertyEditor propertyEditor = new PropertyEditor(airDrop);
+//                propertyEditor.generate();
+//                pl.openInventory(propertyEditor.getInventory());
+////                ItemStackSerialize itemStackSerialize = ItemStackSerializeFactory.create();
+////                ItemStack itemStack = pl.getInventory().getItemInMainHand();
+////                String s = itemStackSerialize.serialize(itemStack);
+////                System.out.println(s);
+////                pl.getLocation().getWorld().dropItem(pl.getLocation(), itemStackSerialize.deserialize(s));
+//                return true;
+//            }
             if (args[0].equals("help")) {
                 if (!pl.hasPermission("bair.help")) {
                     Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("no-prem"));
