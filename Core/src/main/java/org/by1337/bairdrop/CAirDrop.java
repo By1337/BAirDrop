@@ -339,7 +339,7 @@ public class CAirDrop implements AirDrop, StateSerializable, EditableProperties 
                             EditAirMenu.getInventory().clear();
                         }
                         if (isAirDropStarted())
-                            End();
+                            end();
                         if (clone) {
                             notifyObservers(CustomEvent.UNLOAD, null);
                             airDrops.remove(id);
@@ -385,7 +385,7 @@ public class CAirDrop implements AirDrop, StateSerializable, EditableProperties 
                     }
 
                     if (timeStop <= 0) {
-                        End();
+                        end();
                         updateEditAirMenu("stats");
 
                     } else if (!airDropLocked || timeStopEventMustGo && airDropStarted) {
@@ -404,7 +404,7 @@ public class CAirDrop implements AirDrop, StateSerializable, EditableProperties 
                         if (stop) {
                             stopWhenEmpty_event = true;
                             notifyObservers(CustomEvent.STOP_WHEN_EMPTY, null);
-                            End();
+                            end();
                         }
                     }
                     if (airDropStarted) {
@@ -516,7 +516,7 @@ public class CAirDrop implements AirDrop, StateSerializable, EditableProperties 
         if (airDropLocation == null) {
             if (staticLocation == null) {
                 Message.error(BAirDrop.getConfigMessage().getMessage("loc-is-null"));
-                End();
+                end();
                 return;
             } else airDropLocation = staticLocation.clone();
 
@@ -656,7 +656,7 @@ public class CAirDrop implements AirDrop, StateSerializable, EditableProperties 
     }
 
     @Override
-    public void End() {
+    public void end() {
         AirDropEndEvent airDropEndEvent = new AirDropEndEvent(this);
         Bukkit.getServer().getPluginManager().callEvent(airDropEndEvent);
         if (airDropEndEvent.isCancelled())
@@ -1257,7 +1257,7 @@ public class CAirDrop implements AirDrop, StateSerializable, EditableProperties 
     @Override
     public void unload() {
         if (airDropStarted) {
-            End();
+            end();
         }
         notifyObservers(CustomEvent.UNLOAD, null);
         airDrops.remove(getId());

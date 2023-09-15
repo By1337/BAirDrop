@@ -33,10 +33,6 @@ import org.by1337.lib.Version;
 import java.io.*;
 
 import java.util.*;
-import java.util.logging.Level;
-import java.util.regex.MatchResult;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public final class BAirDrop extends JavaPlugin {
@@ -180,9 +176,9 @@ public final class BAirDrop extends JavaPlugin {
                 stateSerializable.stateSerialize();
 
             if (airDrop.isAirDropStarted())
-                airDrop.End();
+                airDrop.end();
             if (airDrop.isClone())
-                airDrop.End();
+                airDrop.end();
             airDrop.notifyObservers(CustomEvent.UNLOAD, null);
             BAirDrop.hologram.remove(airDrop.getId());
             airDrop.save();
@@ -204,9 +200,9 @@ public final class BAirDrop extends JavaPlugin {
     public static void reload() {
         for (AirDrop airDrop : airDrops.values()) {
             if (airDrop.isAirDropStarted())
-                airDrop.End();
+                airDrop.end();
             if (airDrop.isClone())
-                airDrop.End();
+                airDrop.end();
             airDrop.notifyObservers(CustomEvent.UNLOAD, null);
             BAirDrop.hologram.remove(airDrop.getId());
             airDrop.setCanceled(true);

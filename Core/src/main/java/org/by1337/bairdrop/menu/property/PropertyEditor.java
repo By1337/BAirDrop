@@ -104,8 +104,8 @@ public class PropertyEditor implements Listener {
                 generate();
                 return;
             }
-            property.editValue((Player) e.getWhoClicked());
             e.getWhoClicked().closeInventory();
+            property.editValue((Player) e.getWhoClicked());
         }
     }
 

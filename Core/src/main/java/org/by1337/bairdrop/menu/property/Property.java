@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.by1337.bairdrop.ItemUtil.BaseHeadHook;
 import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.util.Placeholder;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +38,7 @@ public abstract class Property<T> implements EditValue<T> {
     @Getter
     private final List<String> lore;
     @Getter
-    private final Material material;
+    private final String material;
 
     /**
      * The list of placeholders associated with the property.
@@ -55,6 +56,25 @@ public abstract class Property<T> implements EditValue<T> {
      * @param displayName The display name of the property.
      */
     public Property(T value, String name, List<String> lore, Material material, String displayName) {
+        this.displayName = displayName;
+        this.value = value;
+        this.name = name;
+        this.lore = lore;
+        this.material = material.name();
+        placeholders.add(sb -> {
+            while (true) {
+                if (sb.indexOf("{value}") != -1) {
+                    sb.replace(sb.indexOf("{value}"), sb.indexOf("{value}") + "{value}".length(), String.valueOf(this.value));
+                    continue;
+                }
+                break;
+            }
+            return sb;
+        });
+        init();
+    }
+
+    public Property(T value, String name, List<String> lore, String material, String displayName) {
         this.displayName = displayName;
         this.value = value;
         this.name = name;
@@ -88,7 +108,7 @@ public abstract class Property<T> implements EditValue<T> {
      * @return An ItemStack representing the property.
      */
     public ItemStack createItem() {
-        ItemStack itemStack = new ItemStack(material);
+        ItemStack itemStack = new ItemStack(BaseHeadHook.getItem(material));
         ItemMeta im = itemStack.getItemMeta();
 
         im.setDisplayName(Message.messageBuilder(replace(displayName)));

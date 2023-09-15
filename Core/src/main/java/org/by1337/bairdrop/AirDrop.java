@@ -54,7 +54,7 @@ public interface AirDrop extends Observable {
      * Stops the airdrop.
      *
      */
-    void End();
+    void end();
 
     /**
      * Applies all placeholders to the string.

@@ -1,6 +1,5 @@
 package org.by1337.bairdrop.command;
 
-import net.md_5.bungee.api.ChatMessageType;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -8,7 +7,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.by1337.api.inventory.ItemStackSerialize;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.CAirDrop;
@@ -16,14 +14,12 @@ import org.by1337.bairdrop.listeners.Compass;
 import org.by1337.bairdrop.menu.EditAirMenu;
 import org.by1337.bairdrop.menu.SelectAirMenu;
 import org.by1337.bairdrop.menu.ShowAllListeners;
-import org.by1337.bairdrop.menu.property.PropertyEditor;
 import org.by1337.bairdrop.scripts.JsScript;
 import org.by1337.bairdrop.customListeners.CustomEvent;
 import org.by1337.bairdrop.locationGenerator.GeneratorLoc;
 import org.by1337.bairdrop.scripts.Script;
 import org.by1337.bairdrop.util.InvalidCharacters;
 import org.by1337.bairdrop.util.Message;
-import org.by1337.lib.inventory.ItemStackSerializeFactory;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -39,18 +35,19 @@ public class Commands implements CommandExecutor {
                 Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("few-arguments"));
                 return true;
             }
-//            if (args[0].equals("test")) {
+            if (args[0].equals("test")) {
+               // SpawnArmorStand.spawn(new BLocation(pl.getLocation()));
 //                CAirDrop airDrop = (CAirDrop) airDrops.get("default");
 //                PropertyEditor propertyEditor = new PropertyEditor(airDrop);
 //                propertyEditor.generate();
 //                pl.openInventory(propertyEditor.getInventory());
-////                ItemStackSerialize itemStackSerialize = ItemStackSerializeFactory.create();
-////                ItemStack itemStack = pl.getInventory().getItemInMainHand();
-////                String s = itemStackSerialize.serialize(itemStack);
-////                System.out.println(s);
-////                pl.getLocation().getWorld().dropItem(pl.getLocation(), itemStackSerialize.deserialize(s));
-//                return true;
-//            }
+//                ItemStackSerialize itemStackSerialize = ItemStackSerializeFactory.create();
+//                ItemStack itemStack = pl.getInventory().getItemInMainHand();
+//                String s = itemStackSerialize.serialize(itemStack);
+//                System.out.println(s);
+//                pl.getLocation().getWorld().dropItem(pl.getLocation(), itemStackSerialize.deserialize(s));
+                return true;
+            }
             if (args[0].equals("help")) {
                 if (!pl.hasPermission("bair.help")) {
                     Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("no-prem"));
@@ -303,7 +300,7 @@ public class Commands implements CommandExecutor {
                         return true;
                     }
                     Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("end"));
-                    BAirDrop.airDrops.get(args[1]).End();
+                    BAirDrop.airDrops.get(args[1]).end();
 
                 } else
                     Message.sendMsg(pl, String.format(BAirDrop.getConfigMessage().getMessage("unknown-airdrop"), args[1]));
@@ -525,7 +522,7 @@ public class Commands implements CommandExecutor {
                         return true;
                     }
                     Message.logger(BAirDrop.getConfigMessage().getMessage("end"));
-                    BAirDrop.airDrops.get(args[1]).End();
+                    BAirDrop.airDrops.get(args[1]).end();
 
                 } else
                     Message.logger(String.format(BAirDrop.getConfigMessage().getMessage("unknown-airdrop"), args[1]));

@@ -77,7 +77,7 @@ public class ChangeWorld implements Listener {
                 return;
             }
             if(airDrop.isAirDropStarted())
-                airDrop.End();
+                airDrop.end();
             airDrop.setFutureLocation(null);
             World world1 = Bukkit.getWorld(world);
             airDrop.setWorld(world1);

@@ -10,11 +10,13 @@ import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.by1337.bairdrop.BAirDrop;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,6 +26,8 @@ public class Message {
     private static final String AUTHOR = "&#a612cb&lB&#9a17d2&ly&#8d1bd9&l1&#8120e1&l3&#7424e8&l3&#6829ef&l7";
     private static final String prefixPlugin = "&#a600f4[&#a70bf5B&#a815f6A&#a920f7i&#aa2bf8r&#aa35f8d&#ab40f9r&#ac4bfao&#ad55fbp&#ae60fc]";
     private static final Pattern RAW_HEX_REGEX = Pattern.compile("&(#[a-f0-9]{6})", Pattern.CASE_INSENSITIVE);
+
+    private static final Logger LOGGER = JavaPlugin.getPlugin(BAirDrop.class).getLogger();
 
     /**
      * Boss bars created with the [NEW_BOSSBAR] command
@@ -90,7 +94,7 @@ public class Message {
      * @param msg The message
      */
     public static void logger(String msg) {
-        SENDER.sendMessage(messageBuilder(msg));
+        LOGGER.log(Level.INFO, messageBuilder(msg));
     }
 
     /**
@@ -99,9 +103,7 @@ public class Message {
      * @param msg The message
      */
     public static void error(String msg) {
-        BAirDrop.getInstance().getLogger().log(Level.SEVERE, msg);
-        sendAllOp(prefixPlugin + " &c" + msg);
-
+        LOGGER.log(Level.SEVERE, messageBuilder(msg));
     }
 
     /**
@@ -121,7 +123,7 @@ public class Message {
      * @param msg The message
      */
     public static void warning(String msg) {
-        BAirDrop.getInstance().getLogger().warning(messageBuilder(msg));
+        LOGGER.log(Level.WARNING, messageBuilder(msg));
     }
 
     /**

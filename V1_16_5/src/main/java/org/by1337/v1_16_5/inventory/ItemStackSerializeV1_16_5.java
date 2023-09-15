@@ -7,7 +7,6 @@ import org.bukkit.inventory.ItemStack;
 import org.by1337.api.inventory.ItemStackSerialize;
 
 import java.nio.charset.StandardCharsets;
-import java.util.*;
 
 import java.util.Base64;
 
