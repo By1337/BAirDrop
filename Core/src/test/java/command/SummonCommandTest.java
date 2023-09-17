@@ -1,15 +1,8 @@
 package command;
 
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.by1337.bairdrop.airdrop.command.impl.SummonCommand;
+import org.by1337.bairdrop.airdrop.command.airdrop.impl.SummonCommand;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.io.File;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class SummonCommandTest {
 
     @Test

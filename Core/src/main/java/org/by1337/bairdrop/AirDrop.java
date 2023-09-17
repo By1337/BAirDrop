@@ -5,6 +5,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -26,10 +28,10 @@ public interface AirDrop extends Observable {
     /**
      * Launches the airdrop and generates locations for it in a separate thread.
      *
-     * @param player Sends the location generation process log.
+     * @param sender Sends the location generation process log.
      */
 
-    void startCommand(@Nullable Player player);
+    void startCommand(@Nullable CommandSender sender);
 
     /**
      * Saves the airdrop to a file.

@@ -18,6 +18,7 @@ public class ItemStackSerializeV1_16_5 implements ItemStackSerialize {
             NBTTagCompound itemTag = new NBTTagCompound();
             i.save(itemTag);
             String serialize = itemTag.toString();
+            System.out.println(serialize);
             return new String(Base64.getEncoder().encode(serialize.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
         } catch (Exception e) {
             throw new IllegalArgumentException("Failed to serialize ItemStack", e);

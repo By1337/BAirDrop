@@ -18,6 +18,7 @@ import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.effect.util.RGBHelper;
 import org.by1337.bairdrop.util.Message;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,8 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class Compass implements Listener {
+    @NotNull
+    public static final NamespacedKey COMPASS_TAG = NamespacedKey.fromString("compass_bairdrop");
     public static ItemStack item = null;
     private double maxDistance = 10;
     private double size = 3;
@@ -39,7 +42,7 @@ public class Compass implements Listener {
             Player pl = e.getPlayer();
             ItemStack itemStack = e.getPlayer().getInventory().getItemInMainHand();
             if(itemStack.getItemMeta() == null) return;
-            boolean isCompass = itemStack.getItemMeta().getPersistentDataContainer().has(NamespacedKey.fromString("compass_bairdrop"), PersistentDataType.STRING);
+            boolean isCompass = itemStack.getItemMeta().getPersistentDataContainer().has(COMPASS_TAG, PersistentDataType.STRING);
             if(!isCompass) return;
             if(cd.getOrDefault(pl.getUniqueId(), 0L) - System.currentTimeMillis() > 0)
                 return;
@@ -121,7 +124,7 @@ public class Compass implements Listener {
         im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         im.addEnchant(Enchantment.ARROW_DAMAGE, 1, false);
-        im.getPersistentDataContainer().set(NamespacedKey.fromString("compass_bairdrop"), PersistentDataType.STRING, "true");
+        im.getPersistentDataContainer().set(COMPASS_TAG, PersistentDataType.STRING, "true");
         itemStack.setItemMeta(im);
         item = itemStack;
     }

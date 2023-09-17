@@ -4,39 +4,108 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="74b4e88f-8fcd-4bdf-bf73-9df5c90923b7" name="Changes" comment="feat: ItemStack serialize, refactor: modules rename">
-      <change afterPath="$PROJECT_DIR$/Api/src/main/java/org/by1337/api/factory/EntityFactory.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Api/src/main/java/org/by1337/api/network/protocol/game/DestroyEntityPacket.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Api/src/main/java/org/by1337/api/network/protocol/game/MobMetaDataPacket.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Api/src/main/java/org/by1337/api/network/protocol/game/Packet.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Api/src/main/java/org/by1337/api/network/protocol/game/SpawnMobPacket.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Api/src/main/java/org/by1337/api/world/entity/PacketArmorStand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Api/src/main/java/org/by1337/api/world/entity/PacketEntity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/factory/FactoryEntityFactory.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/factory/PacketFactory.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/world/entity/SpawnArmorStand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/V1_17/src/main/java/org/by1337/v1_17/factory/EntityFactoryV1_17.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/V1_17/src/main/java/org/by1337/v1_17/network/protocol/game/DestroyEntityPacketV1_17.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/V1_17/src/main/java/org/by1337/v1_17/network/protocol/game/MobMetaDataPacketV1_17.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/V1_17/src/main/java/org/by1337/v1_17/network/protocol/game/SpawnMobPacketV1_17.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/V1_17/src/main/java/org/by1337/v1_17/world/entity/PacketArmorStandV1_17.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="74b4e88f-8fcd-4bdf-bf73-9df5c90923b7" name="Changes" comment="feat: Introduce initial framework for batch entity processing&#10;&#10;In this commit, we've introduced the initial framework and structure for batch entity processing.&#10;- Created basic classes and interfaces for handling batch entities.&#10;- Defined the core architecture for future development.&#10;&#10;Please note that this is a work in progress, and additional functionality will be added in subsequent commits.">
+      <change afterPath="$PROJECT_DIR$/Api/src/main/java/org/by1337/api/chat/TellRaw.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/Command.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/CommandSyntaxError.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/CommandExecutor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/argument/Argument.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/argument/ArgumentInteger.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/argument/ArgumentMap.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/argument/ArgumentPlayer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/argument/ArgumentPosition.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/argument/ArgumentSetList.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/argument/ArgumentValidCharacters.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/argument/ArgumentWorld.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/argument/PositionUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/requires/Requires.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/requires/RequiresPermission.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/registry/CommandFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/command/CommandHook.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/test/java/command/CommandTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/src/test/java/command/SetServer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/chat/ChatColor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/chat/ClickEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/chat/ClickEventType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/chat/Component.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/chat/ComponentBuilder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/chat/TellRaw.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/chat/hover/HoverEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/chat/hover/HoverEventContents.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/chat/hover/HoverEventContentsString.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/chat/hover/HoverEventType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/src/main/test/java/chat/ClickEventTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/V1_16_5/src/main/java/org/by1337/v1_16_5/chat/TellRawV1_16_5.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/V1_17/src/main/java/org/by1337/v1_17/chat/TellRawV1_17.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/V1_17_1/src/main/java/org/by1337/v1_17_1/chat/TellRawV1_17_1.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/V1_18/src/main/java/org/by1337/v1_18/chat/TellRawV1_18.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/V1_18_1/src/main/java/org/by1337/v1_18_1/chat/TellRawV1_18_1.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/V1_18_2/src/main/java/org/by1337/v1_18_2/chat/TellRawV1_18_2.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/V1_19/src/main/java/org/by1337/v1_19/chat/TellRawV1_19.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/V1_19_1/src/main/java/org/by1337/v1_19_1/chat/TellRawV1_19_1.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/V1_19_2/src/main/java/org/by1337/v1_19_2/chat/TellRawV1_19_2.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/V1_19_3/src/main/java/org/by1337/v1_19_3/chat/TellRawV1_19_3.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/V1_19_4/src/main/java/org/by1337/v1_19_4/chat/TellRawV1_19_4.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/V1_20_1/src/main/java/org/by1337/v1_20_1/chat/TellRawV1_20_1.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Core/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/AirDrop.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/AirDrop.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/BAirDrop.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/BAirDrop.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/CAirDrop.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/CAirDrop.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/ItemUtil/BaseHeadHook.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/ItemUtil/BaseHeadHook.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/ItemUtil/SkullUtils.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/command/Commands.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/command/Commands.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/configManager/ConfigMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/configManager/ConfigMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/ChangeWorld.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/ChangeWorld.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/property/Property.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/property/Property.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/property/PropertyEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/property/PropertyEditor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/CommandExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/CommandExecutor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/CommandRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/registry/AirDropCommandRegistry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/ActionbarAllCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/ActionbarAllCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/ActionbarCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/ActionbarCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/ActivateCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/ActivateCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/BlockSetCloseCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/BlockSetCloseCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/BlockSetOpenCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/BlockSetOpenCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/BossBarCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/BossBarCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/CallListenerCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/CallListenerCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/ConsoleCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/ConsoleCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/EasyBossBarCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/EasyBossBarCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/EffectStartCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/EffectStartCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/EffectStopAllCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/EffectStopAllCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/EffectStopCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/EffectStopCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/ErrorCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/ErrorCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/LoggerCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/LoggerCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/MessageAllCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/MessageAllCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/MessageCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/MessageCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/NearPlayersCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/NearPlayersCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/NewBossBarCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/NewBossBarCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/PlayerCloseInventoryCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/PlayerCloseInventoryCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/PlayerPerformCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/PlayerPerformCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/PlayerSetItemCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/PlayerSetItemCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/RemoveBossBarCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/RemoveBossBarCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/RunJsCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/RunJsCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/SchematicsPasteCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SchematicsPasteCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/SchematicsRemoveCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SchematicsRemoveCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/SetBlockFaceCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SetBlockFaceCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/SetHoloTimeToStartCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SetHoloTimeToStartCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/SetMaterialCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SetMaterialCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/SetRegionCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SetRegionCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/SetTimeEndCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SetTimeEndCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/SetTimeStartCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SetTimeStartCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/SetTimeUnlockCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SetTimeUnlockCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/SoundAllCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SoundAllCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/SoundCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SoundCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/SubTitleAllCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SubTitleAllCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/SubTitleCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SubTitleCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/SummonCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SummonCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/TitleAllCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/TitleAllCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/impl/TitleCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/TitleCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/command/Commands.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/command/Completer.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/command/CompleterHook.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/listeners/Compass.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/listeners/Compass.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/locationGenerator/GeneratorLoc.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/locationGenerator/GeneratorLoc.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/EasyBossBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/EasyBossBar.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/ExecuteCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/ExecuteCommands.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/Message.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/resources/menu.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/resources/menu.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/resources/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/test/java/command/SummonCommandTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/test/java/command/SummonCommandTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Lib/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Lib/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/V1_16_5/src/main/java/org/by1337/v1_16_5/inventory/ItemStackSerializeV1_16_5.java" beforeDir="false" afterPath="$PROJECT_DIR$/V1_16_5/src/main/java/org/by1337/v1_16_5/inventory/ItemStackSerializeV1_16_5.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V1_17/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/V1_17/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,9 +115,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Enum" />
         <option value="AnnotationType" />
         <option value="package-info" />
+        <option value="Enum" />
         <option value="Interface" />
         <option value="Class" />
       </list>
@@ -129,31 +198,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;ToolWindowRun.ShowToolbar&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;v1.1.0&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;16&quot;,
-    &quot;jdk.selected.com.intellij.ui.dsl.builder.impl.RowImpl.sdk&quot;: &quot;17&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/andre/.m2/repository/org/spigotmc/spigot/1.17-R0.1-SNAPSHOT/remapped-obf/net/minecraft/core&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "ToolWindowRun.ShowToolbar": "false",
+    "git-widget-placeholder": "v1.1.0",
+    "ignore.virus.scanning.warn.message": "true",
+    "jdk.selected.JAVA_MODULE": "16",
+    "jdk.selected.com.intellij.ui.dsl.builder.impl.RowImpl.sdk": "17",
+    "last_opened_file_path": "C:/Users/andre/.m2/repository/org/spigotmc/spigot/1.16.5-R0.1-SNAPSHOT/1.16.5",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;jdk.preference.com.intellij.ui.dsl.builder.impl.RowImpl.sdk&quot;: [
-      &quot;16=C:/Program Files/Java/jdk-16.0.2&quot;,
-      &quot;17=C:/Users/andre/.jdks/corretto-17.0.8.1&quot;
+  "keyToStringList": {
+    "jdk.preference.com.intellij.ui.dsl.builder.impl.RowImpl.sdk": [
+      "16=C:/Program Files/Java/jdk-16.0.2",
+      "17=C:/Users/andre/.jdks/corretto-17.0.8.1"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="Q:\cod\idea Java\BairDropV1.1.0\BAirDrop\V1_16_5\src\main\test\java" />
@@ -163,52 +232,81 @@
       <recent name="Q:\cod\idea Java\BAirDrop\translations\en" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="org.by1337.bairdrop.airdrop.command" />
+      <recent name="org.by1337.bairdrop.airdrop" />
       <recent name="org.by1337.v1_19.command" />
     </key>
   </component>
   <component name="RunManager" selected="Maven.PomRoot [clean,package]">
-    <configuration name="SerializeTest (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="V1_16_5" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="SerializeTest" />
+    <configuration name="ClickEventTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Lib" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="chat.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="chat" />
+      <option name="MAIN_CLASS_NAME" value="chat.ClickEventTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="VersionTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="ClickEventTest.run" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Lib" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="VersionTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="VersionTest.run" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Lib" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="VersionTest" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="chat.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="chat" />
+      <option name="MAIN_CLASS_NAME" value="chat.ClickEventTest" />
       <option name="METHOD_NAME" value="run" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="VersionTest.testGetVersion" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="ClickEventTest.run2" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Lib" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="VersionTest" />
-      <option name="METHOD_NAME" value="testGetVersion" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="chat.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="chat" />
+      <option name="MAIN_CLASS_NAME" value="chat.ClickEventTest" />
+      <option name="METHOD_NAME" value="run2" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="java in v1_16_5" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="V1_16_R3" />
-      <option name="TEST_OBJECT" value="directory" />
-      <dir value="$PROJECT_DIR$/v1_16_5/src/main/test/java" />
+    <configuration name="CommandTest.testCommandExecution" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="BAirDrop" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="command.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="command" />
+      <option name="MAIN_CLASS_NAME" value="command.CommandTest" />
+      <option name="METHOD_NAME" value="testCommandExecution" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SerializeTest.run" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="V1_16_5" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="SerializeTest" />
+      <option name="METHOD_NAME" value="run" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -752,11 +850,11 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="JUnit.SerializeTest (1)" />
-      <item itemvalue="JUnit.VersionTest" />
-      <item itemvalue="JUnit.VersionTest.run" />
-      <item itemvalue="JUnit.VersionTest.testGetVersion" />
-      <item itemvalue="JUnit.java in v1_16_5" />
+      <item itemvalue="JUnit.ClickEventTest" />
+      <item itemvalue="JUnit.ClickEventTest.run" />
+      <item itemvalue="JUnit.ClickEventTest.run2" />
+      <item itemvalue="JUnit.CommandTest.testCommandExecution" />
+      <item itemvalue="JUnit.SerializeTest.run" />
       <item itemvalue="Maven.V1_10 package" />
       <item itemvalue="Maven.V1_16_5 package" />
       <item itemvalue="Maven.V1_17 package" />
@@ -779,11 +877,11 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.java in v1_16_5" />
-        <item itemvalue="JUnit.VersionTest.testGetVersion" />
-        <item itemvalue="JUnit.VersionTest.run" />
-        <item itemvalue="JUnit.VersionTest" />
-        <item itemvalue="JUnit.SerializeTest (1)" />
+        <item itemvalue="JUnit.ClickEventTest.run2" />
+        <item itemvalue="JUnit.ClickEventTest.run" />
+        <item itemvalue="JUnit.ClickEventTest" />
+        <item itemvalue="JUnit.SerializeTest.run" />
+        <item itemvalue="JUnit.CommandTest.testCommandExecution" />
       </list>
     </recent_temporary>
   </component>
@@ -1112,7 +1210,15 @@
       <option name="project" value="LOCAL" />
       <updated>1694573509968</updated>
     </task>
-    <option name="localTasksCounter" value="46" />
+    <task id="LOCAL-00046" summary="feat: Introduce initial framework for batch entity processing&#10;&#10;In this commit, we've introduced the initial framework and structure for batch entity processing.&#10;- Created basic classes and interfaces for handling batch entities.&#10;- Defined the core architecture for future development.&#10;&#10;Please note that this is a work in progress, and additional functionality will be added in subsequent commits.">
+      <option name="closed" value="true" />
+      <created>1694822148053</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1694822148053</updated>
+    </task>
+    <option name="localTasksCounter" value="47" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -1175,7 +1281,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="ProtocolLib holo" />
     <MESSAGE value="final ProtocolLib holograms" />
     <MESSAGE value="remove lib and fix for jitpack.io" />
     <MESSAGE value="1.0.8.2-SNAPSHOT" />
@@ -1200,7 +1305,8 @@
     <MESSAGE value="refactor: match" />
     <MESSAGE value="feat: summon command" />
     <MESSAGE value="feat: ItemStack serialize, refactor: modules rename" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: ItemStack serialize, refactor: modules rename" />
+    <MESSAGE value="feat: Introduce initial framework for batch entity processing&#10;&#10;In this commit, we've introduced the initial framework and structure for batch entity processing.&#10;- Created basic classes and interfaces for handling batch entities.&#10;- Defined the core architecture for future development.&#10;&#10;Please note that this is a work in progress, and additional functionality will be added in subsequent commits." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: Introduce initial framework for batch entity processing&#10;&#10;In this commit, we've introduced the initial framework and structure for batch entity processing.&#10;- Created basic classes and interfaces for handling batch entities.&#10;- Defined the core architecture for future development.&#10;&#10;Please note that this is a work in progress, and additional functionality will be added in subsequent commits." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

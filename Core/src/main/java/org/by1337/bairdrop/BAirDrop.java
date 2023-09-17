@@ -8,6 +8,7 @@ import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import org.by1337.bairdrop.command.CommandHook;
 import org.by1337.bairdrop.configManager.CConfig;
 import org.by1337.bairdrop.configManager.ConfigMessage;
 import org.by1337.bairdrop.configManager.Config;
@@ -19,8 +20,7 @@ import org.by1337.bairdrop.locationGenerator.CGenLoc;
 import org.by1337.bairdrop.locationGenerator.GeneratorLoc;
 import org.by1337.bairdrop.summoner.Summoner;
 import org.by1337.bairdrop.worldGuardHook.RegionManager;
-import org.by1337.bairdrop.command.Commands;
-import org.by1337.bairdrop.command.Completer;
+import org.by1337.bairdrop.command.CompleterHook;
 import org.by1337.bairdrop.customListeners.CustomEvent;
 import org.by1337.bairdrop.customListeners.observer.Observer;
 import org.by1337.bairdrop.effect.effectImpl.*;
@@ -99,8 +99,14 @@ public final class BAirDrop extends JavaPlugin {
         if (this.getConfig().getBoolean("use-metrics"))
             new Metrics(getInstance(), 17870);
 
-        Objects.requireNonNull(getInstance().getCommand("bairdrop")).setExecutor(new Commands());
-        Objects.requireNonNull(getInstance().getCommand("bairdrop")).setTabCompleter(new Completer());
+//        CommandHook commandHook = new CommandHook();
+//        CompleterHook completerHook = new CompleterHook();
+
+
+
+        Objects.requireNonNull(getInstance().getCommand("bairdrop")).setExecutor(new CommandHook());
+        Objects.requireNonNull(getInstance().getCommand("bairdrop")).setTabCompleter(new CompleterHook());
+
         Bukkit.getServer().getPluginManager().registerEvents(new InteractListener(), getInstance());
         getServer().getPluginManager().registerEvents(summoner, getInstance());
         getServer().getPluginManager().registerEvents(new CraftItem(), BAirDrop.getInstance());

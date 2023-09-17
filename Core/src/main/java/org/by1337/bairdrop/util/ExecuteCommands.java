@@ -9,7 +9,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
-import org.by1337.bairdrop.airdrop.command.CommandRegistry;
+import org.by1337.bairdrop.airdrop.registry.AirDropCommandRegistry;
 import org.by1337.bairdrop.listeners.SetStaticLocation;
 import org.by1337.bairdrop.listeners.util.ListenChat;
 import org.by1337.bairdrop.menu.property.enums.EnumChooser;
@@ -40,7 +40,7 @@ public class ExecuteCommands {
             command = BMatch.match(command);
 
 
-            CommandRegistry.execute(airDrop, pl, command);
+            AirDropCommandRegistry.execute(airDrop, pl, command);
         }
     }
 

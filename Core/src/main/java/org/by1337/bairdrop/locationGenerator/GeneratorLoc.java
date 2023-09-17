@@ -1,7 +1,7 @@
 package org.by1337.bairdrop.locationGenerator;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import org.by1337.bairdrop.AirDrop;
@@ -17,22 +17,22 @@ public class GeneratorLoc {
     public static HashMap<String, List<GenLoc>> locs = new HashMap<>();
     private static boolean isStarted = false;
 
-    public static void Stop(Player pl) {
+    public static void stop(CommandSender sender) {
         if (!isStarted) {
-            Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("generator-not-started"));
+            Message.sendMsg(sender, BAirDrop.getConfigMessage().getMessage("generator-not-started"));
             return;
         }
-        Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("generator-stop"));
+        Message.sendMsg(sender, BAirDrop.getConfigMessage().getMessage("generator-stop"));
         isStarted = false;
     }
 
-    public static void Start(AirDrop airDrop, int timings, int count, Player pl) {
+    public static void start(AirDrop airDrop, int timings, int count, CommandSender sender) {
         if (isStarted) {
-            Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("generator-already-launched"));
+            Message.sendMsg(sender, BAirDrop.getConfigMessage().getMessage("generator-already-launched"));
             return;
         }
         isStarted = true;
-        Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("generator-start"));
+        Message.sendMsg(sender, BAirDrop.getConfigMessage().getMessage("generator-start"));
         new BukkitRunnable() {
             int count1 = count;
             int fail = 0;
@@ -58,23 +58,23 @@ public class GeneratorLoc {
                             locs.put(airId, existingValues);
                     }
                     count1--;
-                    Message.sendMsg(pl, String.format(BAirDrop.getConfigMessage().getMessage("generator"), count1));
+                    Message.sendMsg(sender, String.format(BAirDrop.getConfigMessage().getMessage("generator"), count1));
 
                     if (finalairDrop.getEditAirMenu() != null)
                         finalairDrop.getEditAirMenu().menuGenerate("usePreGeneratedLocations");
                 } else if (fail % 100 == 0) {
-                    Message.sendMsg(pl, String.format(BAirDrop.getConfigMessage().getMessage("generator-fail"), fail));
+                    Message.sendMsg(sender, String.format(BAirDrop.getConfigMessage().getMessage("generator-fail"), fail));
                 }
 
                 if (count1 == 0) {
                     isStarted = false;
-                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("generator-good"));
+                    Message.sendMsg(sender, BAirDrop.getConfigMessage().getMessage("generator-good"));
                     GeneratorLoc.save();
                     cancel();
                     return;
                 }
                 if (!isStarted) {
-                    Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("generator-stop"));
+                    Message.sendMsg(sender, BAirDrop.getConfigMessage().getMessage("generator-stop"));
                     GeneratorLoc.save();
                     cancel();
                 }

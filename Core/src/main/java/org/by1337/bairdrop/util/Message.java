@@ -3,8 +3,11 @@ package org.by1337.bairdrop.util;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.Server;
 import org.bukkit.Sound;
 import org.bukkit.boss.BossBar;
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
@@ -18,6 +21,8 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.by1337.bairdrop.BAirDrop;
+import org.by1337.lib.chat.ComponentBuilder;
+import org.by1337.lib.chat.TellRaw;
 import org.jetbrains.annotations.Nullable;
 
 
@@ -36,31 +41,52 @@ public class Message {
 
     /**
      * Sends a message to the player if they are not null, otherwise logs it to the console
-     * @param pl The player to send the message to
-     * @param msg The message
+     *
+     * @param sender The CommandSender to send the message to
+     * @param msg    The message
      */
-    public static void sendMsg(@Nullable Player pl, String msg) {
-        msg = setPlaceholders(pl, msg);
+    public static void sendMsg(CommandSender sender, String msg) {
+        msg = setPlaceholders(sender instanceof OfflinePlayer ? (OfflinePlayer) sender : null, msg);
         msg = msg.replace("\\n", "/n");
         if (msg.contains("/n")) {
-            if (pl == null) {
-                for (String str : msg.split("/n"))
-                    logger(str);
-            } else if (pl.isOnline())
-                for (String str : msg.split("/n"))
-                    pl.sendMessage(messageBuilder(str));
-
+            for (String str : msg.split("/n"))
+                sender.sendMessage(messageBuilder(str));
         } else {
-            if (pl == null)
-                logger(msg);
-            else
-                pl.sendMessage(messageBuilder(msg));
+            sender.sendMessage(messageBuilder(msg));
         }
     }
 
+    public static void sendRawMsg(CommandSender sender, ComponentBuilder msg) {
+        if (sender instanceof Player player)
+            TellRaw.tell(msg.build(), player);
+        else
+            logger(msg.build());
+    }
+
+    public static void sendRawMsg(CommandSender sender, String msg) {
+        if (sender instanceof Player player)
+            TellRaw.tell(msg, player);
+        else
+            logger(msg);
+    }
+
+
+    public static void sendMsg(CommandSender sender, String msg, Object... format) {
+        msg = setPlaceholders(sender instanceof OfflinePlayer ? (OfflinePlayer) sender : null, msg);
+        msg = msg.replace("\\n", "/n");
+        if (msg.contains("/n")) {
+            for (String str : msg.split("/n"))
+                sender.sendMessage(messageBuilder(String.format(str, format)));
+        } else {
+            sender.sendMessage(messageBuilder(String.format(msg, format)));
+        }
+    }
+
+
     /**
      * Sends a debug message to the console
-     * @param msg The debug message
+     *
+     * @param msg      The debug message
      * @param logLevel The debug level
      */
     public static void debug(String msg, LogLevel logLevel) {
@@ -77,20 +103,21 @@ public class Message {
      */
     @Deprecated
     public static void debug(String msg) {
-        if (BAirDrop.getInstance().getConfig().getBoolean("debug"))
-            logger("&7[&eDeprecated &7DEBUG] " + msg);
+        System.out.println(msg);
     }
 
     /**
      * This method should only be used for debugging
+     *
      * @param msg The message
      */
-    public static void devDebug(String msg){
+    public static void devDebug(String msg) {
         logger(msg);
     }
 
     /**
      * Sends a log
+     *
      * @param msg The message
      */
     public static void logger(String msg) {
@@ -100,6 +127,7 @@ public class Message {
     /**
      * Sends an error message to the console
      * Also sends the message to all op players
+     *
      * @param msg The message
      */
     public static void error(String msg) {
@@ -108,6 +136,7 @@ public class Message {
 
     /**
      * Sends a message to all op players
+     *
      * @param msg The message
      */
     public static void sendAllOp(String msg) {
@@ -120,6 +149,7 @@ public class Message {
 
     /**
      * Sends a warning message
+     *
      * @param msg The message
      */
     public static void warning(String msg) {
@@ -128,7 +158,8 @@ public class Message {
 
     /**
      * Sends an ActionBar message to the player
-     * @param pl The player to send the message to
+     *
+     * @param pl  The player to send the message to
      * @param msg The message
      */
     public static void sendActionBar(Player pl, String msg) {
@@ -137,6 +168,7 @@ public class Message {
 
     /**
      * Sends an ActionBar message to all players
+     *
      * @param msg The message
      */
     public static void sendAllActionBar(String msg) {
@@ -146,6 +178,7 @@ public class Message {
 
     /**
      * Отправляет ActionBar сообщение всем op игрокам
+     *
      * @param msg Сообщение
      * @deprecated Устарел из-за без полезности
      */
@@ -160,12 +193,13 @@ public class Message {
 
     /**
      * Sends a title message to the player
-     * @param pl The player to send the message to
-     * @param title The title message
+     *
+     * @param pl       The player to send the message to
+     * @param title    The title message
      * @param subTitle The subtitle message
-     * @param fadeIn The fade-in time for the title
-     * @param stay The duration the title will stay on screen
-     * @param fadeOut The fade-out time for the title
+     * @param fadeIn   The fade-in time for the title
+     * @param stay     The duration the title will stay on screen
+     * @param fadeOut  The fade-out time for the title
      */
     public static void sendTitle(Player pl, String title, String subTitle, int fadeIn, int stay, int fadeOut) {
         pl.sendTitle(messageBuilder(title), messageBuilder(subTitle), fadeIn, stay, fadeOut);
@@ -173,8 +207,9 @@ public class Message {
 
     /**
      * Sends a title message to the player with pre-defined fadeIn, stay, and fadeOut values
-     * @param pl The player
-     * @param title The title message
+     *
+     * @param pl       The player
+     * @param title    The title message
      * @param subTitle The subtitle message
      */
     public static void sendTitle(Player pl, String title, String subTitle) {
@@ -183,7 +218,8 @@ public class Message {
 
     /**
      * Sends a title message to all players
-     * @param title The title message
+     *
+     * @param title    The title message
      * @param subTitle The subtitle message
      */
     public static void sendAllTitle(String title, String subTitle) {
@@ -193,6 +229,7 @@ public class Message {
 
     /**
      * Applies colors to the message
+     *
      * @param msg The raw message
      * @return The message with applied colors
      */
@@ -207,6 +244,7 @@ public class Message {
 
     /**
      * Sends a message to all players
+     *
      * @param msg The message
      */
     public static void sendAllMsg(String msg) {
@@ -217,6 +255,7 @@ public class Message {
 
     /**
      * Applies placeholders to the message
+     *
      * @param player The player
      * @param string The message
      * @return The message with applied placeholders
@@ -232,8 +271,26 @@ public class Message {
     }
 
     /**
+     * Applies placeholders to the message
+     *
+     * @param player The player
+     * @param string The message
+     * @return The message with applied placeholders
+     */
+    public static String setPlaceholders(@Nullable OfflinePlayer player, String string) {
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            try {
+                return PlaceholderAPI.setPlaceholders(player, string.replace("&", "§")).replace("§", "&");
+            } catch (Exception var3) {
+            }
+        }
+        return string;
+    }
+
+    /**
      * Sends a sound to the player
-     * @param pl The player
+     *
+     * @param pl    The player
      * @param sound The sound as a string
      */
     public static void sendSound(Player pl, String sound) {
@@ -246,7 +303,8 @@ public class Message {
 
     /**
      * Sends a sound to the player
-     * @param pl The player
+     *
+     * @param pl    The player
      * @param sound The sound from the Sound enum
      * @see org.bukkit.Sound
      */
@@ -256,6 +314,7 @@ public class Message {
 
     /**
      * Sends a sound to all players
+     *
      * @param sound The sound as a string
      */
     public static void sendAllSound(String sound) {
@@ -269,6 +328,7 @@ public class Message {
 
     /**
      * Applies a hex color to the message
+     *
      * @param message The raw message
      * @return The processed message
      */

@@ -13,7 +13,7 @@ description: event airdrop
 commands:
   bairdrop:
     description: Standart Command
-    aliases: [bair]
+    aliases: [bair, air]
     usage: Usage /bair help
 permissions:
   bair.*:

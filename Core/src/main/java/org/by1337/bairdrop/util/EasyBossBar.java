@@ -9,7 +9,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import org.by1337.bairdrop.AirDrop;
-import org.by1337.bairdrop.airdrop.command.impl.EasyBossBarCommand;
+import org.by1337.bairdrop.airdrop.command.airdrop.impl.EasyBossBarCommand;
 
 import java.util.ArrayList;
 import java.util.List;

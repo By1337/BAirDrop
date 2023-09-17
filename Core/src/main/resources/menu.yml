@@ -1,4 +1,4 @@
-# Commands
+# CommandHook
 #- '[!airDropStarted]': Change its status to the opposite (was started, now stopped)
 #- '[!airLocked]': Change from open to closed
 #- '[edit]': Open item editing menu

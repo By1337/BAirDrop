@@ -4,6 +4,7 @@ import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import org.bukkit.*;
 import org.bukkit.block.data.type.RespawnAnchor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -425,7 +426,7 @@ public class CAirDrop implements AirDrop, StateSerializable, EditableProperties 
     private BukkitTask bukkitTaskStart = null;
 
     @Override
-    public void startCommand(@Nullable Player player) {
+    public void startCommand(@Nullable CommandSender sender) {
         if (bukkitTaskStart != null && !bukkitTaskStart.isCancelled()) {
             bukkitTaskStart.cancel();
         }
@@ -436,11 +437,11 @@ public class CAirDrop implements AirDrop, StateSerializable, EditableProperties 
             public void run() {
                 locationSearch();
                 if (airDropLocation != null) {
-                    Message.sendMsg(player, "&aStarted");
+                    Message.sendMsg(sender, "&aStarted");
                     start();
                     cancel();
                 } else
-                    Message.sendMsg(player, "&cFail start: " + x);
+                    Message.sendMsg(sender, "&cFail start: " + x);
                 x++;
             }
         }.runTaskTimer(BAirDrop.getInstance(), 1L, 10L);

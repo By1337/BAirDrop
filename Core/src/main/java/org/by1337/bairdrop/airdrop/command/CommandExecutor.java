@@ -1,11 +1,20 @@
 package org.by1337.bairdrop.airdrop.command;
 
-import org.bukkit.entity.Player;
-import org.by1337.bairdrop.AirDrop;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.bukkit.command.CommandSender;
+import org.by1337.bairdrop.airdrop.command.argument.ArgumentMap;
 
+/**
+ * Functional interface for executing a command.
+ */
+@FunctionalInterface
 public interface CommandExecutor {
-    String getCommandPrefix();
-    void execute(@Nullable AirDrop airDrop, @Nullable Player player, @NotNull String command);
+
+    /**
+     * Executes a command with the provided sender and arguments.
+     *
+     * @param sender The sender of the command.
+     * @param args   The map of command arguments.
+     * @throws CommandSyntaxError If there's a syntax error in the command execution.
+     */
+    void executes(CommandSender sender, ArgumentMap<String, Object> args) throws CommandSyntaxError;
 }
