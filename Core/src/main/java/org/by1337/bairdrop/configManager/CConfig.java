@@ -12,10 +12,15 @@ import org.by1337.bairdrop.lang.Lang;
 import org.by1337.bairdrop.listeners.Compass;
 import org.by1337.bairdrop.locationGenerator.CGenLoc;
 import org.by1337.bairdrop.locationGenerator.GenLoc;
+import org.by1337.bairdrop.observer.CustomListenerLoader;
+import org.by1337.bairdrop.observer.requirement.Requirement;
+import org.by1337.bairdrop.observer.requirement.Requirements;
+import org.by1337.bairdrop.observer.requirement.impl.RequirementNumericalCheck;
+import org.by1337.bairdrop.observer.requirement.impl.RequirementStringCheck;
 import org.by1337.bairdrop.worldGuardHook.RegionManager;
-import org.by1337.bairdrop.customListeners.CustomEvent;
-import org.by1337.bairdrop.customListeners.CustomEventListener;
-import org.by1337.bairdrop.customListeners.util.CustomEventListenerBuilder;
+import org.by1337.bairdrop.observer.CustomEvent;
+import org.by1337.bairdrop.observer.CustomEventListener;
+
 import org.by1337.bairdrop.menu.util.MenuItem;
 import org.by1337.bairdrop.util.*;
 
@@ -121,7 +126,7 @@ public class CConfig implements Config, ConfigMessage {
             FileConfiguration fc = YamlConfiguration.loadConfiguration(airFile);
             airDrops.put(airFile, fc);
         }
-        BAirDrop.customEventListeners.clear();
+        CustomListenerLoader.getCustomEventListeners().clear();
         loadListeners();
         loadMenu();
         loadLocations();
@@ -228,50 +233,11 @@ public class CConfig implements Config, ConfigMessage {
         }
     }
 
+    @Override
     public void loadListeners() {
-        if (listeners.getConfigurationSection("listeners") == null) {
-            Message.error(getMessage("list-listeners-is-empty"));
-            return;
-        }
-        for (String key : listeners.getConfigurationSection("listeners").getKeys(false)) {
-            try {
-                CustomEvent customEvent = CustomEvent.getByKey(NamespacedKey.fromString(Objects.requireNonNull(listeners.getString("listeners." + key + ".event"), key + " event is null").toLowerCase()));
-                if (customEvent == null) {
-                    Message.error("Незарегистрированный ивент! " + listeners.getString("listeners." + key + ".event"));
-                    continue;
-                }
-                List<String> commands = listeners.getStringList("listeners." + key + ".commands");
-                List<String> denyCommands = listeners.getStringList("listeners." + key + ".deny-commands");
-                String description = Objects.requireNonNull(listeners.getString("listeners." + key + ".description"), key + " description is null");
-                HashMap<String, HashMap<String, String>> requirement = new HashMap<>();
-                if (listeners.getConfigurationSection("listeners." + key + ".requirement") != null) {
-                    for (String checkId : listeners.getConfigurationSection("listeners." + key + ".requirement").getKeys(false)) {
-                        String checkType = Objects.requireNonNull(listeners.getString("listeners." + key + ".requirement." + checkId + ".type"), key + " requirement type is null");
-                        String input = Objects.requireNonNull(listeners.getString("listeners." + key + ".requirement." + checkId + ".input"), key + " requirement input is null");
-                        HashMap<String, String> check = new HashMap<>();
-                        check.put(checkType, input);
-                        requirement.put(checkId, check);
-                    }
-                }
-                CustomEventListener customEventListener = new CustomEventListenerBuilder()
-                        .customEvent(customEvent)
-                        .commands(commands.toArray(new String[0]))
-                        .denyCommands(denyCommands.toArray(new String[0]))
-                        .description(description).requirement(requirement)
-                        .key(NamespacedKey.fromString(key.toLowerCase()))
-                        .build();
-
-
-                BAirDrop.customEventListeners.put(NamespacedKey.fromString(key.toLowerCase()), customEventListener);
-            } catch (NullPointerException e) {
-                Message.error(getMessage("listeners-error"));
-                e.printStackTrace();
-            } catch (IllegalArgumentException e) {
-                Message.error(String.format(getMessage("unknown-event"), key));
-                e.printStackTrace();
-            }
-        }
+        CustomListenerLoader.load(listeners, "listeners");
     }
+
 
     public void loadEnchant() {
         EnchantMaterial.materialHashMap.clear();

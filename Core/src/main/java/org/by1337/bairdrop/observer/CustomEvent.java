@@ -1,4 +1,4 @@
-package org.by1337.bairdrop.customListeners;
+package org.by1337.bairdrop.observer;
 
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;

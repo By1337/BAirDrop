@@ -6,15 +6,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.AirDropUtils;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.locationGenerator.GeneratorUtils;
-import org.by1337.bairdrop.customListeners.CustomEvent;
+import org.by1337.bairdrop.observer.CustomEvent;
 import org.by1337.bairdrop.locationGenerator.CGenerator;
 import org.by1337.bairdrop.util.Message;
 

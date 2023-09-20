@@ -21,11 +21,12 @@ import org.by1337.bairdrop.listeners.CraftItem;
 import org.by1337.bairdrop.listeners.InteractListener;
 import org.by1337.bairdrop.locationGenerator.CGenLoc;
 import org.by1337.bairdrop.locationGenerator.GeneratorLoc;
+import org.by1337.bairdrop.observer.CustomListenerLoader;
 import org.by1337.bairdrop.summoner.Summoner;
 import org.by1337.bairdrop.worldGuardHook.RegionManager;
 import org.by1337.bairdrop.command.CompleterHook;
-import org.by1337.bairdrop.customListeners.CustomEvent;
-import org.by1337.bairdrop.customListeners.observer.Observer;
+import org.by1337.bairdrop.observer.CustomEvent;
+import org.by1337.bairdrop.observer.observer.Observer;
 import org.by1337.bairdrop.effect.effectImpl.*;
 import org.by1337.bairdrop.serializable.EffectDeserialize;
 import org.by1337.bairdrop.serializable.StateSerializable;
@@ -36,13 +37,11 @@ import org.by1337.lib.Version;
 import java.io.*;
 
 import java.util.*;
-import java.util.logging.Level;
 
 
 public final class BAirDrop extends JavaPlugin {
 
     public static HashMap<String, AirDrop> airDrops = new HashMap<>();
-    public static HashMap<NamespacedKey, Observer> customEventListeners = new HashMap<>();
 
     public static Summoner summoner = new Summoner();
     public static GlobalTimer globalTimer;
@@ -225,7 +224,7 @@ public final class BAirDrop extends JavaPlugin {
         CustomCraft.unloadCrafts();
         getiConfig().getSchematics().clear();
         airDrops.clear();
-        customEventListeners.clear();
+        CustomListenerLoader.getCustomEventListeners().clear();
         // EffectFactory.EffectList.clear();
         getiConfig().getAirDrops().clear();
 

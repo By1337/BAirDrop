@@ -1,10 +1,10 @@
-package org.by1337.bairdrop.customListeners.observer;
+package org.by1337.bairdrop.observer.observer;
 
 import org.bukkit.Keyed;
 import org.bukkit.entity.Player;
 
 import org.by1337.bairdrop.AirDrop;
-import org.by1337.bairdrop.customListeners.CustomEvent;
+import org.by1337.bairdrop.observer.CustomEvent;
 
 import javax.annotation.Nullable;
 

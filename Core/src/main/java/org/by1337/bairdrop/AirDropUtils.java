@@ -2,7 +2,7 @@ package org.by1337.bairdrop;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.by1337.bairdrop.customListeners.observer.Observer;
+import org.by1337.bairdrop.observer.observer.Observer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

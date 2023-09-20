@@ -15,7 +15,7 @@ import org.by1337.bairdrop.listeners.SetStaticLocation;
 import org.by1337.bairdrop.listeners.util.ListenChat;
 import org.by1337.bairdrop.menu.property.enums.EnumChooser;
 import org.by1337.bairdrop.api.event.ExecuteCommandEvent;
-import org.by1337.bairdrop.customListeners.CustomEvent;
+import org.by1337.bairdrop.observer.CustomEvent;
 import org.by1337.bairdrop.menu.*;
 import org.by1337.bairdrop.menu.util.MenuItem;
 import org.by1337.lib.match.BMatch;
@@ -45,38 +45,6 @@ public class ExecuteCommands {
         }
     }
 
-
-    public static String setPlayerPlaceholder(Player pl, String command) {
-        if (command.contains("{player-get-item-")) {
-            try {
-                int slot = Integer.parseInt(command.split("player-get-item-")[1].split("}")[0]);
-                ItemStack item = pl.getInventory().getItem(slot);
-                if (command.contains(".getType")) {
-                    if (item == null) {
-                        command = command.replace(String.format("{player-get-item-%s}.getType", slot), "AIR");
-                        return command;
-                    }
-                    command = command.replace(String.format("{player-get-item-%s}.getType", slot), item.getType().toString());
-                    return command;
-                }
-                if (command.contains(".isNull")) {
-                    if (item == null) {
-                        command = command.replace(String.format("{player-get-item-%s}.isNull", slot), "true");
-                        return command;
-                    }
-                    command = command.replace(String.format("{player-get-item-%s}.isNull", slot), "false");
-                    return command;
-                }
-            } catch (NumberFormatException e) {
-                Message.error("{player-get-item-<slot>} <slot> должен быть числом!");
-            } catch (ArrayIndexOutOfBoundsException e) {
-                Message.error("{player-get-item-<slot>} Не достаточно аргументов!");
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            }
-        }
-        return command;
-    }
 
 
     public static void execute(AirDrop airDrop, MenuItem menuItem, InventoryClickEvent e) {

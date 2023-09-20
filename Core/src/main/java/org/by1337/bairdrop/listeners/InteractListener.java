@@ -11,7 +11,7 @@ import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.AirDropUtils;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.api.event.AirDropOpenEvent;
-import org.by1337.bairdrop.customListeners.CustomEvent;
+import org.by1337.bairdrop.observer.CustomEvent;
 
 import java.util.HashMap;
 import java.util.UUID;

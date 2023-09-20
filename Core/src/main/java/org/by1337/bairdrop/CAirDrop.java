@@ -24,13 +24,14 @@ import org.by1337.bairdrop.locationGenerator.Generator;
 import org.by1337.bairdrop.locationGenerator.GeneratorLoc;
 import org.by1337.bairdrop.locationGenerator.CGenerator;
 import org.by1337.bairdrop.locationGenerator.GeneratorUtils;
+import org.by1337.bairdrop.observer.CustomListenerLoader;
 import org.by1337.bairdrop.worldGuardHook.RegionManager;
 import org.by1337.bairdrop.worldGuardHook.SchematicsManager;
 import org.by1337.bairdrop.api.event.AirDropEndEvent;
 import org.by1337.bairdrop.api.event.AirDropStartEvent;
 import org.by1337.bairdrop.api.event.AirDropUnlockEvent;
-import org.by1337.bairdrop.customListeners.CustomEvent;
-import org.by1337.bairdrop.customListeners.observer.Observer;
+import org.by1337.bairdrop.observer.CustomEvent;
+import org.by1337.bairdrop.observer.observer.Observer;
 import org.by1337.bairdrop.effect.EffectFactory;
 import org.by1337.bairdrop.effect.IEffect;
 import org.by1337.bairdrop.serializable.EffectDeserialize;
@@ -1078,12 +1079,12 @@ public class CAirDrop implements AirDrop, StateSerializable {
     @Override
     public void invokeListener(NamespacedKey listener, @Nullable Player player, CustomEvent customEvent) {
         try {
-            if (!BAirDrop.customEventListeners.containsKey(listener)) {
+            if (!CustomListenerLoader.getCustomEventListeners().containsKey(listener)) {
                // Message.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-listener"), listener));
                 return;
             }
 
-            BAirDrop.customEventListeners.get(listener).update(player, this, customEvent, true);
+            CustomListenerLoader.getCustomEventListeners().get(listener).update(player, this, customEvent, true);
         } catch (StackOverflowError e) {
             e.printStackTrace();
            // Message.error(BAirDrop.getConfigMessage().getMessage("too-many-call"));
@@ -1264,8 +1265,8 @@ public class CAirDrop implements AirDrop, StateSerializable {
         List<String> list = new ArrayList<>(signedListener);
         for (String listener : list) {
             NamespacedKey nKey = NamespacedKey.fromString(listener);
-            if (customEventListeners.containsKey(nKey)) {
-                Observer observer = customEventListeners.get(nKey);
+            if (CustomListenerLoader.getCustomEventListeners().containsKey(nKey)) {
+                Observer observer = CustomListenerLoader.getCustomEventListeners().get(nKey);
                 if (!this.hasObserver(observer)) {
                     this.registerObserver(observer);
                 } else {

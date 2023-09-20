@@ -21,7 +21,7 @@ import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.locationGenerator.GeneratorUtils;
 import org.by1337.bairdrop.api.event.AirDropSummonerEvent;
-import org.by1337.bairdrop.customListeners.CustomEvent;
+import org.by1337.bairdrop.observer.CustomEvent;
 import org.by1337.bairdrop.ItemUtil.BaseHeadHook;
 import org.by1337.bairdrop.util.Message;
 

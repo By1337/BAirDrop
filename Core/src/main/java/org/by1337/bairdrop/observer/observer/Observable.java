@@ -1,8 +1,8 @@
-package org.by1337.bairdrop.customListeners.observer;
+package org.by1337.bairdrop.observer.observer;
 
 import org.bukkit.entity.Player;
 
-import org.by1337.bairdrop.customListeners.CustomEvent;
+import org.by1337.bairdrop.observer.CustomEvent;
 
 import org.jetbrains.annotations.Nullable;
 

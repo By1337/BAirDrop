@@ -18,8 +18,9 @@ import org.bukkit.persistence.PersistentDataType;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.AirDropUtils;
 import org.by1337.bairdrop.BAirDrop;
-import org.by1337.bairdrop.customListeners.CustomEvent;
-import org.by1337.bairdrop.customListeners.observer.Observer;
+import org.by1337.bairdrop.observer.CustomEvent;
+import org.by1337.bairdrop.observer.CustomListenerLoader;
+import org.by1337.bairdrop.observer.observer.Observer;
 import org.by1337.bairdrop.util.*;
 
 import java.util.ArrayList;
@@ -42,8 +43,8 @@ public class ShowAllListeners implements Listener {
 
     private void generate() {
         int slot = 0;
-        for (NamespacedKey key : BAirDrop.customEventListeners.keySet()) {
-            if (BAirDrop.customEventListeners.get(key).getEvent() == CustomEvent.NONE) continue;
+        for (NamespacedKey key : CustomListenerLoader.getCustomEventListeners().keySet()) {
+            if (CustomListenerLoader.getCustomEventListeners().get(key).getEvent() == CustomEvent.NONE) continue;
             if (page > 0) {
                 if (slot < (53 * page)) {
                     slot++;
@@ -68,7 +69,7 @@ public class ShowAllListeners implements Listener {
     }
 
     public ItemStack getItem(NamespacedKey key) {
-        Observer observer = BAirDrop.customEventListeners.get(key);
+        Observer observer = CustomListenerLoader.getCustomEventListeners().get(key);
         if (observer == null) {
             return getErrorItem();
         }
@@ -190,7 +191,7 @@ public class ShowAllListeners implements Listener {
                     return;
                 }
             }
-            Observer observer = BAirDrop.customEventListeners.getOrDefault(NamespacedKey.fromString(key), null);
+            Observer observer = CustomListenerLoader.getCustomEventListeners().getOrDefault(NamespacedKey.fromString(key), null);
 
             if(observer == null){
                 e.setCancelled(true);

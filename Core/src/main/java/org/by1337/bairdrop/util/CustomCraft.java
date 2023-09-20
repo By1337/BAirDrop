@@ -8,8 +8,9 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.by1337.bairdrop.BAirDrop;
-import org.by1337.bairdrop.customListeners.CustomEvent;
+import org.by1337.bairdrop.observer.CustomEvent;
 import org.by1337.bairdrop.lang.Resource;
+import org.by1337.bairdrop.observer.CustomListenerLoader;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -69,9 +70,9 @@ public class CustomCraft {
 
     public void callListeners(String listener, @NotNull Player pl) {
         try {
-            if (!BAirDrop.customEventListeners.containsKey(NamespacedKey.fromString(listener)))
+            if (!CustomListenerLoader.getCustomEventListeners().containsKey(NamespacedKey.fromString(listener)))
                 return;
-            BAirDrop.customEventListeners.get(NamespacedKey.fromString(listener)).update(pl, null, CustomEvent.CRAFT_ITEM, false);
+            CustomListenerLoader.getCustomEventListeners().get(NamespacedKey.fromString(listener)).update(pl, null, CustomEvent.CRAFT_ITEM, false);
         } catch (StackOverflowError e) {
             Message.error(toManyCall.getString());
         }

@@ -6,14 +6,13 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.by1337.bairdrop.locationGenerator.Generator;
 import org.by1337.bairdrop.worldGuardHook.SchematicsManager;
-import org.by1337.bairdrop.customListeners.CustomEvent;
-import org.by1337.bairdrop.customListeners.observer.Observable;
+import org.by1337.bairdrop.observer.CustomEvent;
+import org.by1337.bairdrop.observer.observer.Observable;
 import org.by1337.bairdrop.effect.IEffect;
 import org.by1337.bairdrop.menu.AddingItems;
 import org.by1337.bairdrop.menu.EditAirMenu;
@@ -267,7 +266,7 @@ public interface AirDrop extends Observable {
     /**
      * Registers all subscribed observers.
      *
-     * @see org.by1337.bairdrop.customListeners.observer.Observer
+     * @see org.by1337.bairdrop.observer.observer.Observer
      */
     void registerAllSignedObservers();
 
