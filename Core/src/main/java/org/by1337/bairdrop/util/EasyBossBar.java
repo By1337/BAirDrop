@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.airdrop.command.airdrop.impl.EasyBossBarCommand;
+import org.by1337.bairdrop.lang.Resource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class EasyBossBar {
+    private static final Resource NOT_A_NUMBER = new Resource("not-a-number");
+    private static final Resource OUT_OF_BOUNDS = new Resource("easy-boss-bar.error.progress.out.of.bounds");
     private final BossBar bossBar;
     private int minRadius = -1;
     private int radius = -1;
@@ -55,15 +58,15 @@ public class EasyBossBar {
             String tempTimer = airDrop.replaceInternalPlaceholder(timer);
             String tempConsTimer = airDrop.replaceInternalPlaceholder(consTimer);
 
-            if (!isNum(tempTimer)) {
-                Message.error("Не число " + tempTimer);
+            if (!isNum(tempConsTimer)) {
+                Message.error(NOT_A_NUMBER.getString(), tempConsTimer);
             } else {
                 if (!isNum(tempTimer)) {
-                    Message.error("Не число " + tempTimer);
+                    Message.error(NOT_A_NUMBER.getString(), tempTimer);
                 } else {
                     double progress = (double) Integer.parseInt(tempTimer) / Integer.parseInt(tempConsTimer);
                     if (progress > 1D || progress < 0D) {
-                        Message.error("Прогресс не может быть меньше нуля или больше чем 1");
+                        Message.error(OUT_OF_BOUNDS.getString());
                     } else
                         bossBar.setProgress(progress);
                 }
@@ -82,7 +85,7 @@ public class EasyBossBar {
             if (cmd.contains("[minRadius=")) {
                 String param = getParam(cmd);
                 if (!isNum(param)) {
-                    Message.error("Не число: " + param + " в " + cmd);
+                    Message.error(NOT_A_NUMBER.getString(), param);
                     continue;
                 }
                 minRadius = Integer.parseInt(param);
@@ -92,7 +95,7 @@ public class EasyBossBar {
             if (cmd.contains("[radius=")) {
                 String param = getParam(cmd);
                 if (!isNum(param)) {
-                    Message.error("Не число: " + param + " в " + cmd);
+                    Message.error(NOT_A_NUMBER.getString(), param);
                     continue;
                 }
                 radius = Integer.parseInt(param);

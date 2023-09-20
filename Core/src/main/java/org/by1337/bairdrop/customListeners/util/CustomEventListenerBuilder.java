@@ -13,32 +13,32 @@ public class CustomEventListenerBuilder {
     private  HashMap<String, HashMap<String, String>> requirement;
     private  NamespacedKey key;
 
-    public CustomEventListenerBuilder setCustomEvent(CustomEvent customEvent) {
+    public CustomEventListenerBuilder customEvent(CustomEvent customEvent) {
         this.customEvent = customEvent;
         return this;
     }
 
-    public CustomEventListenerBuilder setDescription(String description) {
+    public CustomEventListenerBuilder description(String description) {
         this.description = description;
         return this;
     }
 
-    public CustomEventListenerBuilder setCommands(String[] commands) {
+    public CustomEventListenerBuilder commands(String[] commands) {
         this.commands = commands;
         return this;
     }
 
-    public CustomEventListenerBuilder setDenyCommands(String[] denyCommands) {
+    public CustomEventListenerBuilder denyCommands(String[] denyCommands) {
         this.denyCommands = denyCommands;
         return this;
     }
 
-    public CustomEventListenerBuilder setRequirement(HashMap<String, HashMap<String, String>> requirement) {
+    public CustomEventListenerBuilder requirement(HashMap<String, HashMap<String, String>> requirement) {
         this.requirement = requirement;
         return this;
     }
 
-    public CustomEventListenerBuilder setKey(NamespacedKey key) {
+    public CustomEventListenerBuilder key(NamespacedKey key) {
         this.key = key;
         return this;
     }

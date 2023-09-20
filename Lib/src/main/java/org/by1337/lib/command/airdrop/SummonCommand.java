@@ -1,4 +1,4 @@
-package org.by1337.lib.command;
+package org.by1337.lib.command.airdrop;
 
 import org.by1337.api.world.BLocation;
 import org.by1337.lib.Version;

@@ -1,11 +1,11 @@
-package org.by1337.bairdrop.airdrop.command;
+package org.by1337.lib.command;
 
 import lombok.Getter;
 import lombok.ToString;
 import org.bukkit.command.CommandSender;
-import org.by1337.bairdrop.airdrop.command.argument.Argument;
-import org.by1337.bairdrop.airdrop.command.argument.ArgumentMap;
-import org.by1337.bairdrop.airdrop.command.requires.Requires;
+import org.by1337.lib.command.argument.Argument;
+import org.by1337.lib.command.argument.ArgumentMap;
+import org.by1337.lib.command.requires.Requires;
 
 import java.util.*;
 

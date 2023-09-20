@@ -42,40 +42,40 @@ public class ChatColor {
         int blue = color.getBlue();
         return String.format("#%02X%02X%02X", red, green, blue).toLowerCase();
     }
+
+
+    public static String toHex(Color color){
+        int red = color.getRed();
+        int green = color.getGreen();
+        int blue = color.getBlue();
+        return String.format("#%02X%02X%02X", red, green, blue).toLowerCase();
+    }
+    public static String toHex(org.bukkit.Color color){
+        return toHex(new Color(
+                color.getRed(),
+                color.getGreen(),
+                color.getBlue()
+        ));
+    }
     public static ChatColor fromHex(String hex){
-        if (hex.equals("black")){
-            return new ChatColor("#000000");
-        }else if (hex.equals("red")){
-            return new ChatColor("#FF5555");
-        }else if (hex.equals("dark_blue")){
-            return new ChatColor("#0000AA");
-        }else if (hex.equals("light_purple")){
-            return new ChatColor("#FF55FF");
-        }else if (hex.equals("dark_green")){
-            return new ChatColor("#00AA00");
-        }else if (hex.equals("yellow")){
-            return new ChatColor("#FFFF55");
-        }else if (hex.equals("dark_aqua")){
-            return new ChatColor("#00AAAA");
-        }else if (hex.equals("white")){
-            return new ChatColor("#FFFFFF");
-        }else if (hex.equals("dark_red")){
-            return new ChatColor("#AA0000");
-        }else if (hex.equals("dark_purple")){
-            return new ChatColor("#AA00AA");
-        }else if (hex.equals("gold")){
-            return new ChatColor("#FFAA00");
-        }else if (hex.equals("gray")){
-            return new ChatColor("#AAAAAA");
-        }else if (hex.equals("dark_gray")){
-            return new ChatColor("#555555");
-        }else if (hex.equals("blue")){
-            return new ChatColor("#5555FF");
-        }else if (hex.equals("green")){
-            return new ChatColor("#55FF55");
-        }else if (hex.equals("aqua")){
-            return new ChatColor("#55FFFF");
-        }
-        return new ChatColor(hex);
+        return switch (hex) {
+            case "black" -> new ChatColor("#000000");
+            case "red" -> new ChatColor("#FF5555");
+            case "dark_blue" -> new ChatColor("#0000AA");
+            case "light_purple" -> new ChatColor("#FF55FF");
+            case "dark_green" -> new ChatColor("#00AA00");
+            case "yellow" -> new ChatColor("#FFFF55");
+            case "dark_aqua" -> new ChatColor("#00AAAA");
+            case "white" -> new ChatColor("#FFFFFF");
+            case "dark_red" -> new ChatColor("#AA0000");
+            case "dark_purple" -> new ChatColor("#AA00AA");
+            case "gold" -> new ChatColor("#FFAA00");
+            case "gray" -> new ChatColor("#AAAAAA");
+            case "dark_gray" -> new ChatColor("#555555");
+            case "blue" -> new ChatColor("#5555FF");
+            case "green" -> new ChatColor("#55FF55");
+            case "aqua" -> new ChatColor("#55FFFF");
+            default -> new ChatColor(hex);
+        };
     }
 }

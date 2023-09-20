@@ -1,4 +1,4 @@
-package org.by1337.bairdrop.airdrop.command.requires;
+package org.by1337.lib.command.requires;
 
 import org.bukkit.command.CommandSender;
 

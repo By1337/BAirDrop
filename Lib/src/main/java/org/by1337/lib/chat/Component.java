@@ -20,6 +20,13 @@ public class Component {
     private HoverEvent hoverEvent = null;
     private ClickEvent clickEvent = null;
 
+    public Component() {
+    }
+
+    public Component(String text) {
+        this.text = text;
+    }
+
     /**
      * Converts the Component object to its JSON string representation.
      *

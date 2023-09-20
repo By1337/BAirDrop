@@ -21,15 +21,13 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.by1337.bairdrop.BAirDrop;
+import org.by1337.bairdrop.lang.Resource;
 import org.by1337.lib.chat.ComponentBuilder;
 import org.by1337.lib.chat.TellRaw;
 import org.jetbrains.annotations.Nullable;
 
 
 public class Message {
-    private static final ConsoleCommandSender SENDER = Bukkit.getConsoleSender();
-    private static final String AUTHOR = "&#a612cb&lB&#9a17d2&ly&#8d1bd9&l1&#8120e1&l3&#7424e8&l3&#6829ef&l7";
-    private static final String prefixPlugin = "&#a600f4[&#a70bf5B&#a815f6A&#a920f7i&#aa2bf8r&#aa35f8d&#ab40f9r&#ac4bfao&#ad55fbp&#ae60fc]";
     private static final Pattern RAW_HEX_REGEX = Pattern.compile("&(#[a-f0-9]{6})", Pattern.CASE_INSENSITIVE);
 
     private static final Logger LOGGER = JavaPlugin.getPlugin(BAirDrop.class).getLogger();
@@ -82,6 +80,16 @@ public class Message {
         }
     }
 
+    public static void sendMsg(CommandSender sender, Resource res, Object... format) {
+        String msg = setPlaceholders(sender instanceof OfflinePlayer ? (OfflinePlayer) sender : null, res.getString());
+        msg = msg.replace("\\n", "/n");
+        if (msg.contains("/n")) {
+            for (String str : msg.split("/n"))
+                sender.sendMessage(messageBuilder(String.format(str, format)));
+        } else {
+            sender.sendMessage(messageBuilder(String.format(msg, format)));
+        }
+    }
 
     /**
      * Sends a debug message to the console
@@ -132,6 +140,9 @@ public class Message {
      */
     public static void error(String msg) {
         LOGGER.log(Level.SEVERE, messageBuilder(msg));
+    }
+    public static void error(String msg, Object... objects) {
+        LOGGER.log(Level.SEVERE, messageBuilder(String.format(msg, objects)));
     }
 
     /**
@@ -236,10 +247,9 @@ public class Message {
     public static String messageBuilder(String msg) {
         if (msg == null)
             return "";
-        String str = msg.replace("{PP}", prefixPlugin).replace("AU", AUTHOR);
-        str = setPlaceholders(null, str);
+        msg = setPlaceholders(null, msg);
 
-        return hex(str);
+        return hex(msg);
     }
 
     /**

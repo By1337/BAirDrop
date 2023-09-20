@@ -2,9 +2,11 @@ package org.by1337.bairdrop;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -13,6 +15,7 @@ import org.by1337.bairdrop.configManager.CConfig;
 import org.by1337.bairdrop.configManager.ConfigMessage;
 import org.by1337.bairdrop.configManager.Config;
 import org.by1337.bairdrop.hologram.*;
+import org.by1337.bairdrop.lang.Lang;
 import org.by1337.bairdrop.listeners.Compass;
 import org.by1337.bairdrop.listeners.CraftItem;
 import org.by1337.bairdrop.listeners.InteractListener;
@@ -33,6 +36,7 @@ import org.by1337.lib.Version;
 import java.io.*;
 
 import java.util.*;
+import java.util.logging.Level;
 
 
 public final class BAirDrop extends JavaPlugin {
@@ -48,10 +52,15 @@ public final class BAirDrop extends JavaPlugin {
     public static IHologram hologram;
     private static Config config;
     private static ConfigMessage configMessage;
-    private static BAirDrop instance;
+
+    @Getter
+    private static Plugin instance;
 
     private static ProtocolManager protocolManager = null;
 
+    public BAirDrop() {
+        super();
+    }
 
     @Override
     public void onLoad() {
@@ -60,6 +69,7 @@ public final class BAirDrop extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        Lang.initLocal();
         try {
             Version.init();
             Message.logger("Version detected: " + Version.version);
@@ -97,15 +107,14 @@ public final class BAirDrop extends JavaPlugin {
         getiConfig().loadConfiguration();
 
         if (this.getConfig().getBoolean("use-metrics"))
-            new Metrics(getInstance(), 17870);
+            new Metrics(this, 17870);
 
 //        CommandHook commandHook = new CommandHook();
 //        CompleterHook completerHook = new CompleterHook();
 
 
-
-        Objects.requireNonNull(getInstance().getCommand("bairdrop")).setExecutor(new CommandHook());
-        Objects.requireNonNull(getInstance().getCommand("bairdrop")).setTabCompleter(new CompleterHook());
+        Objects.requireNonNull(getCommand("bairdrop")).setExecutor(new CommandHook());
+        Objects.requireNonNull(getCommand("bairdrop")).setTabCompleter(new CompleterHook());
 
         Bukkit.getServer().getPluginManager().registerEvents(new InteractListener(), getInstance());
         getServer().getPluginManager().registerEvents(summoner, getInstance());
@@ -139,6 +148,7 @@ public final class BAirDrop extends JavaPlugin {
             airDrops.get(id).registerAllSignedObservers();
         }
 
+
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)
             new PlaceholderHook().register();
 
@@ -164,12 +174,9 @@ public final class BAirDrop extends JavaPlugin {
         return config;
     }
 
+    @Deprecated
     public static ConfigMessage getConfigMessage() {
         return configMessage;
-    }
-
-    public static BAirDrop getInstance() {
-        return instance;
     }
 
     @Override

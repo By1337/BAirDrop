@@ -1,4 +1,4 @@
-package org.by1337.bairdrop.airdrop.command.argument;
+package org.by1337.lib.command.argument;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

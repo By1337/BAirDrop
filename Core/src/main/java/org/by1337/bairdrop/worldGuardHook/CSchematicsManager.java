@@ -21,11 +21,13 @@ import java.io.IOException;
 
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
+import org.by1337.bairdrop.lang.Resource;
 import org.by1337.bairdrop.util.LogLevel;
 import org.by1337.bairdrop.util.Message;
 
 
 public class CSchematicsManager implements SchematicsManager{
+    private static Resource schematicsLimit = new Resource("schematics.error.limit");
 
     /**
      * Sets the schematic
@@ -35,7 +37,7 @@ public class CSchematicsManager implements SchematicsManager{
     public void pasteSchematics(String name, AirDrop airDrop) {
         try {
             if (airDrop.getEditSession() != null) {
-                Message.error(BAirDrop.getConfigMessage().getMessage("schem-limit"));
+                Message.error(schematicsLimit.getString());
                 return;
             }
             Vector offsets = new Vector(

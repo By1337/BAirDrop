@@ -16,9 +16,8 @@ import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.customListeners.observer.Observer;
 import org.by1337.bairdrop.scripts.JsScript;
-import org.by1337.bairdrop.util.BMatch;
+import org.by1337.lib.match.BMatch;
 import org.by1337.bairdrop.util.ExecuteCommands;
-import org.by1337.bairdrop.util.LogLevel;
 import org.by1337.bairdrop.util.Message;
 import org.jetbrains.annotations.NotNull;
 
@@ -151,18 +150,24 @@ public class CustomEventListener implements Observer {
     }
 
     private boolean checkRequirement(@Nullable AirDrop airDrop, @Nullable Player pl) {
-        boolean requirementsMet = true;
+        boolean requirementsMet;
         for (String idCheck : requirement.keySet()) {
             for (String type : requirement.get(idCheck).keySet()) {
                 switch (type) {
-                    case "NUMERICAL_CHECK" ->
-                            requirementsMet = NUMERICAL_CHECK(idCheck, requirement.get(idCheck).get(type), airDrop, pl);
+                    case "num", "NUMERICAL_CHECK" -> {
+                        requirementsMet = NUMERICAL_CHECK(idCheck, requirement.get(idCheck).get(type), airDrop, pl);
+                    }
                     case "LOGICAL_CHECK" ->
                             requirementsMet = LOGICAL_CHECK(requirement.get(idCheck).get(type), airDrop, pl);
-                    case "STRING_CHECK" ->
-                            requirementsMet = STRING_CHECK(requirement.get(idCheck).get(type), airDrop, pl);
-                    case "FIRST_OPEN" -> requirementsMet = airDrop != null && !airDrop.isWasOpened();
-                    default -> requirementsMet = true;
+                    case "str", "STRING_CHECK" -> {
+                        requirementsMet = STRING_CHECK(requirement.get(idCheck).get(type), airDrop, pl);
+                    }
+                    case "FIRST_OPEN" -> {
+                        requirementsMet = airDrop != null && !airDrop.isWasOpened();
+                    }
+                    default -> {
+                        requirementsMet = true;
+                    }
                 }
                 if (!requirementsMet) return false;
             }
@@ -193,7 +198,8 @@ public class CustomEventListener implements Observer {
         req = Message.setPlaceholders(pl, req);
         req = BMatch.match(req);
 
-        return BMatch.match("match[" + req + "]").equals("1");
+        //   return BMatch.match("match[" + req + "]").equals("1");
+        return req.equals("1"); // todo need test
     }
 
     private boolean STRING_CHECK(String req, @Nullable AirDrop airDrop, @Nullable Player pl) {

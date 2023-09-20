@@ -1,4 +1,4 @@
-package org.by1337.bairdrop.airdrop.command;
+package org.by1337.lib.command;
 
 /**
  * Represents an exception thrown for command syntax errors.

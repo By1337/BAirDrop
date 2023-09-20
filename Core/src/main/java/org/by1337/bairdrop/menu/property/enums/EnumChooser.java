@@ -73,7 +73,8 @@ public class EnumChooser<T extends Enum<T>> implements Listener {
             ItemStack itemStack =  converter.convertToMaterial(val);
             ItemMeta im = itemStack.getItemMeta();
             assert im != null;
-            im.setDisplayName(Message.messageBuilder(lang.clickToSelect));
+            if (!im.hasDisplayName())
+                im.setDisplayName(Message.messageBuilder(lang.clickToSelect));
             im.getPersistentDataContainer().set(NamespacedKey.fromString("value"), PersistentDataType.STRING, val.name());
             itemStack.setItemMeta(im);
             inventory.setItem(slot - (52 * page), itemStack);

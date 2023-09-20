@@ -9,6 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.customListeners.CustomEvent;
+import org.by1337.bairdrop.lang.Resource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,6 +18,7 @@ import java.util.List;
 
 
 public class CustomCraft {
+    private static Resource toManyCall = new Resource("listener.error.too-many-call");
     private final String id;
     private final NamespacedKey namespacedKey;
     private final List<String> call;
@@ -71,7 +73,7 @@ public class CustomCraft {
                 return;
             BAirDrop.customEventListeners.get(NamespacedKey.fromString(listener)).update(pl, null, CustomEvent.CRAFT_ITEM, false);
         } catch (StackOverflowError e) {
-            Message.error(BAirDrop.getConfigMessage().getMessage("too-many-call"));
+            Message.error(toManyCall.getString());
         }
     }
 

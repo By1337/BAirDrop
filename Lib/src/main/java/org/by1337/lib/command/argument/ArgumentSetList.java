@@ -1,7 +1,7 @@
-package org.by1337.bairdrop.airdrop.command.argument;
+package org.by1337.lib.command.argument;
 
 import org.bukkit.command.CommandSender;
-import org.by1337.bairdrop.airdrop.command.CommandSyntaxError;
+import org.by1337.lib.command.CommandSyntaxError;
 
 import java.util.List;
 

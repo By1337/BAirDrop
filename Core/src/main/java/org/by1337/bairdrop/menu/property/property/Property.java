@@ -1,18 +1,27 @@
-package org.by1337.bairdrop.menu.property;
+package org.by1337.bairdrop.menu.property.property;
 
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.util.Vector;
 import org.by1337.bairdrop.ItemUtil.BaseHeadHook;
+import org.by1337.bairdrop.lang.Resource;
+import org.by1337.bairdrop.menu.property.EditValue;
+import org.by1337.bairdrop.menu.property.EditableProperties;
 import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.util.Placeholder;
+import org.by1337.lib.chat.ChatColor;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,18 +41,21 @@ public abstract class Property<T> implements EditValue<T> {
     @Setter
     private T value;
     @Getter
-    private final String displayName;
+    private final Resource displayName;
     @Getter
     private final String name;
     @Getter
-    private final List<String> lore;
+    private final Resource lore;
     @Getter
-    private final String material;
+    private final Resource material;
+
+    @Getter
+    private final transient EditableProperties owner;
 
     /**
      * The list of placeholders associated with the property.
      */
-    private final List<Placeholder> placeholders = new ArrayList<>();
+    private final transient List<Placeholder> placeholders = new ArrayList<>();
 
 
     /**
@@ -55,26 +67,9 @@ public abstract class Property<T> implements EditValue<T> {
      * @param material    The material used to represent the property visually.
      * @param displayName The display name of the property.
      */
-    public Property(T value, String name, List<String> lore, Material material, String displayName) {
-        this.displayName = displayName;
-        this.value = value;
-        this.name = name;
-        this.lore = lore;
-        this.material = material.name();
-        placeholders.add(sb -> {
-            while (true) {
-                if (sb.indexOf("{value}") != -1) {
-                    sb.replace(sb.indexOf("{value}"), sb.indexOf("{value}") + "{value}".length(), String.valueOf(this.value));
-                    continue;
-                }
-                break;
-            }
-            return sb;
-        });
-        init();
-    }
 
-    public Property(T value, String name, List<String> lore, String material, String displayName) {
+    public Property(T value, String name, Resource lore, Resource material, Resource displayName, EditableProperties owner) {
+        this.owner = owner;
         this.displayName = displayName;
         this.value = value;
         this.name = name;
@@ -83,7 +78,7 @@ public abstract class Property<T> implements EditValue<T> {
         placeholders.add(sb -> {
             while (true) {
                 if (sb.indexOf("{value}") != -1) {
-                    sb.replace(sb.indexOf("{value}"), sb.indexOf("{value}") + "{value}".length(), String.valueOf(this.value));
+                    sb.replace(sb.indexOf("{value}"), sb.indexOf("{value}") + "{value}".length(), toString(this.value));
                     continue;
                 }
                 break;
@@ -108,12 +103,12 @@ public abstract class Property<T> implements EditValue<T> {
      * @return An ItemStack representing the property.
      */
     public ItemStack createItem() {
-        ItemStack itemStack = new ItemStack(BaseHeadHook.getItem(material));
+        ItemStack itemStack = new ItemStack(BaseHeadHook.getItem(material.getString()));
         ItemMeta im = itemStack.getItemMeta();
 
-        im.setDisplayName(Message.messageBuilder(replace(displayName)));
+        im.setDisplayName(Message.messageBuilder(replace(displayName.getString())));
 
-        List<String> lore = new ArrayList<>(this.lore);
+        List<String> lore = new ArrayList<>(this.lore.getList());
         lore.replaceAll(this::replace);
         lore.replaceAll(Message::messageBuilder);
         im.setLore(lore);
@@ -136,6 +131,16 @@ public abstract class Property<T> implements EditValue<T> {
             sb = placeholder.replace(sb);
         }
         return sb.toString();
+    }
+
+    public static <T> String toString(T val){
+        if (val instanceof Color color){
+            return "&r&n&" + ChatColor.toHex(color).toUpperCase().repeat(2);
+        }else  if (val instanceof Vector vector){
+            return vector.getX() + ", " + vector.getY() + ", " + vector.getZ();
+        }else {
+            return String.valueOf(val);
+        }
     }
 
 }

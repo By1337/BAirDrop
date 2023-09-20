@@ -1,8 +1,8 @@
-package org.by1337.bairdrop.airdrop.command.argument;
+package org.by1337.lib.command.argument;
 
 import lombok.Getter;
 import org.bukkit.command.CommandSender;
-import org.by1337.bairdrop.airdrop.command.CommandSyntaxError;
+import org.by1337.lib.command.CommandSyntaxError;
 
 import java.util.ArrayList;
 import java.util.List;

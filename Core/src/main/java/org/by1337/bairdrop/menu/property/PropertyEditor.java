@@ -16,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.by1337.bairdrop.BAirDrop;
+import org.by1337.bairdrop.menu.property.property.Property;
 import org.by1337.bairdrop.util.Message;
 
 import java.util.ArrayList;
@@ -71,11 +72,13 @@ public class PropertyEditor implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent e) {
+        System.out.println(74);
         if (e.getInventory().equals(inventory)) {
             e.setCancelled(true);
             if (e.getCurrentItem() == null) return;
             if (e.getSlot() == 52) {
                 e.getWhoClicked().closeInventory();
+                System.out.println(80);
                 return;
             }
             if (e.getSlot() == 53) {
@@ -87,6 +90,7 @@ public class PropertyEditor implements Listener {
                     page = page == 0 ? 0 : page - 1;
                     generate();
                 }
+                System.out.println(92);
                 return;
             }
             ItemStack itemStack = e.getCurrentItem();
@@ -95,13 +99,15 @@ public class PropertyEditor implements Listener {
 
             if (value == null){
                 generate();
+                System.out.println(101);
                 return;
             }
 
-            Property<?> property = editableProperties.getProperties().stream().findFirst().filter(p -> p.getName().equals(value)).orElse(null);
+            Property<?> property = editableProperties.getPropertyByName(value);
 
             if (property == null){
                 generate();
+                System.out.println(109);
                 return;
             }
             e.getWhoClicked().closeInventory();

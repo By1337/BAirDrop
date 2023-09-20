@@ -19,14 +19,11 @@ import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 import org.by1337.bairdrop.ItemUtil.EnchantMaterial;
 import org.by1337.bairdrop.ItemUtil.Items;
+import org.by1337.bairdrop.lang.Resource;
 import org.by1337.bairdrop.locationGenerator.Generator;
 import org.by1337.bairdrop.locationGenerator.GeneratorLoc;
 import org.by1337.bairdrop.locationGenerator.CGenerator;
 import org.by1337.bairdrop.locationGenerator.GeneratorUtils;
-import org.by1337.bairdrop.menu.property.EditableProperties;
-import org.by1337.bairdrop.menu.property.ListenChat;
-import org.by1337.bairdrop.menu.property.Property;
-import org.by1337.bairdrop.menu.property.PropertyEditor;
 import org.by1337.bairdrop.worldGuardHook.RegionManager;
 import org.by1337.bairdrop.worldGuardHook.SchematicsManager;
 import org.by1337.bairdrop.api.event.AirDropEndEvent;
@@ -40,6 +37,7 @@ import org.by1337.bairdrop.serializable.EffectDeserialize;
 import org.by1337.bairdrop.serializable.EffectSerializable;
 import org.by1337.bairdrop.serializable.StateSerializable;
 import org.by1337.bairdrop.util.*;
+import org.by1337.lib.chat.util.InvalidCharacters;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,35 +52,8 @@ import static org.by1337.bairdrop.BAirDrop.*;
 
 import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.menu.EditAirMenu;
-
-public class CAirDrop implements AirDrop, StateSerializable, EditableProperties {
-    //for test
-    private final List<Property<?>> properties = new ArrayList<>();
-    @Override
-    public List<Property<?>> getProperties() {
-        return properties;
-    }
-    private <T> Property<T> registerProperty(Property<T> property){
-        if (properties.stream().findFirst().filter(p -> p.getName().equals(property.getName())).isPresent()){
-            throw new IllegalArgumentException("there is already a property with the same name!");
-        }
-        properties.add(property);
-        return property;
-    }
-    private final Property<String> test = registerProperty(new Property<>("value", "test", List.of("123", "{value}"), Material.OBSERVER, "&7Тестовое значение") {
-        @Override
-        public void editValue(Player player) {
-            new ListenChat((str) -> {
-                str.ifPresent(test::setValue);
-                PropertyEditor propertyEditor = new PropertyEditor(instance);
-                propertyEditor.generate();
-                player.openInventory(propertyEditor.getInventory());
-
-            }, player);
-        }
-
-    });
-    //
+@Deprecated
+public class CAirDrop implements AirDrop, StateSerializable {
     private String inventoryTitle;
     private String displayName;
     private int inventorySize;
@@ -177,7 +148,7 @@ public class CAirDrop implements AirDrop, StateSerializable, EditableProperties 
                 double z = fileConfiguration.getDouble("static-location.z");
                 World world1 = Bukkit.getWorld(fileConfiguration.getString("static-location.world"));
                 if (world1 == null) {
-                    Message.error(String.format(BAirDrop.getConfigMessage().getMessage("static-loc-error"), id));
+                    //Message.error(String.format(BAirDrop.getConfigMessage().getMessage("static-loc-error"), id));
                 } else {
                     staticLocation = new Location(world1, x, y, z);
                 }
@@ -243,17 +214,17 @@ public class CAirDrop implements AirDrop, StateSerializable, EditableProperties 
                     for (String slot : fileConfiguration.getConfigurationSection("inv." + inv).getKeys(false)) {
                         List<String> chance = fileConfiguration.getConfigurationSection("inv." + inv + "." + slot).getKeys(false).stream().toList();
                         if (chance.size() == 0) {
-                            Message.warning(BAirDrop.getConfigMessage().getMessage("item-error").replace("{slot}", slot));
+                           // Message.warning(BAirDrop.getConfigMessage().getMessage("item-error").replace("{slot}", slot));
                             continue;
                         }
 
-                        if (chance.size() >= 2)
-                            Message.warning(BAirDrop.getConfigMessage().getMessage("slot-more").replace("{slot}", slot).replace("{id}", id).replace("{size}", String.valueOf(chance.size())));
+                      //  if (chance.size() >= 2)
+                            //Message.warning(BAirDrop.getConfigMessage().getMessage("slot-more").replace("{slot}", slot).replace("{id}", id).replace("{size}", String.valueOf(chance.size())));
 
 
                         ItemStack item = fileConfiguration.getItemStack("inv." + inv + "." + slot + "." + chance.get(0));
                         if (item == null) {
-                            Message.warning(BAirDrop.getConfigMessage().getMessage("item-null").replace("{slot}", slot));
+                            //Message.warning(BAirDrop.getConfigMessage().getMessage("item-null").replace("{slot}", slot));
                             continue;
                         }
 
@@ -310,10 +281,10 @@ public class CAirDrop implements AirDrop, StateSerializable, EditableProperties 
             useOnlyStaticLoc = false;
             generatorSettings = "default";
             spawnChance = 50; //50
-            airHolo = BAirDrop.getConfigMessage().getList("air-holo");
-            airHoloOpen = BAirDrop.getConfigMessage().getList("air-holo-open");
-            airHoloClickWait = BAirDrop.getConfigMessage().getList("air-holo-click-wait");
-            airHoloToStart = BAirDrop.getConfigMessage().getList("air-holo-to-start");
+           // airHolo = BAirDrop.getConfigMessage().getList("air-holo");
+           // airHoloOpen = BAirDrop.getConfigMessage().getList("air-holo-open");
+           // airHoloClickWait = BAirDrop.getConfigMessage().getList("air-holo-click-wait");
+          //  airHoloToStart = BAirDrop.getConfigMessage().getList("air-holo-to-start");
             holoOffsets = new Vector(0.5, 2.5, 0.5);
             generator = new CGenerator();
             inventory = Bukkit.createInventory(null, inventorySize, inventoryTitle);
@@ -510,13 +481,13 @@ public class CAirDrop implements AirDrop, StateSerializable, EditableProperties 
     private void start() {
 
         if (listItems.isEmpty()) {
-            Message.error(BAirDrop.getConfigMessage().getMessage("items-is-empty"));
+            Message.warning(new Resource("airdrop.warning.item-list-empty").getString());
             inventory.setItem(0, new ItemStack(Material.DIRT));
         }
 
         if (airDropLocation == null) {
             if (staticLocation == null) {
-                Message.error(BAirDrop.getConfigMessage().getMessage("loc-is-null"));
+                Message.error(new Resource("airdrop.error.loc-is-null").getString());
                 end();
                 return;
             } else airDropLocation = staticLocation.clone();
@@ -540,7 +511,7 @@ public class CAirDrop implements AirDrop, StateSerializable, EditableProperties 
                 airDropLocation.getBlock().setBlockData(ra);
             }
         } catch (IllegalArgumentException e) {
-            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("material-error"), materialLocked));
+            e.printStackTrace();
             airDropLocation.getBlock().setType(Material.DIRT);
         }
 
@@ -646,7 +617,7 @@ public class CAirDrop implements AirDrop, StateSerializable, EditableProperties 
 
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
-            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("material-error"), materialUnlocked));
+           // Message.error(String.format(BAirDrop.getConfigMessage().getMessage("material-error"), materialUnlocked));
             airDropLocation.getBlock().setType(Material.DIRT);
         }
 
@@ -1081,12 +1052,12 @@ public class CAirDrop implements AirDrop, StateSerializable, EditableProperties 
 
         AirDropUtils.getStaticObservers().forEach(o -> o.update(pl, this, customEvent, false));
 
-        if (System.currentTimeMillis() - x < 50)
-            Message.debug(String.format(BAirDrop.getConfigMessage().getMessage("event-time"), customEvent.getKey().getKey(), (System.currentTimeMillis() - x)), LogLevel.HARD);
-        else if (System.currentTimeMillis() - x > 50 && System.currentTimeMillis() - x < 75)
-            Message.debug(String.format(BAirDrop.getConfigMessage().getMessage("event-time-50"), customEvent.getKey().getKey(), (System.currentTimeMillis() - x)), LogLevel.MEDIUM);
-        else if (System.currentTimeMillis() - x > 75)
-            Message.debug(String.format(BAirDrop.getConfigMessage().getMessage("event-time-75"), customEvent.getKey().getKey(), (System.currentTimeMillis() - x)), LogLevel.LOW);
+//        if (System.currentTimeMillis() - x < 50)
+//            Message.debug(String.format(BAirDrop.getConfigMessage().getMessage("event-time"), customEvent.getKey().getKey(), (System.currentTimeMillis() - x)), LogLevel.HARD);
+//        else if (System.currentTimeMillis() - x > 50 && System.currentTimeMillis() - x < 75)
+//            Message.debug(String.format(BAirDrop.getConfigMessage().getMessage("event-time-50"), customEvent.getKey().getKey(), (System.currentTimeMillis() - x)), LogLevel.MEDIUM);
+//        else if (System.currentTimeMillis() - x > 75)
+//            Message.debug(String.format(BAirDrop.getConfigMessage().getMessage("event-time-75"), customEvent.getKey().getKey(), (System.currentTimeMillis() - x)), LogLevel.LOW);
     }
 
     @Override
@@ -1108,13 +1079,14 @@ public class CAirDrop implements AirDrop, StateSerializable, EditableProperties 
     public void invokeListener(NamespacedKey listener, @Nullable Player player, CustomEvent customEvent) {
         try {
             if (!BAirDrop.customEventListeners.containsKey(listener)) {
-                Message.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-listener"), listener));
+               // Message.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-listener"), listener));
                 return;
             }
 
             BAirDrop.customEventListeners.get(listener).update(player, this, customEvent, true);
         } catch (StackOverflowError e) {
-            Message.error(BAirDrop.getConfigMessage().getMessage("too-many-call"));
+            e.printStackTrace();
+           // Message.error(BAirDrop.getConfigMessage().getMessage("too-many-call"));
         }
 
     }
@@ -1159,10 +1131,10 @@ public class CAirDrop implements AirDrop, StateSerializable, EditableProperties 
     public void loadEffect(String name, String id) {
         IEffect ie = EffectFactory.getEffect(name);
         if (ie == null) {
-            throw new IllegalArgumentException(String.format(BAirDrop.getConfigMessage().getMessage("unknown-effect"), name));
+            throw new IllegalArgumentException();
         }
         if (loadedEffect.containsKey(id)) {
-            throw new IllegalArgumentException(String.format(BAirDrop.getConfigMessage().getMessage("effect-replace-error"), id));
+            throw new IllegalArgumentException();
         }
         loadedEffect.put(id, ie);
     }
@@ -1171,10 +1143,10 @@ public class CAirDrop implements AirDrop, StateSerializable, EditableProperties 
     public void startEffect(String id) {
         IEffect ie = loadedEffect.getOrDefault(id, null);
         if (ie == null) {
-            throw new IllegalArgumentException(String.format(BAirDrop.getConfigMessage().getMessage("unknown-effect"), id));
+            throw new IllegalArgumentException();
         }
         if (isEffectStarted(id)) {
-            throw new IllegalArgumentException(String.format(BAirDrop.getConfigMessage().getMessage("there-is-already-an-effect"), id));
+            throw new IllegalArgumentException();
         }
         ie.Start(this);
     }
@@ -1187,7 +1159,7 @@ public class CAirDrop implements AirDrop, StateSerializable, EditableProperties 
     @Override
     public void StopEffect(String id) {
         if (!loadedEffect.containsKey(id)) {
-            throw new IllegalArgumentException(String.format(BAirDrop.getConfigMessage().getMessage("effect-not-stated"), id));
+            throw new IllegalArgumentException();
         }
         IEffect ie = loadedEffect.get(id);
         ie.End();

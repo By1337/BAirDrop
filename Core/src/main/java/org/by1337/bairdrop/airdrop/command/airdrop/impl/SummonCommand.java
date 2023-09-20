@@ -41,7 +41,7 @@ public class SummonCommand implements CommandExecutor {
         Location loc = airDrop.getAnyLoc();
         Objects.requireNonNull(loc, String.format(BAirDrop.getConfigMessage().getMessage("loc-is-null2"), command));
         BLocation location = new BLocation(args.x, args.y, args.z, loc.getWorld().getName());
-        org.by1337.lib.command.SummonCommand.execute(args.entityType, location, args.nbt);
+        org.by1337.lib.command.airdrop.SummonCommand.execute(args.entityType, location, args.nbt);
     }
 
     @ToString

@@ -1,4 +1,4 @@
-package org.by1337.bairdrop.util;
+package org.by1337.lib.chat.util;
 
 public class InvalidCharacters {
 

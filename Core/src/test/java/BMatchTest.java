@@ -1,4 +1,4 @@
-import org.by1337.bairdrop.util.BMatch;
+import org.by1337.lib.match.BMatch;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -9,12 +9,14 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.customListeners.CustomEvent;
+import org.by1337.bairdrop.lang.Resource;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 public class AntiSteal implements Listener {
+    private static Resource clockRate = new Resource("anti-steal.limit-click-rate");
     private Map<UUID, ChestStealData> chestStealDataMap = new HashMap<>();
     private final AirDrop airDrop;
 
@@ -41,7 +43,7 @@ public class AntiSteal implements Listener {
                 }
                 if (chestStealData.getLastSteal() != -1 && currentTime - chestStealData.getLastSteal() <= BAirDrop.getInstance().getConfig().getInt("anti-steal.сooldown")){
                     event.setCancelled(true);
-                    Message.sendMsg(player, BAirDrop.getConfigMessage().getMessage("anti-steal-limit-speed"));
+                    Message.sendMsg(player, clockRate.getString());
                     if (event.getCurrentItem() != null){
                         player.setCooldown(event.getCurrentItem().getType(), Math.abs( BAirDrop.getInstance().getConfig().getInt("anti-steal.сooldown") / 50));
                     }
