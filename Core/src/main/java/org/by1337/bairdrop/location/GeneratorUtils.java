@@ -1,4 +1,4 @@
-package org.by1337.bairdrop.locationGenerator;
+package org.by1337.bairdrop.location;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -50,8 +50,6 @@ public class GeneratorUtils {
             RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
             RegionManager regions = container.get((BukkitAdapter.adapt(location.getWorld())));
 
-            assert regions != null;
-
             Location point1 = new Location(airDrop.getWorld(), location.getX() + airDrop.getRegionRadius(), location.getY() + airDrop.getRegionRadius(), location.getZ() + airDrop.getRegionRadius());
             Location point2 = new Location(airDrop.getWorld(), location.getX() - airDrop.getRegionRadius(), location.getY() - airDrop.getRegionRadius(), location.getZ() - airDrop.getRegionRadius());
 
@@ -65,7 +63,7 @@ public class GeneratorUtils {
 
             List<ProtectedRegion> overlapping = region.getIntersectingRegions(candidates);
 
-            return overlapping.size() == 0;
+            return overlapping.isEmpty();
 
         } catch (Exception e) {
             Message.error(BAirDrop.getConfigMessage().getMessage("overlapping-error"));

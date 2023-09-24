@@ -140,12 +140,12 @@ public class ExecuteCommands {
                 EnumChooser<Material> enumChooser = createMaterialChooser(airDrop, pl, false);
                 pl.openInventory(enumChooser.getInventory());
             }
-            if (str.equalsIgnoreCase("[change-world]")) {
-                pl.closeInventory();
-                ChangeWorld cw = new ChangeWorld(airDrop);
-                getServer().getPluginManager().registerEvents(cw, BAirDrop.getInstance());
-                pl.openInventory(cw.getInventory());
-            }
+//            if (str.equalsIgnoreCase("[change-world]")) {
+//                pl.closeInventory();
+//                ChangeWorld cw = new ChangeWorld(airDrop);
+//                getServer().getPluginManager().registerEvents(cw, BAirDrop.getInstance());
+//                pl.openInventory(cw.getInventory());
+//            }
             if (str.equalsIgnoreCase("[!usePreGeneratedLocations]")) {
                 airDrop.setUsePreGeneratedLocations(!airDrop.isUsePreGeneratedLocations());
                 airDrop.save();

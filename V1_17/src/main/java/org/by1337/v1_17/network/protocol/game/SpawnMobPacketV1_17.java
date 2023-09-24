@@ -11,13 +11,14 @@ import org.bukkit.entity.Player;
 import org.by1337.api.network.protocol.game.SpawnMobPacket;
 import org.by1337.api.world.BLocation;
 import org.by1337.api.world.entity.PacketArmorStand;
+import org.by1337.api.world.entity.PacketEntity;
 
 import java.util.UUID;
 
 public class SpawnMobPacketV1_17 implements SpawnMobPacket {
     private ClientboundAddMobPacket packet;
 
-    public SpawnMobPacketV1_17(PacketArmorStand entity) {
+    public SpawnMobPacketV1_17(PacketEntity entity) {
         int id = entity.getId_();
         UUID uuid = entity.getUUID_();
         double x = entity.getX_();

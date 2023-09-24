@@ -14,7 +14,7 @@ import org.by1337.lib.command.argument.*;
 import org.by1337.lib.command.requires.RequiresPermission;
 import org.by1337.bairdrop.lang.Resource;
 import org.by1337.bairdrop.listeners.Compass;
-import org.by1337.bairdrop.locationGenerator.GeneratorLoc;
+import org.by1337.bairdrop.location.GeneratorLoc;
 import org.by1337.bairdrop.menu.EditAirMenu;
 import org.by1337.bairdrop.menu.SelectAirMenu;
 import org.by1337.bairdrop.menu.ShowAllListeners;
@@ -47,10 +47,10 @@ public class CommandFactory {
                 .addSubCommand(new Command("list")
                         .requires(new RequiresPermission("bair.list"))
                         .executor(((sender, args) -> {
-                            ComponentBuilder componentBuilder = new ComponentBuilder().addComponent(new Component("\n"));
+                            ComponentBuilder componentBuilder = new ComponentBuilder().component(new Component("\n"));
                             int x = 0;
                             for (String airDrop : airDrops.keySet()) {
-                                componentBuilder.addComponent(new Component(new ChatColor(Color.WHITE), String.format("%s. %s\n", x, airDrop))
+                                componentBuilder.component(new Component(new ChatColor(Color.WHITE), String.format("%s. %s\n", x, airDrop))
                                         .hoverEvent(new HoverEvent(new HoverEventContentsString(String.format("/bair menu %s", airDrop))))
                                         .clickEvent(new ClickEvent(ClickEventType.RUN_COMMAND, String.format("/bair menu %s", airDrop))));
                                 x++;

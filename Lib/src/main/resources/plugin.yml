@@ -1,0 +1,5 @@
+name: BLib
+version: '${project.version}'
+main: org.by1337.lib.Main
+api-version: '1.16'
+author: "By1337"

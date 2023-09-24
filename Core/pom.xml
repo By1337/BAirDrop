@@ -142,7 +142,7 @@
         </dependency>
         <dependency>
             <groupId>org.by1337</groupId>
-            <artifactId>Lib</artifactId>
+            <artifactId>BLib</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>

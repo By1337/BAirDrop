@@ -123,6 +123,9 @@ public class Command {
         for (String arg : args) {
             if (argumentIterator.hasNext()) {
                 Argument argument = argumentIterator.next();
+                if (argument.getRequires() != null && !argument.getRequires().check(sender)){
+                    break;
+                }
                 argumentValues.put(argument.getName(), argument.process(sender, arg));
             } else {
                 throw new CommandSyntaxError(String.format("Too many arguments: '%s'", arg));
@@ -179,6 +182,9 @@ public class Command {
             for (String arg : args) {
                 if (argumentIterator.hasNext()) {
                     Argument argument = argumentIterator.next();
+                    if (argument.getRequires() != null && !argument.getRequires().check(sender)){
+                        break;
+                    }
                     argument.process(sender, arg);
                     completions = argument.getExx();
                 } else {

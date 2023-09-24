@@ -3,6 +3,7 @@ package org.by1337.bairdrop;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import org.bukkit.*;
+import org.bukkit.block.Biome;
 import org.bukkit.block.data.type.RespawnAnchor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -17,13 +18,17 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
+import org.by1337.api.world.BlockPosition;
+import org.by1337.api.world.Vector2D;
 import org.by1337.bairdrop.ItemUtil.EnchantMaterial;
 import org.by1337.bairdrop.ItemUtil.Items;
 import org.by1337.bairdrop.lang.Resource;
-import org.by1337.bairdrop.locationGenerator.Generator;
-import org.by1337.bairdrop.locationGenerator.GeneratorLoc;
-import org.by1337.bairdrop.locationGenerator.CGenerator;
-import org.by1337.bairdrop.locationGenerator.GeneratorUtils;
+import org.by1337.bairdrop.location.Generator;
+import org.by1337.bairdrop.location.GeneratorLoc;
+import org.by1337.bairdrop.location.CGenerator;
+import org.by1337.bairdrop.location.GeneratorUtils;
+import org.by1337.bairdrop.location.generator.GeneratorSetting;
+import org.by1337.bairdrop.location.generator.LocationManager;
 import org.by1337.bairdrop.observer.CustomListenerLoader;
 import org.by1337.bairdrop.worldGuardHook.RegionManager;
 import org.by1337.bairdrop.worldGuardHook.SchematicsManager;
@@ -118,7 +123,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
     private boolean useOnlyStaticLoc;
     private final List<Observer> observers = new ArrayList<>();
     private AntiSteal antiSteal = null;
-    private Generator generator;
+    private LocationManager locationManager;
     private String superName;
     private List<String> dec = new ArrayList<>();
 
@@ -209,7 +214,23 @@ public class CAirDrop implements AirDrop, StateSerializable {
                     fileConfiguration.getDouble("holo-offsets.z")
             );
 
-            generator = new CGenerator();
+            GeneratorSetting setting = new GeneratorSetting();
+            setting.whiteListBiomes.addAll(List.of(Biome.values()));
+            setting.whiteListBlocks.add(Material.GRASS_BLOCK);
+            setting.radius = 5000;
+            setting.center = new Vector2D(100, 150);
+            setting.maxY = 100;
+            setting.minY = 30;
+            setting.offsets = new BlockPosition(0, 1, 0);
+            setting.ignoreBlocks.add(Material.AIR);
+            setting.ignoreBlocks.add(Material.CAVE_AIR);
+            setting.ignoreBlocks.add(Material.VOID_AIR);
+            setting.ignoreBlocks.add(Material.GRASS);
+            setting.hasNoBlock.add(new BlockPosition(1, 0, 0));
+            setting.hasNoBlock.add(new BlockPosition(0, 0, 1));
+            setting.hasNoBlock.add(new BlockPosition(1, 0, 1));
+
+            locationManager = new LocationManager(setting, world);
             if (fileConfiguration.getConfigurationSection("inv") != null) {
                 for (String inv : fileConfiguration.getConfigurationSection("inv").getKeys(false)) {
                     for (String slot : fileConfiguration.getConfigurationSection("inv." + inv).getKeys(false)) {
@@ -287,7 +308,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
            // airHoloClickWait = BAirDrop.getConfigMessage().getList("air-holo-click-wait");
           //  airHoloToStart = BAirDrop.getConfigMessage().getList("air-holo-to-start");
             holoOffsets = new Vector(0.5, 2.5, 0.5);
-            generator = new CGenerator();
+          //  locationManager = new CGenerator();
             inventory = Bukkit.createInventory(null, inventorySize, inventoryTitle);
             Message.logger(BAirDrop.getConfigMessage().getMessage("air-loaded").replace("{id}", this.id));
         } catch (Exception var3) {
@@ -690,9 +711,9 @@ public class CAirDrop implements AirDrop, StateSerializable {
                     try {
                         if (futureLocation == null) {
                             if (usePreGeneratedLocations)
-                                futureLocation = generator.getPreLocation(instance);
+                                futureLocation = locationManager.generate(world.getEnvironment());
                             else
-                                futureLocation = generator.getLocation(instance, false);
+                                futureLocation = locationManager.generate(world.getEnvironment());
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1209,7 +1230,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
         air.setId(id);
         for (Observer observer : observers)
             air.registerObserver(observer);
-        air.setGenerator(generator);
+      //  air.setGenerator(locationManager.generate(world.getEnvironment()););
         air.setSuperName(this.id);
         return air;
     }
@@ -1870,12 +1891,12 @@ public class CAirDrop implements AirDrop, StateSerializable {
 
     @Override
     public Generator getGenerator() {
-        return generator;
+        return null;//locationManager;
     }
 
     @Override
     public void setGenerator(Generator generator) {
-        this.generator = generator;
+       // this.locationManager = generator;
     }
 
     public String getSuperName() {

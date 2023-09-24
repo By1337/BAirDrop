@@ -1,4 +1,4 @@
-package org.by1337.bairdrop.locationGenerator;
+package org.by1337.bairdrop.location;
 
 import org.bukkit.Location;
 import org.bukkit.World;

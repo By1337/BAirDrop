@@ -1,5 +1,6 @@
 package org.by1337.bairdrop.menu;
 
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -17,36 +18,40 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
+import org.by1337.bairdrop.menu.property.SetValueCallBack;
 import org.by1337.bairdrop.util.Message;
 
 public class ChangeWorld implements Listener {
+    @Getter
     private final Inventory inventory;
-    private final AirDrop airDrop;
+    private final SetValueCallBack<World> callBack;
 
-    public ChangeWorld(AirDrop airDrop) {
-        this.airDrop = airDrop;
-        inventory = Bukkit.createInventory(null, 54, BAirDrop.getConfigMessage().getMessage("change-world-inv-name"));
+    public ChangeWorld(SetValueCallBack<World> callBack) {
+        this.callBack = callBack;
+        inventory = Bukkit.createInventory(null, 54, Message.messageBuilder("&7Смена мира"));
+        Bukkit.getServer().getPluginManager().registerEvents(this, BAirDrop.getInstance());
         generate();
     }
-    private void generate(){
+
+    private void generate() {
         int slot = 0;
-        for(World world : Bukkit.getWorlds()){
-            ItemStack itemStack;
-            if(String.valueOf(world.getEnvironment()).equals("NORMAL"))
-                itemStack = new ItemStack(Material.GRASS_BLOCK);
-            else if(String.valueOf(world.getEnvironment()).equals("NETHER"))
-                itemStack = new ItemStack(Material.NETHERRACK);
-            else if(String.valueOf(world.getEnvironment()).equals("THE_END"))
-                itemStack = new ItemStack(Material.END_STONE);
-            else itemStack = new ItemStack(Material.COMMAND_BLOCK);
+        for (World world : Bukkit.getWorlds()) {
+            ItemStack itemStack = switch (world.getEnvironment()) {
+                case NORMAL -> new ItemStack(Material.GRASS_BLOCK);
+                case NETHER -> new ItemStack(Material.NETHERRACK);
+                case THE_END -> new ItemStack(Material.END_STONE);
+                case CUSTOM -> new ItemStack(Material.COMMAND_BLOCK);
+            };
+
             ItemMeta im = itemStack.getItemMeta();
             im.setDisplayName(Message.messageBuilder("&7World №" + slot));
             List<String> lore = new ArrayList<>(BAirDrop.getConfigMessage().getList("world-lore"));
-            lore.replaceAll(s -> s.replace("{type}", world.getEnvironment() + "").replace("{name}", world.getName()));
-            lore.replaceAll(ChangeWorld::locate);
+            lore.replaceAll(s -> s.replace("{type}", world.getEnvironment().name()).replace("{name}", world.getName()));
+            lore.replaceAll(this::locate);
             lore.replaceAll(Message::messageBuilder);
 
             im.getPersistentDataContainer().set(NamespacedKey.fromString("world"), PersistentDataType.STRING, world.getName());
@@ -57,48 +62,37 @@ public class ChangeWorld implements Listener {
             slot++;
         }
     }
-    public static String locate(String string){
-        string = string.replace("NORMAL", BAirDrop.getConfigMessage().getMessage("NORMAL"));
-        string = string.replace("NETHER", BAirDrop.getConfigMessage().getMessage("NETHER"));
-        string = string.replace("THE_END", BAirDrop.getConfigMessage().getMessage("THE_END"));
-        string = string.replace("CUSTOM", BAirDrop.getConfigMessage().getMessage("CUSTOM"));
+
+    private String locate(String string) {
+        string = string.replace("NORMAL", "&aОбычный");
+        string = string.replace("NETHER", "&cНезер");
+        string = string.replace("THE_END", "&dЭнд");
+        string = string.replace("CUSTOM", "&6Кастомный");
         return string;
     }
+
     @EventHandler
     public void onClick(InventoryClickEvent e) {
         if (e.getInventory().equals(inventory)) {
-            if(e.getCurrentItem() == null) return;
+            if (e.getCurrentItem() == null) return;
             ItemMeta im = e.getCurrentItem().getItemMeta();
             String world = im.getPersistentDataContainer().get(NamespacedKey.fromString("world"), PersistentDataType.STRING);
-            if(world == null){
-                Message.sendMsg((Player) e.getWhoClicked(), BAirDrop.getConfigMessage().getMessage("error"));
+            if (world == null) {
                 inventory.clear();
                 generate();
                 return;
             }
-            if(airDrop.isAirDropStarted())
-                airDrop.end();
-            airDrop.setFutureLocation(null);
-            World world1 = Bukkit.getWorld(world);
-            airDrop.setWorld(world1);
-            Message.sendMsg((Player) e.getWhoClicked(), BAirDrop.getConfigMessage().getMessage("world-changed"));
 
-            airDrop.save();
-            EditAirMenu em = new EditAirMenu(airDrop);
-            airDrop.setEditAirMenu(em);
-            e.getWhoClicked().openInventory(em.getInventory());
+            World world1 = Bukkit.getWorld(world);
+            callBack.result(Optional.ofNullable(world1));
         }
 
     }
+
     @EventHandler
     public void onClose(InventoryCloseEvent e) {
         if (e.getInventory().equals(inventory)) {
             HandlerList.unregisterAll(this);
-            airDrop.save();
         }
-    }
-
-    public Inventory getInventory() {
-        return inventory;
     }
 }

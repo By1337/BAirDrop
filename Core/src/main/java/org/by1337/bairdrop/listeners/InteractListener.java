@@ -17,20 +17,19 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class InteractListener implements Listener {
-    private final HashMap<UUID, Long> auntyDouble = new HashMap<>();
+    private final HashMap<UUID, Long> antiDouble = new HashMap<>();
     @EventHandler
-    public void PlayerClick(PlayerInteractEvent e) {
+    public void playerClick(PlayerInteractEvent e) {
         Player pl = e.getPlayer();
         if (e.getAction() == Action.RIGHT_CLICK_BLOCK || BAirDrop.getInstance().getConfig().getBoolean("geyser") && e.getClickedBlock() != null) {
             AirDrop airDrop = AirDropUtils.getAirDropForLocation(e.getClickedBlock().getLocation());
-
             if(airDrop == null)
                 return;
             e.setCancelled(true);
-            if(auntyDouble.getOrDefault(e.getPlayer().getUniqueId(), 0L) > System.currentTimeMillis()){
+            if(antiDouble.getOrDefault(e.getPlayer().getUniqueId(), 0L) > System.currentTimeMillis()){
                 return;
             }else {
-                auntyDouble.put(e.getPlayer().getUniqueId(), System.currentTimeMillis() + 20L);
+                antiDouble.put(e.getPlayer().getUniqueId(), System.currentTimeMillis() + 20L);
             }
             if(!airDrop.isAirDropStarted()){
                 return;

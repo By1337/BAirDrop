@@ -48,9 +48,12 @@ public abstract class Property<T> implements EditValue<T> {
     private final Resource lore;
     @Getter
     private final Resource material;
-
     @Getter
     private final transient EditableProperties owner;
+    @Getter
+    private boolean editable = true;
+    @Getter
+    private boolean saveable = true;
 
     /**
      * The list of placeholders associated with the property.
@@ -133,6 +136,16 @@ public abstract class Property<T> implements EditValue<T> {
         return sb.toString();
     }
 
+    public Property<T> editable(boolean editable) {
+        this.editable = editable;
+        return this;
+    }
+
+    public Property<T> saveable(boolean saveable) {
+        this.saveable = saveable;
+        return this;
+    }
+
     public static <T> String toString(T val){
         if (val instanceof Color color){
             return "&r&n&" + ChatColor.toHex(color).toUpperCase().repeat(2);
@@ -142,5 +155,5 @@ public abstract class Property<T> implements EditValue<T> {
             return String.valueOf(val);
         }
     }
-
 }
+

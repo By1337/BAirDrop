@@ -18,7 +18,7 @@ public class ComponentBuilder {
      * @param component The component to add.
      * @return This ComponentBuilder instance for method chaining.
      */
-    public ComponentBuilder addComponent(Component component) {
+    public ComponentBuilder component(Component component) {
         list.add(component);
         return this;
     }
@@ -49,7 +49,7 @@ public class ComponentBuilder {
         Object[] jsonArray = gson.fromJson(json, Object[].class);
         for (Object obj : jsonArray) {
             if (obj instanceof LinkedTreeMap linkedTreeMap) {
-                addComponent(Component.parse(linkedTreeMap));
+                component(Component.parse(linkedTreeMap));
             }
         }
         return this;

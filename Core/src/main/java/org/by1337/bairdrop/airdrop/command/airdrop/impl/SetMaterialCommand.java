@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.airdrop.command.airdrop.CommandExecutor;
-import org.by1337.bairdrop.locationGenerator.GeneratorUtils;
+import org.by1337.bairdrop.location.GeneratorUtils;
 import org.by1337.bairdrop.util.Message;
 import org.by1337.lib.AsyncCatcher;
 import org.jetbrains.annotations.NotNull;

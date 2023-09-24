@@ -1,9 +1,12 @@
 package org.by1337.bairdrop.command;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.by1337.bairdrop.BAirDrop;
 import org.by1337.lib.command.CommandSyntaxError;
 import org.by1337.bairdrop.airdrop.registry.CommandFactory;
 import org.by1337.bairdrop.effect.test.EffectCircle;
@@ -17,11 +20,11 @@ public class CommandHook implements CommandExecutor {
         if (sender instanceof Player pl){
             // SpawnArmorStand.spawn(new BLocation(pl.getLocation()));
 //                CAirDrop airDrop = (CAirDrop) airDrops.get("default");
-            EffectCircle effectCircle = new EffectCircle(999999, 1);
-            PropertyEditor propertyEditor = new PropertyEditor(effectCircle);
-            propertyEditor.generate();
-            pl.openInventory(propertyEditor.getInventory());
-            System.out.println(effectCircle);
+//            EffectCircle effectCircle = new EffectCircle(999999, 1);
+//            PropertyEditor propertyEditor = new PropertyEditor(effectCircle);
+//            propertyEditor.generate();
+//            pl.openInventory(propertyEditor.getInventory());
+//            System.out.println(effectCircle);
 
 //                PropertyEditor propertyEditor = new PropertyEditor(airDrop);
 //                propertyEditor.generate();

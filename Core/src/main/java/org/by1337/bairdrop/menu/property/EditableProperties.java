@@ -1,16 +1,16 @@
 package org.by1337.bairdrop.menu.property;
 
+import lombok.Getter;
 import org.by1337.bairdrop.menu.property.property.Property;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * An interface representing objects with editable properties.
- */
+
+@Getter
 public abstract class EditableProperties {
 
-    private final transient List<Property<?>> properties = new ArrayList<>();
+    private final List<Property<?>> properties = new ArrayList<>();
 
     public final Property<?> getPropertyByName(String name){
         if (name == null) throw new NullPointerException("name cannot be null!");
@@ -29,7 +29,4 @@ public abstract class EditableProperties {
         return property;
     }
 
-    public List<Property<?>> getProperties() {
-        return properties;
-    }
 }

@@ -3,6 +3,7 @@ package org.by1337.lib.command.argument;
 import lombok.Getter;
 import org.bukkit.command.CommandSender;
 import org.by1337.lib.command.CommandSyntaxError;
+import org.by1337.lib.command.requires.Requires;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
 public abstract class Argument {
     protected final String name;
     protected final List<String> exx;
+    protected Requires requires;
 
     /**
      * Constructs an Argument with the specified name and no examples.
@@ -45,4 +47,9 @@ public abstract class Argument {
      * @throws CommandSyntaxError If there's a syntax error in the argument processing.
      */
     public abstract Object process(CommandSender sender, String str) throws CommandSyntaxError;
+
+    public Argument requires(Requires requires){
+        this.requires = requires;
+        return this;
+    }
 }

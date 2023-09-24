@@ -4,7 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Api/Api.iml" filepath="$PROJECT_DIR$/Api/Api.iml" />
       <module fileurl="file://$PROJECT_DIR$/Core/BAirDrop.iml" filepath="$PROJECT_DIR$/Core/BAirDrop.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Lib/Lib.iml" filepath="$PROJECT_DIR$/Lib/Lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Lib/BLib.iml" filepath="$PROJECT_DIR$/Lib/BLib.iml" />
       <module fileurl="file://$PROJECT_DIR$/V1_16_5/V1_16_5.iml" filepath="$PROJECT_DIR$/V1_16_5/V1_16_5.iml" />
       <module fileurl="file://$PROJECT_DIR$/V1_17/V1_17.iml" filepath="$PROJECT_DIR$/V1_17/V1_17.iml" />
       <module fileurl="file://$PROJECT_DIR$/V1_17_1/V1_17_1.iml" filepath="$PROJECT_DIR$/V1_17_1/V1_17_1.iml" />

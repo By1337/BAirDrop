@@ -109,7 +109,6 @@ public class Message {
      * use debug(String msg, LogLevel logLevel)
      * or logger(String msg)
      */
-    @Deprecated
     public static void debug(String msg) {
         System.out.println(msg);
     }

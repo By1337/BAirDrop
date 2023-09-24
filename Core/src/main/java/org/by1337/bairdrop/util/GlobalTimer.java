@@ -7,7 +7,7 @@ import org.by1337.bairdrop.AirDropUtils;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.configManager.Config;
 
-
+@Deprecated
 public class GlobalTimer {
     private int timeToStart;
     private int timeToStartCons;

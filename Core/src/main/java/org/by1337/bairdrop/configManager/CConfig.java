@@ -10,16 +10,10 @@ import org.by1337.bairdrop.ItemUtil.EnchantInfo;
 import org.by1337.bairdrop.ItemUtil.EnchantMaterial;
 import org.by1337.bairdrop.lang.Lang;
 import org.by1337.bairdrop.listeners.Compass;
-import org.by1337.bairdrop.locationGenerator.CGenLoc;
-import org.by1337.bairdrop.locationGenerator.GenLoc;
+import org.by1337.bairdrop.location.CGenLoc;
+import org.by1337.bairdrop.location.GenLoc;
 import org.by1337.bairdrop.observer.CustomListenerLoader;
-import org.by1337.bairdrop.observer.requirement.Requirement;
-import org.by1337.bairdrop.observer.requirement.Requirements;
-import org.by1337.bairdrop.observer.requirement.impl.RequirementNumericalCheck;
-import org.by1337.bairdrop.observer.requirement.impl.RequirementStringCheck;
 import org.by1337.bairdrop.worldGuardHook.RegionManager;
-import org.by1337.bairdrop.observer.CustomEvent;
-import org.by1337.bairdrop.observer.CustomEventListener;
 
 import org.by1337.bairdrop.menu.util.MenuItem;
 import org.by1337.bairdrop.util.*;
@@ -28,7 +22,7 @@ import java.io.*;
 import java.util.*;
 
 import static org.by1337.bairdrop.BAirDrop.summoner;
-import static org.by1337.bairdrop.locationGenerator.GeneratorLoc.locs;
+import static org.by1337.bairdrop.location.GeneratorLoc.locs;
 import static org.by1337.bairdrop.effect.LoadEffects.LoadEffect;
 
 

@@ -12,10 +12,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Lang {
     private HashMap<String, List<String>> messages = new HashMap<>();
@@ -199,61 +197,61 @@ public class Lang {
         lang.messages.put(("command.airIsNotSelected"), List.of("AirDrop must be specified!"));
         lang.messages.put(("command.rawHelp"),
                 List.of(new ComponentBuilder()
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), "\n"))
-                        .addComponent(new Component(ChatColor.fromHex("#55ffff"), "/bair help").clickEvent(new ClickEvent(ClickEventType.SUGGEST_COMMAND, "/bair help")).hoverEvent(new HoverEvent(new HoverEventContentsString("/bair help"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), " - "))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), "Command Help").hoverEvent(new HoverEvent(new HoverEventContentsString("Displays a summary of all commands"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), "\n"))
-                        .addComponent(new Component(ChatColor.fromHex("#55ffff"), "/bair list").clickEvent(new ClickEvent(ClickEventType.SUGGEST_COMMAND, "/bair list")).hoverEvent(new HoverEvent(new HoverEventContentsString("/bair list"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), " - "))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), "displays a list of airdrops").hoverEvent(new HoverEvent(new HoverEventContentsString("Displays a list of airdrops, you can click on them too!"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), "\n"))
-                        .addComponent(new Component(ChatColor.fromHex("#55ffff"), "/bair compass [<give/remove>]").clickEvent(new ClickEvent(ClickEventType.SUGGEST_COMMAND, "/bair compass")).hoverEvent(new HoverEvent(new HoverEventContentsString("/bair compass"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), " - "))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), "give/take away compass").hoverEvent(new HoverEvent(new HoverEventContentsString("Allows you to give a compass,which will indicate the path to airdrop"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), "\n"))
-                        .addComponent(new Component(ChatColor.fromHex("#55ffff"), "/bair delete [<airdrop id>]").clickEvent(new ClickEvent(ClickEventType.SUGGEST_COMMAND, "/bair delete")).hoverEvent(new HoverEvent(new HoverEventContentsString("/bair delete"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), " - "))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), "Removing an airdrop").hoverEvent(new HoverEvent(new HoverEventContentsString("You can delete an airdrop by specifying its ID"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), "\n"))
-                        .addComponent(new Component(ChatColor.fromHex("#55ffff"), "/bair summoner give [<item id>]").clickEvent(new ClickEvent(ClickEventType.SUGGEST_COMMAND, "/bair summoner give")).hoverEvent(new HoverEvent(new HoverEventContentsString("/bair summoner give"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), " - "))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), "Gives an airdrop summon item to the player").hoverEvent(new HoverEvent(new HoverEventContentsString("/bair summoner give [<item>] [<amount>] [<player>]"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), "\n"))
-                        .addComponent(new Component(ChatColor.fromHex("#55ffff"), "/bair reload").clickEvent(new ClickEvent(ClickEventType.SUGGEST_COMMAND, "/bair reload")).hoverEvent(new HoverEvent(new HoverEventContentsString("/bair reload"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), " - "))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), "Reloads the plugin").hoverEvent(new HoverEvent(new HoverEventContentsString("What else can I say?"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), "\n"))
-                        .addComponent(new Component(ChatColor.fromHex("#55ffff"), "/bair menu [<airdrop id>]").clickEvent(new ClickEvent(ClickEventType.SUGGEST_COMMAND, "/bair menu")).hoverEvent(new HoverEvent(new HoverEventContentsString("/bair menu"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), " - "))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), "Opens the airdrop editing menu").hoverEvent(new HoverEvent(new HoverEventContentsString("Can be entered without specifying an airdrop"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), "\n"))
-                        .addComponent(new Component(ChatColor.fromHex("#55ffff"), "/bair create [<airdrop id>]").clickEvent(new ClickEvent(ClickEventType.SUGGEST_COMMAND, "/bair create")).hoverEvent(new HoverEvent(new HoverEventContentsString("/bair create"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), " - ").hoverEvent(new HoverEvent(new HoverEventContentsString("/bair create"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), "Creates a new airdrop with the specified id").hoverEvent(new HoverEvent(new HoverEventContentsString("Only ^[a-zA-Z0-9-_]+$ are allowed"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), "\n"))
-                        .addComponent(new Component(ChatColor.fromHex("#55ffff"), "/bair start [<airdrop id>]").clickEvent(new ClickEvent(ClickEventType.SUGGEST_COMMAND, "/bair start")).hoverEvent(new HoverEvent(new HoverEventContentsString("/bair start"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), " - ").hoverEvent(new HoverEvent(new HoverEventContentsString("/bair start"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), "Launches an airdrop").hoverEvent(new HoverEvent(new HoverEventContentsString("You can specify coordinates and the world in the command!/bair start default ~ ~ ~ world"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), "\n"))
-                        .addComponent(new Component(ChatColor.fromHex("#55ffff"), "/bair stop [<airdrop id>]").clickEvent(new ClickEvent(ClickEventType.SUGGEST_COMMAND, "/bair stop")).hoverEvent(new HoverEvent(new HoverEventContentsString("/bair stop"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), " - ").hoverEvent(new HoverEvent(new HoverEventContentsString("/bair stop"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), "Stops the airdrop").hoverEvent(new HoverEvent(new HoverEventContentsString("Yes indeed it stops the airdrop"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), "\n"))
-                        .addComponent(new Component(ChatColor.fromHex("#55ffff"), "/bair clone [<airdrop new id>] [<old airdrop>]").clickEvent(new ClickEvent(ClickEventType.SUGGEST_COMMAND, "/bair clone")).hoverEvent(new HoverEvent(new HoverEventContentsString("/bair clone"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), " - "))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), "Creates a clone of an airdrop").hoverEvent(new HoverEvent(new HoverEventContentsString("You can make it temporary using the -temp flag"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), "\n"))
-                        .addComponent(new Component(ChatColor.fromHex("#55ffff"), "/bair tp [<airdrop id>]").clickEvent(new ClickEvent(ClickEventType.SUGGEST_COMMAND, "/bair tp")).hoverEvent(new HoverEvent(new HoverEventContentsString("/bair tp"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), " - "))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), "Teleports to the airdrop").hoverEvent(new HoverEvent(new HoverEventContentsString("or not?"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), "\n"))
-                        .addComponent(new Component(ChatColor.fromHex("#55ffff"), "/bair listeners [<airdrop id>]").clickEvent(new ClickEvent(ClickEventType.SUGGEST_COMMAND, "/bair listeners")).hoverEvent(new HoverEvent(new HoverEventContentsString("/bair listeners"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), " - ").hoverEvent(new HoverEvent(new HoverEventContentsString("/bair listeners"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), "Shows a list of airdrop listeners\n").hoverEvent(new HoverEvent(new HoverEventContentsString("Listeners can unsubscribe and subscribe to the airdrop!"))))
-                        .addComponent(new Component(ChatColor.fromHex("#55ffff"), "/bair generate [<airdrop id>]").clickEvent(new ClickEvent(ClickEventType.SUGGEST_COMMAND, "/bair generate")).hoverEvent(new HoverEvent(new HoverEventContentsString("/bair generate"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), " - ").hoverEvent(new HoverEvent(new HoverEventContentsString("/bair generate"))))
-                        .addComponent(new Component(ChatColor.fromHex("#ffffff"), "Generates locations in advance!").hoverEvent(new HoverEvent(new HoverEventContentsString("Pre-generation Allows you to reduce the load on the server!")))).build()));
+                        .component(new Component(ChatColor.fromHex("#ffffff"), "\n"))
+                        .component(new Component(ChatColor.fromHex("#55ffff"), "/bair help").clickEvent(new ClickEvent(ClickEventType.SUGGEST_COMMAND, "/bair help")).hoverEvent(new HoverEvent(new HoverEventContentsString("/bair help"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), " - "))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), "Command Help").hoverEvent(new HoverEvent(new HoverEventContentsString("Displays a summary of all commands"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), "\n"))
+                        .component(new Component(ChatColor.fromHex("#55ffff"), "/bair list").clickEvent(new ClickEvent(ClickEventType.SUGGEST_COMMAND, "/bair list")).hoverEvent(new HoverEvent(new HoverEventContentsString("/bair list"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), " - "))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), "displays a list of airdrops").hoverEvent(new HoverEvent(new HoverEventContentsString("Displays a list of airdrops, you can click on them too!"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), "\n"))
+                        .component(new Component(ChatColor.fromHex("#55ffff"), "/bair compass [<give/remove>]").clickEvent(new ClickEvent(ClickEventType.SUGGEST_COMMAND, "/bair compass")).hoverEvent(new HoverEvent(new HoverEventContentsString("/bair compass"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), " - "))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), "give/take away compass").hoverEvent(new HoverEvent(new HoverEventContentsString("Allows you to give a compass,which will indicate the path to airdrop"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), "\n"))
+                        .component(new Component(ChatColor.fromHex("#55ffff"), "/bair delete [<airdrop id>]").clickEvent(new ClickEvent(ClickEventType.SUGGEST_COMMAND, "/bair delete")).hoverEvent(new HoverEvent(new HoverEventContentsString("/bair delete"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), " - "))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), "Removing an airdrop").hoverEvent(new HoverEvent(new HoverEventContentsString("You can delete an airdrop by specifying its ID"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), "\n"))
+                        .component(new Component(ChatColor.fromHex("#55ffff"), "/bair summoner give [<item id>]").clickEvent(new ClickEvent(ClickEventType.SUGGEST_COMMAND, "/bair summoner give")).hoverEvent(new HoverEvent(new HoverEventContentsString("/bair summoner give"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), " - "))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), "Gives an airdrop summon item to the player").hoverEvent(new HoverEvent(new HoverEventContentsString("/bair summoner give [<item>] [<amount>] [<player>]"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), "\n"))
+                        .component(new Component(ChatColor.fromHex("#55ffff"), "/bair reload").clickEvent(new ClickEvent(ClickEventType.SUGGEST_COMMAND, "/bair reload")).hoverEvent(new HoverEvent(new HoverEventContentsString("/bair reload"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), " - "))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), "Reloads the plugin").hoverEvent(new HoverEvent(new HoverEventContentsString("What else can I say?"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), "\n"))
+                        .component(new Component(ChatColor.fromHex("#55ffff"), "/bair menu [<airdrop id>]").clickEvent(new ClickEvent(ClickEventType.SUGGEST_COMMAND, "/bair menu")).hoverEvent(new HoverEvent(new HoverEventContentsString("/bair menu"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), " - "))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), "Opens the airdrop editing menu").hoverEvent(new HoverEvent(new HoverEventContentsString("Can be entered without specifying an airdrop"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), "\n"))
+                        .component(new Component(ChatColor.fromHex("#55ffff"), "/bair create [<airdrop id>]").clickEvent(new ClickEvent(ClickEventType.SUGGEST_COMMAND, "/bair create")).hoverEvent(new HoverEvent(new HoverEventContentsString("/bair create"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), " - ").hoverEvent(new HoverEvent(new HoverEventContentsString("/bair create"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), "Creates a new airdrop with the specified id").hoverEvent(new HoverEvent(new HoverEventContentsString("Only ^[a-zA-Z0-9-_]+$ are allowed"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), "\n"))
+                        .component(new Component(ChatColor.fromHex("#55ffff"), "/bair start [<airdrop id>]").clickEvent(new ClickEvent(ClickEventType.SUGGEST_COMMAND, "/bair start")).hoverEvent(new HoverEvent(new HoverEventContentsString("/bair start"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), " - ").hoverEvent(new HoverEvent(new HoverEventContentsString("/bair start"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), "Launches an airdrop").hoverEvent(new HoverEvent(new HoverEventContentsString("You can specify coordinates and the world in the command!/bair start default ~ ~ ~ world"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), "\n"))
+                        .component(new Component(ChatColor.fromHex("#55ffff"), "/bair stop [<airdrop id>]").clickEvent(new ClickEvent(ClickEventType.SUGGEST_COMMAND, "/bair stop")).hoverEvent(new HoverEvent(new HoverEventContentsString("/bair stop"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), " - ").hoverEvent(new HoverEvent(new HoverEventContentsString("/bair stop"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), "Stops the airdrop").hoverEvent(new HoverEvent(new HoverEventContentsString("Yes indeed it stops the airdrop"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), "\n"))
+                        .component(new Component(ChatColor.fromHex("#55ffff"), "/bair clone [<airdrop new id>] [<old airdrop>]").clickEvent(new ClickEvent(ClickEventType.SUGGEST_COMMAND, "/bair clone")).hoverEvent(new HoverEvent(new HoverEventContentsString("/bair clone"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), " - "))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), "Creates a clone of an airdrop").hoverEvent(new HoverEvent(new HoverEventContentsString("You can make it temporary using the -temp flag"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), "\n"))
+                        .component(new Component(ChatColor.fromHex("#55ffff"), "/bair tp [<airdrop id>]").clickEvent(new ClickEvent(ClickEventType.SUGGEST_COMMAND, "/bair tp")).hoverEvent(new HoverEvent(new HoverEventContentsString("/bair tp"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), " - "))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), "Teleports to the airdrop").hoverEvent(new HoverEvent(new HoverEventContentsString("or not?"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), "\n"))
+                        .component(new Component(ChatColor.fromHex("#55ffff"), "/bair listeners [<airdrop id>]").clickEvent(new ClickEvent(ClickEventType.SUGGEST_COMMAND, "/bair listeners")).hoverEvent(new HoverEvent(new HoverEventContentsString("/bair listeners"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), " - ").hoverEvent(new HoverEvent(new HoverEventContentsString("/bair listeners"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), "Shows a list of airdrop listeners\n").hoverEvent(new HoverEvent(new HoverEventContentsString("Listeners can unsubscribe and subscribe to the airdrop!"))))
+                        .component(new Component(ChatColor.fromHex("#55ffff"), "/bair generate [<airdrop id>]").clickEvent(new ClickEvent(ClickEventType.SUGGEST_COMMAND, "/bair generate")).hoverEvent(new HoverEvent(new HoverEventContentsString("/bair generate"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), " - ").hoverEvent(new HoverEvent(new HoverEventContentsString("/bair generate"))))
+                        .component(new Component(ChatColor.fromHex("#ffffff"), "Generates locations in advance!").hoverEvent(new HoverEvent(new HoverEventContentsString("Pre-generation Allows you to reduce the load on the server!")))).build()));
 
 
         lang.messages.put("particle-to-material.list",
@@ -369,6 +367,59 @@ public class Lang {
         lang.messages.put("not-a-number", List.of("'%s' not a number!"));
         lang.messages.put("easy-boss-bar.error.progress.out.of.bounds", List.of("Прогресс не может быть меньше нуля или больше чем 1"));
         lang.messages.put("airdrop.error.isnt-started", List.of("&c'%s' airdrop isn't started!"));
+
+
+        lang.messages.put(("airdrop.properties.use-pre-generated-locations.lore"),
+                List.of(
+                        "&r ",
+                        "&r &7использовать только заранее сгенерированные локации?",
+                        "&r &7Текущее: {value}",
+                        "&r "
+                ));
+        lang.messages.put(("airdrop.properties.use-pre-generated-locations.material"), List.of("STONE"));
+        lang.messages.put(("airdrop.properties.use-pre-generated-locations.name"), List.of("&7Заранее сгенерированные локаци"));
+
+        lang.messages.put(("airdrop.properties.min-players-to-start.lore"),
+                List.of(
+                        "&r ",
+                        "&r &7Минимальное количество игроков для спавна",
+                        "&r &7Текущее: {value}",
+                        "&r "
+                ));
+        lang.messages.put(("airdrop.properties.min-players-to-start.material"), List.of("STONE"));
+        lang.messages.put(("airdrop.properties.min-players-to-start.name"), List.of("&7Минимальное количество игроков"));
+
+
+        lang.messages.put(("airdrop.properties.inventory-title.lore"),
+                List.of(
+                        "&r ",
+                        "&r &7Тайтл инвентаря аирдропа",
+                        "&r &7Текущее: {value}",
+                        "&r "
+                ));
+        lang.messages.put(("airdrop.properties.inventory-title.material"), List.of("STONE"));
+        lang.messages.put(("airdrop.properties.inventory-title.name"), List.of("&7Тайтл инвентаря"));
+
+        lang.messages.put(("airdrop.properties.display-name.lore"),
+                List.of(
+                        "&r ",
+                        "&r &7Имя аирдропа",
+                        "&r &7Текущее: {value}",
+                        "&r "
+                ));
+        lang.messages.put(("airdrop.properties.display-name.material"), List.of("STONE"));
+        lang.messages.put(("airdrop.properties.display-name.name"), List.of("&7Имя"));
+
+        lang.messages.put(("airdrop.properties.inventory-size.lore"),
+                List.of(
+                        "&r ",
+                        "&r &7Размер инвентаря аирдропа",
+                        "&r &7Текущее: {value}",
+                        "&r "
+                ));
+        lang.messages.put(("airdrop.properties.inventory-size.material"), List.of("STONE"));
+        lang.messages.put(("airdrop.properties.inventory-size.name"), List.of("&7Размер инвентаря"));
+
 
     }
 }

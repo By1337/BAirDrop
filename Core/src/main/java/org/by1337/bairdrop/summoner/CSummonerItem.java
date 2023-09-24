@@ -10,9 +10,9 @@ import java.util.List;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.AirDropUtils;
 import org.by1337.bairdrop.BAirDrop;
-import org.by1337.bairdrop.locationGenerator.GeneratorUtils;
+import org.by1337.bairdrop.location.GeneratorUtils;
 import org.by1337.bairdrop.observer.CustomEvent;
-import org.by1337.bairdrop.locationGenerator.CGenerator;
+import org.by1337.bairdrop.location.CGenerator;
 import org.by1337.bairdrop.util.Message;
 
 
