@@ -217,6 +217,8 @@ public class CAirDrop implements AirDrop, StateSerializable {
             GeneratorSetting setting = new GeneratorSetting();
             setting.whiteListBiomes.addAll(List.of(Biome.values()));
             setting.whiteListBlocks.add(Material.GRASS_BLOCK);
+            setting.whiteListBlocks.add(Material.SAND);
+            setting.whiteListBlocks.add(Material.RED_SAND);
             setting.radius = 5000;
             setting.center = new Vector2D(100, 150);
             setting.maxY = 100;
@@ -225,10 +227,31 @@ public class CAirDrop implements AirDrop, StateSerializable {
             setting.ignoreBlocks.add(Material.AIR);
             setting.ignoreBlocks.add(Material.CAVE_AIR);
             setting.ignoreBlocks.add(Material.VOID_AIR);
+            setting.ignoreBlocks.add(Material.LARGE_FERN);
             setting.ignoreBlocks.add(Material.GRASS);
-            setting.hasNoBlock.add(new BlockPosition(1, 0, 0));
-            setting.hasNoBlock.add(new BlockPosition(0, 0, 1));
+            setting.ignoreBlocks.add(Material.TALL_GRASS);
+            setting.hasNoBlock.add(new BlockPosition(-1, 0, -1));
+            setting.hasNoBlock.add(new BlockPosition(-2, 0, -2));
+            setting.hasNoBlock.add(new BlockPosition(-2, 0, 0));
+            setting.hasNoBlock.add(new BlockPosition(-1, 0, 1));
+            setting.hasNoBlock.add(new BlockPosition(0, 0, 2));
+            setting.hasNoBlock.add(new BlockPosition(-2, 0, 2));
             setting.hasNoBlock.add(new BlockPosition(1, 0, 1));
+            setting.hasNoBlock.add(new BlockPosition(2, 0, 0));
+            setting.hasNoBlock.add(new BlockPosition(2, 0, 2));
+            setting.hasNoBlock.add(new BlockPosition(2, 0, 2));
+            setting.hasNoBlock.add(new BlockPosition(1, 0, -1));
+            setting.hasNoBlock.add(new BlockPosition(0, 0, -2));
+            setting.hasNoBlock.add(new BlockPosition(2, 0, -2));
+
+            setting.hasBlock.add(new BlockPosition(1, -1, 1));
+            setting.hasBlock.add(new BlockPosition(2, -1, 0));
+            setting.hasBlock.add(new BlockPosition(1, -1, -1));
+            setting.hasBlock.add(new BlockPosition(0, -1, -2));
+            setting.hasBlock.add(new BlockPosition(-1, -1, -1));
+            setting.hasBlock.add(new BlockPosition(-2, -1, 0));
+            setting.hasBlock.add(new BlockPosition(-1, -1, 1));
+            setting.hasBlock.add(new BlockPosition(0, -1, 2));
 
             locationManager = new LocationManager(setting, world);
             if (fileConfiguration.getConfigurationSection("inv") != null) {
@@ -417,6 +440,11 @@ public class CAirDrop implements AirDrop, StateSerializable {
     }
 
     private BukkitTask bukkitTaskStart = null;
+
+    @Override
+    public GeneratorSetting getGeneratorSetting() {
+        return null;
+    }
 
     @Override
     public void startCommand(@Nullable CommandSender sender) {
@@ -1179,7 +1207,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
     }
 
     @Override
-    public void StopEffect(String id) {
+    public void stopEffect(String id) {
         if (!loadedEffect.containsKey(id)) {
             throw new IllegalArgumentException();
         }
@@ -1189,9 +1217,10 @@ public class CAirDrop implements AirDrop, StateSerializable {
     }
 
     @Override
-    public void StopAllEffects() {
+    public void stopAllEffectsAndClear() {
         for (IEffect ie : loadedEffect.values())
             ie.End();
+        loadedEffect.clear();
     }
 
     @Override
@@ -1285,13 +1314,12 @@ public class CAirDrop implements AirDrop, StateSerializable {
     public void registerAllSignedObservers() {
         List<String> list = new ArrayList<>(signedListener);
         for (String listener : list) {
-            NamespacedKey nKey = NamespacedKey.fromString(listener);
-            if (CustomListenerLoader.getCustomEventListeners().containsKey(nKey)) {
-                Observer observer = CustomListenerLoader.getCustomEventListeners().get(nKey);
+            if (CustomListenerLoader.getCustomEventListeners().containsKey(NamespacedKey.fromString(listener))) {
+                Observer observer = CustomListenerLoader.getCustomEventListeners().get(NamespacedKey.fromString(listener));
                 if (!this.hasObserver(observer)) {
                     this.registerObserver(observer);
                 } else {
-                    Message.warning("the observer: " + observer.getKey().getKey() + " is already subscribed to " + this.getId());
+                    Message.warning("the observer: " + observer.getKey() + " is already subscribed to " + this.getId());
                 }
             } else {
                 Message.warning("unknown observer: " + listener);

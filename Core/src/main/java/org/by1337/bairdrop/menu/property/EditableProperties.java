@@ -3,29 +3,48 @@ package org.by1337.bairdrop.menu.property;
 import lombok.Getter;
 import org.by1337.bairdrop.menu.property.property.Property;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-
+/**
+ * This abstract class represents a collection of editable properties using a Map structure.
+ * Each property is associated with a unique name and can be retrieved by its name.
+ * New properties can be registered in the collection.
+ */
 @Getter
 public abstract class EditableProperties {
 
-    private final List<Property<?>> properties = new ArrayList<>();
+    private final Map<String, Property<?>> properties = new HashMap<>();
 
+    /**
+     * Retrieves a property by its name.
+     *
+     * @param name The name of the property to retrieve.
+     * @return The property with the specified name.
+     * @throws NullPointerException   if the provided name is null.
+     * @throws IllegalArgumentException if no property is found with the given name.
+     */
     public final Property<?> getPropertyByName(String name){
-        if (name == null) throw new NullPointerException("name cannot be null!");
-        for (Property<?> property : properties) {
-            if (property.getName().equals(name)) return property;
+        if (name == null) throw new NullPointerException("Name cannot be null!");
+        Property<?> property = properties.getOrDefault(name, null);
+        if (property == null) {
+            throw new IllegalArgumentException(String.format("Unknown property '%s'", name));
         }
-        throw new IllegalArgumentException(String.format("unknown property '%s'", name));
-
+        return property;
     }
 
+    /**
+     * Registers a new property in the collection.
+     *
+     * @param property The property to register.
+     * @return The registered property.
+     * @throws IllegalArgumentException if a property with the same name already exists.
+     */
     protected <T> Property<T> registerProperty(Property<T> property) {
-        if (properties.stream().findFirst().filter(p -> p.getName().equals(property.getName())).isPresent()) {
-            throw new IllegalArgumentException("there is already a property with the same name!");
+        if (properties.containsKey(property.getName())) {
+            throw new IllegalArgumentException("A property with the same name already exists!");
         }
-        properties.add(property);
+        properties.put(property.getName(), property);
         return property;
     }
 

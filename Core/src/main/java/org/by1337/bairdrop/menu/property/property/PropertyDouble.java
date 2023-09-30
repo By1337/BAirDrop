@@ -25,4 +25,9 @@ public class PropertyDouble extends Property<Double>{
 
         }, player);
     }
+
+    @Override
+    public PropertyType getType() {
+        return PropertyType.DOUBLE;
+    }
 }

@@ -34,4 +34,9 @@ public class PropertyColor extends Property<Color> {
 
         }, player);
     }
+
+    @Override
+    public PropertyType getType() {
+        return PropertyType.COLOR;
+    }
 }

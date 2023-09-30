@@ -131,6 +131,10 @@ public class Message {
         LOGGER.log(Level.INFO, messageBuilder(msg));
     }
 
+    public static void logger(String msg, Object... objects) {
+        LOGGER.log(Level.INFO, String.format(messageBuilder(msg), objects));
+    }
+
     /**
      * Sends an error message to the console
      * Also sends the message to all op players
@@ -140,6 +144,7 @@ public class Message {
     public static void error(String msg) {
         LOGGER.log(Level.SEVERE, messageBuilder(msg));
     }
+
     public static void error(String msg, Object... objects) {
         LOGGER.log(Level.SEVERE, messageBuilder(String.format(msg, objects)));
     }
@@ -321,6 +326,10 @@ public class Message {
         pl.playSound(pl.getLocation(), sound, 1, 1);
     }
 
+    public static void sendSound(Player pl, Sound sound, int volume, int pitch) {
+        pl.playSound(pl.getLocation(), sound, volume, pitch);
+    }
+
     /**
      * Sends a sound to all players
      *
@@ -331,8 +340,27 @@ public class Message {
             for (Player pl : Bukkit.getOnlinePlayers())
                 pl.playSound(pl.getLocation(), Sound.valueOf(sound), 1, 1);
         } catch (IllegalArgumentException e) {
-            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-sound"), sound));
+            Message.error(e.getMessage());
         }
+    }
+
+    /**
+     * Sends a sound to all players
+     *
+     * @param sound The sound
+     */
+    public static void sendAllSound(Sound sound) {
+
+        for (Player pl : Bukkit.getOnlinePlayers())
+            pl.playSound(pl.getLocation(), sound, 1, 1);
+
+    }
+
+    public static void sendAllSound(Sound sound, int volume, int pitch) {
+
+        for (Player pl : Bukkit.getOnlinePlayers())
+            pl.playSound(pl.getLocation(), sound, volume, pitch);
+
     }
 
     /**

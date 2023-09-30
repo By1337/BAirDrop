@@ -76,7 +76,7 @@ public class ShowAllListeners implements Listener {
         ItemStack itemStack = new ItemStack(airDrop.hasObserver(observer) ? Material.DISPENSER : Material.OBSERVER);
         ItemMeta im = itemStack.getItemMeta();
 
-        im.setDisplayName(Message.messageBuilder("&f" + key.getKey()));
+        im.setDisplayName(Message.messageBuilder("&f" + key));
 
         im.getPersistentDataContainer().set(NamespacedKey.fromString("event"), PersistentDataType.STRING, key.getKey());
         List<String> lore = new ArrayList<>(BAirDrop.getConfigMessage().getList("event-lore"));
@@ -92,7 +92,7 @@ public class ShowAllListeners implements Listener {
             max++;
             if (max == 3) {
                 if (observer.getCommands().length > 3)
-                    lore.add(String.format(BAirDrop.getConfigMessage().getMessage("event-lore-max"), (observer.getCommands().length - 4)));
+                    lore.add(String.format(BAirDrop.getConfigMessage().getMessage("event-lore-max"), (observer.getCommands().length - 3)));
                 break;
             }
         }
@@ -104,7 +104,7 @@ public class ShowAllListeners implements Listener {
             max++;
             if (max == 3) {
                 if (observer.getCommands().length > 3)
-                    lore.add(String.format(BAirDrop.getConfigMessage().getMessage("event-lore-max"), (observer.getCommands().length - 4)));
+                    lore.add(String.format(BAirDrop.getConfigMessage().getMessage("event-lore-max"), (observer.getCommands().length - 3)));
                 break;
             }
         }
@@ -115,19 +115,19 @@ public class ShowAllListeners implements Listener {
                 StringBuilder sb = new StringBuilder();
                 String[] args = s.split(" ");
                 int len = 0;
-                for(String word : args){
+                for (String word : args) {
                     len += word.length() + 1;
-                    if(len >= 50 ){
+                    if (len >= 50) {
                         sb.append(word);
                         formattedLore.add(sb.toString());
                         sb = new StringBuilder();
                         sb.append("&7");
                         len = 0;
-                    }else {
+                    } else {
                         sb.append(word).append(" ");
                     }
                 }
-                if(!sb.toString().equals("&7")){
+                if (!sb.toString().equals("&7")) {
                     formattedLore.add(sb.toString());
                 }
             } else {
@@ -191,11 +191,11 @@ public class ShowAllListeners implements Listener {
                     return;
                 }
             }
-            Observer observer = CustomListenerLoader.getCustomEventListeners().getOrDefault(NamespacedKey.fromString(key), null);
+            Observer observer = CustomListenerLoader.getCustomEventListeners().getOrDefault(key, null);
 
-            if(observer == null){
+            if (observer == null) {
                 e.setCancelled(true);
-                Message.sendMsg((Player) e.getWhoClicked(), BAirDrop.getConfigMessage().getMessage("item-error2"));
+                Message.sendMsg(e.getWhoClicked(), BAirDrop.getConfigMessage().getMessage("item-error2"));
                 inventory.clear();
                 generate();
                 return;
@@ -203,14 +203,14 @@ public class ShowAllListeners implements Listener {
 
             if (airDrop.hasObserver(observer)) {
                 airDrop.unregisterObserver(observer);
-                Message.sendMsg((Player) e.getWhoClicked(), BAirDrop.getConfigMessage().getMessage("unsubscribed"));
-                if(airDrop.hasSavedObserver(observer.getKey().getKey())){
+                Message.sendMsg(e.getWhoClicked(), BAirDrop.getConfigMessage().getMessage("unsubscribed"));
+                if (airDrop.hasSavedObserver(observer.getKey().getKey())) {
                     airDrop.removeSaveObserver(observer.getKey().getKey());
                 }
             } else {
                 airDrop.registerObserver(observer);
-                Message.sendMsg((Player) e.getWhoClicked(), BAirDrop.getConfigMessage().getMessage("signed"));
-                if(!airDrop.hasSavedObserver(observer.getKey().getKey())){
+                Message.sendMsg(e.getWhoClicked(), BAirDrop.getConfigMessage().getMessage("signed"));
+                if (!airDrop.hasSavedObserver(observer.getKey().getKey())) {
                     airDrop.saveObserver(observer.getKey().getKey());
                 }
             }

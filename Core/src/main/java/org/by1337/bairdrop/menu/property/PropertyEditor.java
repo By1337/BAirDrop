@@ -42,7 +42,7 @@ public class PropertyEditor implements Listener {
     public void generate() {
         inventory.clear();
         int slot = 0;
-        for (Property<?> property : editableProperties.getProperties()) {
+        for (Property<?> property : editableProperties.getProperties().values()) {
             if (page > 0) {
                 if (slot < (52 * page)) {
                     slot++;

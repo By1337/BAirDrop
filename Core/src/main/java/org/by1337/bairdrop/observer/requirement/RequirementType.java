@@ -28,12 +28,12 @@ public record RequirementType(NamespacedKey key) implements Keyed {
         return type;
     }
 
-    public static boolean has(RequirementType customEvent) {
-        return byKey.containsKey(customEvent.key);
+    public static boolean has(RequirementType type) {
+        return byKey.containsKey(type.key);
     }
 
-    public static void unregister(RequirementType event) {
-        byKey.remove(event.key);
+    public static void unregister(RequirementType type) {
+        byKey.remove(type.key);
     }
 
     @NotNull

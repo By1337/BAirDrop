@@ -4,17 +4,33 @@ import org.bukkit.entity.Player;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.airdrop.command.airdrop.CommandExecutor;
 import org.by1337.bairdrop.util.Message;
+import org.by1337.lib.command.Command;
+import org.by1337.lib.command.CommandException;
+import org.by1337.lib.command.argument.ArgumentStrings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+
 public class ActionbarAllCommand implements CommandExecutor {
-    @Override
+
     public String getCommandPrefix() {
         return "[ACTIONBAR_ALL]";
     }
 
+    public void execute(@Nullable AirDrop airDrop, @Nullable Player player, @NotNull String command) throws CommandException {
+        createCommand().executor(((sender, args) -> Message.sendAllActionBar((String) args.getOrThrow("message", USAGE.getString(), usage())))).process(null, parseCommand(command));
+    }
+
+
     @Override
-    public void execute(@Nullable AirDrop airDrop, @Nullable Player player, @NotNull String command) {
-        Message.sendAllActionBar(command.replace("[ACTIONBAR_ALL] ", ""));
+    public String usage() {
+        return "[ACTIONBAR_ALL] <message>";
+    }
+
+    @Override
+    public Command createCommand() {
+        return new Command(getCommandPrefix())
+                .argument(new ArgumentStrings("message"));
     }
 }

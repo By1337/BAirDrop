@@ -6,9 +6,12 @@ import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.airdrop.command.airdrop.CommandExecutor;
 import org.by1337.bairdrop.util.Message;
+import org.by1337.lib.command.Command;
+import org.by1337.lib.command.CommandException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@Deprecated
 public class RemoveBossBarCommand implements CommandExecutor {
     @Override
     public String getCommandPrefix() {
@@ -58,5 +61,20 @@ public class RemoveBossBarCommand implements CommandExecutor {
             return;
         }
         Message.bossBars.remove(name);
+    }
+
+    @Override
+    public String usage() {
+        return "[REMOVE_BOSSBAR] <args>";
+    }
+
+    @Override
+    public Command createCommand() {
+        return null;
+    }
+
+    @Override
+    public void testCommand(@NotNull String command) throws CommandException {
+
     }
 }

@@ -66,7 +66,7 @@ public final class BAirDrop extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        Lang.initLocal();
+        Lang.loadFromCode();
         try {
             Version.init();
             Message.logger("Version detected: " + Version.version);
@@ -106,12 +106,9 @@ public final class BAirDrop extends JavaPlugin {
         if (this.getConfig().getBoolean("use-metrics"))
             new Metrics(this, 17870);
 
-//        CommandHook commandHook = new CommandHook();
-//        CompleterHook completerHook = new CompleterHook();
 
-
-        Objects.requireNonNull(getCommand("bairdrop")).setExecutor(new CommandHook());
-        Objects.requireNonNull(getCommand("bairdrop")).setTabCompleter(new CompleterHook());
+        getCommand("bairdrop").setExecutor(new CommandHook());
+        getCommand("bairdrop").setTabCompleter(new CompleterHook());
 
         Bukkit.getServer().getPluginManager().registerEvents(new InteractListener(), getInstance());
         getServer().getPluginManager().registerEvents(summoner, getInstance());

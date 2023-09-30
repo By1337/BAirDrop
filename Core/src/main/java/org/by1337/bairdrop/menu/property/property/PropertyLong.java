@@ -26,4 +26,9 @@ public class PropertyLong extends Property<Long>{
 
         }, player);
     }
+
+    @Override
+    public PropertyType getType() {
+        return PropertyType.LONG;
+    }
 }

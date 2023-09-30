@@ -10,7 +10,11 @@ import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.airdrop.command.airdrop.CommandExecutor;
 import org.by1337.bairdrop.util.Message;
+import org.by1337.bairdrop.worldGuardHook.CSchematicsManager;
 import org.by1337.lib.AsyncCatcher;
+import org.by1337.lib.command.Command;
+import org.by1337.lib.command.CommandException;
+import org.by1337.lib.command.argument.ArgumentString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,35 +24,29 @@ import java.util.regex.Pattern;
 
 public class SchematicsPasteCommand implements CommandExecutor {
     @Override
-    public String getCommandPrefix() {
-        return "[SCHEMATICS_PASTE-";
+    public String getCommandPrefix() { // old [SCHEMATICS_PASTE-<id>]
+        return "[SCHEMATICS_PASTE]";
     }
 
     @Override
-    public void execute(@Nullable AirDrop airDrop, @Nullable Player player, @NotNull String command) {
-        AsyncCatcher.catchOp("Asynchronous schematics paste!");
-        Objects.requireNonNull(airDrop, "AirDrop is null!");
-        Location location = airDrop.getAnyLoc();
-        Objects.requireNonNull(location, String.format(BAirDrop.getConfigMessage().getMessage("loc-is-null2"), command));
+    public void execute(@Nullable AirDrop airDrop, @Nullable Player player, @NotNull String command) throws CommandException {
+        AsyncCatcher.catchOp(String.format(ASYNC_CATCHER_ERROR.getString(), getCommandPrefix()));
+        Objects.requireNonNull(airDrop, AIRDROP_IS_NULL.getString());
 
-        Pattern pattern = Pattern.compile("\\[SET_BLOCK_FACE_(.*?)\\]");
-        Matcher matcher = pattern.matcher(command);
-        if (matcher.find()) {
-            String output = matcher.group(1);
-            try {
-                BlockFace blockFace = BlockFace.valueOf(output);
-                Block block = location.getBlock();
-                if (block.getBlockData() instanceof Directional directional) {
-                    BlockState state = block.getState();
-                    directional.setFacing(blockFace);
-                    state.setBlockData(directional);
-                    state.update(true);
-                } else {
-                    Message.error(BAirDrop.getConfigMessage().getMessage("rotate-error"));
-                }
-            } catch (IllegalArgumentException e) {
-                Message.error(e.getLocalizedMessage());
-            }
-        }
+        createCommand().executor(((sender, args) -> {
+            String id = (String) args.getOrThrow("schem", USAGE.getString(), usage());
+            airDrop.schematicsPaste(new CSchematicsManager(), id);
+        })).process(null, parseCommand(command));
+    }
+
+    @Override
+    public String usage() {
+        return "[SCHEMATICS_PASTE] <id>";
+    }
+
+    @Override
+    public Command createCommand() {
+        return new Command(getCommandPrefix())
+                .argument(new ArgumentString("schem"));
     }
 }

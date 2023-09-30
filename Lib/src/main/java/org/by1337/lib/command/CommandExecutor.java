@@ -16,5 +16,5 @@ public interface CommandExecutor {
      * @param args   The map of command arguments.
      * @throws CommandSyntaxError If there's a syntax error in the command execution.
      */
-    void executes(CommandSender sender, ArgumentMap<String, Object> args) throws CommandSyntaxError;
+    void executes(CommandSender sender, ArgumentMap<String, Object> args) throws CommandException;
 }

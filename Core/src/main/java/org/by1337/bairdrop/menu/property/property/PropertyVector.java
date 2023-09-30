@@ -15,6 +15,10 @@ public class PropertyVector extends Property<Vector> {
         super(value, name, lore, material, displayName, owner);
     }
 
+    @Override
+    public PropertyType getType() {
+        return PropertyType.VECTOR;
+    }
 
     @Override
     public void editValue(Player player) {

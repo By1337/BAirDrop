@@ -1,5 +1,6 @@
 package org.by1337.bairdrop.airdrop.command.airdrop.impl;
 
+import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -8,6 +9,11 @@ import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.airdrop.command.airdrop.CommandExecutor;
 import org.by1337.bairdrop.observer.CustomEvent;
 import org.by1337.bairdrop.util.Message;
+import org.by1337.lib.command.Command;
+import org.by1337.lib.command.CommandException;
+import org.by1337.lib.command.argument.ArgumentInteger;
+import org.by1337.lib.command.argument.ArgumentString;
+import org.by1337.lib.command.argument.ArgumentStrings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,28 +21,37 @@ import java.util.Objects;
 
 public class NearPlayersCommand implements CommandExecutor {
     @Override
-    public String getCommandPrefix() {
-        return "[NEAR-PLAYERS=";
+    public String getCommandPrefix() { //old [NEAR-PLAYERS=<radius>] {CALL-<listener>}
+        return "[NEAR_PLAYERS]";
     }
 
     @Override
-    public void execute(@Nullable AirDrop airDrop, @Nullable Player player1, @NotNull String command) {
-        try {
-            int range = Integer.parseInt(command.split("=")[1].split("]")[0]);
+    public void execute(@Nullable AirDrop airDrop, @Nullable Player player, @NotNull String command) throws CommandException {
+        Objects.requireNonNull(airDrop, AIRDROP_IS_NULL.getString());
+        Objects.requireNonNull(airDrop.getAnyLoc(), LOCATION_IS_NULL.getString());
 
-            for (Entity entity : Objects.requireNonNull(Objects.requireNonNull(airDrop, "airdrop is null! " + command).getAnyLoc(), "location is null! " + command).getWorld().getNearbyEntities(airDrop.getAnyLoc(), range, range, range)) {
-                if (entity instanceof Player player) {
-                    airDrop.invokeListener(NamespacedKey.fromString(command
-                            .replace(String.format("[NEAR-PLAYERS=%s] {CALL-", range), "")
-                            .replace("}", "")), player, CustomEvent.NONE);
+        createCommand().executor(((sender, args) -> {
+            NamespacedKey listener = NamespacedKey.fromString((String) args.getOrThrow("listener", USAGE.getString(), usage()));
+            int radius = (int) args.getOrThrow("radius", USAGE.getString());
+
+            for (Entity entity : airDrop.getAnyLoc().getWorld().getNearbyEntities(airDrop.getAnyLoc(), radius, radius, radius)){
+                if (entity instanceof Player pl) {
+                    airDrop.invokeListener(listener, pl, CustomEvent.NONE);
                 }
             }
-        } catch (NumberFormatException e) {
-            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("near-error-1"), command));
-        } catch (NullPointerException e) {
-            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("loc-is-null-command"), command));
-        } catch (ArrayIndexOutOfBoundsException e) {
-            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("few-args-command"), command));
-        }
+
+        })).process(null, parseCommand(command));
+    }
+
+    @Override
+    public String usage() {
+        return "[NEAR_PLAYERS] <radius> <listener>";
+    }
+
+    @Override
+    public Command createCommand() {
+        return new Command(getCommandPrefix())
+                .argument(new ArgumentInteger("radius"))
+                .argument(new ArgumentString("listener"));
     }
 }

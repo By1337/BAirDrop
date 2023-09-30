@@ -47,7 +47,7 @@ public class Lang {
         }
     }
 
-    public static void initLocal() {
+    public static void loadFromCode() {
         lang = new Lang();
         lang.messages.put(("effect.property.max-tick.lore"),
                 List.of(
@@ -369,57 +369,39 @@ public class Lang {
         lang.messages.put("airdrop.error.isnt-started", List.of("&c'%s' airdrop isn't started!"));
 
 
-        lang.messages.put(("airdrop.properties.use-pre-generated-locations.lore"),
+
+     lang.messages.put(("airdrop.logger.lore"),
                 List.of(
                         "&r ",
-                        "&r &7использовать только заранее сгенерированные локации?",
+                        "&r &7Включён ли логгер аирдрпа",
                         "&r &7Текущее: {value}",
                         "&r "
                 ));
-        lang.messages.put(("airdrop.properties.use-pre-generated-locations.material"), List.of("STONE"));
-        lang.messages.put(("airdrop.properties.use-pre-generated-locations.name"), List.of("&7Заранее сгенерированные локаци"));
+        lang.messages.put(("airdrop.logger.material"), List.of("STONE"));
+        lang.messages.put(("airdrop.logger.name"), List.of("&7Логгер"));
 
-        lang.messages.put(("airdrop.properties.min-players-to-start.lore"),
-                List.of(
-                        "&r ",
-                        "&r &7Минимальное количество игроков для спавна",
-                        "&r &7Текущее: {value}",
-                        "&r "
-                ));
-        lang.messages.put(("airdrop.properties.min-players-to-start.material"), List.of("STONE"));
-        lang.messages.put(("airdrop.properties.min-players-to-start.name"), List.of("&7Минимальное количество игроков"));
+        lang.messages.put("command.async", List.of("Asynchronous use of the %s command"));
+        lang.messages.put("command.airdrop-is-null", List.of("Airdrop is null! command: %s"));
+        lang.messages.put("command.location-is-null", List.of("location is null! command: %s"));
+        lang.messages.put("command.usage", List.of("Usage: %s"));
+
+        lang.messages.put("command.player-is-null", List.of("Player is null! Command: %s"));
+        lang.messages.put("command.lid.cannot-be-opened-or-closed", List.of("This block cannot be opened or closed! command: %s"));
+
+        lang.messages.put("command.deprecated.bossbar.err1", List.of("Incorrect string format: not all quotes are closed. %s"));
+        lang.messages.put("command.deprecated.bossbar.few-args", List.of("&cNot enough arguments when creating or updating the boss bar!"));
+        lang.messages.put("command.deprecated.bossbar.enum-err", List.of("Invalid BarColor or BarStyle"));
+        lang.messages.put("command.deprecated.bossbar.not-created", List.of("Boss bar not created"));
+        lang.messages.put("command.deprecated.bossbar.unknown-boss-bar", List.of("Unknown boss bar! %s"));
+        lang.messages.put("command.deprecated.bossbar.player-is-null", List.of("Player is null! Unable to send boss bar to the player!"));
+        lang.messages.put("command.deprecated.bossbar.player-is-null2", List.of("Player = null! Unable to remove boss bar from the player!"));
 
 
-        lang.messages.put(("airdrop.properties.inventory-title.lore"),
-                List.of(
-                        "&r ",
-                        "&r &7Тайтл инвентаря аирдропа",
-                        "&r &7Текущее: {value}",
-                        "&r "
-                ));
-        lang.messages.put(("airdrop.properties.inventory-title.material"), List.of("STONE"));
-        lang.messages.put(("airdrop.properties.inventory-title.name"), List.of("&7Тайтл инвентаря"));
+        lang.messages.put("command.unknown-js-script", List.of("%s Unknown script!"));
+        lang.messages.put("command.js-time", List.of("&7%s executed in %s"));
 
-        lang.messages.put(("airdrop.properties.display-name.lore"),
-                List.of(
-                        "&r ",
-                        "&r &7Имя аирдропа",
-                        "&r &7Текущее: {value}",
-                        "&r "
-                ));
-        lang.messages.put(("airdrop.properties.display-name.material"), List.of("STONE"));
-        lang.messages.put(("airdrop.properties.display-name.name"), List.of("&7Имя"));
-
-        lang.messages.put(("airdrop.properties.inventory-size.lore"),
-                List.of(
-                        "&r ",
-                        "&r &7Размер инвентаря аирдропа",
-                        "&r &7Текущее: {value}",
-                        "&r "
-                ));
-        lang.messages.put(("airdrop.properties.inventory-size.material"), List.of("STONE"));
-        lang.messages.put(("airdrop.properties.inventory-size.name"), List.of("&7Размер инвентаря"));
-
+        lang.messages.put("command.rotate-err", List.of("This block cannot be rotated. Block %s"));
+        lang.messages.put("command.is-not-block", List.of("the material must be a block! Command %s"));
 
     }
 }

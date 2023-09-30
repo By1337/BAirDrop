@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.by1337.bairdrop.BAirDrop;
+import org.by1337.lib.command.CommandException;
 import org.by1337.lib.command.CommandSyntaxError;
 import org.by1337.bairdrop.airdrop.registry.CommandFactory;
 import org.by1337.bairdrop.effect.test.EffectCircle;
@@ -38,7 +39,7 @@ public class CommandHook implements CommandExecutor {
         try {
             CommandFactory.createMain().process(sender, args);
             return true;
-        } catch (CommandSyntaxError e) {
+        } catch (CommandException e) {
             Message.sendMsg(sender, e.getLocalizedMessage());
         }
         return false;

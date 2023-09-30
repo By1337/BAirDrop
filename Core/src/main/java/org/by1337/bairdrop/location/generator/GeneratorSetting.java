@@ -15,9 +15,10 @@ public class GeneratorSetting {
    public List<Material> ignoreBlocks = new ArrayList<>();
    public List<Material> whiteListBlocks = new ArrayList<>();
    public List<Biome> whiteListBiomes = new ArrayList<>();
-   public BlockPosition offsets = new BlockPosition();
-   public Vector2D center = new Vector2D();
-   public int radius;
-   public int maxY;
-   public int minY;
+   public BlockPosition offsets = new BlockPosition(0, 1, 0);
+   public Vector2D center = new Vector2D(0, 0);
+   public int radius = 500;
+   public int maxY = 100;
+   public int minY = 30;
+   public int regionRadiusCheck = 15;
 }

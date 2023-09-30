@@ -25,4 +25,9 @@ public class PropertyInteger extends Property<Integer>{
 
         }, player);
     }
+
+    @Override
+    public PropertyType getType() {
+        return PropertyType.INTEGER;
+    }
 }

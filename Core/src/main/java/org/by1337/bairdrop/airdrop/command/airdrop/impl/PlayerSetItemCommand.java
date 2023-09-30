@@ -6,11 +6,13 @@ import org.bukkit.inventory.ItemStack;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.airdrop.command.airdrop.CommandExecutor;
 import org.by1337.bairdrop.util.Message;
+import org.by1337.lib.command.Command;
+import org.by1337.lib.command.CommandException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
-
+@Deprecated
 public class PlayerSetItemCommand implements CommandExecutor {
     @Override
     public String getCommandPrefix() {
@@ -27,6 +29,21 @@ public class PlayerSetItemCommand implements CommandExecutor {
         } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
             Message.error("[PLAYER-SET-ITEM-<slot>=<material>]" + command);
         }
+
+    }
+
+    @Override
+    public String usage() {
+        return "[PLAYER-SET-ITEM-<slot>=<material>]";
+    }
+
+    @Override
+    public Command createCommand() {
+        return null;
+    }
+
+    @Override
+    public void testCommand(@NotNull String command) throws CommandException {
 
     }
 }

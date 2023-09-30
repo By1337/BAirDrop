@@ -4,29 +4,45 @@ import org.bukkit.entity.Player;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.airdrop.command.airdrop.CommandExecutor;
 import org.by1337.bairdrop.util.Message;
+import org.by1337.lib.command.Command;
+import org.by1337.lib.command.CommandException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
 public class TitleCommand implements CommandExecutor {
-    @Override
+   // @Override
     public String getCommandPrefix() {
         return "[TITLE]";
     }
 
-    @Override
+   // @Override
     public void execute(@Nullable AirDrop airDrop, @Nullable Player player, @NotNull String command) {
         String subTitle = "";
         String Title;
         if (command.contains("[SUB_TITLE]")) {
-            command = command.replace("[SUB_TITLE]", "%rbts%");
-            subTitle = command.split("%rbts%")[1];
-            Title = command.split("%rbts%")[0];
+            command = command.replace("[SUB_TITLE]", "%spliterator%");
+            subTitle = command.split("%spliterator%")[1];
+            Title = command.split("%spliterator%")[0];
             Title = Title.replace("[TITLE] ", "");
         } else {
             Title = command.replace("[TITLE] ", "");
         }
         Message.sendTitle(Objects.requireNonNull(player, "player is null! " + command), Title, subTitle);
+    }
+    @Override
+    public String usage() {
+        return "[TITLE] <message>";
+    }
+
+    @Override
+    public Command createCommand() {
+        return null;
+    }
+
+    @Override
+    public void testCommand(@NotNull String command) throws CommandException {
+
     }
 }

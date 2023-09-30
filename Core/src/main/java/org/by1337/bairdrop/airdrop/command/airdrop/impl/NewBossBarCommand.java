@@ -10,12 +10,14 @@ import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.airdrop.command.airdrop.CommandExecutor;
 import org.by1337.bairdrop.util.Message;
+import org.by1337.lib.command.Command;
+import org.by1337.lib.command.CommandException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Objects;
-
+@Deprecated
 public class NewBossBarCommand implements CommandExecutor {
     @Override
     public String getCommandPrefix() {
@@ -155,5 +157,20 @@ public class NewBossBarCommand implements CommandExecutor {
             Message.error(BAirDrop.getConfigMessage().getMessage("IllegalArgumentException-boss-bar2"));
             Message.error(e.getLocalizedMessage());
         }
+    }
+
+    @Override
+    public String usage() {
+        return "[NEW_BOSSBAR] <args>";
+    }
+
+    @Override
+    public Command createCommand() {
+        return null;
+    }
+
+    @Override
+    public void testCommand(@NotNull String command) throws CommandException {
+
     }
 }

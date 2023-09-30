@@ -3,6 +3,7 @@ package org.by1337.lib.command.argument;
 import org.bukkit.command.CommandSender;
 import org.by1337.lib.command.CommandSyntaxError;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -47,8 +48,11 @@ public class ArgumentSetList extends Argument {
     @Override
     public Object process(CommandSender sender, String str) throws CommandSyntaxError {
         if (str.isEmpty()) return null;
-        if (!items.contains(str))
-            throw new CommandSyntaxError("'%s' is not a valid option!", str);
+        if (!items.contains(str)) {
+            if (items.size() > 10)
+                throw new CommandSyntaxError("'%s' is not a valid option! All possible values for %s. %s more...", str, items.subList(0, 10), items.size() - 10);
+            throw new CommandSyntaxError("'%s' is not a valid option! All possible values for %s.", str, items);
+        }
         return str;
     }
 }

@@ -10,6 +10,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.by1337.bairdrop.location.Generator;
+import org.by1337.bairdrop.location.generator.GeneratorSetting;
 import org.by1337.bairdrop.worldGuardHook.SchematicsManager;
 import org.by1337.bairdrop.observer.CustomEvent;
 import org.by1337.bairdrop.observer.observer.Observable;
@@ -22,8 +23,9 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
-
+@Deprecated
 public interface AirDrop extends Observable {
+    GeneratorSetting getGeneratorSetting();
     /**
      * Launches the airdrop and generates locations for it in a separate thread.
      *
@@ -176,12 +178,12 @@ public interface AirDrop extends Observable {
      * @param id The ID of the effect to stop.
      * @throws IllegalArgumentException if the effect was not found.
      */
-    void StopEffect(String id);
+    void stopEffect(String id);
 
     /**
      * Stops all effects, even if they were not started.
      */
-    void StopAllEffects();
+    void stopAllEffectsAndClear();
 
     /**
      * @return Returns all loaded effects.

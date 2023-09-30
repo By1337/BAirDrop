@@ -5,21 +5,33 @@ import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.airdrop.command.airdrop.CommandExecutor;
 import org.by1337.bairdrop.worldGuardHook.RegionManager;
+import org.by1337.lib.command.Command;
+import org.by1337.lib.command.CommandException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class SetRegionCommand implements CommandExecutor {
+public class SetRegionCommand implements CommandExecutor{
     @Override
     public String getCommandPrefix() {
         return "[SET_REGION]";
     }
 
     @Override
-    public void execute(@Nullable AirDrop airDrop, @Nullable Player player, @NotNull String command) {
-        Objects.requireNonNull(airDrop, "AirDrop is null!");
-        Objects.requireNonNull(airDrop.getAnyLoc(), String.format(BAirDrop.getConfigMessage().getMessage("loc-is-null2"), "[SET_REGION]"));
-        RegionManager.setRegion(airDrop);
+    public void execute(@Nullable AirDrop airDrop, @Nullable Player player, @NotNull String command) throws CommandException {
+        Objects.requireNonNull(airDrop, String.format(AIRDROP_IS_NULL.getString(), command));
+        Objects.requireNonNull(airDrop.getAnyLoc(), String.format(LOCATION_IS_NULL.getString(), command));
+
+        createCommand().executor(((sender, args) -> airDrop.setRegion())).process(null, parseCommand(command));
+    }
+    @Override
+    public String usage() {
+        return "[SET_REGION]";
+    }
+
+    @Override
+    public Command createCommand() {
+        return new Command(getCommandPrefix());
     }
 }

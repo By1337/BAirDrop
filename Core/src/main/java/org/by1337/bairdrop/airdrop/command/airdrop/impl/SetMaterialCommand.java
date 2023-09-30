@@ -2,57 +2,74 @@ package org.by1337.bairdrop.airdrop.command.airdrop.impl;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.type.RespawnAnchor;
 import org.bukkit.entity.Player;
+import org.by1337.api.world.BlockPosition;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.airdrop.command.airdrop.CommandExecutor;
+import org.by1337.bairdrop.lang.Resource;
 import org.by1337.bairdrop.location.GeneratorUtils;
 import org.by1337.bairdrop.util.Message;
 import org.by1337.lib.AsyncCatcher;
+import org.by1337.lib.command.Command;
+import org.by1337.lib.command.CommandException;
+import org.by1337.lib.command.argument.ArgumentEnumValue;
+import org.by1337.lib.command.argument.ArgumentSetList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Objects;
 
-public class SetMaterialCommand implements CommandExecutor {
-    @Override
-    public String getCommandPrefix() {
-        return "[SET_MATERIAL_";
+public class SetMaterialCommand implements CommandExecutor{
+    private final Resource IS_NOT_BLOCK = new Resource("command.is-not-block"); // the material must be a block! Command %s
+   @Override
+    public String getCommandPrefix() { //old [SET_MATERIAL_<material>]-offsets
+        return "[SET_MATERIAL]";
     }
 
     @Override
-    public void execute(@Nullable AirDrop airDrop, @Nullable Player player, @NotNull String command) {
-        AsyncCatcher.catchOp("Asynchronous set material!");
-        Objects.requireNonNull(airDrop, "AirDrop is null!");
-        Location location = airDrop.getAnyLoc();
-        Objects.requireNonNull(location, String.format(BAirDrop.getConfigMessage().getMessage("loc-is-null2"), command));
+    public void execute(@Nullable AirDrop airDrop, @Nullable Player player, @NotNull String command) throws CommandException {
+        AsyncCatcher.catchOp(String.format(ASYNC_CATCHER_ERROR.getString(), getCommandPrefix()));
+        Objects.requireNonNull(airDrop, String.format(AIRDROP_IS_NULL.getString(), command));
+        Objects.requireNonNull(airDrop.getAnyLoc(), String.format(LOCATION_IS_NULL.getString(), command));
 
-        boolean subtractOffsets = false;
-        if (command.contains("-offsets")) {
-            subtractOffsets = true;
-            command = command.replace("-offsets", "");
-        }
-        location = location.clone();
-        try {
-            Material mat = Material.valueOf(command.replace("]", "").replace("[SET_MATERIAL_", "").replace(" ", ""));
-            if (subtractOffsets)
-                location.add(
-                        -GeneratorUtils.getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.x", GeneratorUtils.getWorldKeyByWorld(location.getWorld()))),
-                        -GeneratorUtils.getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.y", GeneratorUtils.getWorldKeyByWorld(location.getWorld()))),
-                        -GeneratorUtils.getSettings(airDrop.getGeneratorSettings(), String.format("%s.offsets.z", GeneratorUtils.getWorldKeyByWorld(location.getWorld())))).add(0,
-                        1
-                        , 0);
-            location.getBlock().setType(mat);
-            if (mat == Material.RESPAWN_ANCHOR) {
-                RespawnAnchor ra = (RespawnAnchor) location.getBlock().getBlockData();
-                ra.setCharges(4);
-                location.getBlock().setBlockData(ra);
+        createCommand().executor(((sender, args) -> {
+            Material material = (Material) args.getOrThrow("material", USAGE.getString(), usage());
+            boolean offsets = args.containsKey("offsets");
+
+            if (!material.isBlock()){
+                throw new CommandException(IS_NOT_BLOCK.getString(), command);
             }
-        } catch (IllegalArgumentException e) {
-            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-material"), "?", command));
-            Message.warning(e.getLocalizedMessage());
 
-        }
+            Block block;
+
+            if (offsets){
+                BlockPosition blockPosition = airDrop.getGeneratorSetting().offsets;
+                block = airDrop.getAnyLoc().add(blockPosition.x, blockPosition.y, blockPosition.z).getBlock();
+            }else {
+                block = airDrop.getAnyLoc().getBlock();
+            }
+            block.setType(material);
+
+        })).process(null, parseCommand(command));
+
+    }
+
+    @Override
+    public String usage() {
+        return "[SET_MATERIAL] <material> <?offsets>";
+    }
+
+    @Override
+    public Command createCommand() {
+        return new Command(getCommandPrefix())
+                .argument(new ArgumentEnumValue("material", Material.class))
+                .argument(new ArgumentSetList("offsets", List.of("offsets", "true")));
     }
 }

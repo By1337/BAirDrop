@@ -5,6 +5,7 @@ import lombok.ToString;
 import org.bukkit.command.CommandSender;
 import org.by1337.lib.command.argument.Argument;
 import org.by1337.lib.command.argument.ArgumentMap;
+import org.by1337.lib.command.argument.ArgumentStrings;
 import org.by1337.lib.command.requires.Requires;
 
 import java.util.*;
@@ -85,7 +86,7 @@ public class Command {
      * @param args   The command arguments.
      * @throws CommandSyntaxError If there's a syntax error in the command.
      */
-    public void process(CommandSender sender, String[] args) throws CommandSyntaxError {
+    public void process(CommandSender sender, String[] args) throws CommandException {
         // Check requirements
         for (Requires requirement : requires) {
             if (!requirement.check(sender)) {
@@ -120,21 +121,39 @@ public class Command {
         Iterator<Argument> argumentIterator = arguments.iterator();
         ArgumentMap<String, Object> argumentValues = new ArgumentMap<>();
 
+        Argument last = null;
+        StringBuilder sb = new StringBuilder();
         for (String arg : args) {
+            if (!argumentIterator.hasNext() && last instanceof ArgumentStrings) {
+                sb.append(arg).append(" ");
+                continue;
+            }
             if (argumentIterator.hasNext()) {
                 Argument argument = argumentIterator.next();
-                if (argument.getRequires() != null && !argument.getRequires().check(sender)){
+                last = argument;
+                if (argument.getRequires() != null && !argument.getRequires().check(sender)) {
                     break;
+                }
+                if (last instanceof ArgumentStrings){
+                    sb.append(arg).append(" ");
+                    continue;
                 }
                 argumentValues.put(argument.getName(), argument.process(sender, arg));
             } else {
                 throw new CommandSyntaxError(String.format("Too many arguments: '%s'", arg));
             }
         }
+        if (last instanceof ArgumentStrings argumentStrings) {
+            if (!sb.isEmpty()){
+                sb.setLength(sb.length() - 1);
+            }
+            argumentValues.put(argumentStrings.getName(), argumentStrings.process(sender, sb.toString()));
+        }
 
         // Execute the command
         executor.executes(sender, argumentValues);
     }
+
     /**
      * Generates tab completions for the command.
      *
@@ -179,10 +198,16 @@ public class Command {
 
         try {
             Iterator<Argument> argumentIterator = arguments.iterator();
+
+            Argument last = null;
             for (String arg : args) {
+                if (!argumentIterator.hasNext() && last instanceof ArgumentStrings){
+                    continue;
+                }
                 if (argumentIterator.hasNext()) {
                     Argument argument = argumentIterator.next();
-                    if (argument.getRequires() != null && !argument.getRequires().check(sender)){
+                    last = argument;
+                    if (argument.getRequires() != null && !argument.getRequires().check(sender)) {
                         break;
                     }
                     argument.process(sender, arg);
@@ -191,7 +216,7 @@ public class Command {
                     if (!args[0].isEmpty()) {
                         List<String> sub = new ArrayList<>();
                         for (String key : subcommands.keySet()) {
-                            if (key.startsWith(args[0])){
+                            if (key.startsWith(args[0])) {
                                 sub.add(key);
                             }
                         }
@@ -210,8 +235,6 @@ public class Command {
 
         return new ArrayList<>(subcommands.keySet());
     }
-
-
 
 
 }

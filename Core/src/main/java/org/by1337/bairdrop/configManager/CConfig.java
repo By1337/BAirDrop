@@ -45,7 +45,11 @@ public class CConfig implements Config, ConfigMessage {
     private boolean loaded;
     public HashMap<String, File> scripts = new HashMap<>();
 
+    private CustomListenerLoader listenerLoader;
+
     public void loadConfiguration() {
+
+
         fileMenu = new File(BAirDrop.getInstance().getDataFolder() + File.separator + "menu.yml");
         if (!fileMenu.exists()) {
             BAirDrop.getInstance().saveResource("menu.yml", true);
@@ -91,11 +95,6 @@ public class CConfig implements Config, ConfigMessage {
         }
         locations = YamlConfiguration.loadConfiguration(fileLocations);
 
-        fileListeners = new File(BAirDrop.getInstance().getDataFolder() + File.separator + "listeners.yml");
-        if (!fileListeners.exists()) {
-            BAirDrop.getInstance().saveResource("listeners.yml", true);
-        }
-        listeners = YamlConfiguration.loadConfiguration(fileListeners);
 
         loadLang();
 
@@ -121,7 +120,9 @@ public class CConfig implements Config, ConfigMessage {
             airDrops.put(airFile, fc);
         }
         CustomListenerLoader.getCustomEventListeners().clear();
-        loadListeners();
+        listenerLoader = new CustomListenerLoader();
+        listenerLoader.load();
+      //  loadListeners();
         loadMenu();
         loadLocations();
         LoadEffect(effects);
@@ -229,9 +230,8 @@ public class CConfig implements Config, ConfigMessage {
 
     @Override
     public void loadListeners() {
-        CustomListenerLoader.load(listeners, "listeners");
-    }
 
+    }
 
     public void loadEnchant() {
         EnchantMaterial.materialHashMap.clear();
@@ -278,12 +278,12 @@ public class CConfig implements Config, ConfigMessage {
 
     @Deprecated
     public String getMessage(String path) {
-        return "null";
+        return path;
     }
 
     @Deprecated
     public List<String> getList(String path) {
-        return List.of("null");
+        return List.of(path);
     }
 
 

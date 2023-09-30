@@ -26,4 +26,9 @@ public class PropertyString extends Property<String>{
         }, player);
     }
 
+    @Override
+    public PropertyType getType() {
+        return PropertyType.STRING;
+    }
+
 }

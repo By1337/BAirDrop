@@ -1,13 +1,9 @@
 package org.by1337.bairdrop.menu.property.property;
 
-import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Color;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -21,7 +17,6 @@ import org.by1337.bairdrop.util.Placeholder;
 import org.by1337.lib.chat.ChatColor;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +49,8 @@ public abstract class Property<T> implements EditValue<T> {
     private boolean editable = true;
     @Getter
     private boolean saveable = true;
+
+    private final String type = getType().getKey().getKey();
 
     /**
      * The list of placeholders associated with the property.
@@ -155,5 +152,6 @@ public abstract class Property<T> implements EditValue<T> {
             return String.valueOf(val);
         }
     }
+    abstract public PropertyType getType();
 }
 

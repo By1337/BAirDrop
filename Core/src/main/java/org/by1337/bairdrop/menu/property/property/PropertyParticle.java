@@ -55,4 +55,9 @@ public class PropertyParticle  extends Property<Particle>{
         enumChooser.generate();
         player.openInventory(enumChooser.getInventory());
     }
+
+    @Override
+    public PropertyType getType() {
+        return PropertyType.PARTICLE;
+    }
 }

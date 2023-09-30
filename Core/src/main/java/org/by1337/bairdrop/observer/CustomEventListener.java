@@ -5,10 +5,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
+import org.by1337.bairdrop.airdrop.registry.AirDropCommandRegistry;
 import org.by1337.bairdrop.observer.observer.Observer;
 import org.by1337.bairdrop.observer.requirement.Requirements;
 import org.by1337.bairdrop.util.ExecuteCommands;
 import org.by1337.bairdrop.util.Message;
+import org.by1337.lib.command.CommandException;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -46,10 +48,6 @@ public class CustomEventListener implements Observer {
         this.denyCommands = denyCommands;
         this.requirements = requirements;
         this.key = key;
-    }
-
-    public static CustomEventListenerBuilder builder() {
-        return new CustomEventListenerBuilder();
     }
 
     /**
@@ -157,6 +155,16 @@ public class CustomEventListener implements Observer {
     @Override
     public String getDescription() {
         return description;
+    }
+
+    @Override
+    public void validateCommands() throws CommandException {
+        for (String command : commands) {
+            AirDropCommandRegistry.validate(command);
+        }
+        for (String denyCommand : denyCommands) {
+            AirDropCommandRegistry.validate(denyCommand);
+        }
     }
 
     @NotNull

@@ -4,6 +4,8 @@ import org.bukkit.entity.Player;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.airdrop.command.airdrop.CommandExecutor;
 import org.by1337.bairdrop.airdrop.command.airdrop.impl.*;
+import org.by1337.bairdrop.util.Message;
+import org.by1337.lib.command.CommandException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,27 +15,41 @@ import java.util.List;
 public class AirDropCommandRegistry {
     private static final HashMap<String, CommandExecutor> registeredCommands;
 
-    public static void registerCommandExecutor(CommandExecutor executor){
-        if (registeredCommands.containsKey(executor.getCommandPrefix())){
+    public static void registerCommandExecutor(CommandExecutor executor) {
+        if (registeredCommands.containsKey(executor.getCommandPrefix())) {
             throw new IllegalStateException("the command executor already registered!");
         }
         registeredCommands.put(executor.getCommandPrefix(), executor);
     }
 
-    public static void execute(@Nullable AirDrop airDrop, @Nullable Player player, @NotNull String command){
-        for (CommandExecutor commandExecutor : registeredCommands.values()){
-            if (command.startsWith(commandExecutor.getCommandPrefix())){
-                commandExecutor.execute(airDrop, player, command);
+    public static void execute(@Nullable AirDrop airDrop, @Nullable Player player, @NotNull String command) {
+        try {
+            for (CommandExecutor commandExecutor : registeredCommands.values()) {
+                if (command.startsWith(commandExecutor.getCommandPrefix())) {
+                    commandExecutor.execute(airDrop, player, command);
+                    return;
+                }
+            }
+        } catch (CommandException e) {
+            Message.error(e.getLocalizedMessage());
+        }
+    }
+
+    public static void validate(String cmd) throws CommandException {
+        for (CommandExecutor commandExecutor : registeredCommands.values()) {
+            if (cmd.startsWith(commandExecutor.getCommandPrefix())) {
+                commandExecutor.testCommand(cmd);
                 return;
             }
         }
+        throw new CommandException("unknown command %s", cmd);
     }
 
     static {
         registeredCommands = new HashMap<>();
         registerCommandExecutor(new ActivateCommand());
-        registerCommandExecutor(new BlockSetCloseCommand());
-        registerCommandExecutor(new BlockSetOpenCommand());
+        registerCommandExecutor(new BlockLidToggle());
+        // registerCommandExecutor(new BlockSetOpenCommand());
         registerCommandExecutor(new EasyBossBarCommand());
         registerCommandExecutor(new EffectStartCommand());
         registerCommandExecutor(new EffectStopCommand());
@@ -41,7 +57,7 @@ public class AirDropCommandRegistry {
         registerCommandExecutor(new SchematicsPasteCommand());
         registerCommandExecutor(new SchematicsRemoveCommand());
         registerCommandExecutor(new SetBlockFaceCommand());
-        registerCommandExecutor(new SetHoloTimeToStartCommand());
+        //   registerCommandExecutor(new SetH oloTimeToStartCommand()); //deleted
         registerCommandExecutor(new SetMaterialCommand());
         registerCommandExecutor(new SetRegionCommand());
         registerCommandExecutor(new SetTimeEndCommand());
@@ -54,7 +70,7 @@ public class AirDropCommandRegistry {
         registerCommandExecutor(new SubTitleAllCommand());
         registerCommandExecutor(new TitleAllCommand());
         registerCommandExecutor(new ActionbarAllCommand());
-        registerCommandExecutor(new ConsoleCommand());
+        registerCommandExecutor(new DispatchCommand());
         registerCommandExecutor(new SoundAllCommand());
         registerCommandExecutor(new PlayerSetItemCommand());
         registerCommandExecutor(new PlayerCloseInventoryCommand());
@@ -67,7 +83,7 @@ public class AirDropCommandRegistry {
         registerCommandExecutor(new NewBossBarCommand());
         registerCommandExecutor(new BossBarCommand());
         registerCommandExecutor(new RemoveBossBarCommand());
-        registerCommandExecutor(new CallListenerCommand());
+        registerCommandExecutor(new InvokeListenerCommand());
         registerCommandExecutor(new NearPlayersCommand());
         registerCommandExecutor(new SummonCommand());
     }

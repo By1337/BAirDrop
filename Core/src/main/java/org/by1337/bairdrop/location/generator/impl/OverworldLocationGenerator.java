@@ -3,6 +3,10 @@ package org.by1337.bairdrop.location.generator.impl;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.by1337.api.world.BlockPosition;
 import org.by1337.api.world.Vector2D;
 import org.by1337.bairdrop.location.generator.GeneratorSetting;
@@ -16,21 +20,25 @@ public class OverworldLocationGenerator extends LocationGenerator {
 
     @Override
     protected Location generate() {
+        Entity entity = null;
+
         Chunk chunk = getRandomChunk();
 
         Vector2D vector2D = new Vector2D(8, 8);
         int y = getHighestBlock(chunk, vector2D);
-        Message.logger(y+"");
+
         if (y < setting.minY) return null;
 
         BlockPosition pos = new BlockPosition(8, y, 8);
 
-        if (!setting.whiteListBiomes.contains(chunk.getBlock(pos.x, pos.y, pos.z).getBiome()))
+        Block block = chunk.getBlock(pos.x, pos.y, pos.z);
+        if (!setting.whiteListBiomes.contains(block.getBiome()))
             return null;
 
         pos = pos.add(setting.offsets);
-        Message.logger(pos+"");
 
+        if (!isRegionEmpty(setting.regionRadiusCheck, block.getLocation()))
+            return null;
 
         for (BlockPosition blockPosition : setting.hasBlock){
             if (!hasBlock(chunk, blockPosition.add(pos))){

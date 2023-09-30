@@ -20,4 +20,9 @@ public class PropertyBoolean extends Property<Boolean>{
             player.openInventory(propertyEditor.getInventory());
         }, player);
     }
+
+    @Override
+    public PropertyType getType() {
+        return PropertyType.BOOLEAN;
+    }
 }

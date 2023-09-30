@@ -3,7 +3,7 @@ package org.by1337.lib.command;
 /**
  * Represents an exception thrown for command syntax errors.
  */
-public class CommandSyntaxError extends Exception {
+public class CommandSyntaxError extends CommandException {
 
     /**
      * Constructs a CommandSyntaxError with the specified error message.
