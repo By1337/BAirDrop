@@ -5,100 +5,33 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="74b4e88f-8fcd-4bdf-bf73-9df5c90923b7" name="Changes" comment="refactor: CustomEventListener, feat: new location generator">
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/Placeholderable.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/BaseAirDrop.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/BlockLidToggle.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/DispatchCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/InvokeListenerCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/property/property/PropertyAdapter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/property/property/PropertyType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/migrator/command/CmdMigrator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/observer/requirement/RequirementAdapter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/command/CommandException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/command/argument/ArgumentBoolean.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/command/argument/ArgumentEnumValue.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/command/argument/ArgumentString.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/command/argument/ArgumentStrings.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/BLib.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/config/Config.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/lang/Lang.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/src/main/resources/config.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/src/main/resources/messages_en_US.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/src/main/resources/messages_ru_RU.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/src/main/test/java/MessageBundleTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/AirDrop.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/AirDrop.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Core/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/BAirDrop.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/BAirDrop.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/CAirDrop.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/CAirDrop.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/Airdrop.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/Airdrop.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/AirdropProperties.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/CommandExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/CommandExecutor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/ActionbarAllCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/ActionbarAllCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/ActionbarCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/ActionbarCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/ActivateCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/ActivateCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/BlockSetCloseCommand.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/BlockSetOpenCommand.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/BossBarCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/BossBarCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/CallListenerCommand.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/ConsoleCommand.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/EasyBossBarCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/EasyBossBarCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/EffectStartCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/EffectStartCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/EffectStopAllCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/EffectStopAllCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/EffectStopCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/EffectStopCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/ErrorCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/ErrorCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/LoggerCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/LoggerCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/MessageAllCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/MessageAllCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/MessageCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/MessageCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/NearPlayersCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/NearPlayersCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/NewBossBarCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/NewBossBarCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/PlayerCloseInventoryCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/PlayerCloseInventoryCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/PlayerPerformCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/PlayerPerformCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/PlayerSetItemCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/PlayerSetItemCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/RemoveBossBarCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/RemoveBossBarCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/RunJsCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/RunJsCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SchematicsPasteCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SchematicsPasteCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SchematicsRemoveCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SchematicsRemoveCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SetBlockFaceCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SetBlockFaceCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SetHoloTimeToStartCommand.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SetMaterialCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SetMaterialCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SetRegionCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SetRegionCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SetTimeEndCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SetTimeEndCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SetTimeStartCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SetTimeStartCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SetTimeUnlockCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SetTimeUnlockCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SoundAllCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SoundAllCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SoundCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SoundCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SubTitleAllCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SubTitleAllCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SubTitleCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SubTitleCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SummonCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/SummonCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/TitleAllCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/TitleAllCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/TitleCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/command/airdrop/impl/TitleCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/registry/AirDropCommandRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/airdrop/registry/AirDropCommandRegistry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/command/CommandHook.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/command/CommandHook.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/command/CompleterHook.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/command/CompleterHook.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/configManager/CConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/configManager/CConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/lang/Lang.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/lang/Lang.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/location/generator/GeneratorSetting.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/location/generator/GeneratorSetting.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/location/generator/LocationGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/location/generator/LocationGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/location/generator/impl/OverworldLocationGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/location/generator/impl/OverworldLocationGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/ShowAllListeners.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/ShowAllListeners.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/property/EditableProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/property/EditableProperties.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/property/PropertyEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/property/PropertyEditor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/property/property/Property.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/property/property/Property.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/property/property/PropertyBoolean.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/property/property/PropertyBoolean.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/property/property/PropertyColor.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/property/property/PropertyColor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/property/property/PropertyDouble.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/property/property/PropertyDouble.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/property/property/PropertyInteger.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/property/property/PropertyInteger.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/property/property/PropertyLong.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/property/property/PropertyLong.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/property/property/PropertyParticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/property/property/PropertyParticle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/property/property/PropertyString.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/property/property/PropertyString.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/property/property/PropertyVector.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/menu/property/property/PropertyVector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/observer/CustomEventListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/observer/CustomEventListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/observer/CustomListenerLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/observer/CustomListenerLoader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/observer/observer/Observer.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/observer/observer/Observer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/observer/requirement/RequirementType.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/observer/requirement/RequirementType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/serializable/GsonFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/serializable/GsonFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/util/Message.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/location/CGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/location/CGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/location/Generator.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/org/by1337/bairdrop/location/Generator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/resources/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/test/java/BMatchTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lib/src/main/test/java/BMatchTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/src/test/java/command/CommandTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/test/java/command/CommandTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/test/java/command/SummonCommandTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/Main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/Version.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/Version.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/command/Command.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/command/Command.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/command/CommandExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/command/CommandExecutor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/command/CommandSyntaxError.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/command/CommandSyntaxError.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/command/argument/ArgumentInteger.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/command/argument/ArgumentInteger.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/command/argument/ArgumentPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/command/argument/ArgumentPlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/command/argument/ArgumentPosition.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/command/argument/ArgumentPosition.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/command/argument/ArgumentSetList.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/command/argument/ArgumentSetList.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lib/src/main/test/java/chat/ClickEventTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lib/src/main/test/java/chat/ClickEventTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V1_20_1/src/main/test/java/Test.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/command/argument/ArgumentValidCharacters.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/command/argument/ArgumentValidCharacters.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/match/BMatch.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/match/BMatch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/world/entity/SpawnArmorStand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lib/src/main/java/org/by1337/lib/world/entity/SpawnArmorStand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lib/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Lib/src/main/resources/plugin.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -209,7 +142,7 @@
     &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+    &quot;settings.editor.selected.configurable&quot;: &quot;File.Encoding&quot;
   },
   &quot;keyToStringList&quot;: {
     &quot;jdk.preference.com.intellij.ui.dsl.builder.impl.RowImpl.sdk&quot;: [
@@ -220,13 +153,14 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="Q:\cod\idea Java\BairDropV1.1.0\BAirDrop\Lib\src\main\resources" />
       <recent name="Q:\cod\idea Java\BairDropV1.1.0\BAirDrop\V1_16_5\src\main\test\java" />
       <recent name="Q:\cod\idea Java\BairDropV1.1.0\BAirDrop\Core\src" />
       <recent name="Q:\cod\idea Java\BAirDrop\PomRoot" />
       <recent name="Q:\cod\idea Java\BAirDrop\translations\en\airdrops" />
-      <recent name="Q:\cod\idea Java\BAirDrop\translations\en" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="" />
       <recent name="org.by1337.bairdrop.airdrop.command" />
       <recent name="org.by1337.bairdrop.airdrop" />
       <recent name="org.by1337.v1_19.command" />
@@ -244,22 +178,6 @@
       <option name="PACKAGE_NAME" value="command" />
       <option name="MAIN_CLASS_NAME" value="command.CommandTest" />
       <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="CommandTest.testSetTimeStart" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="BAirDrop" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="command.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="command" />
-      <option name="MAIN_CLASS_NAME" value="command.CommandTest" />
-      <option name="METHOD_NAME" value="testSetTimeStart" />
-      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -307,6 +225,16 @@
       <option name="PACKAGE_NAME" value="command" />
       <option name="MAIN_CLASS_NAME" value="command.CommandTest" />
       <option name="METHOD_NAME" value="testSummonCommand" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MessageBundleTest.testSupportedMessages" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="BLib" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="MessageBundleTest" />
+      <option name="METHOD_NAME" value="testSupportedMessages" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -851,7 +779,7 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="JUnit.CommandTest.testSetTimeStart" />
+      <item itemvalue="JUnit.MessageBundleTest.testSupportedMessages" />
       <item itemvalue="JUnit.CommandTest.testSetTimeUnlock" />
       <item itemvalue="JUnit.CommandTest.testSoundAll" />
       <item itemvalue="JUnit.CommandTest.testSummonCommand" />
@@ -878,11 +806,11 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.MessageBundleTest.testSupportedMessages" />
         <item itemvalue="JUnit.CommandTest" />
         <item itemvalue="JUnit.CommandTest.testSummonCommand" />
         <item itemvalue="JUnit.CommandTest.testSoundAll" />
         <item itemvalue="JUnit.CommandTest.testSetTimeUnlock" />
-        <item itemvalue="JUnit.CommandTest.testSetTimeStart" />
       </list>
     </recent_temporary>
   </component>

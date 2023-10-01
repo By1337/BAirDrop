@@ -2,6 +2,7 @@ package org.by1337.lib.command.argument;
 
 import org.bukkit.command.CommandSender;
 import org.by1337.lib.command.CommandSyntaxError;
+import org.by1337.lib.lang.Lang;
 
 import java.util.List;
 
@@ -56,7 +57,7 @@ public class ArgumentPosition extends Argument {
             return Double.parseDouble(str);
 
         } catch (NumberFormatException e) {
-            throw new CommandSyntaxError("'%s' must be a number!");
+            throw new CommandSyntaxError(Lang.getMessage("nan"), str);
         }
     }
 

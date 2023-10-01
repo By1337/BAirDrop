@@ -7,6 +7,7 @@ import org.by1337.lib.command.argument.Argument;
 import org.by1337.lib.command.argument.ArgumentMap;
 import org.by1337.lib.command.argument.ArgumentStrings;
 import org.by1337.lib.command.requires.Requires;
+import org.by1337.lib.lang.Lang;
 
 import java.util.*;
 
@@ -140,7 +141,7 @@ public class Command {
                 }
                 argumentValues.put(argument.getName(), argument.process(sender, arg));
             } else {
-                throw new CommandSyntaxError(String.format("Too many arguments: '%s'", arg));
+                throw new CommandSyntaxError(String.format(Lang.getMessage("too-many-arguments"), arg));
             }
         }
         if (last instanceof ArgumentStrings argumentStrings) {

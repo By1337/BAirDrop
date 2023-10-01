@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.by1337.lib.command.CommandSyntaxError;
+import org.by1337.lib.lang.Lang;
 
 import java.util.List;
 import java.util.Random;
@@ -57,7 +58,7 @@ public class ArgumentPlayer extends Argument {
         if (str.isEmpty()) return null;
         Player player = getPlayer(sender, str);
         if (player == null)
-            throw new CommandSyntaxError("'%s' is an unknown player!", str);
+            throw new CommandSyntaxError(Lang.getMessage("unknown-player"), str);
         return player;
     }
 

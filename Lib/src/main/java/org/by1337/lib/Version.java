@@ -1,6 +1,8 @@
 package org.by1337.lib;
 
+import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.by1337.lib.lang.Lang;
 
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
@@ -10,24 +12,31 @@ import java.util.regex.Pattern;
  * An enumeration representing different server versions.
  */
 public enum Version {
-    UNKNOWN,
-    V1_16_5,
-    V1_17,
-    V1_17_1,
-    V1_18,
-    V1_18_1,
-    V1_18_2,
-    V1_19,
-    V1_19_1,
-    V1_19_2,
-    V1_19_3,
-    V1_19_4,
-    V1_20_1;
+    UNKNOWN(null),
+    V1_16_5("16.5"),
+    V1_17("17.0"),
+    V1_17_1("17.1"),
+    V1_18("18.0"),
+    V1_18_1("18.1"),
+    V1_18_2("18.2"),
+    V1_19("19.0"),
+    V1_19_1("19.1"),
+    V1_19_2("19.2"),
+    V1_19_3("19.3"),
+    V1_19_4("19.4"),
+    V1_20_1("20.1");
+
+    @Getter
+    private final String ver;
 
     /**
      * The current server version.
      */
     public static Version version;
+
+    Version(String version) {
+        this.ver = version;
+    }
 
     /**
      * Initializes the current server version.
@@ -61,7 +70,7 @@ public enum Version {
         if (ver.equals("19.3")) return V1_19_3;
         if (ver.equals("19.4")) return V1_19_4;
         if (ver.equals("20.1")) return V1_20_1;
-        throw new UnsupportedVersionException(String.format("This server version is not supported: %s", version));
+        throw new UnsupportedVersionException(Lang.getMessage("unsupported-version"), version);
     }
 
     /**
@@ -117,6 +126,9 @@ public enum Version {
     public static class UnsupportedVersionException extends Exception {
         public UnsupportedVersionException(String message) {
             super(message);
+        }
+        public UnsupportedVersionException(String message, Object... objects) {
+            super(String.format(message, objects));
         }
     }
 }

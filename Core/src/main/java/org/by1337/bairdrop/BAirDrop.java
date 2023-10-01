@@ -67,14 +67,14 @@ public final class BAirDrop extends JavaPlugin {
     @Override
     public void onEnable() {
         Lang.loadFromCode();
-        try {
-            Version.init();
-            Message.logger("Version detected: " + Version.version);
-        } catch (Version.UnsupportedVersionException e) {
-            Message.error(e.getLocalizedMessage());
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
+//        try {
+//            Version.init();
+//            Message.logger("Version detected: " + Version.version);
+//        } catch (Version.UnsupportedVersionException e) {
+//            Message.error(e.getLocalizedMessage());
+//            getServer().getPluginManager().disablePlugin(this);
+//            return;
+//        }
         ConfigurationSerialization.registerClass(CGenLoc.class);
 
         EffectDeserialize.register(Circle.class);

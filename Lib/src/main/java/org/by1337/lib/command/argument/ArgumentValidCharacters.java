@@ -3,6 +3,7 @@ package org.by1337.lib.command.argument;
 import org.bukkit.command.CommandSender;
 import org.by1337.lib.chat.util.InvalidCharacters;
 import org.by1337.lib.command.CommandSyntaxError;
+import org.by1337.lib.lang.Lang;
 
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class ArgumentValidCharacters extends Argument {
     public Object process(CommandSender sender, String str) throws CommandSyntaxError {
         String invalidChars = InvalidCharacters.getInvalidCharacters(str);
         if (!invalidChars.isEmpty())
-            throw new CommandSyntaxError(String.format("&cInvalid characters: %s", invalidChars));
+            throw new CommandSyntaxError(Lang.getMessage("invalid-characters"), invalidChars);
         return str;
     }
 }

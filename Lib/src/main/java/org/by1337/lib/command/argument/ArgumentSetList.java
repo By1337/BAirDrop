@@ -2,8 +2,8 @@ package org.by1337.lib.command.argument;
 
 import org.bukkit.command.CommandSender;
 import org.by1337.lib.command.CommandSyntaxError;
+import org.by1337.lib.lang.Lang;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -50,8 +50,8 @@ public class ArgumentSetList extends Argument {
         if (str.isEmpty()) return null;
         if (!items.contains(str)) {
             if (items.size() > 10)
-                throw new CommandSyntaxError("'%s' is not a valid option! All possible values for %s. %s more...", str, items.subList(0, 10), items.size() - 10);
-            throw new CommandSyntaxError("'%s' is not a valid option! All possible values for %s.", str, items);
+                throw new CommandSyntaxError(Lang.getMessage("constant-not-found-more"), str, items.subList(0, 5), items.size() - 10);
+            throw new CommandSyntaxError(Lang.getMessage("constant-not-found"), str, items);
         }
         return str;
     }

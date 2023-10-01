@@ -1,5 +1,11 @@
 name: BLib
 version: '${project.version}'
-main: org.by1337.lib.Main
+main: org.by1337.lib.BLib
 api-version: '1.16'
 author: "By1337"
+commands:
+  blib:
+    aliases: lib
+permissions:
+  blib.*:
+    default: op

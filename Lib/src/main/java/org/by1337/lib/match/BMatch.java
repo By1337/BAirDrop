@@ -2,6 +2,7 @@ package org.by1337.lib.match;
 
 
 import lombok.ToString;
+import org.by1337.lib.lang.Lang;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -184,7 +185,7 @@ public class BMatch {
                         lexemes.add(new Lexeme(LexemeType.NUMBER, sb.toString()));
                     } else {
                         if (c != ' ') {
-                            throw new IllegalArgumentException("Unexpected character: " + c);
+                            throw new IllegalArgumentException(String.format(Lang.getMessage("unexpected-character"), c));
                         }
                         pos++;
                     }
@@ -238,13 +239,12 @@ public class BMatch {
                 int value = plusminus(lexemes);
                 lexeme = lexemes.next();
                 if (lexeme.type != LexemeType.RIGHT_BRACKET) {
-                    throw new RuntimeException("Unexpected token: " + lexeme.value
-                            + " at position: " + lexemes.getPos());
+
+                    throw new RuntimeException(String.format(Lang.getMessage("unexpected-token-at-pos"), lexeme.type, lexemes.getPos()));
                 }
                 return value;
             default:
-                throw new RuntimeException("Unexpected token: " + lexeme.value
-                        + " at position: " + lexemes.getPos());
+                throw new RuntimeException(String.format(Lang.getMessage("unexpected-token-at-pos"), lexeme.type, lexemes.getPos()));
         }
     }
 
@@ -288,8 +288,7 @@ public class BMatch {
                     lexemes.back();
                     return value;
                 }
-                default -> throw new RuntimeException("Unexpected token: " + "type: " + lexeme.type.name() + " " + lexeme.value
-                        + " at position: " + lexemes.getPos());
+                default -> throw new RuntimeException(String.format(Lang.getMessage("unexpected-token-at-pos"), lexeme.type, lexemes.getPos()));
             }
         }
     }
@@ -328,8 +327,7 @@ public class BMatch {
                     lexemes.back();
                     return value;
                 default:
-                    throw new RuntimeException("Unexpected token: " + "type: " + lexeme.type.name() + " " + lexeme.value
-                            + " at position: " + lexemes.getPos());
+                    throw new RuntimeException(String.format(Lang.getMessage("unexpected-token-at-pos"), lexeme.type, lexemes.getPos()));
             }
         }
     }

@@ -2,6 +2,7 @@ package org.by1337.lib.command.argument;
 
 import org.bukkit.command.CommandSender;
 import org.by1337.lib.command.CommandSyntaxError;
+import org.by1337.lib.lang.Lang;
 
 import java.util.List;
 
@@ -96,15 +97,15 @@ public class ArgumentInteger extends Argument {
             int val = Integer.parseInt(str);
 
             if (val < min)
-                throw new CommandSyntaxError(String.format("%s must be greater than %s", val, min));
+                throw new CommandSyntaxError(Lang.getMessage("number-too-big"), val, min);
 
             if (val > max)
-                throw new CommandSyntaxError(String.format("%s must be less than %s", val, max));
+                throw new CommandSyntaxError(Lang.getMessage("number-too-small"), val, max);
 
             return val;
 
         } catch (NumberFormatException e) {
-            throw new CommandSyntaxError(String.format("%s must be a number!", str));
+            throw new CommandSyntaxError(Lang.getMessage("nan"), str);
         }
     }
 }

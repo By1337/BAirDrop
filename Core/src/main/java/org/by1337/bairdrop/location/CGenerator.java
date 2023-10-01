@@ -47,7 +47,7 @@ public class CGenerator implements Generator{
     }
 
     /**
-     * Main method for generating locations
+     * BLib method for generating locations
      * @param airDrop The AirDrop for which to generate the location
      * @param isGenerator If this is a generator generating locations, there will be no logging
      * @return Generated location
