@@ -9,6 +9,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import org.by1337.bairdrop.AirDrop;
+import org.by1337.bairdrop.airdrop.Airdrop;
 import org.by1337.bairdrop.airdrop.command.airdrop.impl.EasyBossBarCommand;
 import org.by1337.bairdrop.lang.Resource;
 
@@ -29,10 +30,10 @@ public class EasyBossBar {
     private BarStyle barStyle = BarStyle.SEGMENTED_6;
     private final List<BarFlag> barFlags = new ArrayList<>();
     private String title = "&cTitle";
-    private final AirDrop airDrop;
+    private final Airdrop airDrop;
     private final String id;
 
-    public EasyBossBar(AirDrop airDrop, String id) {
+    public EasyBossBar(Airdrop airDrop, String id) {
         this.id = id;
         this.airDrop = airDrop;
         bossBar = Bukkit.createBossBar(title, barColor, barStyle);
@@ -55,8 +56,8 @@ public class EasyBossBar {
         }
 
         if (timer != null && consTimer != null) {
-            String tempTimer = airDrop.replaceInternalPlaceholder(timer);
-            String tempConsTimer = airDrop.replaceInternalPlaceholder(consTimer);
+            String tempTimer = airDrop.replace(timer);
+            String tempConsTimer = airDrop.replace(consTimer);
 
             if (!isNum(tempConsTimer)) {
                 Message.error(NOT_A_NUMBER.getString(), tempConsTimer);
@@ -74,7 +75,7 @@ public class EasyBossBar {
         }
         bossBar.setColor(barColor);
         bossBar.setStyle(barStyle);
-        bossBar.setTitle(Message.messageBuilder(airDrop.replaceInternalPlaceholder(title)));
+        bossBar.setTitle(Message.messageBuilder(airDrop.replace(title)));
     }
 
 
@@ -104,7 +105,7 @@ public class EasyBossBar {
             if (cmd.contains("[timer=")) {
                 String param = getParam(cmd);
                 timer = param;
-                consTimer = airDrop.replaceInternalPlaceholder(param);
+                consTimer = airDrop.replace(param);
                 continue;
             }
             if (cmd.contains("[barColor=")) {

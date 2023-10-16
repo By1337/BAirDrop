@@ -8,6 +8,7 @@ import org.bukkit.util.Vector;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.ItemUtil.EnchantInfo;
 import org.by1337.bairdrop.ItemUtil.EnchantMaterial;
+import org.by1337.bairdrop.hologram.HologramManager;
 import org.by1337.bairdrop.lang.Lang;
 import org.by1337.bairdrop.listeners.Compass;
 import org.by1337.bairdrop.location.CGenLoc;
@@ -49,6 +50,7 @@ public class CConfig implements Config, ConfigMessage {
 
     public void loadConfiguration() {
 
+        HologramManager.loadHolograms();
 
         fileMenu = new File(BAirDrop.getInstance().getDataFolder() + File.separator + "menu.yml");
         if (!fileMenu.exists()) {
@@ -129,8 +131,8 @@ public class CConfig implements Config, ConfigMessage {
         RegionManager.loadFlags();
         loadEnchant();
         summoner.LoadSummoner();
-        BAirDrop.compass = new Compass();
-        BAirDrop.compass.loadItem();
+       // BAirDrop.compass = new Compass();
+      //  BAirDrop.compass.loadItem();
         if (BAirDrop.getInstance().getConfig().getBoolean("custom-crafts.enable"))
             loadCustomCraft();
         loaded = true;

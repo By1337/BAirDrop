@@ -12,44 +12,39 @@ import com.sk89q.worldguard.protection.regions.RegionContainer;
 import org.bukkit.Location;
 import org.bukkit.World;
 
+import org.by1337.api.world.BlockPosition;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
+import org.by1337.bairdrop.airdrop.Airdrop;
+import org.by1337.bairdrop.location.generator.GeneratorSetting;
 import org.by1337.bairdrop.util.Message;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 public class RegionManager {
     private static final HashMap<StateFlag, StateFlag.State> flags = new HashMap<>();
 
-    public static void removeRegion(AirDrop airDrop) {
-        World world;
-        if (airDrop.getAirDropLocation() != null)
-            world = airDrop.getAirDropLocation().getWorld();
-        else if (airDrop.getFutureLocation() != null)
-            world = airDrop.getFutureLocation().getWorld();
-        else world = airDrop.getWorld();
-        if (world == null) {
-            Message.error(BAirDrop.getConfigMessage().getMessage("unknown-world-region"));
-            return;
-        }
+    // airdropId + _region
+    public static void removeRegion(@NotNull World world, String regionName) {
 
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         com.sk89q.worldguard.protection.managers.RegionManager regions = container.get(BukkitAdapter.adapt(world));
-        if (regions.hasRegion(airDrop.getId() + "_region"))
-            regions.removeRegion(airDrop.getId() + "_region", RemovalStrategy.REMOVE_CHILDREN);
+        if (regions.hasRegion(regionName))
+            regions.removeRegion(regionName, RemovalStrategy.REMOVE_CHILDREN);
     }
 
-    public static ProtectedCuboidRegion getProtectedCuboidRegion(AirDrop airDrop) {
-        Location point1 = new Location(airDrop.getAirDropLocation().getWorld(), airDrop.getAirDropLocation().getX() + airDrop.getRegionRadius(), airDrop.getAirDropLocation().getY() + airDrop.getRegionRadius(), airDrop.getAirDropLocation().getZ() + airDrop.getRegionRadius());
-        Location point2 = new Location(airDrop.getAirDropLocation().getWorld(), airDrop.getAirDropLocation().getX() - airDrop.getRegionRadius(), airDrop.getAirDropLocation().getY() - airDrop.getRegionRadius(), airDrop.getAirDropLocation().getZ() - airDrop.getRegionRadius());
-        return new ProtectedCuboidRegion(airDrop.getId() + "_region",
+    public static ProtectedCuboidRegion getProtectedCuboidRegion(BlockPosition regionRadius, String regionName, Location location) {
+        Location point1 = new Location(location.getWorld(), location.getX() + regionRadius.getX(), location.getY() + regionRadius.getY(), location.getZ() + regionRadius.getZ());
+        Location point2 = new Location(location.getWorld(), location.getX() - regionRadius.getX(), location.getY() - regionRadius.getY(), location.getZ() - regionRadius.getZ());
+        return new ProtectedCuboidRegion(regionName,
                 BlockVector3.at(point1.getX(), point1.getY(), point1.getZ()),
                 BlockVector3.at(point2.getX(), point2.getY(), point2.getZ()));
     }
 
-    public static void setRegion(AirDrop airDrop) {
-        ProtectedCuboidRegion rg = getProtectedCuboidRegion(airDrop);
-        World world = airDrop.getAirDropLocation().getWorld();
+    public static void setRegion(BlockPosition regionRadius, String regionName, Location location) {
+        ProtectedCuboidRegion rg = getProtectedCuboidRegion(regionRadius, regionName, location);
+        World world = location.getWorld();
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         com.sk89q.worldguard.protection.managers.RegionManager regions = container.get(BukkitAdapter.adapt(world));
 

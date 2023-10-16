@@ -3,17 +3,18 @@ package org.by1337.bairdrop.observer;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
+import org.by1337.bairdrop.airdrop.Airdrop;
 import org.by1337.bairdrop.airdrop.registry.AirDropCommandRegistry;
 import org.by1337.bairdrop.observer.observer.Observer;
+import org.by1337.bairdrop.observer.requirement.Requirement;
 import org.by1337.bairdrop.observer.requirement.Requirements;
 import org.by1337.bairdrop.util.ExecuteCommands;
 import org.by1337.bairdrop.util.Message;
-import org.by1337.lib.command.CommandException;
+import org.by1337.api.command.CommandException;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,7 +29,10 @@ public class CustomEventListener implements Observer {
     private final String description;
     private final String[] commands;
     private final String[] denyCommands;
+    @Nullable
     private final Requirements requirements;
+    @Nullable
+    private final Condition condition;
     private final NamespacedKey key;
 
     /**
@@ -39,14 +43,16 @@ public class CustomEventListener implements Observer {
      * @param commands     An array of commands to execute when conditions are met.
      * @param denyCommands An array of commands to execute when conditions are not met.
      * @param requirements The requirements that must be satisfied for this listener to trigger.
+     * @param condition
      * @param key          A unique key associated with this listener.
      */
-    public CustomEventListener(CustomEvent customEvent, String description, String[] commands, String[] denyCommands, Requirements requirements, NamespacedKey key) {
+    public CustomEventListener(CustomEvent customEvent, String description, String[] commands, String[] denyCommands, @Nullable Requirements requirements, @Nullable Condition condition, NamespacedKey key) {
         this.customEvent = customEvent;
         this.description = description;
         this.commands = commands;
         this.denyCommands = denyCommands;
         this.requirements = requirements;
+        this.condition = condition;
         this.key = key;
     }
 
@@ -61,7 +67,7 @@ public class CustomEventListener implements Observer {
      */
 
     @Override
-    public void update(@Nullable Player pl, @Nullable AirDrop airDrop, CustomEvent customEvent, boolean ignoreEvent) {
+    public void update(@Nullable Player pl, @Nullable Airdrop airDrop, CustomEvent customEvent, boolean ignoreEvent) {
         if (!customEvent.equals(this.customEvent) && !ignoreEvent)
             return;
         if (Arrays.stream(commands).toList().contains("[SCHEDULER]") || Arrays.stream(denyCommands).toList().contains("[SCHEDULER]")) {
@@ -79,6 +85,11 @@ public class CustomEventListener implements Observer {
         } else {
             executeCommands.runListenerCommands(denyCommands, pl, airDrop, customEvent);
         }
+        if (condition != null){
+            List<String> list = condition.getCommands(airDrop, pl);
+            Message.logger(list.toString());
+            executeCommands.runListenerCommands(list.toArray(new String[0]), pl, airDrop, customEvent);
+        }
     }
 
     /**
@@ -89,7 +100,7 @@ public class CustomEventListener implements Observer {
      * @param customEvent The custom event being observed.
      * @return A BukkitRunnable for event processing.
      */
-    private BukkitRunnable getRunnable(@Nullable Player pl, @Nullable AirDrop airDrop, CustomEvent customEvent) {
+    private BukkitRunnable getRunnable(@Nullable Player pl, @Nullable Airdrop airDrop, CustomEvent customEvent) {
         return new BukkitRunnable() {
             @Override
             public void run() {
@@ -98,6 +109,11 @@ public class CustomEventListener implements Observer {
                     executeCommands.runListenerCommands(commands, pl, airDrop, customEvent);
                 } else {
                     executeCommands.runListenerCommands(denyCommands, pl, airDrop, customEvent);
+                }
+                if (condition != null){
+                    List<String> list = condition.getCommands(airDrop, pl);
+                    Message.logger(list.toString());
+                    executeCommands.runListenerCommands(list.toArray(new String[0]), pl, airDrop, customEvent);
                 }
             }
         };
@@ -133,8 +149,10 @@ public class CustomEventListener implements Observer {
      * @param pl      The player associated with the event (can be null).
      * @return true if all requirements are met, otherwise false.
      */
-    private boolean checkRequirement(@Nullable AirDrop airDrop, @Nullable Player pl) {
-        return requirements.check(airDrop, pl);
+    private boolean checkRequirement(@Nullable Airdrop airDrop, @Nullable Player pl) {
+        if (requirements != null)
+            return requirements.check(airDrop, pl);
+        return true;
     }
 
     @Override
@@ -174,14 +192,21 @@ public class CustomEventListener implements Observer {
     }
 
     public static class CustomEventListenerBuilder {
-        private CustomEvent customEvent;
-        private String description;
-        private String[] commands;
-        private String[] denyCommands;
-        private Requirements requirements;
-        private NamespacedKey key;
+        private CustomEvent customEvent = CustomEvent.NONE;
+        private String description = "description";
+        private String[] commands = new String[0];
+        private String[] denyCommands= new String[0];
+        private Requirements requirements = null;
+        private NamespacedKey key = null;
+        private Condition condition = null;
+
         public CustomEventListenerBuilder customEvent(CustomEvent customEvent) {
             this.customEvent = customEvent;
+            return this;
+        }
+
+        public CustomEventListenerBuilder condition(Condition condition) {
+            this.condition = condition;
             return this;
         }
 
@@ -205,13 +230,20 @@ public class CustomEventListener implements Observer {
             return this;
         }
 
+        public CustomEventListenerBuilder requirements(List<Requirement> requirements) {
+            Requirements requirements1 = new Requirements();
+            requirements1.set(requirements);
+            this.requirements = requirements1;
+            return this;
+        }
+
         public CustomEventListenerBuilder key(NamespacedKey key) {
             this.key = key;
             return this;
         }
 
         public CustomEventListener build() {
-            return new CustomEventListener(this.customEvent, this.description, this.commands, this.denyCommands, this.requirements, this.key);
+            return new CustomEventListener(this.customEvent, this.description, this.commands, this.denyCommands, this.requirements, condition, this.key);
         }
 
     }

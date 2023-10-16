@@ -60,8 +60,8 @@ public class GeneratorLoc {
                     count1--;
                     Message.sendMsg(sender, String.format(BAirDrop.getConfigMessage().getMessage("generator"), count1));
 
-                    if (finalairDrop.getEditAirMenu() != null)
-                        finalairDrop.getEditAirMenu().menuGenerate("usePreGeneratedLocations");
+              //      if (finalairDrop.getEditAirMenu() != null)
+                   //     finalairDrop.getEditAirMenu().menuGenerate("usePreGeneratedLocations");
                 } else if (fail % 100 == 0) {
                     Message.sendMsg(sender, String.format(BAirDrop.getConfigMessage().getMessage("generator-fail"), fail));
                 }

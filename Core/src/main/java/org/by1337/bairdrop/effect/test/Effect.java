@@ -1,18 +1,8 @@
 package org.by1337.bairdrop.effect.test;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.scheduler.BukkitTask;
-import org.by1337.bairdrop.BAirDrop;
-import org.by1337.bairdrop.lang.Resource;
-import org.by1337.bairdrop.menu.property.EditableProperties;
-import org.by1337.bairdrop.menu.property.property.PropertyInteger;
-import org.by1337.bairdrop.menu.property.property.PropertyLong;
+import org.by1337.bairdrop.menu.property.StorageProperties;
 
-import java.util.List;
-
-public abstract class Effect extends EditableProperties implements Runnable {
+public abstract class Effect extends StorageProperties implements Runnable {/*
 
     private final PropertyLong maxTick = (PropertyLong) registerProperty(
             new PropertyLong(
@@ -74,6 +64,6 @@ public abstract class Effect extends EditableProperties implements Runnable {
 
     protected abstract void stopEffect();
 
-    abstract void tick();
+    abstract void tick();*/
 }
 

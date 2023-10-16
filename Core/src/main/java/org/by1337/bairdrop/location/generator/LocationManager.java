@@ -17,8 +17,8 @@ public class LocationManager {
     }
 
     @Nullable
-    public Location generate(World.Environment type) {
-        return switch (type) {
+    public Location generate() {
+        return switch (world.getEnvironment()) {
             case NORMAL -> overworld.generate();
             case CUSTOM -> null;
             case NETHER -> null;

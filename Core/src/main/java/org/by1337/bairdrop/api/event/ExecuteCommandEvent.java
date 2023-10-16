@@ -5,6 +5,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.by1337.bairdrop.AirDrop;
+import org.by1337.bairdrop.airdrop.Airdrop;
 import org.by1337.bairdrop.observer.CustomEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -12,12 +13,12 @@ import org.jetbrains.annotations.Nullable;
 public class ExecuteCommandEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private boolean cancelled;
-    private final AirDrop airDrop;
+    private final Airdrop airDrop;
     private final String[] commands;
     private final Player player;
     private final CustomEvent customEvent;
 
-    public ExecuteCommandEvent(AirDrop airDrop, String[] commands, Player player, CustomEvent customEvent) {
+    public ExecuteCommandEvent(Airdrop airDrop, String[] commands, Player player, CustomEvent customEvent) {
         this.airDrop = airDrop;
         this.commands = commands;
         this.player = player;
@@ -36,7 +37,7 @@ public class ExecuteCommandEvent extends Event implements Cancellable {
         return customEvent;
     }
     @Nullable
-    public AirDrop getAirDrop() {
+    public Airdrop getAirDrop() {
         return airDrop;
     }
 

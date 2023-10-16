@@ -5,13 +5,15 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Lidded;
 import org.bukkit.entity.Player;
+import org.by1337.api.BLib;
 import org.by1337.bairdrop.AirDrop;
+import org.by1337.bairdrop.airdrop.Airdrop;
 import org.by1337.bairdrop.airdrop.command.airdrop.CommandExecutor;
 import org.by1337.bairdrop.lang.Resource;
-import org.by1337.lib.AsyncCatcher;
-import org.by1337.lib.command.Command;
-import org.by1337.lib.command.CommandException;
-import org.by1337.lib.command.argument.ArgumentSetList;
+
+import org.by1337.api.command.Command;
+import org.by1337.api.command.CommandException;
+import org.by1337.api.command.argument.ArgumentSetList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,8 +28,8 @@ public class BlockLidToggle implements CommandExecutor {
         return "[BLOCK_LID_TOGGLE]";
     }
     @Override
-    public void execute(@Nullable AirDrop airDrop, @Nullable Player player, @NotNull String command)  throws CommandException {
-        AsyncCatcher.catchOp(String.format(ASYNC_CATCHER_ERROR.getString(), getCommandPrefix()));
+    public void execute(@Nullable Airdrop airDrop, @Nullable Player player, @NotNull String command)  throws CommandException {
+        BLib.catchOp(String.format(ASYNC_CATCHER_ERROR.getString(), getCommandPrefix()));
         Objects.requireNonNull(airDrop, String.format(AIRDROP_IS_NULL.getString(), command));
         Location location = airDrop.getAnyLoc();
         Objects.requireNonNull(location, String.format(LOCATION_IS_NULL.getString(), command));

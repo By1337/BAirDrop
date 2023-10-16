@@ -6,3 +6,9 @@
 #    offsets-y: 0
 #    offsets-z: 0
 schematics:
+  air:
+    file: 'air.schem'
+    ignore-air-blocks: true
+    offsets-x: 0
+    offsets-y: 2
+    offsets-z: 0

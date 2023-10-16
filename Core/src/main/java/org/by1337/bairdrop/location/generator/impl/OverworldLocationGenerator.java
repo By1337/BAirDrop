@@ -20,8 +20,6 @@ public class OverworldLocationGenerator extends LocationGenerator {
 
     @Override
     protected Location generate() {
-        Entity entity = null;
-
         Chunk chunk = getRandomChunk();
 
         Vector2D vector2D = new Vector2D(8, 8);
@@ -31,14 +29,14 @@ public class OverworldLocationGenerator extends LocationGenerator {
 
         BlockPosition pos = new BlockPosition(8, y, 8);
 
-        Block block = chunk.getBlock(pos.x, pos.y, pos.z);
+        Block block = chunk.getBlock(pos.getX(), pos.getY(), pos.getZ());
         if (!setting.whiteListBiomes.contains(block.getBiome()))
             return null;
 
         pos = pos.add(setting.offsets);
 
-        if (!isRegionEmpty(setting.regionRadiusCheck, block.getLocation()))
-            return null;
+//        if (!isRegionEmpty(setting.regionRadiusCheck, block.getLocation()))
+//            return null; // todo
 
         for (BlockPosition blockPosition : setting.hasBlock){
             if (!hasBlock(chunk, blockPosition.add(pos))){
@@ -51,6 +49,6 @@ public class OverworldLocationGenerator extends LocationGenerator {
             }
         }
 
-        return chunk.getBlock(pos.x, pos.y, pos.z).getLocation();
+        return chunk.getBlock(pos.getX(), pos.getY(), pos.getZ()).getLocation();
     }
 }

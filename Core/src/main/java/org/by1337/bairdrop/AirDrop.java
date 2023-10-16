@@ -96,15 +96,6 @@ public interface AirDrop extends Observable {
      * @param player      the player
      * @param customEvent the custom event
      */
-    @Deprecated
-    void InvokeListener(NamespacedKey listener, @Nullable Player player, CustomEvent customEvent);
-    /**
-     * Invokes the listener.
-     *
-     * @param listener    the listener to invoke
-     * @param player      the player
-     * @param customEvent the custom event
-     */
     void invokeListener(NamespacedKey listener, @Nullable Player player, CustomEvent customEvent);
 
     /**

@@ -3,8 +3,8 @@ package command;
 import org.by1337.bairdrop.airdrop.command.airdrop.impl.*;
 
 import org.by1337.bairdrop.migrator.command.CmdMigrator;
-import org.by1337.lib.command.CommandException;
-import org.by1337.lib.lang.Lang;
+import org.by1337.api.command.CommandException;
+import org.by1337.api.lang.Lang;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -1,0 +1,274 @@
+time-update: 5
+line-spacing: 0.3
+radius: 20
+offsets:
+  x: 0.5
+  y: 1.7
+  z: 0.5
+lines:
+  line-0:
+    - '&d-&3--------------'
+    - '&7Test'
+    - '&7time-to-start={time-to-start}, time-to-unlock={time-to-unlock}, time-to-end={time-to-end}'
+    - "&#FF0000t&#FFFF00e&#0000FFs&#9400D3t"
+  line-1:
+    - '&3-&d-&3-------------'
+    - '&7Test'
+    - '&7time-to-start={time-to-start}, time-to-unlock={time-to-unlock}, time-to-end={time-to-end}'
+    - "&#FFFF00t&#FF0000e&#FFFF00s&#0000FFt"
+  line-2:
+    - '&3--&d-&3------------'
+    - '&7Test'
+    - '&7time-to-start={time-to-start}, time-to-unlock={time-to-unlock}, time-to-end={time-to-end}'
+    - "&#0000FFt&#FFFF00e&#FF0000s&#FFFF00t"
+  line-3:
+    - '&3---&d-&3-----------'
+    - '&7Test'
+    - '&7time-to-start={time-to-start}, time-to-unlock={time-to-unlock}, time-to-end={time-to-end}'
+    - "&#9400D3t&#0000FFe&#FFFF00s&#FF0000t"
+  line-4:
+    - '&3----&d-&3----------'
+    - '&7Test'
+    - '&7time-to-start={time-to-start}, time-to-unlock={time-to-unlock}, time-to-end={time-to-end}'
+    - "&#0000FFt&#9400D3e&#0000FFs&#FFFF00t"
+  line-5:
+    - '&3-----&d-&3---------'
+    - '&7Test'
+    - '&7time-to-start={time-to-start}, time-to-unlock={time-to-unlock}, time-to-end={time-to-end}'
+    - "&#FFFF00t&#0000FFe&#9400D3s&#0000FFt"
+  line-6:
+    - '&3------&d-&3--------'
+    - '&7Test'
+    - '&7time-to-start={time-to-start}, time-to-unlock={time-to-unlock}, time-to-end={time-to-end}'
+    - "&#FFFF00t&#0000FFe&#9400D3s&#0000FFt"
+  line-7:
+    - '&3-------&d-&3-------'
+    - '&7Test'
+    - '&7time-to-start={time-to-start}, time-to-unlock={time-to-unlock}, time-to-end={time-to-end}'
+    - "&#FFFF00t&#0000FFe&#9400D3s&#0000FFt"
+  line-8:
+    - '&3--------&d-&3------'
+    - '&7Test'
+    - '&7time-to-start={time-to-start}, time-to-unlock={time-to-unlock}, time-to-end={time-to-end}'
+    - "&#FFFF00t&#0000FFe&#9400D3s&#0000FFt"
+  line-9:
+    - '&3---------&d-&3-----'
+    - '&7Test'
+    - '&7time-to-start={time-to-start}, time-to-unlock={time-to-unlock}, time-to-end={time-to-end}'
+    - "&#FFFF00t&#0000FFe&#9400D3s&#0000FFt"
+  line-10:
+    - '&3----------&d-&3----'
+    - '&7Test'
+    - '&7time-to-start={time-to-start}, time-to-unlock={time-to-unlock}, time-to-end={time-to-end}'
+    - "&#FFFF00t&#0000FFe&#9400D3s&#0000FFt"
+  line-11:
+    - '&3-----------&d-&3---'
+    - '&7Test'
+    - '&7time-to-start={time-to-start}, time-to-unlock={time-to-unlock}, time-to-end={time-to-end}'
+    - "&#FFFF00t&#0000FFe&#9400D3s&#0000FFt"
+  line-12:
+    - '&3------------&d-&3--'
+    - '&7Test'
+    - '&7time-to-start={time-to-start}, time-to-unlock={time-to-unlock}, time-to-end={time-to-end}'
+    - "&#FFFF00t&#0000FFe&#9400D3s&#0000FFt"
+  line-13:
+    - '&3-------------&d-&3-'
+    - '&7Test'
+    - '&7time-to-start={time-to-start}, time-to-unlock={time-to-unlock}, time-to-end={time-to-end}'
+    - "&#FFFF00t&#0000FFe&#9400D3s&#0000FFt"
+  line-14:
+    - '&3--------------&d-'
+    - '&7Test'
+    - '&7time-to-start={time-to-start}, time-to-unlock={time-to-unlock}, time-to-end={time-to-end}'
+    - "&#FFFF00t&#0000FFe&#9400D3s&#0000FFt"
+  line-15:
+    - '&3-------------&d-&3-'
+    - '&7Test'
+    - '&7time-to-start={time-to-start}, time-to-unlock={time-to-unlock}, time-to-end={time-to-end}'
+    - "&#FFFF00t&#0000FFe&#9400D3s&#0000FFt"
+  line-16:
+    - '&3------------&d-&3--'
+    - '&7Test'
+    - '&7time-to-start={time-to-start}, time-to-unlock={time-to-unlock}, time-to-end={time-to-end}'
+    - "&#FFFF00t&#0000FFe&#9400D3s&#0000FFt"
+  line-17:
+    - '&3-----------&d-&3---'
+    - '&7Test'
+    - '&7time-to-start={time-to-start}, time-to-unlock={time-to-unlock}, time-to-end={time-to-end}'
+    - "&#FFFF00t&#0000FFe&#9400D3s&#0000FFt"
+  line-18:
+    - '&3----------&d-&3----'
+    - '&7Test'
+    - '&7time-to-start={time-to-start}, time-to-unlock={time-to-unlock}, time-to-end={time-to-end}'
+    - "&#FFFF00t&#0000FFe&#9400D3s&#0000FFt"
+  line-19:
+    - '&3---------&d-&3-----'
+    - '&7Test'
+    - '&7time-to-start={time-to-start}, time-to-unlock={time-to-unlock}, time-to-end={time-to-end}'
+    - "&#FFFF00t&#0000FFe&#9400D3s&#0000FFt"
+  line-20:
+    - '&3--------&d-&3------'
+    - '&7Test'
+    - '&7time-to-start={time-to-start}, time-to-unlock={time-to-unlock}, time-to-end={time-to-end}'
+    - "&#FFFF00t&#0000FFe&#9400D3s&#0000FFt"
+  line-21:
+    - '&3-------&d-&3-------'
+    - '&7Test'
+    - '&7time-to-start={time-to-start}, time-to-unlock={time-to-unlock}, time-to-end={time-to-end}'
+    - "&#FFFF00t&#0000FFe&#9400D3s&#0000FFt"
+  line-22:
+    - '&3------&d-&3--------'
+    - '&7Test'
+    - '&7time-to-start={time-to-start}, time-to-unlock={time-to-unlock}, time-to-end={time-to-end}'
+    - "&#FFFF00t&#0000FFe&#9400D3s&#0000FFt"
+  line-23:
+    - '&3-----&d-&3---------'
+    - '&7Test'
+    - '&7time-to-start={time-to-start}, time-to-unlock={time-to-unlock}, time-to-end={time-to-end}'
+    - "&#FFFF00t&#0000FFe&#9400D3s&#0000FFt"
+  line-24:
+    - '&3----&d-&3----------'
+    - '&7Test'
+    - '&7time-to-start={time-to-start}, time-to-unlock={time-to-unlock}, time-to-end={time-to-end}'
+    - "&#FFFF00t&#0000FFe&#9400D3s&#0000FFt"
+  line-25:
+    - '&3---&d-&3-----------'
+    - '&7Test'
+    - '&7time-to-start={time-to-start}, time-to-unlock={time-to-unlock}, time-to-end={time-to-end}'
+    - "&#FFFF00t&#0000FFe&#9400D3s&#0000FFt"
+  line-26:
+    - '&3--&d-&3------------'
+    - '&7Test'
+    - '&7time-to-start={time-to-start}, time-to-unlock={time-to-unlock}, time-to-end={time-to-end}'
+    - "&#FFFF00t&#0000FFe&#9400D3s&#0000FFt"
+  line-27:
+    - '&3-&d-&3-------------'
+    - '&7Test'
+    - '&7time-to-start={time-to-start}, time-to-unlock={time-to-unlock}, time-to-end={time-to-end}'
+    - "&#FFFF00t&#0000FFe&#9400D3s&#0000FFt"
+  line-28:
+    - '&d-&3--------------'
+    - '&7Test'
+    - '&7time-to-start={time-to-start}, time-to-unlock={time-to-unlock}, time-to-end={time-to-end}'
+    - "&#FFFF00t&#0000FFe&#9400D3s&#0000FFt"
+
+
+
+#ilogo:
+#  change-interval: 50
+#  texts:
+#  - "&#FF0000t&#FFFF00e&#0000FFs&#9400D3t"
+#  - "&#FFFF00t&#FF0000e&#FFFF00s&#0000FFt"
+#  - "&#0000FFt&#FFFF00e&#FF0000s&#FFFF00t"
+#  - "&#9400D3t&#0000FFe&#FFFF00s&#FF0000t"
+#  - "&#0000FFt&#9400D3e&#0000FFs&#FFFF00t"
+#  - "&#FFFF00t&#0000FFe&#9400D3s&#0000FFt"
+#time-update: 5 # Частота обновления голограммы в тиках
+#line-spacing: 0.3 # Расстояние между линиями голограммы
+#radius: 20 # Радиус видимости голограммы
+#offsets: # Смещение голограммы
+#  x: 0.5
+#  y: 0.7
+#  z: 0.5
+## Секция для определения строк голограммы и их анимации.
+##
+## Синтаксис:
+## lines:
+##   line-0: # Название линии 0 (любой текст)
+##     - '&d-&3--------------' # Строка 0 голограммы
+##     - '&7Test'
+##   line-1: # Название линии 1 (любой текст)
+##     - '&3-&d-&3-------------' # Строка 1 голограммы
+##     - '&7Test'
+##
+## Каждые {time-update} тиков голограммы будут меняться по кругу
+## Сначала будут выведены строки из line-0, затем строки из line-1, и так далее.
+##
+#lines:
+#  line-0: # Линия 0 голограммы (любой текст)
+#    - '&d-&3--------------' # Строка 0 голограммы
+#    - '&7Test'
+#  line-1: # Линия 1 голограммы (любой текст)
+#    - '&3-&d-&3-------------' # Строка 1 голограммы
+#    - '&7Test'
+#  line-2: # Линия 2 голограммы (любой текст)
+#    - '&3--&d-&3------------' # Строка 2 голограммы
+#    - '&7Test'
+#  line-3: # Линия 3 голограммы (любой текст)
+#    - '&3---&d-&3-----------' # Строка 3 голограммы
+#    - '&7Test'
+#  line-4:
+#    - '&3----&d-&3----------'
+#    - '&7Test'
+#  line-5:
+#    - '&3-----&d-&3---------'
+#    - '&7Test'
+#  line-6:
+#    - '&3------&d-&3--------'
+#    - '&7Test'
+#  line-7:
+#    - '&3-------&d-&3-------'
+#    - '&7Test'
+#  line-8:
+#    - '&3--------&d-&3------'
+#    - '&7Test'
+#  line-9:
+#    - '&3---------&d-&3-----'
+#    - '&7Test'
+#  line-10:
+#    - '&3----------&d-&3----'
+#    - '&7Test'
+#  line-11:
+#    - '&3-----------&d-&3---'
+#    - '&7Test'
+#  line-12:
+#    - '&3------------&d-&3--'
+#    - '&7Test'
+#  line-13:
+#    - '&3-------------&d-&3-'
+#    - '&7Test'
+#  line-14:
+#    - '&3--------------&d-'
+#    - '&7Test'
+#  line-15:
+#    - '&3-------------&d-&3-'
+#    - '&7Test'
+#  line-16:
+#    - '&3------------&d-&3--'
+#    - '&7Test'
+#  line-17:
+#    - '&3-----------&d-&3---'
+#    - '&7Test'
+#  line-18:
+#    - '&3----------&d-&3----'
+#    - '&7Test'
+#  line-19:
+#    - '&3---------&d-&3-----'
+#    - '&7Test'
+#  line-20:
+#    - '&3--------&d-&3------'
+#    - '&7Test'
+#  line-21:
+#    - '&3-------&d-&3-------'
+#    - '&7Test'
+#  line-22:
+#    - '&3------&d-&3--------'
+#    - '&7Test'
+#  line-23:
+#    - '&3-----&d-&3---------'
+#    - '&7Test'
+#  line-24:
+#    - '&3----&d-&3----------'
+#    - '&7Test'
+#  line-25:
+#    - '&3---&d-&3-----------'
+#    - '&7Test'
+#  line-26:
+#    - '&3--&d-&3------------'
+#    - '&7Test'
+#  line-27:
+#    - '&3-&d-&3-------------'
+#    - '&7Test'
+#  line-28:
+#    - '&d-&3--------------'
+#    - '&7Test'

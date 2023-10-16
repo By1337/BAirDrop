@@ -1,22 +1,32 @@
 package org.by1337.bairdrop.menu.property.property;
 
 import org.bukkit.Color;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
-import org.by1337.bairdrop.lang.Resource;
-import org.by1337.bairdrop.menu.property.EditableProperties;
-import org.by1337.bairdrop.menu.property.ListenChat;
-import org.by1337.bairdrop.menu.property.PropertyEditor;
-
-import java.util.List;
 
 public class PropertyColor extends Property<Color> {
-    public PropertyColor(Color value, String name, Resource lore, Resource material, Resource displayName, EditableProperties owner) {
-        super(value, name, lore, material, displayName, owner);
+    /**
+     * Creates a new property with the specified initial value, name
+     *
+     * @param value The initial value of the property.
+     * @param name  The unique name of the property.
+     */
+    public PropertyColor(Color value, String name) {
+        super(value, name);
+    }
+
+    @Override
+    public Color parse(String str) {
+        return null;
+    }
+//    public PropertyColor(Color value, String name, Resource lore, Resource material, Resource displayName, StorageProperties owner) {
+//        super(value, name, lore, material, displayName, owner);
+//    }
+
+    public PropertyColor(Color value, String name, Color defValue) {
+        super(value, name, defValue);
     }
 
 
+/*
     @Override
     public void editValue(Player player) {
         new ListenChat((str) -> {
@@ -34,6 +44,7 @@ public class PropertyColor extends Property<Color> {
 
         }, player);
     }
+*/
 
     @Override
     public PropertyType getType() {

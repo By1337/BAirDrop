@@ -1,10 +1,11 @@
 package org.by1337.bairdrop.menu.property.property;
 
 import com.google.gson.*;
+
 import java.lang.reflect.Type;
 import java.util.HashMap;
 
-public class PropertyAdapter implements JsonDeserializer<Property<?>>, JsonSerializer<Property<?>> {
+public class PropertyAdapter implements JsonDeserializer<Property<?>> {
 
     private static final HashMap<String, Class<?>> registeredProperty = new HashMap<>();
 
@@ -23,6 +24,7 @@ public class PropertyAdapter implements JsonDeserializer<Property<?>>, JsonSeria
 
         registeredProperty.put(name, clazz);
     }
+
     @Override
     public Property<?> deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
@@ -35,17 +37,6 @@ public class PropertyAdapter implements JsonDeserializer<Property<?>>, JsonSeria
         return context.deserialize(jsonObject, registeredProperty.get(typeValue));
     }
 
-    @Override
-    public JsonElement serialize(Property<?> property, Type type, JsonSerializationContext context) {
-        JsonObject jsonObject = new JsonObject();
-        System.out.println(property.getType().getKey().getKey());
-        jsonObject.addProperty("type", property.getType().getKey().getKey());
-
-        JsonElement requirementJsonElement = context.serialize(property, property.getClass());
-        jsonObject.add("data", requirementJsonElement);
-
-        return jsonObject;
-    }
     static {
         register("vector", PropertyVector.class);
         register("string", PropertyString.class);
@@ -55,5 +46,8 @@ public class PropertyAdapter implements JsonDeserializer<Property<?>>, JsonSeria
         register("double", PropertyDouble.class);
         register("color", PropertyColor.class);
         register("boolean", PropertyBoolean.class);
+        register("list_string", PropertyListString.class);
+        register("location", PropertyLocation.class);
+        register("material", PropertyMaterial.class);
     }
 }

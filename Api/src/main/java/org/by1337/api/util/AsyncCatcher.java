@@ -1,5 +1,7 @@
 package org.by1337.api.util;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * An interface for catching asynchronous operations (async tasks) in the application.
  */
@@ -9,5 +11,5 @@ public interface AsyncCatcher {
      *
      * @param identifier A unique identifier or description of the asynchronous operation.
      */
-    void catchOp(String identifier);
+    void catchOp(@NotNull String identifier);
 }

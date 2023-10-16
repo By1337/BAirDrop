@@ -15,7 +15,8 @@ import org.by1337.bairdrop.menu.property.property.*;
 import java.util.List;
 
 @ToString
-public class EffectCircle extends Effect {
+public class EffectCircle  { //extends Effect
+/*
 
     private final PropertyParticle particle = (PropertyParticle) registerProperty(
             new PropertyParticle(
@@ -158,6 +159,7 @@ public class EffectCircle extends Effect {
                 loc.getWorld().spawnParticle(particle.getValue(), loc.clone().add(offsets.getValue()).add(x, 0, z), count.getValue(), direction.getValue().getX(), direction.getValue().getY(), direction.getValue().getZ());
         }
     }
+*/
 
 
 }

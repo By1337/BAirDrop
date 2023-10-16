@@ -76,6 +76,7 @@
             <groupId>org.by1337</groupId>
             <artifactId>Api</artifactId>
             <version>1.0</version>
+            <scope>provided</scope>
         </dependency>
         <!-- tests -->
         <dependency>

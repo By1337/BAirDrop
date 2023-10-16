@@ -1,16 +1,12 @@
 package org.by1337.bairdrop.observer.requirement.impl;
 
 import org.bukkit.entity.Player;
-import org.by1337.bairdrop.AirDrop;
+import org.by1337.api.chat.Placeholderable;
 import org.by1337.bairdrop.observer.requirement.*;
 
-import org.by1337.bairdrop.util.ExecuteCommands;
 import org.by1337.bairdrop.util.Message;
-import org.by1337.lib.match.BMatch;
+import org.by1337.api.match.BMatch;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class RequirementStringCheck implements Requirement {
     private final String requirement;
@@ -20,10 +16,10 @@ public class RequirementStringCheck implements Requirement {
     }
 
     @Override
-    public boolean check(@Nullable AirDrop airDrop, @Nullable Player player) {
+    public boolean check(@Nullable Placeholderable placeholderable, @Nullable Player player) {
         String req = requirement;
-        if (airDrop != null)
-            req = airDrop.replaceInternalPlaceholder(req);
+        if (placeholderable != null)
+            req = placeholderable.replace(req);
         req = Message.setPlaceholders(player, req);
         req = BMatch.match(req);
         String[] args = req.split(" ");

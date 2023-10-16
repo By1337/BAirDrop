@@ -18,6 +18,9 @@ public record PropertyType(NamespacedKey key) implements Keyed {
     public static final PropertyType DOUBLE = register(new PropertyType(NamespacedKey.fromString("double")));
     public static final PropertyType COLOR = register(new PropertyType(NamespacedKey.fromString("color")));
     public static final PropertyType BOOLEAN = register(new PropertyType(NamespacedKey.fromString("boolean")));
+    public static final PropertyType LIST_STRING = register(new PropertyType(NamespacedKey.fromString("list_string")));
+    public static final PropertyType LOCATION = register(new PropertyType(NamespacedKey.fromString("location")));
+    public static final PropertyType MATERIAL = register(new PropertyType(NamespacedKey.fromString("material")));
 
 
     @Nullable

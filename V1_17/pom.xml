@@ -110,6 +110,7 @@
         <dependency>
             <groupId>org.by1337</groupId>
             <artifactId>Api</artifactId>
+            <scope>provided</scope>
             <version>1.0</version>
         </dependency>
         <!-- utils -->

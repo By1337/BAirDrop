@@ -1,9 +1,9 @@
 package org.by1337.api.world;
 
 public class BlockPosition {
-    public int x = 0;
-    public int y = 0;
-    public int z = 0;
+    private int x = 0;
+    private int y = 0;
+    private int z = 0;
 
     public BlockPosition() {
     }
@@ -26,6 +26,30 @@ public class BlockPosition {
     }
     public BlockPosition subtract(int x, int y, int z) {
         return new BlockPosition(this.x - x, this.y - y, this.z - z);
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getZ() {
+        return z;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public void setZ(int z) {
+        this.z = z;
     }
 
     @Override

@@ -22,50 +22,50 @@ public class GlobalTimer {
     }
 
     public void run() {
-        Message.debug(BAirDrop.getConfigMessage().getMessage("global-timer-thread-start"), LogLevel.LOW);
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (stop) {
-                    cancel();
-                    Message.debug(BAirDrop.getConfigMessage().getMessage("global-timer-thread-stop"), LogLevel.LOW);
-                    return;
-                }
-                if (air != null && !BAirDrop.airDrops.containsKey(air.getId())){
-                    air = null;
-                    timeToStart = timeToStartCons;
-                }
-                if (timeToStart <= 0) {
-                    if (air == null) {
-                        Message.warning(BAirDrop.getConfigMessage().getMessage("global-timer-failed"));
-                        return;
-                    }
-                    air.setTimeCountingEnabled(true);
-                    air.setHideInCompleter(false);
-                    if (air.isAirDropStarted()) {
-                        air = null;
-                        timeToStart = timeToStartCons;
-                    }
-                } else if (air != null && Bukkit.getOnlinePlayers().size() >= air.getMinPlayersToStart()) {
-                    timeToStart--;
-                }
-                if (BAirDrop.airDrops.isEmpty()) {
-                    Message.error(BAirDrop.getConfigMessage().getMessage("global-timer-failed2"));
-                    timeToStart = timeToStartCons;
-                    return;
-                }
-
-                if (air == null) {
-                    air = AirDropUtils.getRandomCloneAir();
-                    if (air != null) {
-                        air.setHideInCompleter(true);
-                        air.addDec(String.format(BAirDrop.getConfigMessage().getMessage("dec-info"), "global timer"));
-                        BAirDrop.airDrops.put(air.getId(), air);
-                        Message.debug(String.format(BAirDrop.getConfigMessage().getMessage("global-timer"), air.getId()), LogLevel.LOW);
-                    }
-                }
-            }
-        }.runTaskTimerAsynchronously(BAirDrop.getInstance(), 20, 20);
+//        Message.debug(BAirDrop.getConfigMessage().getMessage("global-timer-thread-start"), LogLevel.LOW);
+//        new BukkitRunnable() {
+//            @Override
+//            public void run() {
+//                if (stop) {
+//                    cancel();
+//                    Message.debug(BAirDrop.getConfigMessage().getMessage("global-timer-thread-stop"), LogLevel.LOW);
+//                    return;
+//                }
+//                if (air != null && !BAirDrop.airDrops.containsKey(air.getId())){
+//                    air = null;
+//                    timeToStart = timeToStartCons;
+//                }
+//                if (timeToStart <= 0) {
+//                    if (air == null) {
+//                        Message.warning(BAirDrop.getConfigMessage().getMessage("global-timer-failed"));
+//                        return;
+//                    }
+//                    air.setTimeCountingEnabled(true);
+//                    air.setHideInCompleter(false);
+//                    if (air.isAirDropStarted()) {
+//                        air = null;
+//                        timeToStart = timeToStartCons;
+//                    }
+//                } else if (air != null && Bukkit.getOnlinePlayers().size() >= air.getMinPlayersToStart()) {
+//                    timeToStart--;
+//                }
+//                if (BAirDrop.airDrops.isEmpty()) {
+//                    Message.error(BAirDrop.getConfigMessage().getMessage("global-timer-failed2"));
+//                    timeToStart = timeToStartCons;
+//                    return;
+//                }
+//
+//                if (air == null) {
+//                    air = AirDropUtils.getRandomCloneAir();
+//                    if (air != null) {
+//                        air.setHideInCompleter(true);
+//                        air.addDec(String.format(BAirDrop.getConfigMessage().getMessage("dec-info"), "global timer"));
+//                        BAirDrop.airDrops.put(air.getId(), air);
+//                        Message.debug(String.format(BAirDrop.getConfigMessage().getMessage("global-timer"), air.getId()), LogLevel.LOW);
+//                    }
+//                }
+//            }
+//        }.runTaskTimerAsynchronously(BAirDrop.getInstance(), 20, 20);
     }
 
 

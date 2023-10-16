@@ -1,5 +1,6 @@
 package org.by1337.lib;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class AsyncCatcher {
@@ -8,8 +9,8 @@ public class AsyncCatcher {
             Class<?> clazz = Class.forName("org.spigotmc.AsyncCatcher");
             Method method = clazz.getMethod("catchOp", String.class);
             method.invoke(null, s);
-        }catch (Exception e){
-            e.printStackTrace();
+        } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
+            throw new RuntimeException(e);
         }
     }
 }

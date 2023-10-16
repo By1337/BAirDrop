@@ -1,7 +1,5 @@
 package org.by1337.bairdrop;
 
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -9,51 +7,41 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import org.by1337.bairdrop.airdrop.Airdrop;
 import org.by1337.bairdrop.command.CommandHook;
 import org.by1337.bairdrop.configManager.CConfig;
 import org.by1337.bairdrop.configManager.ConfigMessage;
 import org.by1337.bairdrop.configManager.Config;
-import org.by1337.bairdrop.hologram.*;
 import org.by1337.bairdrop.lang.Lang;
 import org.by1337.bairdrop.listeners.Compass;
-import org.by1337.bairdrop.listeners.CraftItem;
 import org.by1337.bairdrop.listeners.InteractListener;
 import org.by1337.bairdrop.location.CGenLoc;
 import org.by1337.bairdrop.location.GeneratorLoc;
 import org.by1337.bairdrop.observer.CustomListenerLoader;
 import org.by1337.bairdrop.summoner.Summoner;
-import org.by1337.bairdrop.worldGuardHook.RegionManager;
 import org.by1337.bairdrop.command.CompleterHook;
-import org.by1337.bairdrop.observer.CustomEvent;
 import org.by1337.bairdrop.effect.effectImpl.*;
 import org.by1337.bairdrop.serializable.EffectDeserialize;
-import org.by1337.bairdrop.serializable.StateSerializable;
 import org.by1337.bairdrop.util.*;
 import org.by1337.bairdrop.util.Message;
-import org.by1337.lib.Version;
-
-import java.io.*;
 
 import java.util.*;
 
 
 public final class BAirDrop extends JavaPlugin {
 
-    public static HashMap<String, AirDrop> airDrops = new HashMap<>();
+    public static HashMap<String, Airdrop> airDrops = new HashMap<>();
 
     public static Summoner summoner = new Summoner();
-    public static GlobalTimer globalTimer;
+  //  public static GlobalTimer globalTimer;
     public static HashMap<String, CustomCraft> crafts = new HashMap<>();
     public static Compass compass;
     public static LogLevel logLevel;
-    public static IHologram hologram;
     private static Config config;
     private static ConfigMessage configMessage;
 
     @Getter
     private static Plugin instance;
-
-    private static ProtocolManager protocolManager = null;
 
     public BAirDrop() {
         super();
@@ -101,6 +89,7 @@ public final class BAirDrop extends JavaPlugin {
 
         long x = System.currentTimeMillis();
 
+
         getiConfig().loadConfiguration();
 
         if (this.getConfig().getBoolean("use-metrics"))
@@ -111,44 +100,44 @@ public final class BAirDrop extends JavaPlugin {
         getCommand("bairdrop").setTabCompleter(new CompleterHook());
 
         Bukkit.getServer().getPluginManager().registerEvents(new InteractListener(), getInstance());
-        getServer().getPluginManager().registerEvents(summoner, getInstance());
-        getServer().getPluginManager().registerEvents(new CraftItem(), BAirDrop.getInstance());
-        getServer().getPluginManager().registerEvents(compass, BAirDrop.getInstance());
+      //  getServer().getPluginManager().registerEvents(summoner, getInstance());
+      //  getServer().getPluginManager().registerEvents(new CraftItem(), BAirDrop.getInstance());
+       // getServer().getPluginManager().registerEvents(compass, BAirDrop.getInstance());
 
 
-        if (Bukkit.getPluginManager().getPlugin("DecentHolograms") != null) {
-            hologram = new DecentHologram();
-        } else if (Bukkit.getPluginManager().getPlugin("ProtocolLib") != null) {
-            protocolManager = ProtocolLibrary.getProtocolManager();
-            hologram = new ProtocolHoloManager();
-        } else {
-            hologram = new EmptyHologram();
-            Message.error(getConfigMessage().getMessage("depend-not-found"));
-        }
+//        if (Bukkit.getPluginManager().getPlugin("DecentHolograms") != null) {
+//            hologram = new DecentHologram();
+//        } else if (Bukkit.getPluginManager().getPlugin("ProtocolLib") != null) {
+//            protocolManager = ProtocolLibrary.getProtocolManager();
+//            hologram = new ProtocolHoloManager();
+//        } else {
+//            hologram = new EmptyHologram();
+//            Message.error(getConfigMessage().getMessage("depend-not-found"));
+//        }
 
 
-        for (File file : getiConfig().getAirDrops().keySet()) {
-            AirDrop airDrop = new CAirDrop(getiConfig().getAirDrops().get(file), file);
-            airDrops.put(getiConfig().getAirDrops().get(file).getString("air-id"), airDrop);
-            if (instance.getConfig().getBoolean("state-serializable")) {
-                StateSerializable stateSerializable = (StateSerializable) airDrop;
-                stateSerializable.stateDeserialize();
-            }
-
-        }
-
-        List<String> ids = new ArrayList<>(airDrops.keySet());
-        for (String id : ids) {
-            airDrops.get(id).registerAllSignedObservers();
-        }
+//        for (File file : getiConfig().getAirDrops().keySet()) {
+//            AirDrop airDrop = new CAirDrop(getiConfig().getAirDrops().get(file), file);
+//            airDrops.put(getiConfig().getAirDrops().get(file).getString("air-id"), airDrop);
+//            if (instance.getConfig().getBoolean("state-serializable")) {
+//                StateSerializable stateSerializable = (StateSerializable) airDrop;
+//                stateSerializable.stateDeserialize();
+//            }
+//
+//        }
+//
+//        List<String> ids = new ArrayList<>(airDrops.keySet());
+//        for (String id : ids) {
+//            airDrops.get(id).registerAllSignedObservers();
+//        }
 
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)
             new PlaceholderHook().register();
 
-        if (BAirDrop.getInstance().getConfig().getBoolean("global-time.enable")) {
-            globalTimer = new GlobalTimer((BAirDrop.getInstance().getConfig().getInt("global-time.time") * 60));
-        }
+//        if (BAirDrop.getInstance().getConfig().getBoolean("global-time.enable")) {
+//            globalTimer = new GlobalTimer((BAirDrop.getInstance().getConfig().getInt("global-time.time") * 60));
+//        }
         if (logLevel == LogLevel.HARD) {
             new BukkitRunnable() {
                 @Override
@@ -178,20 +167,20 @@ public final class BAirDrop extends JavaPlugin {
         if (!getiConfig().isLoaded())
             return;
         long x = System.currentTimeMillis();
-        for (AirDrop airDrop : airDrops.values()) {
-            if (instance.getConfig().getBoolean("state-serializable") && airDrop instanceof StateSerializable stateSerializable)
-                stateSerializable.stateSerialize();
-
-            if (airDrop.isAirDropStarted())
-                airDrop.end();
-            if (airDrop.isClone())
-                airDrop.end();
-            airDrop.notifyObservers(CustomEvent.UNLOAD, null);
-            BAirDrop.hologram.remove(airDrop.getId());
-            airDrop.save();
-            airDrop.schematicsUndo();
-            RegionManager.removeRegion(airDrop);
-        }
+//        for (AirDrop airDrop : airDrops.values()) {
+//            if (instance.getConfig().getBoolean("state-serializable") && airDrop instanceof StateSerializable stateSerializable)
+//                stateSerializable.stateSerialize();
+//
+//            if (airDrop.isAirDropStarted())
+//                airDrop.end();
+//            if (airDrop.isClone())
+//                airDrop.end();
+//            airDrop.notifyObservers(CustomEvent.UNLOAD, null);
+//            BAirDrop.hologram.remove(airDrop.getId());
+//            airDrop.save();
+//            airDrop.schematicsUndo();
+//            RegionManager.removeRegion(airDrop);
+//        }
         GeneratorLoc.save();
         CustomCraft.unloadCrafts();
 
@@ -205,17 +194,18 @@ public final class BAirDrop extends JavaPlugin {
      * Перезагрузка конфиг файлов
      */
     public static void reload() {
-        for (AirDrop airDrop : airDrops.values()) {
-            if (airDrop.isAirDropStarted())
-                airDrop.end();
-            if (airDrop.isClone())
-                airDrop.end();
-            airDrop.notifyObservers(CustomEvent.UNLOAD, null);
-            BAirDrop.hologram.remove(airDrop.getId());
-            airDrop.setCanceled(true);
-            airDrop.schematicsUndo();
-            RegionManager.removeRegion(airDrop);
-        }
+
+//        for (AirDrop airDrop : airDrops.values()) {
+//            if (airDrop.isAirDropStarted())
+//                airDrop.end();
+//            if (airDrop.isClone())
+//                airDrop.end();
+//            airDrop.notifyObservers(CustomEvent.UNLOAD, null);
+//            BAirDrop.hologram.remove(airDrop.getId());
+//            airDrop.setCanceled(true);
+//            airDrop.schematicsUndo();
+//            RegionManager.removeRegion(airDrop);
+//        }
         CustomCraft.unloadCrafts();
         getiConfig().getSchematics().clear();
         airDrops.clear();
@@ -224,34 +214,31 @@ public final class BAirDrop extends JavaPlugin {
         getiConfig().getAirDrops().clear();
 
         getInstance().reloadConfig();
-        compass.loadItem();
+      //  compass.loadItem();
         GeneratorLoc.locs.clear();
         summoner.LoadSummoner();
-        if (globalTimer != null) {
-            if (!BAirDrop.getInstance().getConfig().getBoolean("global-time.enable")) {
-                globalTimer.setStop(true);
-                globalTimer = null;
-            } else {
-                globalTimer.setTimeToStartCons(BAirDrop.getInstance().getConfig().getInt("global-time.time") * 60);
-                globalTimer.setTimeToStart(globalTimer.getTimeToStartCons());
-                if (globalTimer.getAir() != null)
-                    globalTimer.setAir(null);
-            }
-        } else if (BAirDrop.getInstance().getConfig().getBoolean("global-time.enable")) {
-            globalTimer = new GlobalTimer((BAirDrop.getInstance().getConfig().getInt("global-time.time") * 60));
-        }
-        getiConfig().loadConfiguration();
-        for (File file : getiConfig().getAirDrops().keySet()) {
-            airDrops.put(getiConfig().getAirDrops().get(file).getString("air-id"), new CAirDrop(getiConfig().getAirDrops().get(file), file));
-        }
-        List<String> ids = new ArrayList<>(airDrops.keySet());
-        for (String id : ids) {
-            airDrops.get(id).registerAllSignedObservers();
-        }
+//        if (globalTimer != null) {
+//            if (!BAirDrop.getInstance().getConfig().getBoolean("global-time.enable")) {
+//                globalTimer.setStop(true);
+//                globalTimer = null;
+//            } else {
+//                globalTimer.setTimeToStartCons(BAirDrop.getInstance().getConfig().getInt("global-time.time") * 60);
+//                globalTimer.setTimeToStart(globalTimer.getTimeToStartCons());
+//                if (globalTimer.getAir() != null)
+//                    globalTimer.setAir(null);
+//            }
+//        } else if (BAirDrop.getInstance().getConfig().getBoolean("global-time.enable")) {
+//            globalTimer = new GlobalTimer((BAirDrop.getInstance().getConfig().getInt("global-time.time") * 60));
+//        }
+//        getiConfig().loadConfiguration();
+//        for (File file : getiConfig().getAirDrops().keySet()) {
+//            airDrops.put(getiConfig().getAirDrops().get(file).getString("air-id"), new CAirDrop(getiConfig().getAirDrops().get(file), file));
+//        }
+//        List<String> ids = new ArrayList<>(airDrops.keySet());
+//        for (String id : ids) {
+//            airDrops.get(id).registerAllSignedObservers();
+//        }
     }
 
-    public static ProtocolManager getProtocolManager() {
-        return protocolManager;
-    }
 }
 

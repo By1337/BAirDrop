@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 public record CustomEvent(NamespacedKey key) implements Keyed {
     private static final HashMap<NamespacedKey, CustomEvent> byKey = new HashMap<>();
@@ -103,7 +104,11 @@ public record CustomEvent(NamespacedKey key) implements Keyed {
      * when airdrop deserialize
      * Player null, AirDrop not null
      */
+    @Deprecated
     public static CustomEvent DESERIALIZE = registerEvent(new CustomEvent(NamespacedKey.fromString("deserialize")));
+
+
+    public static CustomEvent CLICK = registerEvent(new CustomEvent(NamespacedKey.fromString("click")));
 
     /**
      * @param key NamespacedKey of the event
@@ -148,24 +153,11 @@ public record CustomEvent(NamespacedKey key) implements Keyed {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null)
-            return false;
-        if (obj instanceof CustomEvent customEvent) {
-            return this.key.getKey().equals(customEvent.key.getKey());
-           // return this.hashCode() == customEvent.hashCode();
-        } else
-            return false;
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        CustomEvent customEvent = (CustomEvent) obj;
+        return this.key.getKey().equals(customEvent.key.getKey());
     }
 
-    @Override
-    public int hashCode() {
-        if(this.key == null)
-            return 0;
-
-        int result = 0;
-        for (byte element : this.key.getKey().getBytes())
-            result = 45 * result + element;
-        return result;
-    }
 }
 

@@ -20,17 +20,26 @@ import java.util.regex.Pattern;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.by1337.api.BLib;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.lang.Resource;
-import org.by1337.lib.chat.ComponentBuilder;
-import org.by1337.lib.chat.TellRaw;
+import org.by1337.api.chat.ComponentBuilder;
+import org.by1337.api.chat.TellRaw;
 import org.jetbrains.annotations.Nullable;
 
-
+@Deprecated
 public class Message {
     private static final Pattern RAW_HEX_REGEX = Pattern.compile("&(#[a-f0-9]{6})", Pattern.CASE_INSENSITIVE);
 
-    private static final Logger LOGGER = JavaPlugin.getPlugin(BAirDrop.class).getLogger();
+    private static Logger LOGGER;
+
+    static {
+        try {
+            LOGGER = JavaPlugin.getPlugin(BAirDrop.class).getLogger();
+        }catch (Exception e){
+            LOGGER = Bukkit.getLogger();
+        }
+    }
 
     /**
      * Boss bars created with the [NEW_BOSSBAR] command
@@ -56,14 +65,14 @@ public class Message {
 
     public static void sendRawMsg(CommandSender sender, ComponentBuilder msg) {
         if (sender instanceof Player player)
-            TellRaw.tell(msg.build(), player);
+            BLib.getCommandUtil().tellRaw(msg.build(), player);
         else
             logger(msg.build());
     }
 
     public static void sendRawMsg(CommandSender sender, String msg) {
         if (sender instanceof Player player)
-            TellRaw.tell(msg, player);
+            BLib.getCommandUtil().tellRaw(msg, player);
         else
             logger(msg);
     }
@@ -326,7 +335,7 @@ public class Message {
         pl.playSound(pl.getLocation(), sound, 1, 1);
     }
 
-    public static void sendSound(Player pl, Sound sound, int volume, int pitch) {
+    public static void sendSound(Player pl, Sound sound, float volume, float pitch) {
         pl.playSound(pl.getLocation(), sound, volume, pitch);
     }
 
@@ -356,7 +365,7 @@ public class Message {
 
     }
 
-    public static void sendAllSound(Sound sound, int volume, int pitch) {
+    public static void sendAllSound(Sound sound, float volume, float pitch) {
 
         for (Player pl : Bukkit.getOnlinePlayers())
             pl.playSound(pl.getLocation(), sound, volume, pitch);

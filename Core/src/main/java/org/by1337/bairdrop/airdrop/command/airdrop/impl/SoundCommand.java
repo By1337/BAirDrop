@@ -3,12 +3,14 @@ package org.by1337.bairdrop.airdrop.command.airdrop.impl;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.by1337.bairdrop.AirDrop;
+import org.by1337.bairdrop.airdrop.Airdrop;
 import org.by1337.bairdrop.airdrop.command.airdrop.CommandExecutor;
 import org.by1337.bairdrop.util.Message;
-import org.by1337.lib.command.Command;
-import org.by1337.lib.command.CommandException;
-import org.by1337.lib.command.argument.ArgumentEnumValue;
-import org.by1337.lib.command.argument.ArgumentInteger;
+import org.by1337.api.command.Command;
+import org.by1337.api.command.CommandException;
+import org.by1337.api.command.argument.ArgumentEnumValue;
+import org.by1337.api.command.argument.ArgumentFloat;
+import org.by1337.api.command.argument.ArgumentInteger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,12 +23,12 @@ public class SoundCommand implements CommandExecutor {
     }
 
     @Override
-    public void execute(@Nullable AirDrop airDrop, @Nullable Player player, @NotNull String command) throws CommandException {
+    public void execute(@Nullable Airdrop airDrop, @Nullable Player player, @NotNull String command) throws CommandException {
         Objects.requireNonNull(player, String.format(PLAYER_IS_NULL.getString(), command));
         createCommand().executor(((sender, args) -> {
             Sound sound = (Sound) args.getOrThrow("sound", USAGE.getString(), usage());
-            int volume = (int) args.getOrDefault("volume", 1);
-            int pitch = (int) args.getOrDefault("pitch", 1);
+            float volume = (float) args.getOrDefault("volume", 1);
+            float pitch = (float) args.getOrDefault("pitch", 1);
             Message.sendSound(player, sound, volume, pitch);
         })).process(null, parseCommand(command));
     }
@@ -40,8 +42,8 @@ public class SoundCommand implements CommandExecutor {
     public Command createCommand() {
         return new Command(getCommandPrefix())
                 .argument(new ArgumentEnumValue("sound", Sound.class))
-                .argument(new ArgumentInteger("volume"))
-                .argument(new ArgumentInteger("pitch"));
+                .argument(new ArgumentFloat("volume"))
+                .argument(new ArgumentFloat("pitch"));
     }
 
 }

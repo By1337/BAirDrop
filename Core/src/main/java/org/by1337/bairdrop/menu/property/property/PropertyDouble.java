@@ -1,20 +1,30 @@
 package org.by1337.bairdrop.menu.property.property;
 
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.by1337.bairdrop.lang.Resource;
-import org.by1337.bairdrop.menu.property.EditableProperties;
-import org.by1337.bairdrop.menu.property.ListenChat;
-import org.by1337.bairdrop.menu.property.PropertyEditor;
-
-import java.util.List;
-
 public class PropertyDouble extends Property<Double>{
-    public PropertyDouble(Double value, String name, Resource lore, Resource material, Resource displayName, EditableProperties owner) {
-        super(value, name, lore, material, displayName, owner);
+    /**
+     * Creates a new property with the specified initial value, name
+     *
+     * @param value The initial value of the property.
+     * @param name  The unique name of the property.
+     */
+    public PropertyDouble(Double value, String name) {
+        super(value, name);
     }
 
     @Override
+    public Double parse(String str) {
+        return Double.parseDouble(str);
+    }
+//    public PropertyDouble(Double value, String name, Resource lore, Resource material, Resource displayName, StorageProperties owner) {
+//        super(value, name, lore, material, displayName, owner);
+//    }
+
+    public PropertyDouble(Double value, String name, Double defValue) {
+        super(value, name, defValue);
+    }
+
+
+/*    @Override
     public void editValue(Player player) {
         new ListenChat((str) -> {
             str.ifPresent(s -> setValue(Double.parseDouble(s)));
@@ -24,7 +34,7 @@ public class PropertyDouble extends Property<Double>{
             player.openInventory(propertyEditor.getInventory());
 
         }, player);
-    }
+    }*/
 
     @Override
     public PropertyType getType() {

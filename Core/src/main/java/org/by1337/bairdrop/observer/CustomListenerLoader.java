@@ -14,7 +14,7 @@ import org.by1337.bairdrop.observer.requirement.Requirements;
 import org.by1337.bairdrop.observer.requirement.impl.RequirementNumericalCheck;
 import org.by1337.bairdrop.observer.requirement.impl.RequirementStringCheck;
 import org.by1337.bairdrop.util.Message;
-import org.by1337.lib.command.CommandException;
+import org.by1337.api.command.CommandException;
 
 import java.io.File;
 import java.io.IOException;

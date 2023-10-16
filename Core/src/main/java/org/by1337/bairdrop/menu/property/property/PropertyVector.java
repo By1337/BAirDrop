@@ -1,18 +1,29 @@
 package org.by1337.bairdrop.menu.property.property;
 
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
-import org.by1337.bairdrop.lang.Resource;
-import org.by1337.bairdrop.menu.property.EditableProperties;
-import org.by1337.bairdrop.menu.property.ListenChat;
-import org.by1337.bairdrop.menu.property.PropertyEditor;
-
-import java.util.List;
 
 public class PropertyVector extends Property<Vector> {
-    public PropertyVector(Vector value, String name, Resource lore, Resource material, Resource displayName, EditableProperties owner) {
-        super(value, name, lore, material, displayName, owner);
+    /**
+     * Creates a new property with the specified initial value, name
+     *
+     * @param value The initial value of the property.
+     * @param name  The unique name of the property.
+     */
+    public PropertyVector(Vector value, String name) {
+        super(value, name);
+    }
+
+    @Override
+    public Vector parse(String str) {
+        return null;
+    }
+//    public PropertyVector(Vector value, String name, Resource lore, Resource material, Resource displayName, StorageProperties owner) {
+//        super(value, name, lore, material, displayName, owner);
+//    }
+
+
+    public PropertyVector(Vector value, String name, Vector defValue) {
+        super(value, name, defValue);
     }
 
     @Override
@@ -20,7 +31,7 @@ public class PropertyVector extends Property<Vector> {
         return PropertyType.VECTOR;
     }
 
-    @Override
+/*    @Override
     public void editValue(Player player) {
         new ListenChat((str) -> {
             str.ifPresent(s -> {
@@ -37,5 +48,5 @@ public class PropertyVector extends Property<Vector> {
             player.openInventory(propertyEditor.getInventory());
 
         }, player);
-    }
+    }*/
 }

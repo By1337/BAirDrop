@@ -88,12 +88,12 @@
     </repositories>
 
     <dependencies>
-        <dependency>
-            <groupId>com.comphenix.protocol</groupId>
-            <artifactId>ProtocolLib</artifactId>
-            <version>5.0.0</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.comphenix.protocol</groupId>-->
+<!--            <artifactId>ProtocolLib</artifactId>-->
+<!--            <version>5.0.0</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
@@ -118,34 +118,34 @@
             <version>7.2.15</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.github.decentsoftware-eu</groupId>
-            <artifactId>decentholograms</artifactId>
-            <version>2.7.11</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.github.decentsoftware-eu</groupId>-->
+<!--            <artifactId>decentholograms</artifactId>-->
+<!--            <version>2.7.11</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.mojang</groupId>
             <artifactId>authlib</artifactId>
             <version>1.5.21</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20230227</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.json</groupId>-->
+<!--            <artifactId>json</artifactId>-->
+<!--            <version>20230227</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.mozilla</groupId>
             <artifactId>rhino</artifactId>
             <version>1.7.14</version>
         </dependency>
-        <dependency>
-            <groupId>org.by1337</groupId>
-            <artifactId>BLib</artifactId>
-            <scope>provided</scope>
-            <version>1.0</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.by1337</groupId>-->
+<!--            <artifactId>BLib</artifactId>-->
+<!--            <scope>provided</scope>-->
+<!--            <version>1.0</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
@@ -162,6 +162,7 @@
             <groupId>org.by1337</groupId>
             <artifactId>Api</artifactId>
             <version>1.0</version>
+            <scope>provided</scope>
         </dependency>
 <!--        &lt;!&ndash;commands&ndash;&gt;-->
 <!--        <dependency>-->

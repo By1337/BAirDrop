@@ -25,12 +25,10 @@ import org.by1337.bairdrop.ItemUtil.Items;
 import org.by1337.bairdrop.lang.Resource;
 import org.by1337.bairdrop.location.Generator;
 import org.by1337.bairdrop.location.GeneratorLoc;
-import org.by1337.bairdrop.location.CGenerator;
 import org.by1337.bairdrop.location.GeneratorUtils;
 import org.by1337.bairdrop.location.generator.GeneratorSetting;
 import org.by1337.bairdrop.location.generator.LocationManager;
 import org.by1337.bairdrop.observer.CustomListenerLoader;
-import org.by1337.bairdrop.worldGuardHook.RegionManager;
 import org.by1337.bairdrop.worldGuardHook.SchematicsManager;
 import org.by1337.bairdrop.api.event.AirDropEndEvent;
 import org.by1337.bairdrop.api.event.AirDropStartEvent;
@@ -41,9 +39,8 @@ import org.by1337.bairdrop.effect.EffectFactory;
 import org.by1337.bairdrop.effect.IEffect;
 import org.by1337.bairdrop.serializable.EffectDeserialize;
 import org.by1337.bairdrop.serializable.EffectSerializable;
-import org.by1337.bairdrop.serializable.StateSerializable;
 import org.by1337.bairdrop.util.*;
-import org.by1337.lib.chat.util.InvalidCharacters;
+import org.by1337.api.chat.util.InvalidCharacters;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,7 +56,7 @@ import static org.by1337.bairdrop.BAirDrop.*;
 import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.menu.EditAirMenu;
 @Deprecated
-public class CAirDrop implements AirDrop, StateSerializable {
+public class CAirDrop implements AirDrop {
     private String inventoryTitle;
     private String displayName;
     private int inventorySize;
@@ -351,10 +348,10 @@ public class CAirDrop implements AirDrop, StateSerializable {
                 synchronized (this) {
                     if (canceled) {
                         cancel();
-                        if (EditAirMenu != null) {
-                            EditAirMenu.unReg();
-                            EditAirMenu.getInventory().clear();
-                        }
+//                        if (EditAirMenu != null) {
+//                            EditAirMenu.unReg();
+//                            EditAirMenu.getInventory().clear();
+//                        }
                         if (isAirDropStarted())
                             end();
                         if (clone) {
@@ -372,14 +369,14 @@ public class CAirDrop implements AirDrop, StateSerializable {
                             List<String> lines = new ArrayList<>(airHoloToStart);
                             lines.replaceAll(s -> replaceInternalPlaceholder(s));
 
-                            if (!holoTimeToStartMinusOffsets) {
-                                BAirDrop.hologram.createOrUpdateHologram(lines, getAnyLoc().clone().add(holoOffsets), id);
-                            } else {
-                                BAirDrop.hologram.createOrUpdateHologram(lines, getAnyLoc().clone().add(holoOffsets).add(
-                                        -GeneratorUtils.getSettings(getGeneratorSettings(), String.format("%s.offsets.x", GeneratorUtils.getWorldKeyByWorld(getAnyLoc().getWorld()))),
-                                        -GeneratorUtils.getSettings(getGeneratorSettings(), String.format("%s.offsets.y", GeneratorUtils.getWorldKeyByWorld(getAnyLoc().getWorld()))),
-                                        -GeneratorUtils.getSettings(getGeneratorSettings(), String.format("%s.offsets.z", GeneratorUtils.getWorldKeyByWorld(getAnyLoc().getWorld())))).add(0, 1, 0), id);
-                            }
+//                            if (!holoTimeToStartMinusOffsets) {
+//                                BAirDrop.hologram.createOrUpdateHologram(lines, getAnyLoc().clone().add(holoOffsets), id);
+//                            } else {
+//                                BAirDrop.hologram.createOrUpdateHologram(lines, getAnyLoc().clone().add(holoOffsets).add(
+//                                        -GeneratorUtils.getSettings(getGeneratorSettings(), String.format("%s.offsets.x", GeneratorUtils.getWorldKeyByWorld(getAnyLoc().getWorld()))),
+//                                        -GeneratorUtils.getSettings(getGeneratorSettings(), String.format("%s.offsets.y", GeneratorUtils.getWorldKeyByWorld(getAnyLoc().getWorld()))),
+//                                        -GeneratorUtils.getSettings(getGeneratorSettings(), String.format("%s.offsets.z", GeneratorUtils.getWorldKeyByWorld(getAnyLoc().getWorld())))).add(0, 1, 0), id);
+//                            }
                         }
 
                         updateEditAirMenu("stats");
@@ -392,12 +389,12 @@ public class CAirDrop implements AirDrop, StateSerializable {
                         timeToOpen--;
                         List<String> lines = new ArrayList<>(airHolo);
                         lines.replaceAll(s -> replaceInternalPlaceholder(s));
-                        BAirDrop.hologram.createOrUpdateHologram(lines, airDropLocation.clone().add(holoOffsets), id);
+                     //   BAirDrop.hologram.createOrUpdateHologram(lines, airDropLocation.clone().add(holoOffsets), id);
                         updateEditAirMenu("stats");
                     } else if (startCountdownAfterClick && airDropLocked && airDropStarted) {
                         List<String> lines = new ArrayList<>(airHoloClickWait);
                         lines.replaceAll(s -> replaceInternalPlaceholder(s));
-                        BAirDrop.hologram.createOrUpdateHologram(lines, airDropLocation.clone().add(holoOffsets), id);
+                      //  BAirDrop.hologram.createOrUpdateHologram(lines, airDropLocation.clone().add(holoOffsets), id);
 
                     }
 
@@ -548,7 +545,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
         if (airDropStartEvent.isCancelled())
             return;
 
-        RegionManager.setRegion(this);
+        //RegionManager.setRegion(this);
         timeToStart = 0;
         futureLocation = null;
         stopWhenEmpty_event = false;
@@ -622,7 +619,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
         updateEditAirMenu("stats");
         if (BAirDrop.getInstance().getConfig().getBoolean("anti-steal.enable")) {
             if (antiSteal != null) antiSteal.unregister();
-            antiSteal = new AntiSteal(this);
+            //antiSteal = new AntiSteal(this);
         }
 
         notifyObservers(CustomEvent.START_EVENT, null);
@@ -673,7 +670,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
 
         List<String> lines = new ArrayList<>(airHoloOpen);
         lines.replaceAll(this::replaceInternalPlaceholder);
-        BAirDrop.hologram.createOrUpdateHologram(lines, airDropLocation.clone().add(holoOffsets), id);
+       // BAirDrop.hologram.createOrUpdateHologram(lines, airDropLocation.clone().add(holoOffsets), id);
         notifyObservers(CustomEvent.UNLOCK_EVENT, null);
     }
 
@@ -687,7 +684,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
         notifyObservers(CustomEvent.END_EVENT, null);
         if (airDropLocation != null)
             airDropLocation.getBlock().setType(Material.AIR);
-        RegionManager.removeRegion(this);
+        //RegionManager.removeRegion(this);
         airDropLocation = null;
         inventory.clear();
         List<HumanEntity> list = new ArrayList<>(inventory.getViewers());
@@ -704,7 +701,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
         timeToOpen = timeToUnlockCons * 60;
         timeStop = timeToStopCons * 60;
         airDropLocked = true;
-        BAirDrop.hologram.remove(id);
+       // BAirDrop.hologram.remove(id);
         updateEditAirMenu("stats");
         pickPreGenLocs = 0;
         if (kill) canceled = true;
@@ -739,9 +736,9 @@ public class CAirDrop implements AirDrop, StateSerializable {
                     try {
                         if (futureLocation == null) {
                             if (usePreGeneratedLocations)
-                                futureLocation = locationManager.generate(world.getEnvironment());
+                                futureLocation = locationManager.generate();
                             else
-                                futureLocation = locationManager.generate(world.getEnvironment());
+                                futureLocation = locationManager.generate();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -969,10 +966,10 @@ public class CAirDrop implements AirDrop, StateSerializable {
                 sb.replace(sb.indexOf("{use-player-location}"), sb.indexOf("{use-player-location}") + 21, String.valueOf(isUsePlayerLocation()));
                 continue;
             }
-            if (sb.indexOf("{global-timer}") != -1) {
-                sb.replace(sb.indexOf("{global-timer}"), sb.indexOf("{global-timer}") + 14, BAirDrop.globalTimer != null ? String.valueOf(BAirDrop.globalTimer.getTimeToStart()) : "var");
-                continue;
-            }
+//            if (sb.indexOf("{global-timer}") != -1) {
+//                sb.replace(sb.indexOf("{global-timer}"), sb.indexOf("{global-timer}") + 14, BAirDrop.globalTimer != null ? String.valueOf(BAirDrop.globalTimer.getTimeToStart()) : "var");
+//                continue;
+//            }
             if (staticLocation == null) {
                 if (sb.indexOf("{stat-world}") != -1) {
                     sb.replace(sb.indexOf("{stat-world}"), sb.indexOf("{stat-world}") + 12, "?");
@@ -1096,11 +1093,11 @@ public class CAirDrop implements AirDrop, StateSerializable {
     public void notifyObservers(CustomEvent customEvent, @Nullable Player pl) {
         long x = System.currentTimeMillis();
 
-        List<Observer> tempObservers = new ArrayList<>(observers);
-
-        tempObservers.forEach(o -> o.update(pl, this, customEvent, false));
-
-        AirDropUtils.getStaticObservers().forEach(o -> o.update(pl, this, customEvent, false));
+//        List<Observer> tempObservers = new ArrayList<>(observers);
+//
+//        tempObservers.forEach(o -> o.update(pl, this, customEvent, false));
+//
+//        AirDropUtils.getStaticObservers().forEach(o -> o.update(pl, this, customEvent, false));
 
 //        if (System.currentTimeMillis() - x < 50)
 //            Message.debug(String.format(BAirDrop.getConfigMessage().getMessage("event-time"), customEvent.getKey().getKey(), (System.currentTimeMillis() - x)), LogLevel.HARD);
@@ -1121,11 +1118,6 @@ public class CAirDrop implements AirDrop, StateSerializable {
     }
 
     @Override
-    public void InvokeListener(NamespacedKey listener, @Nullable Player player, CustomEvent customEvent) {
-        invokeListener(listener, player, customEvent);
-    }
-
-    @Override
     public void invokeListener(NamespacedKey listener, @Nullable Player player, CustomEvent customEvent) {
         try {
             if (!CustomListenerLoader.getCustomEventListeners().containsKey(listener)) {
@@ -1133,7 +1125,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
                 return;
             }
 
-            CustomListenerLoader.getCustomEventListeners().get(listener).update(player, this, customEvent, true);
+         //  CustomListenerLoader.getCustomEventListeners().get(listener).update(player, this, customEvent, true);
         } catch (StackOverflowError e) {
             e.printStackTrace();
            // Message.error(BAirDrop.getConfigMessage().getMessage("too-many-call"));
@@ -1167,14 +1159,14 @@ public class CAirDrop implements AirDrop, StateSerializable {
 
     @Override
     public void updateEditAirMenu() {
-        if (EditAirMenu != null)
-            EditAirMenu.menuGenerate();
+//        if (EditAirMenu != null)
+//            EditAirMenu.menuGenerate();
     }
 
     @Override
     public void updateEditAirMenu(String tag) {
-        if (EditAirMenu != null)
-            EditAirMenu.menuGenerate(tag);
+//        if (EditAirMenu != null)
+//            EditAirMenu.menuGenerate(tag);
     }
 
     @Override
@@ -1327,7 +1319,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
         }
     }
 
-    @Override
+  //  @Override
     public void stateSerialize() {
         Map<String, Object> map = new HashMap<>();
         map.put("version", 1);
@@ -1373,7 +1365,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
 
     public static final int STATE_VERSION = 1;
 
-    @Override
+  //  @Override
     public void stateDeserialize() {
         try {
             if (fileConfiguration.getConfigurationSection("state") == null) return;
@@ -1412,7 +1404,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
                 airDropLocation = S_airDropLocation;
                 if (S_airDropStarted) {
 
-                    RegionManager.setRegion(this);
+                    //RegionManager.setRegion(this);
                     timeToStart = 0;
                     futureLocation = null;
                     stopWhenEmpty_event = false;
@@ -1430,7 +1422,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
                     updateEditAirMenu("stats");
                     if (BAirDrop.getInstance().getConfig().getBoolean("anti-steal.enable")) {
                         if (antiSteal != null) antiSteal.unregister();
-                        antiSteal = new AntiSteal(this);
+                       // antiSteal = new AntiSteal(this);
                     }
 
                     if (!S_airDropLocked) {
@@ -1447,7 +1439,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
 
                         List<String> lines = new ArrayList<>(airHoloOpen);
                         lines.replaceAll(this::replaceInternalPlaceholder);
-                        BAirDrop.hologram.createOrUpdateHologram(lines, airDropLocation.clone().add(holoOffsets), id);
+                     //   BAirDrop.hologram.createOrUpdateHologram(lines, airDropLocation.clone().add(holoOffsets), id);
                     }
                 }
                 Map<String, Object> effects = ((ConfigurationSection) map.get("effects")).getValues(false);
@@ -1469,7 +1461,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
 
     @Override
     public void setRegion() {
-        RegionManager.setRegion(this);
+       // RegionManager.setRegion(this);
     }
 
     @Override
@@ -1619,7 +1611,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
 
     @Override
     public void schematicsPaste(SchematicsManager manager, String name) {
-        manager.pasteSchematics(name, this);
+       //manager.pasteSchematics(name, this);
     }
 
     @Override

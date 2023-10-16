@@ -26,20 +26,16 @@ import org.by1337.bairdrop.util.LogLevel;
 import org.by1337.bairdrop.util.Message;
 
 
-public class CSchematicsManager implements SchematicsManager{
+public class CSchematicsManager implements SchematicsManager {
     private static Resource schematicsLimit = new Resource("schematics.error.limit");
 
-    /**
-     * Sets the schematic
-     * @param name The name of the schematic in the config
-     * @param airDrop The AirDrop that spawns this schematic
-     */
-    public void pasteSchematics(String name, AirDrop airDrop) {
+
+    public EditSession pasteSchematics(String name, Location location) {
         try {
-            if (airDrop.getEditSession() != null) {
-                Message.error(schematicsLimit.getString());
-                return;
-            }
+//            if (airDrop.getEditSession() != null) {
+//                Message.error(schematicsLimit.getString());
+//                return;
+//            }
             Vector offsets = new Vector(
                     BAirDrop.getiConfig().getSchemConf().getInt(String.format("schematics.%s.offsets-x", name)),
                     BAirDrop.getiConfig().getSchemConf().getInt(String.format("schematics.%s.offsets-y", name)),
@@ -64,25 +60,22 @@ public class CSchematicsManager implements SchematicsManager{
             Clipboard clipboard = reader.read();
 
 
-            Location loc = airDrop.getAirDropLocation();
-            if (loc == null)
-                loc = airDrop.getFutureLocation();
-            if (loc == null)
-                throw new NullPointerException();
-            com.sk89q.worldedit.world.World adaptedWorld = BukkitAdapter.adapt(loc.getWorld());
+            com.sk89q.worldedit.world.World adaptedWorld = BukkitAdapter.adapt(location.getWorld());
 
             EditSession editSession = WorldEdit.getInstance().newEditSession(adaptedWorld);
 
             Operation operation = new ClipboardHolder(clipboard).createPaste(editSession)
-                    .to(BlockVector3.at(loc.getX() + offsets.getBlockX(), loc.getY() + offsets.getBlockY(), loc.getZ() + +offsets.getBlockZ())).ignoreAirBlocks(ignoreAirBlocks).build();
+                    .to(BlockVector3.at(location.getX() + offsets.getBlockX(), location.getY() + offsets.getBlockY(), location.getZ() + offsets.getBlockZ())).ignoreAirBlocks(ignoreAirBlocks).build();
 
             Operations.complete(operation);
             editSession.close();
 
-            airDrop.setEditSession(editSession);
+//            airDrop.setEditSession(editSession);
             editSession.getBlockBag();
+            return editSession;
         } catch (IOException | WorldEditException | IllegalArgumentException | NullPointerException e) {
             e.printStackTrace();
+            return null;
         }
     }
 

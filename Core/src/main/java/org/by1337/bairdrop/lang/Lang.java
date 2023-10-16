@@ -4,9 +4,9 @@ import com.google.gson.Gson;
 import lombok.Getter;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.util.Message;
-import org.by1337.lib.chat.*;
-import org.by1337.lib.chat.hover.HoverEvent;
-import org.by1337.lib.chat.hover.HoverEventContentsString;
+import org.by1337.api.chat.*;
+import org.by1337.api.chat.hover.HoverEvent;
+import org.by1337.api.chat.hover.HoverEventContentsString;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -57,7 +57,7 @@ public abstract class LocationGenerator {
     }
 
     protected boolean hasBlock(Chunk chunk, BlockPosition blockPosition){
-        Material type = chunk.getBlock(blockPosition.x, blockPosition.y, blockPosition.z).getType();
+        Material type = chunk.getBlock(blockPosition.getX(), blockPosition.getY(), blockPosition.getZ()).getType();
         return !setting.ignoreBlocks.contains(type);
     }
 

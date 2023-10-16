@@ -6,15 +6,16 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.Directional;
 import org.bukkit.entity.Player;
+import org.by1337.api.BLib;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
+import org.by1337.bairdrop.airdrop.Airdrop;
 import org.by1337.bairdrop.airdrop.command.airdrop.CommandExecutor;
 import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.worldGuardHook.CSchematicsManager;
-import org.by1337.lib.AsyncCatcher;
-import org.by1337.lib.command.Command;
-import org.by1337.lib.command.CommandException;
-import org.by1337.lib.command.argument.ArgumentString;
+import org.by1337.api.command.Command;
+import org.by1337.api.command.CommandException;
+import org.by1337.api.command.argument.ArgumentString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,13 +30,13 @@ public class SchematicsPasteCommand implements CommandExecutor {
     }
 
     @Override
-    public void execute(@Nullable AirDrop airDrop, @Nullable Player player, @NotNull String command) throws CommandException {
-        AsyncCatcher.catchOp(String.format(ASYNC_CATCHER_ERROR.getString(), getCommandPrefix()));
+    public void execute(@Nullable Airdrop airDrop, @Nullable Player player, @NotNull String command) throws CommandException {
+        BLib.catchOp(String.format(ASYNC_CATCHER_ERROR.getString(), getCommandPrefix()));
         Objects.requireNonNull(airDrop, AIRDROP_IS_NULL.getString());
 
         createCommand().executor(((sender, args) -> {
             String id = (String) args.getOrThrow("schem", USAGE.getString(), usage());
-            airDrop.schematicsPaste(new CSchematicsManager(), id);
+          //  airDrop.schematicsPaste(new CSchematicsManager(), id);
         })).process(null, parseCommand(command));
     }
 

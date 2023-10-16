@@ -1,5 +1,8 @@
 package org.by1337.bairdrop.airdrop;
 
+
+import org.by1337.api.BLib;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -18,6 +21,7 @@ public class TimerRegistry {
      * @throws IllegalArgumentException If a timer with the same name already exists in the registry.
      */
     public static void register(Timer timer, String name) {
+        BLib.catchOp("Asynchronous timer registration");
         if (timers.containsKey(name)) {
             throw new IllegalArgumentException("A timer with the same name already exists in the registry.");
         }
@@ -83,7 +87,7 @@ public class TimerRegistry {
     /**
      * Clears all timers from the registry.
      */
-    public static void clearAll() {
+    public static void clear() {
         timers.clear();
     }
 }

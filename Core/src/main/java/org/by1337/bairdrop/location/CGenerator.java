@@ -47,7 +47,7 @@ public class CGenerator implements Generator{
     }
 
     /**
-     * BLib method for generating locations
+     * Main method for generating locations
      * @param airDrop The AirDrop for which to generate the location
      * @param isGenerator If this is a generator generating locations, there will be no logging
      * @return Generated location
@@ -242,27 +242,27 @@ public class CGenerator implements Generator{
             Message.error(String.format(BAirDrop.getConfigMessage().getMessage("gen-loc-is-null"), airDrop.getSuperName()));
             return null;
         }
-        if (loc.clone().add(-GeneratorUtils.getOffsets(airDrop).getX(), -GeneratorUtils.getOffsets(airDrop).getY(), -GeneratorUtils.getOffsets(airDrop).getZ()).getBlock().isEmpty()) {
-            GeneratorLoc.removeLoc(loc, airDrop);
-            Message.logger(String.format(BAirDrop.getConfigMessage().getMessage("location-isn-t-relevant"), loc.getWorld(), loc.getX(), loc.getY(), loc.getZ()));
-            if (airDrop.getEditAirMenu() != null)
-                airDrop.getEditAirMenu().menuGenerate("usePreGeneratedLocations");
-            return null;
-        }
-        if (isBiomeInBlackList(loc)) {
-            GeneratorLoc.removeLoc(loc, airDrop);
-            Message.logger(String.format(BAirDrop.getConfigMessage().getMessage("location-isn-t-relevant"), loc.getWorld(), loc.getX(), loc.getY(), loc.getZ()));
-            if (airDrop.getEditAirMenu() != null)
-                airDrop.getEditAirMenu().menuGenerate("usePreGeneratedLocations");
-            return null;
-        }
-        if (!GeneratorUtils.isRegionEmpty(airDrop, loc)) {
-            GeneratorLoc.removeLoc(loc, airDrop);
-            Message.logger(String.format(BAirDrop.getConfigMessage().getMessage("location-isn-t-relevant"), loc.getWorld(), loc.getX(), loc.getY(), loc.getZ()));
-            if (airDrop.getEditAirMenu() != null)
-                airDrop.getEditAirMenu().menuGenerate("usePreGeneratedLocations");
-            return null;
-        }
+//        if (loc.clone().add(-GeneratorUtils.getOffsets(airDrop).getX(), -GeneratorUtils.getOffsets(airDrop).getY(), -GeneratorUtils.getOffsets(airDrop).getZ()).getBlock().isEmpty()) {
+//            GeneratorLoc.removeLoc(loc, airDrop);
+//            Message.logger(String.format(BAirDrop.getConfigMessage().getMessage("location-isn-t-relevant"), loc.getWorld(), loc.getX(), loc.getY(), loc.getZ()));
+//            if (airDrop.getEditAirMenu() != null)
+//                airDrop.getEditAirMenu().menuGenerate("usePreGeneratedLocations");
+//            return null;
+//        }
+//        if (isBiomeInBlackList(loc)) {
+//            GeneratorLoc.removeLoc(loc, airDrop);
+//            Message.logger(String.format(BAirDrop.getConfigMessage().getMessage("location-isn-t-relevant"), loc.getWorld(), loc.getX(), loc.getY(), loc.getZ()));
+//            if (airDrop.getEditAirMenu() != null)
+//                airDrop.getEditAirMenu().menuGenerate("usePreGeneratedLocations");
+//            return null;
+//        }
+//        if (!GeneratorUtils.isRegionEmpty(airDrop, loc)) {
+//            GeneratorLoc.removeLoc(loc, airDrop);
+//            Message.logger(String.format(BAirDrop.getConfigMessage().getMessage("location-isn-t-relevant"), loc.getWorld(), loc.getX(), loc.getY(), loc.getZ()));
+//            if (airDrop.getEditAirMenu() != null)
+//                airDrop.getEditAirMenu().menuGenerate("usePreGeneratedLocations");
+//            return null;
+//        }
         return loc;
     }
 

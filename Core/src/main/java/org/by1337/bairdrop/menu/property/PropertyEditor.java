@@ -23,16 +23,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PropertyEditor implements Listener {
-
+/*
     @Getter
     private final Inventory inventory;
-    private final EditableProperties editableProperties;
+    private final StorageProperties editableProperties;
     private int page = 0;
 
     @Setter
     private PropertyEditLang lang = new PropertyEditLang();
 
-    public PropertyEditor(EditableProperties editableProperties) {
+    public PropertyEditor(StorageProperties editableProperties) {
         this.editableProperties = editableProperties;
         this.inventory = Bukkit.createInventory(null, 54);
         Bukkit.getPluginManager().registerEvents(this, BAirDrop.getInstance());
@@ -122,9 +122,9 @@ public class PropertyEditor implements Listener {
         }
     }
 
-    /**
+    *//**
      * Language settings for the PropertyEditor.
-     */
+     *//*
     public static class PropertyEditLang {
         private final String swapPageName = "&aSwap page";
         private final List<String> swapPageLore = List.of(
@@ -132,5 +132,5 @@ public class PropertyEditor implements Listener {
                 "&cRMB &7- Previous page"
         );
         private final String back = "&cBack";
-    }
+    }*/
 }

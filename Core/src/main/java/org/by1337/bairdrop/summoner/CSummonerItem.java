@@ -101,50 +101,51 @@ public class CSummonerItem implements SummonerItem {
             }
         }
 
-        AirDrop air;
-        if (key.equals("RANDOM")) {
-            if (isClone()) {
-                air = AirDropUtils.getRandomCloneAir();
-            } else {
-                air = AirDropUtils.getRandomAir();
-            }
-        } else {
-            air = BAirDrop.airDrops.getOrDefault(key, null);
-        }
-        if (air == null){
-            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-airdrop"), key + " (air is null!)"));
-            Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("impossible-to-call"));
-            pl.setCooldown(getItem().getType(), 40);
-            return null;
-        }
-        if (air.isAirDropStarted()){
-            Message.error(BAirDrop.getConfigMessage().getMessage("summoner-error-it-airdrop-is-already-started") + "(airdrop: " + key + ")");
-            Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("summoner-error-it-airdrop-is-already-started"));
-            pl.setCooldown(getItem().getType(), 40);
-            return null;
-        }
-        if (air.isClone()){
-            air.addDec(String.format(BAirDrop.getConfigMessage().getMessage("dec-info"), pl.getName()));
-        }
-
-        if (isUsePlayerLocation() && !isIgnoreRegion()) {
-            if (!GeneratorUtils.isRegionEmpty(air, location)) {
-                Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("region-overlapping"));
-                pl.setCooldown(getItem().getType(), 40);
-                return null;
-            }
-        }
-        if (isFlatnessCheck()) {
-            if (!new CGenerator().checkForEvenness(location.clone().add(0, 1, 0), air)) {
-                Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("flatness-check-fail"));
-                pl.setCooldown(getItem().getType(), 40);
-                return null;
-            }
-        }
-
-        callListeners(air, pl);
-        air.setSummoner(true);
-        return air;
+//        AirDrop air;
+//        if (key.equals("RANDOM")) {
+//            if (isClone()) {
+//                air = AirDropUtils.getRandomCloneAir();
+//            } else {
+//                air = AirDropUtils.getRandomAir();
+//            }
+//        } else {
+//            air = BAirDrop.airDrops.getOrDefault(key, null);
+//        }
+//        if (air == null){
+//            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-airdrop"), key + " (air is null!)"));
+//            Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("impossible-to-call"));
+//            pl.setCooldown(getItem().getType(), 40);
+//            return null;
+//        }
+//        if (air.isAirDropStarted()){
+//            Message.error(BAirDrop.getConfigMessage().getMessage("summoner-error-it-airdrop-is-already-started") + "(airdrop: " + key + ")");
+//            Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("summoner-error-it-airdrop-is-already-started"));
+//            pl.setCooldown(getItem().getType(), 40);
+//            return null;
+//        }
+//        if (air.isClone()){
+//            air.addDec(String.format(BAirDrop.getConfigMessage().getMessage("dec-info"), pl.getName()));
+//        }
+//
+//        if (isUsePlayerLocation() && !isIgnoreRegion()) {
+//            if (!GeneratorUtils.isRegionEmpty(air, location)) {
+//                Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("region-overlapping"));
+//                pl.setCooldown(getItem().getType(), 40);
+//                return null;
+//            }
+//        }
+//        if (isFlatnessCheck()) {
+//            if (!new CGenerator().checkForEvenness(location.clone().add(0, 1, 0), air)) {
+//                Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("flatness-check-fail"));
+//                pl.setCooldown(getItem().getType(), 40);
+//                return null;
+//            }
+//        }
+//
+//        callListeners(air, pl);
+//        air.setSummoner(true);
+//        return air;
+        return null;
     }
 
     public void callListeners(AirDrop airDrop, Player pl) {

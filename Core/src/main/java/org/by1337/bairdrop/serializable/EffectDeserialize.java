@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-
+@Deprecated // to removed
 public class EffectDeserialize {
     private static final HashMap<String, Class<?>> deserializable = new HashMap<>();
     public static void register(Class<? extends EffectSerializable> clazz){

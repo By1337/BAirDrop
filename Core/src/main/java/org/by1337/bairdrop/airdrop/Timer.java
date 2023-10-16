@@ -3,14 +3,13 @@ package org.by1337.bairdrop.airdrop;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.by1337.bairdrop.BAirDrop;
 
 
 import java.util.*;
 
-public class Timer implements Runnable {
+public class Timer {
     private final LinkedList<Airdrop> airdrops = new LinkedList<>();
     @Setter
     @Getter
@@ -18,13 +17,20 @@ public class Timer implements Runnable {
     @Getter
     private final BukkitTask task;
     private final Random random = new Random();
+    private final String name;
 
-    public Timer() {
-        task = Bukkit.getScheduler().runTaskTimer(BAirDrop.getInstance(), this, 0, 20);
+    public Timer(String name) {
+        this.name = name;
+        task = Bukkit.getScheduler().runTaskTimer(BAirDrop.getInstance(), this::run, 0, 20);
     }
 
-    @Override
+
     public void run() {
+        if (airdrops.isEmpty() && current == null) {
+            task.cancel();
+            TimerRegistry.unregister(name);
+            return;
+        }
         if (current == null) {
             current = getRandomAir();
             return;

@@ -1,19 +1,15 @@
 package org.by1337.bairdrop.airdrop.command.airdrop.impl;
 
-import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.by1337.bairdrop.AirDrop;
-import org.by1337.bairdrop.BAirDrop;
+import org.by1337.bairdrop.airdrop.Airdrop;
 import org.by1337.bairdrop.airdrop.command.airdrop.CommandExecutor;
 import org.by1337.bairdrop.observer.CustomEvent;
-import org.by1337.bairdrop.util.Message;
-import org.by1337.lib.command.Command;
-import org.by1337.lib.command.CommandException;
-import org.by1337.lib.command.argument.ArgumentInteger;
-import org.by1337.lib.command.argument.ArgumentString;
-import org.by1337.lib.command.argument.ArgumentStrings;
+import org.by1337.api.command.Command;
+import org.by1337.api.command.CommandException;
+import org.by1337.api.command.argument.ArgumentInteger;
+import org.by1337.api.command.argument.ArgumentString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +22,7 @@ public class NearPlayersCommand implements CommandExecutor {
     }
 
     @Override
-    public void execute(@Nullable AirDrop airDrop, @Nullable Player player, @NotNull String command) throws CommandException {
+    public void execute(@Nullable Airdrop airDrop, @Nullable Player player, @NotNull String command) throws CommandException {
         Objects.requireNonNull(airDrop, AIRDROP_IS_NULL.getString());
         Objects.requireNonNull(airDrop.getAnyLoc(), LOCATION_IS_NULL.getString());
 
