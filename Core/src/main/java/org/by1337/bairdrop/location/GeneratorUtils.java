@@ -14,7 +14,7 @@ import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
-import org.by1337.bairdrop.util.Message;
+import org.by1337.bairdrop.util.OLDMessage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,7 +25,7 @@ import java.util.Map;
 public class GeneratorUtils {
 
     public static int getSettings(String genS, String patch) {
-        return BAirDrop.getiConfig().getGeneratorSettings().getInt(String.format("settings.%s.%s", genS, patch));
+        return BAirDrop.getCfg().getGeneratorSettings().getInt(String.format("settings.%s.%s", genS, patch));
     }
 
     @NotNull
@@ -66,8 +66,8 @@ public class GeneratorUtils {
             return overlapping.isEmpty();
 
         } catch (Exception e) {
-            Message.error(BAirDrop.getConfigMessage().getMessage("overlapping-error"));
-            Message.error(e.getLocalizedMessage());
+            OLDMessage.error(BAirDrop.getConfigMessage().getMessage("overlapping-error"));
+            OLDMessage.error(e.getLocalizedMessage());
             return true;
         }
     }

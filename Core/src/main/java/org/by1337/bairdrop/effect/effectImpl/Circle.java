@@ -8,7 +8,7 @@ import org.by1337.bairdrop.*;
 import org.by1337.bairdrop.effect.EffectType;
 import org.by1337.bairdrop.effect.IEffect;
 import org.by1337.bairdrop.serializable.EffectSerializable;
-import org.by1337.bairdrop.util.Message;
+import org.by1337.bairdrop.util.OLDMessage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -86,9 +86,9 @@ public class Circle implements IEffect, EffectSerializable {
     public void Start(AirDrop airDrop) {
         this.airDrop = airDrop;
         if (airDrop.getAnyLoc() == null) {
-            Message.error(BAirDrop.getConfigMessage().getMessage("effect-error-loc-is-null"));
-            Message.error(BAirDrop.getConfigMessage().getMessage("effect-error-loc-is-null2"));
-            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("effect-error-loc-is-null3"), airDrop.getId()));
+            OLDMessage.error(BAirDrop.getConfigMessage().getMessage("effect-error-loc-is-null"));
+            OLDMessage.error(BAirDrop.getConfigMessage().getMessage("effect-error-loc-is-null2"));
+            OLDMessage.error(String.format(BAirDrop.getConfigMessage().getMessage("effect-error-loc-is-null3"), airDrop.getId()));
             return;
         } else loc = airDrop.getAnyLoc().clone();
         used = true;
@@ -109,7 +109,7 @@ public class Circle implements IEffect, EffectSerializable {
         new BukkitRunnable() {
             @Override
             public void run() {
-                //    Message.logger("spawn = " + loc);
+                //    OLDMessage.logger("spawn = " + loc);
                 for (double y = 0; y <= numberOfSteps; y += step) {
                     double x = radius * Math.cos(y);
                     double z = radius * Math.sin(y);

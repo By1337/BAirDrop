@@ -6,12 +6,12 @@ import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
-import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.airdrop.Airdrop;
 import org.by1337.bairdrop.airdrop.command.airdrop.CommandExecutor;
 import org.by1337.bairdrop.lang.Resource;
-import org.by1337.bairdrop.util.Message;
+import org.by1337.bairdrop.observer.event.Event;
+import org.by1337.bairdrop.util.OLDMessage;
 import org.by1337.api.command.Command;
 import org.by1337.api.command.CommandException;
 import org.jetbrains.annotations.NotNull;
@@ -36,11 +36,11 @@ public class BossBarCommand implements CommandExecutor {
     }
 
     @Override
-    public void execute(@Nullable Airdrop airDrop, @Nullable Player player, @NotNull String command) {
+    public void execute(Event event, @NotNull String command) {
         command = command.replace("[BOSSBAR]", "");
         int quoteCount = command.replaceAll("[^\"]", "").length();
         if (quoteCount % 2 != 0) {
-            Message.error(ERR1.getString(), command);
+            OLDMessage.error(ERR1.getString(), command);
             return;
         } else {
             StringBuilder result = new StringBuilder();
@@ -58,7 +58,7 @@ public class BossBarCommand implements CommandExecutor {
         }
         String[] args = command.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
         if (args.length < 1) {
-            Message.error(FEW_ARGS.getString());
+            OLDMessage.error(FEW_ARGS.getString());
             return;
         }
         String name = null;
@@ -68,18 +68,18 @@ public class BossBarCommand implements CommandExecutor {
                 continue;
             }
         if (name == null) {
-            Message.error(ENUM_ERR.getString());
-            Message.error(NOT_CREATED.getString());
-            Message.error(Arrays.toString(args));
+            OLDMessage.error(ENUM_ERR.getString());
+            OLDMessage.error(NOT_CREATED.getString());
+            OLDMessage.error(Arrays.toString(args));
             return;
 
         }
-        BossBar bossBar = Message.bossBars.getOrDefault(name, null);
+        BossBar bossBar = OLDMessage.bossBars.getOrDefault(name, null);
         if (bossBar == null) {
-            Message.error(UNKNOWN_BOSS_BAR.getString(), name);
+            OLDMessage.error(UNKNOWN_BOSS_BAR.getString(), name);
             return;
         }
-        bossBarAddParam(bossBar, args, Objects.requireNonNull(player, "player is null! " + command));
+        bossBarAddParam(bossBar, args, Objects.requireNonNull(event.getPlayer(), "player is null! " + command));
     }
 
     @Override
@@ -101,7 +101,7 @@ public class BossBarCommand implements CommandExecutor {
         try {
             for (String key : args) {
                 if (key.contains("setTitle")) {
-                    bossBar.setTitle(Message.messageBuilder(key.replace("setTitle=", "").replace("\"", "")));
+                    bossBar.setTitle(OLDMessage.messageBuilder(key.replace("setTitle=", "").replace("\"", "")));
                     continue;
                 }
                 if (key.contains("BarColor")) {
@@ -125,14 +125,14 @@ public class BossBarCommand implements CommandExecutor {
                     if (pl != null)
                         bossBar.addPlayer(pl);
                     else
-                        Message.error(PLAYER_IS_NULL.getString());
+                        OLDMessage.error(PLAYER_IS_NULL.getString());
                     continue;
                 }
                 if (key.contains("removePlayer")) {
                     if (pl != null)
                         bossBar.removePlayer(pl);
                     else
-                        Message.error(PLAYER_IS_NULL2.getString());
+                        OLDMessage.error(PLAYER_IS_NULL2.getString());
                     continue;
                 }
                 if (key.contains("removeAll")) {
@@ -152,10 +152,10 @@ public class BossBarCommand implements CommandExecutor {
                     continue;
                 }
                 if (!key.contains("name="))
-                    Message.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-cmd-boss-bar"), key));
+                    OLDMessage.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-cmd-boss-bar"), key));
             }
         } catch (IllegalArgumentException e) {
-            Message.error(e.getLocalizedMessage());
+            OLDMessage.error(e.getLocalizedMessage());
         }
     }
 }

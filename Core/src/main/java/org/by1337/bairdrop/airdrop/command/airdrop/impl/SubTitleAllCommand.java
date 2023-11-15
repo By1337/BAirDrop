@@ -1,10 +1,10 @@
 package org.by1337.bairdrop.airdrop.command.airdrop.impl;
 
 import org.bukkit.entity.Player;
-import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.airdrop.Airdrop;
 import org.by1337.bairdrop.airdrop.command.airdrop.CommandExecutor;
-import org.by1337.bairdrop.util.Message;
+import org.by1337.bairdrop.observer.event.Event;
+import org.by1337.bairdrop.util.OLDMessage;
 import org.by1337.api.command.Command;
 import org.by1337.api.command.CommandException;
 import org.jetbrains.annotations.NotNull;
@@ -16,9 +16,13 @@ public class SubTitleAllCommand implements CommandExecutor{
         return "[SUB_TITLE_ALL]";
     }
 
-    @Override
+    @Override // заглушка
+    public void execute(Event event, @NotNull String command) throws CommandException {
+        execute(event.getAirdrop(), event.getPlayer(), command);
+    }
+
     public void execute(@Nullable Airdrop airDrop, @Nullable Player player, @NotNull String command) {
-        Message.sendAllTitle(" ", command.replace("[SUB_TITLE_ALL] ", ""));
+        OLDMessage.sendAllTitle(" ", command.replace("[SUB_TITLE_ALL] ", ""));
     }
 
     @Override

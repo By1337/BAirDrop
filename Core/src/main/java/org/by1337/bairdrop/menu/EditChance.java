@@ -1,29 +1,6 @@
 package org.by1337.bairdrop.menu;
 
-import org.bukkit.Bukkit;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.by1337.bairdrop.AirDrop;
-import org.by1337.bairdrop.BAirDrop;
-
-import org.by1337.bairdrop.ItemUtil.Items;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.bukkit.Bukkit.getServer;
-
-
-import org.by1337.bairdrop.util.Message;
 
 public class EditChance implements Listener {
 //    private static EditChance editChance = null;
@@ -86,7 +63,7 @@ public class EditChance implements Listener {
 //                    }
 //                }
 //                if(originalItem == null){
-//                    Message.error(BAirDrop.getConfigMessage().getMessage("item-error2"));
+//                    OLDMessage.error(BAirDrop.getConfigMessage().getMessage("item-error2"));
 //                    e.setCancelled(true);
 //                    return;
 //                }
@@ -124,7 +101,7 @@ public class EditChance implements Listener {
 //        List<String> lore = BAirDrop.getConfigMessage().getList("edit-lore");
 //        lore.replaceAll(s -> s.replace("{chance}", chance + ""));
 //
-//        lore.replaceAll(Message::messageBuilder);
+//        lore.replaceAll(OLDMessage::messageBuilder);
 //        if(im.getLore() != null) {
 //            lore.addAll(im.getLore());
 //            im.setLore(lore);

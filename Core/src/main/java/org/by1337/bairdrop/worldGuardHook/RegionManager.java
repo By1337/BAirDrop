@@ -13,11 +13,8 @@ import org.bukkit.Location;
 import org.bukkit.World;
 
 import org.by1337.api.world.BlockPosition;
-import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
-import org.by1337.bairdrop.airdrop.Airdrop;
-import org.by1337.bairdrop.location.generator.GeneratorSetting;
-import org.by1337.bairdrop.util.Message;
+import org.by1337.bairdrop.util.OLDMessage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -54,7 +51,7 @@ public class RegionManager {
             for (Map.Entry<StateFlag, StateFlag.State> entry : flags.entrySet())
                 rg.setFlag((Flag) entry.getKey(), entry.getValue());
         } catch (Exception e) {
-            Message.error(BAirDrop.getConfigMessage().getMessage("flag-error"));
+            OLDMessage.error(BAirDrop.getConfigMessage().getMessage("flag-error"));
             e.printStackTrace();
         }
         regions.addRegion(rg);
@@ -63,11 +60,11 @@ public class RegionManager {
     public static void loadFlags() {
         for (String flag : BAirDrop.getInstance().getConfig().getStringList("settings.world-guard-flags.allow-flags")) {
             if (!addFlag(flag, true))
-                Message.warning("Flag " + flag + " not loaded in");
+                OLDMessage.warning("Flag " + flag + " not loaded in");
         }
         for (String flag : BAirDrop.getInstance().getConfig().getStringList("settings.world-guard-flags.deny-flags")) {
             if (!addFlag(flag, false))
-                Message.warning("Flag " + flag + " not loaded in");
+                OLDMessage.warning("Flag " + flag + " not loaded in");
         }
 
     }

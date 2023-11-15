@@ -1,18 +1,6 @@
 package org.by1337.bairdrop.effect.test;
 
 import lombok.ToString;
-import org.bukkit.Color;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.entity.Player;
-
-import org.bukkit.util.Vector;
-
-import org.by1337.bairdrop.lang.Resource;
-import org.by1337.bairdrop.menu.property.property.*;
-
-import java.util.List;
 
 @ToString
 public class EffectCircle  { //extends Effect

@@ -1,18 +1,15 @@
 package org.by1337.bairdrop.listeners;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.AirDropUtils;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.airdrop.Airdrop;
-import org.by1337.bairdrop.api.event.AirDropOpenEvent;
-import org.by1337.bairdrop.observer.CustomEvent;
+import org.by1337.bairdrop.observer.event.CustomEvent;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -32,7 +29,7 @@ public class InteractListener implements Listener {
             }else {
                 antiDouble.put(e.getPlayer().getUniqueId(), System.currentTimeMillis() + 20L);
             }
-            airDrop.notifyObservers(CustomEvent.CLICK, pl);
+          //  airDrop.notifyObservers(CustomEvent.CLICK, pl);
 //            if(!airDrop.isAirDropStarted()){
 //                return;
 //            }

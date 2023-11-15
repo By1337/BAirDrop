@@ -1,6 +1,9 @@
 package org.by1337.api.chat;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.*;
+
 /**
  * Represents a chat color with the option to convert to/from hexadecimal values.
  */
@@ -12,7 +15,7 @@ public class ChatColor {
      *
      * @param color The Color object representing the chat color.
      */
-    public ChatColor(Color color) {
+    public ChatColor(@NotNull Color color) {
         this.color = color;
     }
 
@@ -28,7 +31,7 @@ public class ChatColor {
         int red = Integer.parseInt(hex.substring(0, 2), 16);
         int green = Integer.parseInt(hex.substring(2, 4), 16);
         int blue = Integer.parseInt(hex.substring(4, 6), 16);
-         color = new Color(red, green, blue);
+        color = new Color(red, green, blue);
     }
 
     /**
@@ -36,28 +39,38 @@ public class ChatColor {
      *
      * @return The hexadecimal color code.
      */
-    public String toHex(){
+    public String toHex() {
         int red = color.getRed();
         int green = color.getGreen();
         int blue = color.getBlue();
         return String.format("#%02X%02X%02X", red, green, blue).toLowerCase();
     }
 
+    @NotNull
+    public Color getColor() {
+        return color;
+    }
 
-    public static String toHex(Color color){
+    public org.bukkit.Color toBukkitColor() {
+        return org.bukkit.Color.fromRGB(color.getRed(), color.getGreen(), color.getBlue());
+    }
+
+    public static String toHex(Color color) {
         int red = color.getRed();
         int green = color.getGreen();
         int blue = color.getBlue();
         return String.format("#%02X%02X%02X", red, green, blue).toLowerCase();
     }
-    public static String toHex(org.bukkit.Color color){
+
+    public static String toHex(org.bukkit.Color color) {
         return toHex(new Color(
                 color.getRed(),
                 color.getGreen(),
                 color.getBlue()
         ));
     }
-    public static ChatColor fromHex(String hex){
+
+    public static ChatColor fromHex(String hex) {
         return switch (hex) {
             case "black" -> new ChatColor("#000000");
             case "red" -> new ChatColor("#FF5555");

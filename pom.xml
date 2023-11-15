@@ -23,4 +23,7 @@
         <module>V1_19_4</module>
         <module>V1_20_1</module>
     </modules>
+    <build>
+        <defaultGoal>clean package</defaultGoal>
+    </build>
 </project>

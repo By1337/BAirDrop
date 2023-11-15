@@ -3,10 +3,11 @@ package org.by1337.bairdrop.airdrop.command.airdrop.impl;
 import org.bukkit.entity.Player;
 import org.by1337.bairdrop.airdrop.Airdrop;
 import org.by1337.bairdrop.airdrop.command.airdrop.CommandExecutor;
-import org.by1337.bairdrop.menu.property.property.Property;
+import org.by1337.api.property.property.Property;
 import org.by1337.api.command.Command;
 import org.by1337.api.command.CommandException;
 import org.by1337.api.command.argument.ArgumentString;
+import org.by1337.bairdrop.observer.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,6 +17,11 @@ public class PropertyEditCommand implements CommandExecutor {
 
     public String getCommandPrefix() {
         return "[PROPERTY]";
+    }
+
+    @Override // заглушка
+    public void execute(Event event, @NotNull String command) throws CommandException {
+        execute(event.getAirdrop(), event.getPlayer(), command);
     }
 
     public void execute(@Nullable Airdrop airDrop, @Nullable Player player, @NotNull String command) throws CommandException {
@@ -30,19 +36,23 @@ public class PropertyEditCommand implements CommandExecutor {
                         .argument(new ArgumentString("property"))
                         .argument(new ArgumentString("value"))
                         .executor(((sender, args) -> {
-                            Property<T> property = (Property<T>) airDrop.getProperty((String) args.getOrThrow("property", USAGE.getString(), usage()));
+                            Property<T> property = (Property<T>) airDrop.getStorageProperties().getProperty((String) args.getOrThrow("property", USAGE.getString(), usage()));
                             String val = (String) args.getOrThrow("value", USAGE.getString(), usage());
                             T value = property.parse(val);
                             property.setValue(value);
                         }))
                 )
-                .addSubCommand(new Command("reset")
-                        .argument(new ArgumentString("property"))
-                        .executor(((sender, args) -> {
-                            Property<T> property = (Property<T>) airDrop.getProperty((String) args.getOrThrow("property", USAGE.getString(), usage()));
-                            property.setValue(property.getDefValue());
-                        }))
-                )
+//                .addSubCommand(new Command("reset")
+//                        .argument(new ArgumentString("property"))
+//                        .executor(((sender, args) -> {
+//                            String name = (String) args.getOrThrow("property", USAGE.getString(), usage());
+//                            Property<T> property = (Property<T>) airDrop.getProperty(name);
+////                            if (!property.isHasDefValue()){
+////                                throw new CommandException(String.format("property %s has no default value!", name));
+////                            }
+////                            property.setValue(property.getDefValue());
+//                        }))
+//                )
                 .process(null, parseCommand(command));
     }
 

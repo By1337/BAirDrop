@@ -1,6 +1,6 @@
 package org.by1337.bairdrop.effect.test;
 
-import org.by1337.bairdrop.menu.property.StorageProperties;
+import org.by1337.api.property.StorageProperties;
 
 public abstract class Effect extends StorageProperties implements Runnable {/*
 

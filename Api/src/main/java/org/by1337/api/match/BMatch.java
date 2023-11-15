@@ -1,6 +1,8 @@
 package org.by1337.api.match;
 
 
+import org.by1337.api.BLib;
+import org.by1337.api.command.Command;
 import org.by1337.api.lang.Lang;
 
 import java.text.ParseException;
@@ -11,23 +13,39 @@ import java.util.regex.Pattern;
 
 public class BMatch {
 
-public static final int TRUE = 1;
+    public static final int TRUE = 1;
     public static final int FALSE = 0;
-    public static String match(String input) {
-        try {
-            String pattern = "match\\[(.*?)]";
-            Pattern regexPattern = Pattern.compile(pattern);
-            Matcher matcher = regexPattern.matcher(input);
 
-            while (matcher.find()) {
+    public static String matchSave(String input) {
+        String pattern = "match\\[(.*?)]";
+        Pattern regexPattern = Pattern.compile(pattern);
+        Matcher matcher = regexPattern.matcher(input);
+
+        while (matcher.find()) {
+            try {
                 String s = replaceStrings(matcher.group(1));
                 s = s.replace(" ", "");
                 List<Lexeme> list = parseExp(s);
                 LexemeBuffer buffer = new LexemeBuffer(list);
                 input = input.replace(matcher.group(0), String.valueOf(analyze(buffer)));
+            } catch (ParseException e) {
+                BLib.getApi().getMessage().error(e);
             }
-        } catch (ParseException e) {
-            e.printStackTrace();
+        }
+        return input;
+    }
+
+    public static String match(String input) throws ParseException {
+        String pattern = "match\\[(.*?)]";
+        Pattern regexPattern = Pattern.compile(pattern);
+        Matcher matcher = regexPattern.matcher(input);
+
+        while (matcher.find()) {
+            String s = matcher.group(1);
+            s = s.replace(" ", "");
+            List<Lexeme> list = parseExp(s);
+            LexemeBuffer buffer = new LexemeBuffer(list);
+            input = input.replace(matcher.group(0), String.valueOf(analyze(buffer)));
         }
         return input;
     }
@@ -68,7 +86,7 @@ public static final int TRUE = 1;
         EOF; // end exp
     }
 
-    public static int analyze(LexemeBuffer lexemes) throws ParseException{
+    public static int analyze(LexemeBuffer lexemes) throws ParseException {
         Lexeme lexeme = lexemes.next();
         if (lexeme.type == LexemeType.EOF) {
             return 0;
@@ -99,7 +117,7 @@ public static final int TRUE = 1;
 
     }
 
-    public static int plusMinus(LexemeBuffer buffer) throws ParseException{
+    public static int plusMinus(LexemeBuffer buffer) throws ParseException {
         int value = multdiv(buffer);
         while (true) {
             Lexeme lexeme = buffer.next();
@@ -124,7 +142,7 @@ public static final int TRUE = 1;
         }
     }
 
-    public static int logical(LexemeBuffer buffer) throws ParseException{
+    public static int logical(LexemeBuffer buffer) throws ParseException {
         int value = plusMinus(buffer);
         while (true) {
             Lexeme lexeme = buffer.next();
@@ -233,43 +251,44 @@ public static final int TRUE = 1;
                         if (expText.charAt(pos + 1) == '=') {
                             lexemes.add(new Lexeme(LexemeType.GREATER_THAN_OR_EQUAL_TO, ">="));
                             pos += 2;
-                        } else {
-                            lexemes.add(new Lexeme(LexemeType.GREATER_THAN, '>'));
-                            pos++;
+                            continue;
                         }
                     }
+                    lexemes.add(new Lexeme(LexemeType.GREATER_THAN, '>'));
+                    pos++;
                 }
                 case '<' -> {
                     if (pos + 1 < expText.length()) {
                         if (expText.charAt(pos + 1) == '=') {
                             lexemes.add(new Lexeme(LexemeType.LESS_THAN_OR_EQUAL_TO, "<="));
                             pos += 2;
-                        } else {
-                            lexemes.add(new Lexeme(LexemeType.LESS_THAN, '<'));
-                            pos++;
+                            continue;
                         }
                     }
+                    lexemes.add(new Lexeme(LexemeType.LESS_THAN, '<'));
+                    pos++;
+
                 }
                 case '=' -> {
                     if (pos + 1 < expText.length()) {
                         if (expText.charAt(pos + 1) == '=') {
                             lexemes.add(new Lexeme(LexemeType.EQUAL_TO, "=="));
                             pos += 2;
-                        }else {
-                            throw new ParseException(String.format(Lang.getMessage("expected"), '='), pos);
+                            continue;
                         }
                     }
+                    throw new ParseException(String.format(Lang.getMessage("expected"), '='), pos);
                 }
                 case '!' -> {
                     if (pos + 1 < expText.length()) {
                         if (expText.charAt(pos + 1) == '=') {
                             lexemes.add(new Lexeme(LexemeType.NOT_EQUAL_TO, "!="));
                             pos += 2;
-                        } else {
-                            lexemes.add(new Lexeme(LexemeType.LOGICAL_NOT, '!'));
-                            pos++;
+                            continue;
                         }
                     }
+                    lexemes.add(new Lexeme(LexemeType.LOGICAL_NOT, '!'));
+                    pos++;
                 }
                 case '(' -> {
                     lexemes.add(new Lexeme(LexemeType.OPEN_BRACKET, c));
@@ -284,20 +303,20 @@ public static final int TRUE = 1;
                         if (expText.charAt(pos + 1) == '&') {
                             lexemes.add(new Lexeme(LexemeType.LOGICAL_AND, "&&"));
                             pos += 2;
-                        } else {
-                            throw new ParseException(String.format(Lang.getMessage("expected"), '&'), pos);
+                            continue;
                         }
                     }
+                    throw new ParseException(String.format(Lang.getMessage("expected"), '&'), pos);
                 }
                 case '|' -> {
                     if (pos + 1 < expText.length()) {
                         if (expText.charAt(pos + 1) == '|') {
                             lexemes.add(new Lexeme(LexemeType.LOGICAL_OR, "||"));
                             pos += 2;
-                        } else {
-                            throw new ParseException(String.format(Lang.getMessage("expected"), '|'), pos);
+                            continue;
                         }
                     }
+                    throw new ParseException(String.format(Lang.getMessage("expected"), '|'), pos);
                 }
                 case '-' -> {
                     lexemes.add(new Lexeme(LexemeType.OP_MINUS, c));
@@ -352,6 +371,7 @@ public static final int TRUE = 1;
                     '}';
         }
     }
+
     public static class LexemeBuffer {
         private int pos;
 

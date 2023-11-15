@@ -10,7 +10,7 @@ import java.util.List;
 
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.AirDropUtils;
-import org.by1337.bairdrop.util.Message;
+import org.by1337.bairdrop.util.OLDMessage;
 
 public class ItemUtil {
     public static ItemMeta addLore(ItemStack itemStack, AirDrop airDrop, String... lore){
@@ -29,7 +29,7 @@ public class ItemUtil {
         ItemMeta im = itemStack.getItemMeta();
         newLore.replaceAll(airDrop::replaceInternalPlaceholder);
         newLore.replaceAll(AirDropUtils::color);
-        newLore.replaceAll(Message::messageBuilder);
+        newLore.replaceAll(OLDMessage::messageBuilder);
         if(im.getLore() != null) {
             newLore.addAll(im.getLore());
             im.setLore(newLore);
@@ -41,7 +41,7 @@ public class ItemUtil {
     public static ItemStack getErrorItem(){
         ItemStack itemStack = new ItemStack(Material.DIRT);
         ItemMeta im = itemStack.getItemMeta();
-        im.setDisplayName(Message.messageBuilder("&cERROR"));
+        im.setDisplayName(OLDMessage.messageBuilder("&cERROR"));
         itemStack.setItemMeta(im);
         return itemStack;
     }

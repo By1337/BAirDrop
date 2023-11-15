@@ -1,9 +1,19 @@
 package org.by1337.api.util;
 
-import lombok.Getter;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonReader;
 import org.bukkit.Bukkit;
 import org.by1337.api.lang.Lang;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.logging.Level;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,40 +22,68 @@ import java.util.regex.Pattern;
  * An enumeration representing different server versions.
  */
 public enum Version {
-    UNKNOWN(null),
-    V1_16_5("16.5"),
-    V1_17("17.0"),
-    V1_17_1("17.1"),
-    V1_18("18.0"),
-    V1_18_1("18.1"),
-    V1_18_2("18.2"),
-    V1_19("19.0"),
-    V1_19_1("19.1"),
-    V1_19_2("19.2"),
-    V1_19_3("19.3"),
-    V1_19_4("19.4"),
-    V1_20_1("20.1");
+    UNKNOWN("unknown"),
+    V1_16_5("1.16.5"),
+    V1_17("1.17"),
+    V1_17_1("1.17.1"),
+    V1_18("1.18"),
+    V1_18_1("1.18.1"),
+    V1_18_2("1.18.2"),
+    V1_19("1.19"),
+    V1_19_1("1.19.1"),
+    V1_19_2("1.19.2"),
+    V1_19_3("1.19.3"),
+    V1_19_4("1.19.4"),
+    V1_20_1("1.20.1");
 
-    @Getter
+    @NotNull
     private final String ver;
+
+    @Nullable
+    private static GameVersion gameVersion;
 
     /**
      * The current server version.
      */
     public static final Version VERSION;
 
-    Version(String version) {
-        this.ver = "1." + version;
+    Version(@NotNull String version) {
+        this.ver = version;
     }
 
     static {
-        try {
-            VERSION = getVersion(Bukkit.getVersion(), Bukkit.getBukkitVersion(), Bukkit.getServer().getClass().getPackage().getName());
-        } catch (UnsupportedVersionException e) {
-            throw new RuntimeException(new UnsupportedVersionException("Cannot be detected server version! " + "Version info: Bukkit.getVersion()='" + Bukkit.getVersion() +
-                    "', Bukkit.getBukkitVersion()='" + Bukkit.getBukkitVersion() +
-                    "', Bukkit.getServer().getClass().getPackage().getName()='" + Bukkit.getServer().getClass().getPackage().getName() + "'"));
+        Version detectedVer;
+        try (InputStream stream = Bukkit.getServer().getClass().getResourceAsStream("/version.json")) {
+            if (stream == null) {
+                Bukkit.getLogger().log(Level.WARNING, "[BLib] Missing version information!");
+                throw new FileNotFoundException();
+            } else {
+                try (InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
+                    Gson gson = new Gson();
+                    JsonReader jsonReader = new JsonReader(reader);
+                    gameVersion = new BGameVersion(gson.getAdapter(JsonObject.class).read(jsonReader));
+                }
+                detectedVer = getVersion(gameVersion);
+            }
+        } catch (IOException | UnsupportedVersionException e) {
+            try {
+                detectedVer = getVersion(Bukkit.getVersion(), Bukkit.getBukkitVersion(), Bukkit.getServer().getClass().getPackage().getName());
+            } catch (UnsupportedVersionException ex) {
+                throw new RuntimeException(new UnsupportedVersionException("Cannot be detected server version! " + "Version info: Bukkit.getVersion()='" + Bukkit.getVersion() +
+                        "', Bukkit.getBukkitVersion()='" + Bukkit.getBukkitVersion() +
+                        "', Bukkit.getServer().getClass().getPackage().getName()='" + Bukkit.getServer().getClass().getPackage().getName() + "'" + ", gameVersion='" + gameVersion + "'"));
+            }
         }
+        VERSION = detectedVer;
+    }
+
+    private static Version getVersion(GameVersion gameVersion) throws UnsupportedVersionException {
+        for (Version version : Version.values()) {
+            if (version.getVer().equals(gameVersion.getName())) {
+                return version;
+            }
+        }
+        throw new UnsupportedVersionException(Lang.getMessage("unsupported-version"), gameVersion.toString());
     }
 
     /**
@@ -119,6 +157,15 @@ public enum Version {
             }
         }
         return majorVersion + ".0";
+    }
+
+    @Nullable
+    public static GameVersion getGameVersion() {
+        return gameVersion;
+    }
+
+    public @NotNull String getVer() {
+        return this.ver;
     }
 
     /**

@@ -6,6 +6,7 @@ import org.by1337.api.command.CommandSyntaxError;
 import org.by1337.api.lang.Lang;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Represents an argument that validates input strings for valid characters.
@@ -27,6 +28,10 @@ public class ArgumentValidCharacters extends Argument {
      * @param exx  A list of example values for the argument.
      */
     public ArgumentValidCharacters(String name, List<String> exx) {
+        super(name, () -> exx);
+    }
+
+    public ArgumentValidCharacters(String name, Supplier<List<String>> exx) {
         super(name, exx);
     }
 

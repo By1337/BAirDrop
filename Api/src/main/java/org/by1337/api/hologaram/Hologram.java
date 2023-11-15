@@ -116,11 +116,11 @@ public class Hologram {
         Iterator<HologramLine> iterator = new ArrayList<>(lines).iterator();
 
         for (int i = 0; i < textLines.size(); i++) {
-            String textLine = textLines.get(i);
+            String textLine = placeholderable.replace(textLines.get(i));
             if (iterator.hasNext()) {
                 HologramLine line = iterator.next();
                 if (!line.getText().equals(textLine)) {
-                    line.setText(placeholderable.replace(textLine));
+                    line.setText(textLine);
                     actualViewers.forEach(player -> {
                         if (!viewers.contains(player)) {
                             line.spawnFor(player);
@@ -137,7 +137,7 @@ public class Hologram {
                 }
 
             } else {
-                HologramLine line = new HologramLine(new BLocation(bukkitLocation.clone().add(0, -(setting.lineSpacing * i), 0)), placeholderable.replace(textLine));
+                HologramLine line = new HologramLine(new BLocation(bukkitLocation.clone().add(0, -(setting.lineSpacing * i), 0)), textLine);
                 actualViewers.forEach(line::spawnFor);
                 lines.add(line);
             }

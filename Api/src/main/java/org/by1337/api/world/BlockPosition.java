@@ -1,5 +1,7 @@
 package org.by1337.api.world;
 
+import java.util.Objects;
+
 public class BlockPosition {
     private int x = 0;
     private int y = 0;
@@ -59,5 +61,17 @@ public class BlockPosition {
                 ", y=" + y +
                 ", z=" + z +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BlockPosition that)) return false;
+        return getX() == that.getX() && getY() == that.getY() && getZ() == that.getZ();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getX(), getY(), getZ());
     }
 }

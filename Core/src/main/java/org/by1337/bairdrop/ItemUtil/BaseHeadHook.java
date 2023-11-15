@@ -7,24 +7,23 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.by1337.bairdrop.util.Message;
+import org.by1337.bairdrop.util.OLDMessage;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
-import java.util.Map;
 import java.util.UUID;
 
 public class BaseHeadHook {
     public static ItemStack getItem(String argument) {
         if (argument == null) {
-            Message.error("material is null!");
+            OLDMessage.error("material is null!");
             return new ItemStack(Material.PLAYER_HEAD);
         }
         if (argument.startsWith("basehead-")) {
             try {
                 return SkullUtils.getSkull(argument.replace("basehead-", ""));
             } catch (Exception exception) {
-                Message.error("Something went wrong while trying to get base64 head: " + argument);
+                OLDMessage.error("Something went wrong while trying to get base64 head: " + argument);
                 return new ItemStack(Material.PLAYER_HEAD);
             }
         }

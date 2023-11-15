@@ -15,7 +15,7 @@ import java.util.List;
 
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
-import org.by1337.bairdrop.util.Message;
+import org.by1337.bairdrop.util.OLDMessage;
 
 public class SetStaticLocation implements Listener {
     private final AirDrop airDrop;
@@ -32,7 +32,7 @@ public class SetStaticLocation implements Listener {
         if (e.getPlayer().getInventory().contains(item)) {
             airDrop.setStaticLocation(e.getBlock().getLocation());
             airDrop.save();
-            Message.sendMsg(e.getPlayer(), BAirDrop.getConfigMessage().getMessage("set-static-loc"));
+            OLDMessage.sendMsg(e.getPlayer(), BAirDrop.getConfigMessage().getMessage("set-static-loc"));
             e.getPlayer().getInventory().remove(item);
             e.setCancelled(true);
             HandlerList.unregisterAll(this);
@@ -43,8 +43,8 @@ public class SetStaticLocation implements Listener {
         ItemStack itemStack = new ItemStack(Material.GOLDEN_AXE);
         List<String> lore = new ArrayList<>();
         ItemMeta im = itemStack.getItemMeta();
-        im.setDisplayName(Message.messageBuilder(BAirDrop.getConfigMessage().getMessage("item-name-set-static-loc")));
-        lore.add(Message.messageBuilder(BAirDrop.getConfigMessage().getMessage("item-lore-set-static-loc")));
+        im.setDisplayName(OLDMessage.messageBuilder(BAirDrop.getConfigMessage().getMessage("item-name-set-static-loc")));
+        lore.add(OLDMessage.messageBuilder(BAirDrop.getConfigMessage().getMessage("item-lore-set-static-loc")));
         im.setLore(lore);
         im.getPersistentDataContainer().set(NamespacedKey.fromString("item"), PersistentDataType.STRING, "itemBairDrop");
         itemStack.setItemMeta(im);

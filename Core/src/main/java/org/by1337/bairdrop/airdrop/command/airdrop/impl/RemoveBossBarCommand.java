@@ -2,11 +2,11 @@ package org.by1337.bairdrop.airdrop.command.airdrop.impl;
 
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
-import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.airdrop.Airdrop;
 import org.by1337.bairdrop.airdrop.command.airdrop.CommandExecutor;
-import org.by1337.bairdrop.util.Message;
+import org.by1337.bairdrop.observer.event.Event;
+import org.by1337.bairdrop.util.OLDMessage;
 import org.by1337.api.command.Command;
 import org.by1337.api.command.CommandException;
 import org.jetbrains.annotations.NotNull;
@@ -19,12 +19,16 @@ public class RemoveBossBarCommand implements CommandExecutor {
         return "[REMOVE_BOSSBAR]";
     }
 
-    @Override
+    @Override // заглушка
+    public void execute(Event event, @NotNull String command) throws CommandException {
+        execute(event.getAirdrop(), event.getPlayer(), command);
+    }
+
     public void execute(@Nullable Airdrop airDrop, @Nullable Player player, @NotNull String command) {
         command = command.replace("[REMOVE_BOSSBAR]", "");
         int quoteCount = command.replaceAll("[^\"]", "").length();
         if (quoteCount % 2 != 0) {
-            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("boss-bar-error-command"), command));
+            OLDMessage.error(String.format(BAirDrop.getConfigMessage().getMessage("boss-bar-error-command"), command));
             return;
         } else {
             StringBuilder result = new StringBuilder();
@@ -42,7 +46,7 @@ public class RemoveBossBarCommand implements CommandExecutor {
         }
         String[] args = command.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
         if (args.length < 1) {
-            Message.error(BAirDrop.getConfigMessage().getMessage("few-arg-for-del-boss-bar"));
+            OLDMessage.error(BAirDrop.getConfigMessage().getMessage("few-arg-for-del-boss-bar"));
             return;
         }
         String name = null;
@@ -52,16 +56,16 @@ public class RemoveBossBarCommand implements CommandExecutor {
                 continue;
             }
         if (name == null) {
-            Message.error(BAirDrop.getConfigMessage().getMessage("fail-del-boss-bar"));
-            Message.error(BAirDrop.getConfigMessage().getMessage("fail-del-boss-bar2"));
+            OLDMessage.error(BAirDrop.getConfigMessage().getMessage("fail-del-boss-bar"));
+            OLDMessage.error(BAirDrop.getConfigMessage().getMessage("fail-del-boss-bar2"));
             return;
         }
-        BossBar bossBar = Message.bossBars.getOrDefault(name, null);
+        BossBar bossBar = OLDMessage.bossBars.getOrDefault(name, null);
         if (bossBar == null) {
-            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-boss-bar"), name));
+            OLDMessage.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-boss-bar"), name));
             return;
         }
-        Message.bossBars.remove(name);
+        OLDMessage.bossBars.remove(name);
     }
 
     @Override

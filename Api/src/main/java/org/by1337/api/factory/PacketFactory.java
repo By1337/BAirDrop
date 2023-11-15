@@ -1,10 +1,11 @@
 package org.by1337.api.factory;
 
-import org.by1337.api.network.clientbound.entity.PacketAddEntity;
-import org.by1337.api.network.clientbound.entity.PacketRemoveEntity;
-import org.by1337.api.network.clientbound.entity.PacketSetEntityData;
-import org.by1337.api.network.clientbound.entity.TeleportEntityPacket;
+import org.bukkit.inventory.ItemStack;
+import org.by1337.api.network.clientbound.entity.*;
+import org.by1337.api.world.entity.BEquipmentSlot;
 import org.by1337.api.world.entity.PacketEntity;
+
+import java.util.Map;
 
 public interface PacketFactory {
     PacketAddEntity createPacketAddEntity(PacketEntity packetEntity);
@@ -16,5 +17,8 @@ public interface PacketFactory {
     PacketSetEntityData createPacketSetEntityData(PacketEntity packetEntity);
 
     TeleportEntityPacket createTeleportEntityPacket(PacketEntity entity);
+
     TeleportEntityPacket createTeleportEntityPacket(int id, double x, double y, double z, float pitch, float yaw, boolean onGround);
+
+    PacketSetEquipment createPacketSetEquipment(int entityId, Map<BEquipmentSlot, ItemStack> slots);
 }

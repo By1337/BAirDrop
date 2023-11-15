@@ -14,6 +14,7 @@ import org.by1337.bairdrop.lang.Resource;
 import org.by1337.api.command.Command;
 import org.by1337.api.command.CommandException;
 import org.by1337.api.command.argument.ArgumentSetList;
+import org.by1337.bairdrop.observer.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,10 +29,11 @@ public class BlockLidToggle implements CommandExecutor {
         return "[BLOCK_LID_TOGGLE]";
     }
     @Override
-    public void execute(@Nullable Airdrop airDrop, @Nullable Player player, @NotNull String command)  throws CommandException {
+    public void execute(Event event, @NotNull String command)  throws CommandException {
+        Airdrop airdrop = event.getAirdrop();
         BLib.catchOp(String.format(ASYNC_CATCHER_ERROR.getString(), getCommandPrefix()));
-        Objects.requireNonNull(airDrop, String.format(AIRDROP_IS_NULL.getString(), command));
-        Location location = airDrop.getAnyLoc();
+        Objects.requireNonNull(airdrop, String.format(AIRDROP_IS_NULL.getString(), command));
+        Location location = airdrop.getAnyLoc();
         Objects.requireNonNull(location, String.format(LOCATION_IS_NULL.getString(), command));
 
         String[] params = command.split(" ");

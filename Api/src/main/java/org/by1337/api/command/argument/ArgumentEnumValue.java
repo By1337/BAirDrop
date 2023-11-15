@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 public class ArgumentEnumValue extends ArgumentSetList {
     private final Class<? extends Enum<?>> anEnum;
+
     public ArgumentEnumValue(String name, Class<? extends Enum<?>> anEnum) {
         super(name, Arrays.stream(anEnum.getEnumConstants()).map(Enum::name).collect(Collectors.toList()));
         this.anEnum = anEnum;

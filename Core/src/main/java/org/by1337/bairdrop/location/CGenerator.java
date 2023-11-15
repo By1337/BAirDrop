@@ -3,7 +3,7 @@ package org.by1337.bairdrop.location;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.by1337.bairdrop.AirDrop;
-import org.by1337.bairdrop.util.Message;
+import org.by1337.bairdrop.util.OLDMessage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,8 +35,8 @@ public class CGenerator implements Generator{
         world = airDrop.getWorld();
         if (GeneratorLoc.locs.getOrDefault(airDrop.getSuperName(), new ArrayList<>()).isEmpty()) {
             if (cd.getOrDefault(airDrop.getSuperName() + "001", 0L) < System.currentTimeMillis()) {
-                Message.warning(String.format(BAirDrop.getConfigMessage().getMessage("locations-are-absent"), world.getName()));
-                Message.warning(BAirDrop.getConfigMessage().getMessage("attempt-use-static-loc"));
+                OLDMessage.warning(String.format(BAirDrop.getConfigMessage().getMessage("locations-are-absent"), world.getName()));
+                OLDMessage.warning(BAirDrop.getConfigMessage().getMessage("attempt-use-static-loc"));
                 cd.put(airDrop.getSuperName() + "001", System.currentTimeMillis() + 150000L);//скажем что это error 001
             }
             if (airDrop.isUseStaticLoc())
@@ -70,14 +70,14 @@ public class CGenerator implements Generator{
             return getLocation_THE_END(loc1, airDrop);
         if (worldType.equals("NETHER")) {
             if (!isGenerator && cd.getOrDefault(airDrop.getSuperName() + "002", 0L) < System.currentTimeMillis()) {
-                Message.warning(String.format(BAirDrop.getConfigMessage().getMessage("generation-nether"), airDrop.getSuperName()));
+                OLDMessage.warning(String.format(BAirDrop.getConfigMessage().getMessage("generation-nether"), airDrop.getSuperName()));
                 cd.put(airDrop.getSuperName() + "002", System.currentTimeMillis() + 150000L);//а это 002
             }
             return getLocation_NETHER(loc1, airDrop);
         }
         if (worldType.equals("CUSTOM")) {
             if (cd.getOrDefault(airDrop.getSuperName() + "003", 0L) < System.currentTimeMillis()) {
-                Message.warning(String.format(BAirDrop.getConfigMessage().getMessage("unknown-world-type"), world.getName()));
+                OLDMessage.warning(String.format(BAirDrop.getConfigMessage().getMessage("unknown-world-type"), world.getName()));
                 cd.put(airDrop.getSuperName() + "003", System.currentTimeMillis() + 150000L); //а это 003
             }
             return getLocation_NORMAL(loc1, airDrop);
@@ -118,7 +118,7 @@ public class CGenerator implements Generator{
         boolean upBlockIsAir = false;
         for(int y = maxY; y > 30; y--){
             if(!chunk.getBlock(x, y, z).getType().isAir()){
-                if (BAirDrop.getiConfig().getGeneratorSettings().getStringList("black-List").contains(String.valueOf(chunk.getBlock(x, y, z).getType()))) {
+                if (BAirDrop.getCfg().getGeneratorSettings().getStringList("black-List").contains(String.valueOf(chunk.getBlock(x, y, z).getType()))) {
                     return -1;
                 }
                 if(upBlockIsAir)
@@ -147,7 +147,7 @@ public class CGenerator implements Generator{
         for (int y = GeneratorUtils.getSettings(airDrop.getGeneratorSettings(), "world-NETHER.start-y"); y > GeneratorUtils.getSettings(airDrop.getGeneratorSettings(), "world-NETHER.end-y"); y--) {
             loc.setY(y);
             if (!loc.getBlock().getType().isAir())
-                if (! BAirDrop.getiConfig().getGeneratorSettings().getStringList("black-List").contains(String.valueOf(loc.getBlock().getType()))) {
+                if (! BAirDrop.getCfg().getGeneratorSettings().getStringList("black-List").contains(String.valueOf(loc.getBlock().getType()))) {
                     if (upBlockIsAir) {
                         if (GeneratorUtils.isRegionEmpty(airDrop, location)) {
                             if (checkMaxY(location, airDrop, "world-NETHER.max-y")) {
@@ -164,7 +164,7 @@ public class CGenerator implements Generator{
                         }
                     }
                 }
-            upBlockIsAir = loc.getBlock().getType().isAir() ||  BAirDrop.getiConfig().getGeneratorSettings().getStringList("ignored-blocks").contains(String.valueOf(location.getBlock().getType()));
+            upBlockIsAir = loc.getBlock().getType().isAir() ||  BAirDrop.getCfg().getGeneratorSettings().getStringList("ignored-blocks").contains(String.valueOf(location.getBlock().getType()));
         }
         return null;
     }
@@ -175,7 +175,7 @@ public class CGenerator implements Generator{
         location.setY(GeneratorUtils.getSettings(airDrop.getGeneratorSettings(), "world-THE_END.start-y"));
         if (!location.getBlock().isEmpty()) {
             location.setY(location.getWorld().getHighestBlockYAt(location));
-            if ( BAirDrop.getiConfig().getGeneratorSettings().getStringList("black-List").contains(String.valueOf(location.getBlock().getType()))) {
+            if ( BAirDrop.getCfg().getGeneratorSettings().getStringList("black-List").contains(String.valueOf(location.getBlock().getType()))) {
                 return null;
             }
             if (!checkMaxY(location, airDrop, "world-THE_END.max-y"))
@@ -215,7 +215,7 @@ public class CGenerator implements Generator{
             for (int x = GeneratorUtils.getSettings(airDrop.getGeneratorSettings(), "check-for-evenness.poz.start-x"); x < GeneratorUtils.getSettings(airDrop.getGeneratorSettings(), "check-for-evenness.poz.end-x"); x++) {
                 for (int z = GeneratorUtils.getSettings(airDrop.getGeneratorSettings(), "check-for-evenness.poz.start-z"); z < GeneratorUtils.getSettings(airDrop.getGeneratorSettings(), "check-for-evenness.poz.end-z"); z++) {
                     if (x == 0 && y == 0 && z == 0) continue;
-                    if (!location.clone().add(x, y, z).getBlock().getType().isAir() && ! BAirDrop.getiConfig().getGeneratorSettings().getStringList("ignored-blocks").contains(String.valueOf(location.clone().add(x, y, z).getBlock().getType())))
+                    if (!location.clone().add(x, y, z).getBlock().getType().isAir() && ! BAirDrop.getCfg().getGeneratorSettings().getStringList("ignored-blocks").contains(String.valueOf(location.clone().add(x, y, z).getBlock().getType())))
                         return false;
                 }
             }
@@ -227,8 +227,8 @@ public class CGenerator implements Generator{
     private Location PreGeneratedLocations(AirDrop airDrop) {
         if (airDrop.getPickPreGenLocs() >= BAirDrop.getInstance().getConfig().getInt("max-experience-pre-generated-location")) {
             if (cd.getOrDefault(airDrop.getSuperName() + "004", 0L) < System.currentTimeMillis()) {
-                Message.error(BAirDrop.getConfigMessage().getMessage("search-location-limit"));
-                Message.error(String.format(BAirDrop.getConfigMessage().getMessage("search-location-limit-2"), airDrop.getSuperName()));
+                OLDMessage.error(BAirDrop.getConfigMessage().getMessage("search-location-limit"));
+                OLDMessage.error(String.format(BAirDrop.getConfigMessage().getMessage("search-location-limit-2"), airDrop.getSuperName()));
                 cd.put(airDrop.getSuperName() + "004", System.currentTimeMillis() + 75000L);//004
             }
             if (airDrop.isUseStaticLoc())
@@ -239,26 +239,26 @@ public class CGenerator implements Generator{
 
         Location loc = GeneratorLoc.getLocationForAirDrop(airDrop);
         if (loc == null) {
-            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("gen-loc-is-null"), airDrop.getSuperName()));
+            OLDMessage.error(String.format(BAirDrop.getConfigMessage().getMessage("gen-loc-is-null"), airDrop.getSuperName()));
             return null;
         }
 //        if (loc.clone().add(-GeneratorUtils.getOffsets(airDrop).getX(), -GeneratorUtils.getOffsets(airDrop).getY(), -GeneratorUtils.getOffsets(airDrop).getZ()).getBlock().isEmpty()) {
 //            GeneratorLoc.removeLoc(loc, airDrop);
-//            Message.logger(String.format(BAirDrop.getConfigMessage().getMessage("location-isn-t-relevant"), loc.getWorld(), loc.getX(), loc.getY(), loc.getZ()));
+//            OLDMessage.logger(String.format(BAirDrop.getConfigMessage().getMessage("location-isn-t-relevant"), loc.getWorld(), loc.getX(), loc.getY(), loc.getZ()));
 //            if (airDrop.getEditAirMenu() != null)
 //                airDrop.getEditAirMenu().menuGenerate("usePreGeneratedLocations");
 //            return null;
 //        }
 //        if (isBiomeInBlackList(loc)) {
 //            GeneratorLoc.removeLoc(loc, airDrop);
-//            Message.logger(String.format(BAirDrop.getConfigMessage().getMessage("location-isn-t-relevant"), loc.getWorld(), loc.getX(), loc.getY(), loc.getZ()));
+//            OLDMessage.logger(String.format(BAirDrop.getConfigMessage().getMessage("location-isn-t-relevant"), loc.getWorld(), loc.getX(), loc.getY(), loc.getZ()));
 //            if (airDrop.getEditAirMenu() != null)
 //                airDrop.getEditAirMenu().menuGenerate("usePreGeneratedLocations");
 //            return null;
 //        }
 //        if (!GeneratorUtils.isRegionEmpty(airDrop, loc)) {
 //            GeneratorLoc.removeLoc(loc, airDrop);
-//            Message.logger(String.format(BAirDrop.getConfigMessage().getMessage("location-isn-t-relevant"), loc.getWorld(), loc.getX(), loc.getY(), loc.getZ()));
+//            OLDMessage.logger(String.format(BAirDrop.getConfigMessage().getMessage("location-isn-t-relevant"), loc.getWorld(), loc.getX(), loc.getY(), loc.getZ()));
 //            if (airDrop.getEditAirMenu() != null)
 //                airDrop.getEditAirMenu().menuGenerate("usePreGeneratedLocations");
 //            return null;
@@ -269,6 +269,6 @@ public class CGenerator implements Generator{
 
     private boolean isBiomeInBlackList(@NotNull Location location) {
         Biome bom = location.getWorld().getBiome((int) location.getX(), (int) location.getY(), (int) location.getZ());
-        return  BAirDrop.getiConfig().getGeneratorSettings().getStringList("black-List-biome").contains(String.valueOf(bom));
+        return  BAirDrop.getCfg().getGeneratorSettings().getStringList("black-List-biome").contains(String.valueOf(bom));
     }
 }

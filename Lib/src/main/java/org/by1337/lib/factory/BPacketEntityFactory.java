@@ -23,10 +23,10 @@ public class BPacketEntityFactory implements PacketEntityFactory {
     /**
      * Registers a specific implementation of PacketEntity for a given server version and entity class.
      *
-     * @param entityClass     The entity class for which the implementation is registered.
-     * @param supplier  A supplier that creates instances of the specified entity class.
+     * @param entityClass The entity class for which the implementation is registered.
+     * @param supplier    A supplier that creates instances of the specified entity class.
      */
-    public static void registerEntity( Class<? extends PacketEntity> entityClass, OneArgSupplier<? extends PacketEntity, BLocation> supplier) {
+    public static void registerEntity(Class<? extends PacketEntity> entityClass, OneArgSupplier<? extends PacketEntity, BLocation> supplier) {
         entityMap.put(entityClass, supplier);
     }
 
@@ -48,11 +48,10 @@ public class BPacketEntityFactory implements PacketEntityFactory {
 
     static {
         entityMap = new HashMap<>();
-        if (Version.VERSION == Version.V1_16_5){
+        if (Version.VERSION == Version.V1_16_5) {
             BPacketEntityFactory.registerEntity(PacketArmorStand.class, PacketArmorStandImp165::new);
-        } else  if (Version.VERSION == Version.V1_17){
+        } else if (Version.VERSION == Version.V1_17) {
             BPacketEntityFactory.registerEntity(PacketArmorStand.class, PacketArmorStandImpl17::new);
         }
-
     }
 }

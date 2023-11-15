@@ -7,6 +7,7 @@ import org.by1337.bairdrop.lang.Resource;
 import org.by1337.api.command.Command;
 import org.by1337.api.command.CommandException;
 import org.by1337.api.command.CommandSyntaxError;
+import org.by1337.bairdrop.observer.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,14 +21,18 @@ public interface CommandExecutor {
     Resource PLAYER_IS_NULL = new Resource("command.player-is-null"); //Player is null! Command: %s
 
     String getCommandPrefix();
-    void execute(@Nullable Airdrop airDrop, @Nullable Player player, @NotNull String command) throws CommandException;
+
+    void execute(Event event, @NotNull String command) throws CommandException;
+
     String usage();
+
     Command createCommand();
 
-    default String[] parseCommand(@NotNull String command){
+    default String[] parseCommand(@NotNull String command) {
         String[] params = command.split(" ");
         return Arrays.copyOfRange(params, 1, params.length);
     }
+
     default void testCommand(@NotNull String command) throws CommandException {
         createCommand().process(null, parseCommand(command));
     }

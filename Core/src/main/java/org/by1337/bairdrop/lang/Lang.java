@@ -3,7 +3,7 @@ package org.by1337.bairdrop.lang;
 import com.google.gson.Gson;
 import lombok.Getter;
 import org.by1337.bairdrop.BAirDrop;
-import org.by1337.bairdrop.util.Message;
+import org.by1337.bairdrop.util.OLDMessage;
 import org.by1337.api.chat.*;
 import org.by1337.api.chat.hover.HoverEvent;
 import org.by1337.api.chat.hover.HoverEventContentsString;
@@ -22,21 +22,21 @@ public class Lang {
     private static Lang lang;
 
     public String getMessage(String patch) {
-        return String.join("\n", messages.getOrDefault(patch, List.of(String.format("Message along path %s not found!", patch))));
+        return String.join("\n", messages.getOrDefault(patch, List.of(String.format("OLDMessage along path %s not found!", patch))));
     }
 
     public List<String> getList(String patch) {
-        return messages.getOrDefault(patch, List.of(String.format("Message along path %s not found!", patch)));
+        return messages.getOrDefault(patch, List.of(String.format("OLDMessage along path %s not found!", patch)));
     }
 
     public static void init() {
         String file = BAirDrop.getInstance().getConfig().getString("lang", "en");
         InputStream resourceStream = BAirDrop.getInstance().getResource("lang/" + file + ".json");
         if (resourceStream == null) {
-            Message.error("file: " + "lang/" + file + ".json" + " not found!");
+            OLDMessage.error("file: " + "lang/" + file + ".json" + " not found!");
             resourceStream = BAirDrop.getInstance().getResource("lang/en.json");
             if (resourceStream == null) {
-                throw new IllegalStateException("Message file not found! Do you have the latest version of the plugin?");
+                throw new IllegalStateException("OLDMessage file not found! Do you have the latest version of the plugin?");
             }
         }
         try (InputStreamReader reader = new InputStreamReader(resourceStream, StandardCharsets.UTF_8)) {

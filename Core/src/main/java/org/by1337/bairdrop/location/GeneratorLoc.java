@@ -6,7 +6,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
-import org.by1337.bairdrop.util.Message;
+import org.by1337.bairdrop.util.OLDMessage;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -19,20 +19,20 @@ public class GeneratorLoc {
 
     public static void stop(CommandSender sender) {
         if (!isStarted) {
-            Message.sendMsg(sender, BAirDrop.getConfigMessage().getMessage("generator-not-started"));
+            OLDMessage.sendMsg(sender, BAirDrop.getConfigMessage().getMessage("generator-not-started"));
             return;
         }
-        Message.sendMsg(sender, BAirDrop.getConfigMessage().getMessage("generator-stop"));
+        OLDMessage.sendMsg(sender, BAirDrop.getConfigMessage().getMessage("generator-stop"));
         isStarted = false;
     }
 
     public static void start(AirDrop airDrop, int timings, int count, CommandSender sender) {
         if (isStarted) {
-            Message.sendMsg(sender, BAirDrop.getConfigMessage().getMessage("generator-already-launched"));
+            OLDMessage.sendMsg(sender, BAirDrop.getConfigMessage().getMessage("generator-already-launched"));
             return;
         }
         isStarted = true;
-        Message.sendMsg(sender, BAirDrop.getConfigMessage().getMessage("generator-start"));
+        OLDMessage.sendMsg(sender, BAirDrop.getConfigMessage().getMessage("generator-start"));
         new BukkitRunnable() {
             int count1 = count;
             int fail = 0;
@@ -43,7 +43,7 @@ public class GeneratorLoc {
               //  long time = System.currentTimeMillis();
 
                 Location loc = finalairDrop.getGenerator().getLocation(finalairDrop, true);
-             //   Message.warning("time = " + (System.currentTimeMillis() - time));
+             //   OLDMessage.warning("time = " + (System.currentTimeMillis() - time));
                 fail++;
                 if (loc != null) {
                     GenLoc genLoc = new CGenLoc(loc, GeneratorUtils.getOffsets(finalairDrop), finalairDrop.getSuperName());
@@ -58,23 +58,23 @@ public class GeneratorLoc {
                             locs.put(airId, existingValues);
                     }
                     count1--;
-                    Message.sendMsg(sender, String.format(BAirDrop.getConfigMessage().getMessage("generator"), count1));
+                    OLDMessage.sendMsg(sender, String.format(BAirDrop.getConfigMessage().getMessage("generator"), count1));
 
               //      if (finalairDrop.getEditAirMenu() != null)
                    //     finalairDrop.getEditAirMenu().menuGenerate("usePreGeneratedLocations");
                 } else if (fail % 100 == 0) {
-                    Message.sendMsg(sender, String.format(BAirDrop.getConfigMessage().getMessage("generator-fail"), fail));
+                    OLDMessage.sendMsg(sender, String.format(BAirDrop.getConfigMessage().getMessage("generator-fail"), fail));
                 }
 
                 if (count1 == 0) {
                     isStarted = false;
-                    Message.sendMsg(sender, BAirDrop.getConfigMessage().getMessage("generator-good"));
+                    OLDMessage.sendMsg(sender, BAirDrop.getConfigMessage().getMessage("generator-good"));
                     GeneratorLoc.save();
                     cancel();
                     return;
                 }
                 if (!isStarted) {
-                    Message.sendMsg(sender, BAirDrop.getConfigMessage().getMessage("generator-stop"));
+                    OLDMessage.sendMsg(sender, BAirDrop.getConfigMessage().getMessage("generator-stop"));
                     GeneratorLoc.save();
                     cancel();
                 }
@@ -83,15 +83,15 @@ public class GeneratorLoc {
     }
 
     public static void save() {
-        BAirDrop.getiConfig().getLocations().set("locations", null);
+        BAirDrop.getCfg().getLocations().set("locations", null);
         for (List<GenLoc> locs1 : locs.values()) {
             for (GenLoc genLoc : locs1){
-                BAirDrop.getiConfig().getLocations().set(String.format("locations.%s.%s.%s", genLoc.getAirDropId(), genLoc.getWorld().getName(), genLoc.getUuid().toString()), genLoc);
+                BAirDrop.getCfg().getLocations().set(String.format("locations.%s.%s.%s", genLoc.getAirDropId(), genLoc.getWorld().getName(), genLoc.getUuid().toString()), genLoc);
             }
         }
         try {
-            BAirDrop.getiConfig().getLocations().set("version", 1);
-            BAirDrop.getiConfig().getLocations().save(BAirDrop.getiConfig().getFileLocations());
+            BAirDrop.getCfg    ().getLocations().set("version", 1);
+            BAirDrop.getCfg().getLocations().save(BAirDrop.getCfg().getFileLocations());
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -1,0 +1,10 @@
+timers:
+  default:
+    name: 'default'
+    condition: '{is-spawned} == false'
+    linked-airdrops:
+      - 'default'
+  summoners:
+    name: 'default'
+    condition: '{is-spawned} == false'
+    linked-airdrops: []

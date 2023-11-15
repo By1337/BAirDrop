@@ -14,9 +14,9 @@ public class Config {
 
     public String lang;
     public void load(){
-        file = new File(BLib.getInstance().getDataFolder() + "/config.yaml");
+        file = new File(BLib.getInstance().getDataFolder() + "/config.yml");
         if (!file.exists()){
-            BLib.getInstance().saveResource("config.yaml", true);
+            BLib.getInstance().saveResource("config.yml", true);
         }
         fileConfiguration = YamlConfiguration.loadConfiguration(file);
 

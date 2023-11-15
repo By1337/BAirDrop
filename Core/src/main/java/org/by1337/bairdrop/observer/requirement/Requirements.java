@@ -3,6 +3,8 @@ package org.by1337.bairdrop.observer.requirement;
 import org.bukkit.entity.Player;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.airdrop.Airdrop;
+import org.by1337.bairdrop.observer.event.Event;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -14,6 +16,13 @@ import java.util.List;
  */
 public class Requirements {
     private List<Requirement> requirements;
+
+    public Requirements() {
+    }
+
+    public Requirements(List<Requirement> requirements) {
+        this.requirements = requirements;
+    }
 
     /**
      * Sets an immutable list of requirements if not already set.
@@ -43,19 +52,24 @@ public class Requirements {
         }
     }
 
-    /**
-     * Checks whether all requirements are met for performing a specific action.
-     *
-     * @param airDrop The AirDrop object (can be null).
-     * @param player  The player (can be null).
-     * @return true if all requirements are met, otherwise false.
-     */
-    public boolean check(@Nullable Airdrop airDrop, @Nullable Player player) {
+
+    public boolean check(@NotNull Event event) {
         for (Requirement requirement : requirements) {
-            if (!requirement.check(airDrop, player)) {
+            if (!requirement.check(event)) {
                 return false;
             }
         }
         return true;
+    }
+
+    public List<Requirement> getRequirements() {
+        return requirements;
+    }
+
+    @Override
+    public String toString() {
+        return "Requirements{" +
+                "requirements=" + requirements +
+                '}';
     }
 }

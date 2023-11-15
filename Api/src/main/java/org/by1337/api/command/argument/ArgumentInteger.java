@@ -5,6 +5,7 @@ import org.by1337.api.command.CommandSyntaxError;
 import org.by1337.api.lang.Lang;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Represents an integer argument for a command.
@@ -13,71 +14,49 @@ public class ArgumentInteger extends Argument {
     private int min = Integer.MIN_VALUE;
     private int max = Integer.MAX_VALUE;
 
-    /**
-     * Constructs an ArgumentInteger with the specified name and no minimum or maximum bounds.
-     *
-     * @param name The name of the argument.
-     */
     public ArgumentInteger(String name) {
         super(name);
     }
 
-    /**
-     * Constructs an ArgumentInteger with the specified name, a list of example values, and no minimum or maximum bounds.
-     *
-     * @param name The name of the argument.
-     * @param exx  A list of example values for the argument.
-     */
-    public ArgumentInteger(String name, List<String> exx) {
+    public ArgumentInteger(String name, Supplier<List<String>> exx) {
         super(name, exx);
     }
 
-    /**
-     * Constructs an ArgumentInteger with the specified name and a minimum bound.
-     *
-     * @param name The name of the argument.
-     * @param min  The minimum allowed value for the argument.
-     */
+    public ArgumentInteger(String name, List<String> exx) {
+        super(name, () -> exx);
+    }
+
+
     public ArgumentInteger(String name, int min) {
         super(name);
         this.min = min;
     }
 
-    /**
-     * Constructs an ArgumentInteger with the specified name, a list of example values, and a minimum bound.
-     *
-     * @param name The name of the argument.
-     * @param exx  A list of example values for the argument.
-     * @param min  The minimum allowed value for the argument.
-     */
-    public ArgumentInteger(String name, List<String> exx, int min) {
+    public ArgumentInteger(String name, Supplier<List<String>> exx, int min) {
         super(name, exx);
         this.min = min;
     }
 
-    /**
-     * Constructs an ArgumentInteger with the specified name, a minimum bound, and a maximum bound.
-     *
-     * @param name The name of the argument.
-     * @param min  The minimum allowed value for the argument.
-     * @param max  The maximum allowed value for the argument.
-     */
+    public ArgumentInteger(String name, List<String> exx, int min) {
+        super(name, () -> exx);
+        this.min = min;
+    }
+
+
     public ArgumentInteger(String name, int min, int max) {
         super(name);
         this.min = min;
         this.max = max;
     }
 
-    /**
-     * Constructs an ArgumentInteger with the specified name, a list of example values, a minimum bound, and a maximum bound.
-     *
-     * @param name The name of the argument.
-     * @param exx  A list of example values for the argument.
-     * @param min  The minimum allowed value for the argument.
-     * @param max  The maximum allowed value for the argument.
-     */
-    public ArgumentInteger(String name, List<String> exx, int min, int max) {
+    public ArgumentInteger(String name, Supplier<List<String>> exx, int min, int max) {
         super(name, exx);
+        this.min = min;
+        this.max = max;
+    }
+
+    public ArgumentInteger(String name, List<String> exx, int min, int max) {
+        super(name, () -> exx);
         this.min = min;
         this.max = max;
     }

@@ -11,7 +11,7 @@ import org.by1337.bairdrop.effect.EffectType;
 import org.by1337.bairdrop.effect.IEffect;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.serializable.EffectSerializable;
-import org.by1337.bairdrop.util.Message;
+import org.by1337.bairdrop.util.OLDMessage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -84,9 +84,9 @@ public class ExpandingCircle implements IEffect, EffectSerializable {
     public void Start(AirDrop airDrop) {
         this.airDrop = airDrop;
         if (airDrop.getAnyLoc() == null) {
-            Message.error(BAirDrop.getConfigMessage().getMessage("effect-error-loc-is-null"));
-            Message.error(BAirDrop.getConfigMessage().getMessage("effect-error-loc-is-null2"));
-            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("effect-error-loc-is-null3"), airDrop.getId()));
+            OLDMessage.error(BAirDrop.getConfigMessage().getMessage("effect-error-loc-is-null"));
+            OLDMessage.error(BAirDrop.getConfigMessage().getMessage("effect-error-loc-is-null2"));
+            OLDMessage.error(String.format(BAirDrop.getConfigMessage().getMessage("effect-error-loc-is-null3"), airDrop.getId()));
             return;
         } else loc = airDrop.getAnyLoc().clone();
         used = true;

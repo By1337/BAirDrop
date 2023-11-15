@@ -1,7 +1,7 @@
 package org.by1337.bairdrop.airdrop;
 
 import org.by1337.api.match.BMatch;
-import org.by1337.bairdrop.util.Message;
+import org.by1337.bairdrop.BAirDrop;
 import org.by1337.api.chat.Placeholderable;
 
 public class PlaceholderableDefault implements Placeholderable {
@@ -13,6 +13,6 @@ public class PlaceholderableDefault implements Placeholderable {
 
     @Override
     public String replace(String string) {
-        return Message.messageBuilder(airdrop.replace(BMatch.match(string)));
+        return BAirDrop.MESSAGE.messageBuilder(airdrop.replace(BMatch.matchSave(string)));
     }
 }

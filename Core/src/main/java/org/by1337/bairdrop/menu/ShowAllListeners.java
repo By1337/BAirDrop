@@ -1,33 +1,6 @@
 package org.by1337.bairdrop.menu;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
-
-import org.by1337.bairdrop.AirDrop;
-import org.by1337.bairdrop.AirDropUtils;
-import org.by1337.bairdrop.BAirDrop;
-import org.by1337.bairdrop.observer.CustomEvent;
-import org.by1337.bairdrop.observer.CustomListenerLoader;
-import org.by1337.bairdrop.observer.observer.Observer;
-import org.by1337.bairdrop.util.*;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.by1337.bairdrop.menu.util.ItemUtil.getErrorItem;
 
 public class ShowAllListeners implements Listener {
 //    private final Inventory inventory;
@@ -43,8 +16,8 @@ public class ShowAllListeners implements Listener {
 //
 //    private void generate() {
 //        int slot = 0;
-//        for (NamespacedKey key : CustomListenerLoader.getCustomEventListeners().keySet()) {
-//            if (CustomListenerLoader.getCustomEventListeners().get(key).getEvent() == CustomEvent.NONE) continue;
+//        for (NamespacedKey nameKey : CustomListenerLoader.getCustomEventListeners().keySet()) {
+//            if (CustomListenerLoader.getCustomEventListeners().get(nameKey).getEvent() == CustomEvent.NONE) continue;
 //            if (page > 0) {
 //                if (slot < (53 * page)) {
 //                    slot++;
@@ -52,7 +25,7 @@ public class ShowAllListeners implements Listener {
 //                }
 //            }
 //            if (slot - (53 * page) >= 53) continue;
-//            inventory.setItem(slot - (53 * page), getItem(key));
+//            inventory.setItem(slot - (53 * page), getItem(nameKey));
 //            slot++;
 //        }
 //        if (slot >= 53) {
@@ -60,7 +33,7 @@ public class ShowAllListeners implements Listener {
 //            ItemMeta im = itemStack.getItemMeta();
 //            im.setDisplayName(BAirDrop.getConfigMessage().getMessage("mat-change-arrow-name"));
 //            List<String> lore = new ArrayList<>(BAirDrop.getConfigMessage().getList("mat-change-arrow-lore"));
-//            lore.replaceAll(Message::messageBuilder);
+//            lore.replaceAll(OLDMessage::messageBuilder);
 //            im.setLore(lore);
 //            im.getPersistentDataContainer().set(NamespacedKey.fromString("event"), PersistentDataType.STRING, "page swipe");//page
 //            itemStack.setItemMeta(im);
@@ -68,17 +41,17 @@ public class ShowAllListeners implements Listener {
 //        }
 //    }
 //
-//    public ItemStack getItem(NamespacedKey key) {
-//        Observer observer = CustomListenerLoader.getCustomEventListeners().get(key);
+//    public ItemStack getItem(NamespacedKey nameKey) {
+//        Observer observer = CustomListenerLoader.getCustomEventListeners().get(nameKey);
 //        if (observer == null) {
 //            return getErrorItem();
 //        }
 //        ItemStack itemStack = new ItemStack(airDrop.hasObserver(observer) ? Material.DISPENSER : Material.OBSERVER);
 //        ItemMeta im = itemStack.getItemMeta();
 //
-//        im.setDisplayName(Message.messageBuilder("&f" + key));
+//        im.setDisplayName(OLDMessage.messageBuilder("&f" + nameKey));
 //
-//        im.getPersistentDataContainer().set(NamespacedKey.fromString("event"), PersistentDataType.STRING, key.getKey());
+//        im.getPersistentDataContainer().set(NamespacedKey.fromString("event"), PersistentDataType.STRING, nameKey.getKey());
 //        List<String> lore = new ArrayList<>(BAirDrop.getConfigMessage().getList("event-lore"));
 //        lore.replaceAll(s -> s
 //                .replace("{description}", observer.getDescription())
@@ -148,7 +121,7 @@ public class ShowAllListeners implements Listener {
 //        }
 //        nweLore.replaceAll(airDrop::replaceInternalPlaceholder);
 //        nweLore.replaceAll(AirDropUtils::color);
-//        nweLore.replaceAll(Message::messageBuilder);
+//        nweLore.replaceAll(OLDMessage::messageBuilder);
 //
 //        im.setLore(nweLore);
 //        itemStack.setItemMeta(im);
@@ -167,15 +140,15 @@ public class ShowAllListeners implements Listener {
 //                return;
 //            }
 //            ItemMeta im = e.getCurrentItem().getItemMeta();
-//            String key = im.getPersistentDataContainer().get(NamespacedKey.fromString("event"), PersistentDataType.STRING);
-//            if (key == null) {
+//            String nameKey = im.getPersistentDataContainer().get(NamespacedKey.fromString("event"), PersistentDataType.STRING);
+//            if (nameKey == null) {
 //                e.setCancelled(true);
-//                Message.sendMsg((Player) e.getWhoClicked(), BAirDrop.getConfigMessage().getMessage("item-error2"));
+//                OLDMessage.sendMsg((Player) e.getWhoClicked(), BAirDrop.getConfigMessage().getMessage("item-error2"));
 //                inventory.clear();
 //                generate();
 //                return;
 //            }
-//            if (key.equals("page swipe")) {//page
+//            if (nameKey.equals("page swipe")) {//page
 //                if (e.getClick() == ClickType.LEFT) {
 //                    page++;
 //                    e.setCancelled(true);
@@ -191,11 +164,11 @@ public class ShowAllListeners implements Listener {
 //                    return;
 //                }
 //            }
-//            Observer observer = CustomListenerLoader.getCustomEventListeners().getOrDefault(key, null);
+//            Observer observer = CustomListenerLoader.getCustomEventListeners().getOrDefault(nameKey, null);
 //
 //            if (observer == null) {
 //                e.setCancelled(true);
-//                Message.sendMsg(e.getWhoClicked(), BAirDrop.getConfigMessage().getMessage("item-error2"));
+//                OLDMessage.sendMsg(e.getWhoClicked(), BAirDrop.getConfigMessage().getMessage("item-error2"));
 //                inventory.clear();
 //                generate();
 //                return;
@@ -203,13 +176,13 @@ public class ShowAllListeners implements Listener {
 //
 //            if (airDrop.hasObserver(observer)) {
 //                airDrop.unregisterObserver(observer);
-//                Message.sendMsg(e.getWhoClicked(), BAirDrop.getConfigMessage().getMessage("unsubscribed"));
+//                OLDMessage.sendMsg(e.getWhoClicked(), BAirDrop.getConfigMessage().getMessage("unsubscribed"));
 //                if (airDrop.hasSavedObserver(observer.getKey().getKey())) {
 //                    airDrop.removeSaveObserver(observer.getKey().getKey());
 //                }
 //            } else {
 //                airDrop.registerObserver(observer);
-//                Message.sendMsg(e.getWhoClicked(), BAirDrop.getConfigMessage().getMessage("signed"));
+//                OLDMessage.sendMsg(e.getWhoClicked(), BAirDrop.getConfigMessage().getMessage("signed"));
 //                if (!airDrop.hasSavedObserver(observer.getKey().getKey())) {
 //                    airDrop.saveObserver(observer.getKey().getKey());
 //                }
@@ -217,7 +190,7 @@ public class ShowAllListeners implements Listener {
 //
 //            airDrop.save();
 //            e.setCancelled(true);
-//            inventory.setItem(e.getSlot(), getItem(NamespacedKey.fromString(key)));
+//            inventory.setItem(e.getSlot(), getItem(NamespacedKey.fromString(nameKey)));
 //        }
 //
 //

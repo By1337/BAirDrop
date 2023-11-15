@@ -1,17 +1,17 @@
 package org.by1337.bairdrop.airdrop.registry;
 
 import org.bukkit.entity.Player;
-import org.by1337.bairdrop.AirDrop;
+import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.airdrop.Airdrop;
 import org.by1337.bairdrop.airdrop.command.airdrop.CommandExecutor;
 import org.by1337.bairdrop.airdrop.command.airdrop.impl.*;
-import org.by1337.bairdrop.util.Message;
+import org.by1337.bairdrop.observer.event.Event;
+import org.by1337.bairdrop.util.OLDMessage;
 import org.by1337.api.command.CommandException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class AirDropCommandRegistry {
     private static final HashMap<String, CommandExecutor> registeredCommands;
@@ -23,17 +23,17 @@ public class AirDropCommandRegistry {
         registeredCommands.put(executor.getCommandPrefix(), executor);
     }
 
-    public static void execute(@Nullable Airdrop airDrop, @Nullable Player player, @NotNull String command) {
+    public static void execute(@NotNull Event event, @NotNull String command) {
         try {
             for (CommandExecutor commandExecutor : registeredCommands.values()) {
                 if (command.startsWith(commandExecutor.getCommandPrefix())) {
-                    commandExecutor.execute(airDrop, player, command);
+                    commandExecutor.execute(event, command);
                     return;
                 }
             }
-            Message.error("no executed: %s", command);
+            BAirDrop.MESSAGE.warning("no executed: %s", command);
         } catch (CommandException e) {
-            Message.error(e.getLocalizedMessage());
+            BAirDrop.MESSAGE.error(e);
         }
     }
 
@@ -49,23 +49,23 @@ public class AirDropCommandRegistry {
 
     static {
         registeredCommands = new HashMap<>();
-        registerCommandExecutor(new ActivateCommand());
+        registerCommandExecutor(new Activate());
         registerCommandExecutor(new BlockLidToggle());
         // registerCommandExecutor(new BlockSetOpenCommand());
-        registerCommandExecutor(new EasyBossBarCommand());
-        registerCommandExecutor(new EffectStartCommand());
-        registerCommandExecutor(new EffectStopCommand());
-        registerCommandExecutor(new EffectStopAllCommand());
-        registerCommandExecutor(new SchematicsPasteCommand());
-        registerCommandExecutor(new SchematicsRemoveCommand());
-        registerCommandExecutor(new SetBlockFaceCommand());
+        registerCommandExecutor(new EasyBossBar());
+        registerCommandExecutor(new EffectStart());
+        registerCommandExecutor(new EffectStop());
+        registerCommandExecutor(new EffectStopAll());
+        registerCommandExecutor(new SchematicsPaste());
+        registerCommandExecutor(new SchematicsRemove());
+        registerCommandExecutor(new SetBlockFace());
         //   registerCommandExecutor(new SetH oloTimeToStartCommand()); //deleted
-        registerCommandExecutor(new SetMaterialCommand());
-        registerCommandExecutor(new SetRegionCommand());
-        registerCommandExecutor(new SetTimeEndCommand());
-        registerCommandExecutor(new SetTimeStartCommand());
-        registerCommandExecutor(new SetTimeUnlockCommand());
-        registerCommandExecutor(new RunJsCommand());
+        registerCommandExecutor(new SetMaterial());
+        registerCommandExecutor(new SetRegion());
+        registerCommandExecutor(new SetTimeEnd());
+        registerCommandExecutor(new SetTimeStart());
+        registerCommandExecutor(new SetTimeUnlock());
+        registerCommandExecutor(new RunJs());
         registerCommandExecutor(new ErrorCommand());
         registerCommandExecutor(new LoggerCommand());
         registerCommandExecutor(new MessageAllCommand());

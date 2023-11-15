@@ -5,8 +5,9 @@ import org.by1337.api.command.CommandSyntaxError;
 import org.by1337.api.lang.Lang;
 
 import java.util.List;
+import java.util.function.Supplier;
 
-public class ArgumentDouble  extends Argument {
+public class ArgumentDouble extends Argument {
     private double min = Double.MIN_VALUE;
     private double max = Double.MAX_VALUE;
 
@@ -15,19 +16,30 @@ public class ArgumentDouble  extends Argument {
         super(name);
     }
 
-    public ArgumentDouble(String name, List<String> exx) {
+    public ArgumentDouble(String name, Supplier<List<String>> exx) {
         super(name, exx);
     }
+
+    public ArgumentDouble(String name, List<String> exx) {
+        super(name, () -> exx);
+    }
+
 
     public ArgumentDouble(String name, double min) {
         super(name);
         this.min = min;
     }
 
-    public ArgumentDouble(String name, List<String> exx, double min) {
+    public ArgumentDouble(String name, Supplier<List<String>> exx, double min) {
         super(name, exx);
         this.min = min;
     }
+
+    public ArgumentDouble(String name, List<String> exx, double min) {
+        super(name, () -> exx);
+        this.min = min;
+    }
+
 
     public ArgumentDouble(String name, double min, double max) {
         super(name);
@@ -35,11 +47,18 @@ public class ArgumentDouble  extends Argument {
         this.max = max;
     }
 
-    public ArgumentDouble(String name, List<String> exx, double min, double max) {
+    public ArgumentDouble(String name, Supplier<List<String>> exx, double min, double max) {
         super(name, exx);
         this.min = min;
         this.max = max;
     }
+
+    public ArgumentDouble(String name, List<String> exx, double min, double max) {
+        super(name, () -> exx);
+        this.min = min;
+        this.max = max;
+    }
+
 
     @Override
     public Object process(CommandSender sender, String str) throws CommandSyntaxError {

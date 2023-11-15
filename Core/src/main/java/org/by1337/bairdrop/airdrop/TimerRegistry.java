@@ -2,6 +2,7 @@ package org.by1337.bairdrop.airdrop;
 
 
 import org.by1337.api.BLib;
+import org.by1337.api.util.NameKey;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +12,7 @@ public class TimerRegistry {
     /**
      * Storage for timers indexed by name.
      */
-    private static final HashMap<String, Timer> timers = new HashMap<>();
+    private static final Map<NameKey, Timer> timers = new HashMap<>();
 
     /**
      * Registers a timer in the registry.
@@ -20,7 +21,7 @@ public class TimerRegistry {
      * @param name  The name under which the timer will be registered.
      * @throws IllegalArgumentException If a timer with the same name already exists in the registry.
      */
-    public static void register(Timer timer, String name) {
+    public static void register(Timer timer, NameKey name) {
         BLib.catchOp("Asynchronous timer registration");
         if (timers.containsKey(name)) {
             throw new IllegalArgumentException("A timer with the same name already exists in the registry.");
@@ -34,7 +35,8 @@ public class TimerRegistry {
      * @param name The name of the timer to unregister.
      * @throws IllegalArgumentException If no timer with the specified name is found in the registry.
      */
-    public static void unregister(String name) {
+    public static void unregister(NameKey name) {
+        BLib.catchOp("Asynchronous timer unregistering");
         if (!timers.containsKey(name)) {
             throw new IllegalArgumentException("No timer with the specified name found in the registry.");
         }
@@ -48,7 +50,7 @@ public class TimerRegistry {
      * @return The timer with the specified name, or null if no timer is found with that name.
      * @throws IllegalArgumentException If no timer with the specified name is found in the registry.
      */
-    public static Timer get(String name) {
+    public static Timer get(NameKey name) {
         if (!timers.containsKey(name)) {
             throw new IllegalArgumentException("No timer with the specified name found in the registry.");
         }
@@ -61,7 +63,7 @@ public class TimerRegistry {
      *
      * @return A set view of the mappings contained in the registry.
      */
-    public static Set<Map.Entry<String, Timer>> entrySet() {
+    public static Set<Map.Entry<NameKey, Timer>> entrySet() {
         return timers.entrySet();
     }
 
@@ -71,7 +73,7 @@ public class TimerRegistry {
      * @param name The name of the timer to check for.
      * @return {@code true} if a timer with the specified name exists in the registry, {@code false} otherwise.
      */
-    public static boolean containsTimer(String name) {
+    public static boolean containsTimer(NameKey name) {
         return timers.containsKey(name);
     }
 
@@ -80,7 +82,7 @@ public class TimerRegistry {
      */
     public static void stopAll() {
         for (Timer timer : timers.values()) {
-            timer.getTask().cancel();
+            timer.stop();
         }
     }
 

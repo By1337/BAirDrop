@@ -60,45 +60,6 @@ public class AirDropUtils {
     }
 
 
-//    @Nullable
-//    public static AirDrop getRandomCloneAir() {
-//        List<AirDrop> airDrops = new ArrayList<>(BAirDrop.airDrops.values());
-//        Comparator<AirDrop> airDropComparator = Comparator.comparingInt(AirDrop::getSpawnChance);
-//        airDrops.sort(airDropComparator);
-//        Random random = new Random();
-//        for (AirDrop airDrop : airDrops) {
-//            if (airDrop.isUseOnlyStaticLoc() || airDrop.isClone() || airDrop.isAirDropStarted() || (Bukkit.getOnlinePlayers().size() < airDrop.getMinPlayersToStart())) {
-//                continue;
-//            }
-//            if (random.nextInt(100) <= airDrop.getSpawnChance()) {
-//                String newId = airDrop.getId() + "_clone_" + getAndIncrease();
-//                AirDrop clone = airDrop.clone(newId);
-//                clone.setClone(true);
-//                clone.setKill(true);
-//                return clone;
-//            }
-//        }
-//        return null;
-//    }
-
-//    @Nullable
-//    public static AirDrop getRandomAir() {
-//        List<AirDrop> airDrops = new ArrayList<>(BAirDrop.airDrops.values());
-//        Comparator<AirDrop> airDropComparator = Comparator.comparingInt(AirDrop::getSpawnChance);
-//        airDrops.sort(airDropComparator);
-//        Random random = new Random();
-//        for (AirDrop airDrop : airDrops) {
-//            if (airDrop.isUseOnlyStaticLoc() || airDrop.isClone() || airDrop.isAirDropStarted() || (Bukkit.getOnlinePlayers().size() < airDrop.getMinPlayersToStart())) {
-//                continue;
-//            }
-//            if (random.nextInt(100) <= airDrop.getSpawnChance()) {
-//                return airDrop;
-//            }
-//        }
-//        return null;
-//    }
-
-
     private static int count = 0;
     @Nullable
     public static Airdrop getAirDropForLocation(@NotNull Location location) {

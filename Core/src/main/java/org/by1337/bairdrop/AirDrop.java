@@ -12,8 +12,7 @@ import org.bukkit.inventory.Inventory;
 import org.by1337.bairdrop.location.Generator;
 import org.by1337.bairdrop.location.generator.GeneratorSetting;
 import org.by1337.bairdrop.worldGuardHook.SchematicsManager;
-import org.by1337.bairdrop.observer.CustomEvent;
-import org.by1337.bairdrop.observer.observer.Observable;
+import org.by1337.bairdrop.observer.event.CustomEvent;
 import org.by1337.bairdrop.effect.IEffect;
 import org.by1337.bairdrop.menu.AddingItems;
 import org.by1337.bairdrop.menu.EditAirMenu;
@@ -24,7 +23,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 @Deprecated
-public interface AirDrop extends Observable {
+public interface AirDrop   {
     GeneratorSetting getGeneratorSetting();
     /**
      * Launches the airdrop and generates locations for it in a separate thread.
@@ -68,24 +67,24 @@ public interface AirDrop extends Observable {
     String replaceInternalPlaceholder(String str);
 
     /**
-     * Saves the observer key to a file.
+     * Saves the observer nameKey to a file.
      *
      * @param observerKey the name to be saved
      */
     void saveObserver(String observerKey);
 
     /**
-     * Removes the observer key from the saved data.
+     * Removes the observer nameKey from the saved data.
      *
      * @param observerKey the name to be removed
      */
     void removeSaveObserver(String observerKey);
 
     /**
-     * Checks if the observer key is saved in the file.
+     * Checks if the observer nameKey is saved in the file.
      *
      * @param observerKey the name of the observer
-     * @return true if this observer key is saved in the file
+     * @return true if this observer nameKey is saved in the file
      */
     boolean hasSavedObserver(String observerKey);
 

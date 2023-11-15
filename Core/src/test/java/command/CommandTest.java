@@ -33,53 +33,53 @@ public class CommandTest {
     public void testSetTimeUnlock() throws CommandException {
         String old = "[SET_TIME_UNLOCK-90]";
         Assert.assertEquals(CmdMigrator.adapt(old), "[SET_TIME_UNLOCK] 90");
-        new SetTimeUnlockCommand().testCommand("[SET_TIME_UNLOCK] 90");
+        new SetTimeUnlock().testCommand("[SET_TIME_UNLOCK] 90");
     }
 
     @Test
     public void testSetTimeStart() throws CommandException {
         String old = "[SET_TIME_START-90]";
         Assert.assertEquals(CmdMigrator.adapt(old), "[SET_TIME_START] 90");
-        new SetTimeStartCommand().testCommand("[SET_TIME_START] 90");
+        new SetTimeStart().testCommand("[SET_TIME_START] 90");
     }
 
     @Test
     public void testSetTimeEnd() throws CommandException {
         String old = "[SET_TIME_END-90]";
         Assert.assertEquals(CmdMigrator.adapt(old), "[SET_TIME_END] 90");
-        new SetTimeEndCommand().testCommand("[SET_TIME_END] 90");
+        new SetTimeEnd().testCommand("[SET_TIME_END] 90");
     }
 
     @Test
     public void testSetMaterial() throws CommandException {
         String old = "[SET_MATERIAL_DIRT]-offsets";
         Assert.assertEquals(CmdMigrator.adapt(old), "[SET_MATERIAL] DIRT offsets");
-        new SetMaterialCommand().testCommand("[SET_MATERIAL] DIRT offsets");
+        new SetMaterial().testCommand("[SET_MATERIAL] DIRT offsets");
     }
     @Test
     public void testSetBlockFace() throws CommandException {
         String old = "[SET_BLOCK_FACE_NORTH]";
         Assert.assertEquals(CmdMigrator.adapt(old), "[SET_BLOCK_FACE] NORTH");
-        new SetBlockFaceCommand().testCommand("[SET_BLOCK_FACE] NORTH");
+        new SetBlockFace().testCommand("[SET_BLOCK_FACE] NORTH");
     }
 
     @Test(expected = CommandException.class)
     public void testSetBlockFaceBadCmd() throws CommandException {
-        new SetBlockFaceCommand().testCommand("[SET_BLOCK_FACE] 1NORTH");
+        new SetBlockFace().testCommand("[SET_BLOCK_FACE] 1NORTH");
     }
 
     @Test
     public void testSchem() throws CommandException {
         String old = "[SCHEMATICS_PASTE-id]";
         Assert.assertEquals(CmdMigrator.adapt(old), "[SCHEMATICS_PASTE] id");
-        new SchematicsPasteCommand().testCommand("[SCHEMATICS_PASTE] id");
+        new SchematicsPaste().testCommand("[SCHEMATICS_PASTE] id");
     }
 
     @Test
     public void testRunJs() throws CommandException {
         String old = "[RUN_JS=Fire.js] param(player=player)";
         Assert.assertEquals(CmdMigrator.adapt(old), "[RUN_JS] Fire.js");
-        new RunJsCommand().testCommand("[RUN_JS] Fire.js");
+        new RunJs().testCommand("[RUN_JS] Fire.js");
     }
 
     @Test
@@ -98,14 +98,14 @@ public class CommandTest {
     public void testEffectStop() throws CommandException {
         String old = "[EFFECT_STOP-id]";
         Assert.assertEquals(CmdMigrator.adapt(old), "[EFFECT_STOP] id");
-        new EffectStopCommand().testCommand("[EFFECT_STOP] id");
+        new EffectStop().testCommand("[EFFECT_STOP] id");
     }
 
     @Test
     public void testEffectStart() throws CommandException {
         String old = "[EFFECT_START-Name-randomId]";
         Assert.assertEquals(CmdMigrator.adapt(old), "[EFFECT_START] Name randomId");
-        new EffectStartCommand().testCommand("[EFFECT_START] Name randomId");
+        new EffectStart().testCommand("[EFFECT_START] Name randomId");
     }
 
     @Test

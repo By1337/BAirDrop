@@ -19,11 +19,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.lang.Resource;
-import org.by1337.bairdrop.util.LogLevel;
-import org.by1337.bairdrop.util.Message;
+import org.by1337.api.chat.util.LogLevel;
+import org.by1337.bairdrop.util.OLDMessage;
 
 
 public class CSchematicsManager implements SchematicsManager {
@@ -33,24 +32,24 @@ public class CSchematicsManager implements SchematicsManager {
     public EditSession pasteSchematics(String name, Location location) {
         try {
 //            if (airDrop.getEditSession() != null) {
-//                Message.error(schematicsLimit.getString());
+//                OLDMessage.error(schematicsLimit.getString());
 //                return;
 //            }
             Vector offsets = new Vector(
-                    BAirDrop.getiConfig().getSchemConf().getInt(String.format("schematics.%s.offsets-x", name)),
-                    BAirDrop.getiConfig().getSchemConf().getInt(String.format("schematics.%s.offsets-y", name)),
-                    BAirDrop.getiConfig().getSchemConf().getInt(String.format("schematics.%s.offsets-z", name))
+                    BAirDrop.getCfg().getSchemConf().getInt(String.format("schematics.%s.offsets-x", name)),
+                    BAirDrop.getCfg().getSchemConf().getInt(String.format("schematics.%s.offsets-y", name)),
+                    BAirDrop.getCfg().getSchemConf().getInt(String.format("schematics.%s.offsets-z", name))
             );
-            boolean ignoreAirBlocks = BAirDrop.getiConfig().getSchemConf().getBoolean(String.format("schematics.%s.ignore-air-blocks", name));
-            String file = BAirDrop.getiConfig().getSchemConf().getString(String.format("schematics.%s.file", name));
+            boolean ignoreAirBlocks = BAirDrop.getCfg().getSchemConf().getBoolean(String.format("schematics.%s.ignore-air-blocks", name));
+            String file = BAirDrop.getCfg().getSchemConf().getString(String.format("schematics.%s.file", name));
 
-            if (file == null || !BAirDrop.getiConfig().getSchematics().containsKey(file)) {
+            if (file == null || !BAirDrop.getCfg().getSchematics().containsKey(file)) {
                 throw new IllegalArgumentException("unknown schematic: " + name);
             }
 
-            Message.debug("paste " + file, LogLevel.LOW);
+            OLDMessage.debug("paste " + file, LogLevel.LEVEL_0);
 
-            File schem = BAirDrop.getiConfig().getSchematics().get(file);
+            File schem = BAirDrop.getCfg().getSchematics().get(file);
 
             ClipboardFormat format = ClipboardFormats.findByFile(schem);
 

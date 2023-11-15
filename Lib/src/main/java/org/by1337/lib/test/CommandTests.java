@@ -64,6 +64,7 @@ public class CommandTests {
 
                     sender.sendMessage("§fos.name='§7" + System.getProperty("os.name") + "§f'");
                     sender.sendMessage("§fjava.version='§7" + System.getProperty("java.version") + "§f'");
+                    sender.sendMessage("gameVersion='§7" + Version.getGameVersion() + "'");
                 }));
     }
     public static Command sleep() {

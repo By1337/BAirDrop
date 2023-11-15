@@ -1,24 +1,6 @@
 package org.by1337.bairdrop.menu;
 
-import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.by1337.bairdrop.AirDrop;
-import org.by1337.bairdrop.BAirDrop;
-import org.by1337.bairdrop.CAirDrop;
-import org.by1337.bairdrop.util.Message;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class SelectAirMenu implements Listener {
@@ -27,7 +9,7 @@ public class SelectAirMenu implements Listener {
 //    private final int taskId;
 //
 //    public SelectAirMenu() {
-//       inventory = Bukkit.createInventory(null, 54, Message.messageBuilder(BAirDrop.getConfigMessage().getMessage("menu-air-select")));
+//       inventory = Bukkit.createInventory(null, 54, OLDMessage.messageBuilder(BAirDrop.getConfigMessage().getMessage("menu-air-select")));
 //        taskId = new BukkitRunnable() {
 //            @Override
 //            public void run() {
@@ -44,11 +26,11 @@ public class SelectAirMenu implements Listener {
 //            ItemStack itemStack = new ItemStack(airDrop.getMaterialLocked());
 //            ItemMeta im = itemStack.getItemMeta();
 //            im.getPersistentDataContainer().set(NamespacedKey.fromString("air_id"), PersistentDataType.STRING, airDrop.getId());
-//            im.setDisplayName(Message.messageBuilder(airDrop.getDisplayName()));
+//            im.setDisplayName(OLDMessage.messageBuilder(airDrop.getDisplayName()));
 //            List<String> lore = new ArrayList<>(BAirDrop.getConfigMessage().getList("select-air-menu-lore"));
 //            lore.addAll(airDrop.getDec());
 //            lore.replaceAll(airDrop::replaceInternalPlaceholder);
-//            lore.replaceAll(Message::messageBuilder);
+//            lore.replaceAll(OLDMessage::messageBuilder);
 //            im.setLore(lore);
 //            itemStack.setItemMeta(im);
 //            inventory.setItem(x, itemStack);
@@ -64,15 +46,15 @@ public class SelectAirMenu implements Listener {
 //            }
 //            ItemMeta im = e.getCurrentItem().getItemMeta();
 //            if(im.getPersistentDataContainer().has(NamespacedKey.fromString("air_id"), PersistentDataType.STRING)){
-//                String key = im.getPersistentDataContainer().get(NamespacedKey.fromString("air_id"), PersistentDataType.STRING);
-//                if(BAirDrop.airDrops.containsKey(key)){
+//                String nameKey = im.getPersistentDataContainer().get(NamespacedKey.fromString("air_id"), PersistentDataType.STRING);
+//                if(BAirDrop.airDrops.containsKey(nameKey)){
 //
-//                    if (BAirDrop.airDrops.get(key).getEditAirMenu() != null) {
-//                        BAirDrop.airDrops.get(key).getEditAirMenu().unReg();
+//                    if (BAirDrop.airDrops.get(nameKey).getEditAirMenu() != null) {
+//                        BAirDrop.airDrops.get(nameKey).getEditAirMenu().unReg();
 //                    }
 //
-//                    EditAirMenu editAirMenu = new EditAirMenu(BAirDrop.airDrops.get(key));
-//                    BAirDrop.airDrops.get(key).setEditAirMenu(editAirMenu);
+//                    EditAirMenu editAirMenu = new EditAirMenu(BAirDrop.airDrops.get(nameKey));
+//                    BAirDrop.airDrops.get(nameKey).setEditAirMenu(editAirMenu);
 //                    e.getWhoClicked().openInventory(editAirMenu.getInventory());
 //                    return;
 //                }

@@ -68,7 +68,7 @@ public class PlaceholderHook extends me.clip.placeholderapi.expansion.Placeholde
 //            }
 //            if (airDrop == null)
 //                return BAirDrop.getConfigMessage().getMessage("air-near-none");
-//            return Message.messageBuilder(airDrop.replaceInternalPlaceholder(BAirDrop.getConfigMessage().getMessage("air-near").replace("{dist}", dist + "")));
+//            return OLDMessage.messageBuilder(airDrop.replaceInternalPlaceholder(BAirDrop.getConfigMessage().getMessage("air-near").replace("{dist}", dist + "")));
 //        }
 //        if (params.contains("time_to_end_format_")) { //%bairdrop_time_to_end_format_<air id>%
 //            String[] args = params.split("_");

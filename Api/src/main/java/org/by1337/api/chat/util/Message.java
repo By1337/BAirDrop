@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 public class Message {
     private final Pattern hexPattern;
     private final Logger logger;
+    private LogLevel logLevel = LogLevel.NONE;
 
     /**
      * Constructs a Message instance with a default color pattern.
@@ -48,6 +49,36 @@ public class Message {
     }
 
     /**
+     * Logs a severe error message with the associated Throwable.
+     *
+     * @param msg The error message to log.
+     * @param t   The Throwable associated with the error.
+     */
+    public void error(String msg, Throwable t) {
+        logger.log(Level.SEVERE, msg, t);
+    }
+
+    /**
+     * Logs a severe error message with the associated Throwable and additional objects.
+     *
+     * @param msg     The error message to log, which may contain placeholders for objects.
+     * @param t       The Throwable associated with the error.
+     * @param objects Additional objects to be included in the log message.
+     */
+    public void error(String msg, Throwable t, Object... objects) {
+        logger.log(Level.SEVERE, String.format(msg, objects), t);
+    }
+
+    /**
+     * Logs a severe error message with the associated Throwable and an empty message.
+     *
+     * @param t The Throwable associated with the error.
+     */
+    public void error(Throwable t) {
+        logger.log(Level.SEVERE, "", t);
+    }
+
+    /**
      * Sends a formatted message to a command sender.
      *
      * @param sender The CommandSender to send the message to.
@@ -55,13 +86,7 @@ public class Message {
      */
     public void sendMsg(@NotNull CommandSender sender, @NotNull String msg) {
         msg = setPlaceholders(sender instanceof OfflinePlayer ? (OfflinePlayer) sender : null, msg);
-        msg = msg.replace("\\n", "\n");
-        if (msg.contains("\n")) {
-            for (String str : msg.split("\n"))
-                sender.sendMessage(messageBuilder(str));
-        } else {
-            sender.sendMessage(messageBuilder(msg));
-        }
+        sender.sendMessage(messageBuilder(msg));
     }
 
     /**
@@ -93,19 +118,13 @@ public class Message {
     /**
      * Sends a formatted message to a command sender with variable replacements using format placeholders.
      *
-     * @param sender  The CommandSender to send the message to.
-     * @param msg     The message string to be sent with format placeholders.
-     * @param format  The objects used for formatting the message.
+     * @param sender The CommandSender to send the message to.
+     * @param msg    The message string to be sent with format placeholders.
+     * @param format The objects used for formatting the message.
      */
     public void sendMsg(@NotNull CommandSender sender, @NotNull String msg, @NotNull Object... format) {
         msg = setPlaceholders(sender instanceof OfflinePlayer ? (OfflinePlayer) sender : null, msg);
-        msg = msg.replace("\\n", "\n");
-        if (msg.contains("\n")) {
-            for (String str : msg.split("\n"))
-                sender.sendMessage(messageBuilder(String.format(str, format)));
-        } else {
-            sender.sendMessage(messageBuilder(String.format(msg, format)));
-        }
+        sender.sendMessage(messageBuilder(String.format(msg, format)));
     }
 
     /**
@@ -115,6 +134,31 @@ public class Message {
      */
     public void debug(@Nullable String msg) {
         logger.info("[DEBUG] " + msg);
+    }
+
+    /**
+     * Send a debug message to the logger with the specified message and log level control.
+     *
+     * @param msg   The debug message to be logged.
+     * @param level The log level control to determine if the message should be logged.
+     */
+    public void debug(@Nullable String msg, @NotNull LogLevel level) {
+        if (level.getLvl() < logLevel.getLvl()) {
+            logger.info("[DEBUG] " + msg);
+        }
+    }
+
+    /**
+     * Send a debug message to the logger with the specified message, log level control, and additional objects.
+     *
+     * @param msg     The debug message to be logged, which may contain placeholders for objects.
+     * @param level   The log level control to determine if the message should be logged.
+     * @param objects Additional objects to be included in the log message.
+     */
+    public void debug(@Nullable String msg, @NotNull LogLevel level, Object... objects) {
+        if (level.getLvl() < logLevel.getLvl()) {
+            logger.info(String.format("[DEBUG] " + msg, objects));
+        }
     }
 
     /**
@@ -130,8 +174,8 @@ public class Message {
     /**
      * Log a message to the logger with formatting and additional objects.
      *
-     * @param msg      The message format string.
-     * @param objects  Objects to format the message.
+     * @param msg     The message format string.
+     * @param objects Objects to format the message.
      */
     public void logger(@NotNull String msg, @NotNull Object... objects) {
         logger.log(Level.INFO, String.format(messageBuilder(msg), objects));
@@ -149,8 +193,8 @@ public class Message {
     /**
      * Log an error message to the logger with formatting.
      *
-     * @param msg      The error message format string.
-     * @param objects  Objects to format the error message.
+     * @param msg     The error message format string.
+     * @param objects Objects to format the error message.
      */
     public void error(@NotNull String msg, @NotNull Object... objects) {
         logger.log(Level.SEVERE, messageBuilder(String.format(msg, objects)));
@@ -176,6 +220,10 @@ public class Message {
      */
     public void warning(@NotNull String msg) {
         logger.log(Level.WARNING, messageBuilder(msg));
+    }
+
+    public void warning(@NotNull String msg, Object... objects) {
+        logger.log(Level.WARNING, messageBuilder(String.format(msg, objects)));
     }
 
     /**
@@ -241,7 +289,17 @@ public class Message {
      * @return The formatted message with placeholders and colors.
      */
     public String messageBuilder(@NotNull String msg) {
-        msg = setPlaceholders(null, msg);
+        return messageBuilder(msg, null);
+    }
+
+    public String messageBuilder(@NotNull String msg, @Nullable OfflinePlayer player) {
+        msg = setPlaceholders(player, msg);
+        msg = msg.replace("\\s", "\s")
+             //   .replace("\\r", "\r")
+            //    .replace("\\f", "\f")
+              //  .replace("\\t", "\t")
+              //  .replace("\\b", "\b")
+                .replace("\\n", "\n");
         return hex(msg);
     }
 
@@ -308,6 +366,7 @@ public class Message {
     public void sendSound(@NotNull Player pl, @NotNull Sound sound, float volume, float pitch) {
         pl.playSound(pl.getLocation(), sound, volume, pitch);
     }
+
     /**
      * Play a sound to all online players.
      *
@@ -355,5 +414,13 @@ public class Message {
         while (m.find())
             message = message.replace(m.group(), ChatColor.of(m.group(1)).toString());
         return ChatColor.translateAlternateColorCodes('&', message);
+    }
+
+    public LogLevel getLogLevel() {
+        return logLevel;
+    }
+
+    public void setLogLevel(LogLevel logLevel) {
+        this.logLevel = logLevel;
     }
 }

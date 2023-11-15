@@ -15,7 +15,7 @@ import java.util.Map;
 
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.serializable.EffectSerializable;
-import org.by1337.bairdrop.util.Message;
+import org.by1337.bairdrop.util.OLDMessage;
 import org.by1337.bairdrop.BAirDrop;
 
 public class Helix implements IEffect, EffectSerializable {
@@ -79,9 +79,9 @@ public class Helix implements IEffect, EffectSerializable {
     public void Start(AirDrop airDrop) {
         this.airDrop = airDrop;
         if (airDrop.getAnyLoc() == null) {
-            Message.error(BAirDrop.getConfigMessage().getMessage("effect-error-loc-is-null"));
-            Message.error(BAirDrop.getConfigMessage().getMessage("effect-error-loc-is-null2"));
-            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("effect-error-loc-is-null3"), airDrop.getId()));
+            OLDMessage.error(BAirDrop.getConfigMessage().getMessage("effect-error-loc-is-null"));
+            OLDMessage.error(BAirDrop.getConfigMessage().getMessage("effect-error-loc-is-null2"));
+            OLDMessage.error(String.format(BAirDrop.getConfigMessage().getMessage("effect-error-loc-is-null3"), airDrop.getId()));
             return;
         } else loc = airDrop.getAnyLoc().clone();
         used = true;

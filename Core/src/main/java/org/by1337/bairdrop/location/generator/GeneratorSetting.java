@@ -8,6 +8,7 @@ import org.by1337.api.world.Vector2D;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class GeneratorSetting {
    public List<BlockPosition> hasBlock = new ArrayList<>();
@@ -22,4 +23,32 @@ public class GeneratorSetting {
    public int minY = 30;
    public BlockPosition regionRadius = new BlockPosition(15, 15, 15);
 
+   @Override
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (!(o instanceof GeneratorSetting setting)) return false;
+      return radius == setting.radius && maxY == setting.maxY && minY == setting.minY && Objects.equals(hasBlock, setting.hasBlock) && Objects.equals(hasNoBlock, setting.hasNoBlock) && Objects.equals(ignoreBlocks, setting.ignoreBlocks) && Objects.equals(whiteListBlocks, setting.whiteListBlocks) && Objects.equals(whiteListBiomes, setting.whiteListBiomes) && Objects.equals(offsets, setting.offsets) && Objects.equals(center, setting.center) && Objects.equals(regionRadius, setting.regionRadius);
+   }
+
+   @Override
+   public int hashCode() {
+      return Objects.hash(hasBlock, hasNoBlock, ignoreBlocks, whiteListBlocks, whiteListBiomes, offsets, center, radius, maxY, minY, regionRadius);
+   }
+
+   @Override
+   public String toString() {
+      return "GeneratorSetting{" +
+              "hasBlock=" + hasBlock +
+              ", hasNoBlock=" + hasNoBlock +
+              ", ignoreBlocks=" + ignoreBlocks +
+              ", whiteListBlocks=" + whiteListBlocks +
+              ", whiteListBiomes=" + whiteListBiomes +
+              ", offsets=" + offsets +
+              ", center=" + center +
+              ", radius=" + radius +
+              ", maxY=" + maxY +
+              ", minY=" + minY +
+              ", regionRadius=" + regionRadius +
+              '}';
+   }
 }

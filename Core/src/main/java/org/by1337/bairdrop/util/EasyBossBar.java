@@ -8,9 +8,7 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.airdrop.Airdrop;
-import org.by1337.bairdrop.airdrop.command.airdrop.impl.EasyBossBarCommand;
 import org.by1337.bairdrop.lang.Resource;
 
 import java.util.ArrayList;
@@ -60,14 +58,14 @@ public class EasyBossBar {
             String tempConsTimer = airDrop.replace(consTimer);
 
             if (!isNum(tempConsTimer)) {
-                Message.error(NOT_A_NUMBER.getString(), tempConsTimer);
+                OLDMessage.error(NOT_A_NUMBER.getString(), tempConsTimer);
             } else {
                 if (!isNum(tempTimer)) {
-                    Message.error(NOT_A_NUMBER.getString(), tempTimer);
+                    OLDMessage.error(NOT_A_NUMBER.getString(), tempTimer);
                 } else {
                     double progress = (double) Integer.parseInt(tempTimer) / Integer.parseInt(tempConsTimer);
                     if (progress > 1D || progress < 0D) {
-                        Message.error(OUT_OF_BOUNDS.getString());
+                        OLDMessage.error(OUT_OF_BOUNDS.getString());
                     } else
                         bossBar.setProgress(progress);
                 }
@@ -75,7 +73,7 @@ public class EasyBossBar {
         }
         bossBar.setColor(barColor);
         bossBar.setStyle(barStyle);
-        bossBar.setTitle(Message.messageBuilder(airDrop.replace(title)));
+        bossBar.setTitle(OLDMessage.messageBuilder(airDrop.replace(title)));
     }
 
 
@@ -86,7 +84,7 @@ public class EasyBossBar {
             if (cmd.contains("[minRadius=")) {
                 String param = getParam(cmd);
                 if (!isNum(param)) {
-                    Message.error(NOT_A_NUMBER.getString(), param);
+                    OLDMessage.error(NOT_A_NUMBER.getString(), param);
                     continue;
                 }
                 minRadius = Integer.parseInt(param);
@@ -96,7 +94,7 @@ public class EasyBossBar {
             if (cmd.contains("[radius=")) {
                 String param = getParam(cmd);
                 if (!isNum(param)) {
-                    Message.error(NOT_A_NUMBER.getString(), param);
+                    OLDMessage.error(NOT_A_NUMBER.getString(), param);
                     continue;
                 }
                 radius = Integer.parseInt(param);
@@ -135,7 +133,7 @@ public class EasyBossBar {
                 continue;
             }
             if (cmd.contains("[remove]")) {
-                EasyBossBarCommand.getEasyBossBarHashMap().remove(id);
+                org.by1337.bairdrop.airdrop.command.airdrop.impl.EasyBossBar.getEasyBossBarHashMap().remove(id);
                 bossBar.removeAll();
                 continue;
             }

@@ -1,17 +1,17 @@
 package org.by1337.bairdrop.observer;
 
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.airdrop.Airdrop;
-import org.by1337.bairdrop.airdrop.registry.AirDropCommandRegistry;
-import org.by1337.bairdrop.observer.observer.Observer;
-import org.by1337.bairdrop.observer.requirement.Requirement;
+import org.by1337.bairdrop.observer.event.CustomEvent;
+import org.by1337.bairdrop.observer.event.Event;
+import org.by1337.bairdrop.observer.observer.EditableObserver;
 import org.by1337.bairdrop.observer.requirement.Requirements;
+import org.by1337.bairdrop.observer.requirement.condition.Condition;
 import org.by1337.bairdrop.util.ExecuteCommands;
-import org.by1337.bairdrop.util.Message;
-import org.by1337.api.command.CommandException;
+import org.by1337.api.util.NameKey;
+import org.by1337.bairdrop.util.OLDMessage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,106 +24,85 @@ import java.util.regex.Pattern;
 /**
  * A custom event listener that observes specific events and triggers commands based on certain conditions.
  */
-public class CustomEventListener implements Observer {
+public class CustomEventListener implements EditableObserver {
+    @NotNull
     private final CustomEvent customEvent;
+    @Nullable
     private final String description;
+    @Nullable
     private final String[] commands;
+    @Nullable
     private final String[] denyCommands;
     @Nullable
     private final Requirements requirements;
     @Nullable
     private final Condition condition;
-    private final NamespacedKey key;
+    @NotNull
+    private final NameKey nameKey;
 
-    /**
-     * Constructs a new CustomEventListener.
-     *
-     * @param customEvent  The custom event to observe.
-     * @param description  A description of this listener.
-     * @param commands     An array of commands to execute when conditions are met.
-     * @param denyCommands An array of commands to execute when conditions are not met.
-     * @param requirements The requirements that must be satisfied for this listener to trigger.
-     * @param condition
-     * @param key          A unique key associated with this listener.
-     */
-    public CustomEventListener(CustomEvent customEvent, String description, String[] commands, String[] denyCommands, @Nullable Requirements requirements, @Nullable Condition condition, NamespacedKey key) {
+    private final boolean scheduler;
+    private final boolean async;
+    private final int later;
+
+    public CustomEventListener(@NotNull CustomEvent customEvent, @Nullable String description,
+                               @Nullable String[] commands, @Nullable String[] denyCommands,
+                               @Nullable Requirements requirements, @Nullable Condition condition,
+                               @NotNull NameKey nameKey) {
         this.customEvent = customEvent;
         this.description = description;
         this.commands = commands;
         this.denyCommands = denyCommands;
         this.requirements = requirements;
         this.condition = condition;
-        this.key = key;
+        this.nameKey = nameKey;
+
+        scheduler = Arrays.stream(commands).toList().contains("[SCHEDULER]") || Arrays.stream(denyCommands).toList().contains("[SCHEDULER]");
+        async = Arrays.stream(commands).toList().contains("[ASYNC]") || Arrays.stream(denyCommands).toList().contains("[ASYNC]");
+        later = getLaterTime();
     }
 
-    /**
-     * Updates the listener in response to events.
-     *
-     * @param pl          The player associated with the event (can be null).
-     * @param airDrop     The AirDrop object associated with the event (can be null).
-     * @param customEvent The custom event being observed.
-     * @param ignoreEvent Indicates whether to ignore the event. If set to true, the listener
-     *                    will trigger regardless of the event type.
-     */
 
     @Override
-    public void update(@Nullable Player pl, @Nullable Airdrop airDrop, CustomEvent customEvent, boolean ignoreEvent) {
-        if (!customEvent.equals(this.customEvent) && !ignoreEvent)
-            return;
-        if (Arrays.stream(commands).toList().contains("[SCHEDULER]") || Arrays.stream(denyCommands).toList().contains("[SCHEDULER]")) {
-            getRunnable(pl, airDrop, customEvent).runTaskLater(BAirDrop.getInstance(), getLaterTime());
+    public void update(Event event) {
+        if (scheduler) {
+            getRunnable(event).runTaskLater(BAirDrop.getInstance(), later);
             return;
         }
-        if (Arrays.stream(commands).toList().contains("[ASYNC]") || Arrays.stream(denyCommands).toList().contains("[ASYNC]")) {
-            getRunnable(pl, airDrop, customEvent).runTaskLaterAsynchronously(BAirDrop.getInstance(), getLaterTime());
+        if (async) {
+            getRunnable(event).runTaskLaterAsynchronously(BAirDrop.getInstance(), later);
             return;
         }
 
         ExecuteCommands executeCommands = new ExecuteCommands();
-        if (checkRequirement(airDrop, pl)) {
-            executeCommands.runListenerCommands(commands, pl, airDrop, customEvent);
+        if (checkRequirement(event)) {
+            executeCommands.runListenerCommands(event, commands);
         } else {
-            executeCommands.runListenerCommands(denyCommands, pl, airDrop, customEvent);
+            executeCommands.runListenerCommands(event, denyCommands);
         }
-        if (condition != null){
-            List<String> list = condition.getCommands(airDrop, pl);
-            Message.logger(list.toString());
-            executeCommands.runListenerCommands(list.toArray(new String[0]), pl, airDrop, customEvent);
+        if (condition != null) {
+            List<String> list = condition.getCommands(event);
+            executeCommands.runListenerCommands(event, list.toArray(new String[0]));
         }
     }
 
-    /**
-     * Creates a BukkitRunnable for event processing in a separate thread.
-     *
-     * @param pl          The player associated with the event (can be null).
-     * @param airDrop     The AirDrop object associated with the event (can be null).
-     * @param customEvent The custom event being observed.
-     * @return A BukkitRunnable for event processing.
-     */
-    private BukkitRunnable getRunnable(@Nullable Player pl, @Nullable Airdrop airDrop, CustomEvent customEvent) {
+    private BukkitRunnable getRunnable(Event event) {
         return new BukkitRunnable() {
             @Override
             public void run() {
                 ExecuteCommands executeCommands = new ExecuteCommands();
-                if (checkRequirement(airDrop, pl)) {
-                    executeCommands.runListenerCommands(commands, pl, airDrop, customEvent);
+                if (checkRequirement(event)) {
+                    executeCommands.runListenerCommands(event, commands);
                 } else {
-                    executeCommands.runListenerCommands(denyCommands, pl, airDrop, customEvent);
+                    executeCommands.runListenerCommands(event, denyCommands);
                 }
-                if (condition != null){
-                    List<String> list = condition.getCommands(airDrop, pl);
-                    Message.logger(list.toString());
-                    executeCommands.runListenerCommands(list.toArray(new String[0]), pl, airDrop, customEvent);
+                if (condition != null) {
+                    List<String> list = condition.getCommands(event);
+                    executeCommands.runListenerCommands(event, list.toArray(new String[0]));
                 }
             }
         };
     }
 
-    /**
-     * Retrieves the delay time for execution, if specified in the commands.
-     *
-     * @return The delay time in ticks, or 0 if not specified.
-     */
     private int getLaterTime() {
         List<String> list = new ArrayList<>();
         list.add(Arrays.toString(commands));
@@ -135,116 +114,65 @@ public class CustomEventListener implements Observer {
                 try {
                     return Integer.parseInt(matcher.group(1));
                 } catch (NumberFormatException e) {
-                    Message.error(e.getLocalizedMessage());
+                    OLDMessage.error(e.getLocalizedMessage());
                 }
             }
         }
         return 0;
     }
 
-    /**
-     * Checks all conditions to determine if the listener should trigger.
-     *
-     * @param airDrop The AirDrop object associated with the event (can be null).
-     * @param pl      The player associated with the event (can be null).
-     * @return true if all requirements are met, otherwise false.
-     */
-    private boolean checkRequirement(@Nullable Airdrop airDrop, @Nullable Player pl) {
+
+    private boolean checkRequirement(@NotNull Event event) {
         if (requirements != null)
-            return requirements.check(airDrop, pl);
+            return requirements.check(event);
         return true;
     }
 
+
     @Override
-    public CustomEvent getEvent() {
+    public @NotNull CustomEvent customEvent() {
         return customEvent;
     }
 
     @Override
-    public String[] getCommands() {
+    public String[] commands() {
         return commands;
     }
 
     @Override
-    public String[] getDenyCommands() {
+    public String[] denyCommands() {
         return denyCommands;
     }
 
     @Override
-    public String getDescription() {
+    public @NotNull String description() {
         return description;
+
+    }
+
+    public Requirements requirements() {
+        return requirements;
+    }
+
+    public Condition condition() {
+        return condition;
     }
 
     @Override
-    public void validateCommands() throws CommandException {
-        for (String command : commands) {
-            AirDropCommandRegistry.validate(command);
-        }
-        for (String denyCommand : denyCommands) {
-            AirDropCommandRegistry.validate(denyCommand);
-        }
+    public @NotNull NameKey getName() {
+        return nameKey;
     }
 
-    @NotNull
     @Override
-    public NamespacedKey getKey() {
-        return key;
-    }
-
-    public static class CustomEventListenerBuilder {
-        private CustomEvent customEvent = CustomEvent.NONE;
-        private String description = "description";
-        private String[] commands = new String[0];
-        private String[] denyCommands= new String[0];
-        private Requirements requirements = null;
-        private NamespacedKey key = null;
-        private Condition condition = null;
-
-        public CustomEventListenerBuilder customEvent(CustomEvent customEvent) {
-            this.customEvent = customEvent;
-            return this;
-        }
-
-        public CustomEventListenerBuilder condition(Condition condition) {
-            this.condition = condition;
-            return this;
-        }
-
-        public CustomEventListenerBuilder description(String description) {
-            this.description = description;
-            return this;
-        }
-
-        public CustomEventListenerBuilder commands(String[] commands) {
-            this.commands = commands;
-            return this;
-        }
-
-        public CustomEventListenerBuilder denyCommands(String[] denyCommands) {
-            this.denyCommands = denyCommands;
-            return this;
-        }
-
-        public CustomEventListenerBuilder requirements(Requirements requirements) {
-            this.requirements = requirements;
-            return this;
-        }
-
-        public CustomEventListenerBuilder requirements(List<Requirement> requirements) {
-            Requirements requirements1 = new Requirements();
-            requirements1.set(requirements);
-            this.requirements = requirements1;
-            return this;
-        }
-
-        public CustomEventListenerBuilder key(NamespacedKey key) {
-            this.key = key;
-            return this;
-        }
-
-        public CustomEventListener build() {
-            return new CustomEventListener(this.customEvent, this.description, this.commands, this.denyCommands, this.requirements, condition, this.key);
-        }
-
+    public String toString() {
+        return "CustomEventListener{" +
+                "customEvent=" + customEvent +
+                ", description='" + description + '\'' +
+                ", commands=" + Arrays.toString(commands) +
+                ", denyCommands=" + Arrays.toString(denyCommands) +
+                ", requirements=" + requirements +
+                ", condition=" + condition +
+                ", nameKey=" + nameKey +
+                '}';
     }
 }

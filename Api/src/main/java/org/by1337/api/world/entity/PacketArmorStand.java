@@ -1,13 +1,13 @@
 package org.by1337.api.world.entity;
 
 public interface PacketArmorStand extends PacketLivingEntity {
-    void setSmall(boolean param0);
+    void setSmall(boolean small);
     boolean isSmall();
-    void setShowArms(boolean param0);
+    void setShowArms(boolean showArms);
     boolean isShowArms();
-    void setNoBasePlate(boolean param0);
+    void setNoBasePlate(boolean noBasePlate);
     boolean isNoBasePlate();
-    void setMarker(boolean param0);
+    void setMarker(boolean marker);
     boolean isMarker();
     void setHeadPose(float x, float y, float z);
     void setBodyPose(float x, float y, float z);

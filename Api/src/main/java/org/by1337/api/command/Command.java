@@ -211,8 +211,11 @@ public class Command {
                     if (argument.getRequires() != null && !argument.getRequires().check(sender)) {
                         break;
                     }
-                    argument.process(sender, arg);
-                    completions = argument.getExx();
+                    completions.clear();
+
+                    completions.addAll(argument.tabCompleter(sender, arg));
+                    completions.addAll(argument.getExx());
+
                 } else {
                     if (!args[0].isEmpty()) {
                         List<String> sub = new ArrayList<>();

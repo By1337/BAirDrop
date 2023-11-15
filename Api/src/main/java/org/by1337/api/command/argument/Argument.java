@@ -1,20 +1,19 @@
 package org.by1337.api.command.argument;
 
-import lombok.Getter;
 import org.bukkit.command.CommandSender;
-import org.by1337.api.command.requires.Requires;
 import org.by1337.api.command.CommandSyntaxError;
+import org.by1337.api.command.requires.Requires;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Abstract class representing a command argument.
  */
-@Getter
 public abstract class Argument {
     protected final String name;
-    protected final List<String> exx;
+    private Supplier<List<String>> exx;
     protected Requires requires;
 
     /**
@@ -24,16 +23,11 @@ public abstract class Argument {
      */
     public Argument(String name) {
         this.name = name;
-        this.exx = new ArrayList<>();
+        this.exx = ArrayList::new;
     }
 
-    /**
-     * Constructs an Argument with the specified name and a list of example values.
-     *
-     * @param name     The name of the argument.
-     * @param exx A list of example values for the argument.
-     */
-    public Argument(String name, List<String> exx) {
+
+    public Argument(String name, Supplier<List<String>> exx) {
         this.name = name;
         this.exx = exx;
     }
@@ -48,8 +42,29 @@ public abstract class Argument {
      */
     public abstract Object process(CommandSender sender, String str) throws CommandSyntaxError;
 
-    public Argument requires(Requires requires){
+    public List<String> tabCompleter(CommandSender sender, String str) throws CommandSyntaxError {
+        process(sender, str);
+        return new ArrayList<>();
+    }
+
+    public Argument requires(Requires requires) {
         this.requires = requires;
         return this;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public List<String> getExx() {
+        return this.exx.get();
+    }
+
+    public Requires getRequires() {
+        return this.requires;
+    }
+
+    public void setExx(Supplier<List<String>> exx) {
+        this.exx = exx;
     }
 }

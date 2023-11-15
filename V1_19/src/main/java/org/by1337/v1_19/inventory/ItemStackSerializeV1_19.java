@@ -5,13 +5,14 @@ import net.minecraft.nbt.TagParser;
 import org.bukkit.craftbukkit.v1_19_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 import org.by1337.api.inventory.ItemStackSerialize;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 public class ItemStackSerializeV1_19 implements ItemStackSerialize {
     @Override
-    public String serialize(ItemStack itemStack) throws IllegalArgumentException {
+    public @NotNull String serialize(@NotNull ItemStack itemStack) throws IllegalArgumentException {
         try {
             net.minecraft.world.item.ItemStack item = CraftItemStack.asNMSCopy(itemStack);
             CompoundTag tag = new CompoundTag();
@@ -24,7 +25,7 @@ public class ItemStackSerializeV1_19 implements ItemStackSerialize {
     }
 
     @Override
-    public ItemStack deserialize(String data) throws IllegalArgumentException {
+    public @NotNull ItemStack deserialize(@NotNull String data) throws IllegalArgumentException {
         try {
             return CraftItemStack.asBukkitCopy(
                     net.minecraft.world.item.ItemStack.of(TagParser.parseTag(new String(Base64.getDecoder().decode(data.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8)))

@@ -1,40 +1,76 @@
 package command;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import org.bukkit.NamespacedKey;
-import org.by1337.api.world.BLocation;
-import org.by1337.bairdrop.menu.property.ListenChat;
-import org.by1337.bairdrop.menu.property.property.Property;
-import org.by1337.bairdrop.menu.property.property.PropertyBoolean;
-import org.by1337.bairdrop.menu.property.property.PropertyListString;
-import org.by1337.bairdrop.menu.property.property.PropertyLocation;
-import org.by1337.bairdrop.serializable.GsonFactory;
+import org.bukkit.Color;
+import org.bukkit.Material;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.by1337.api.configuration.YamlContext;
+import org.by1337.api.match.BMatch;
+import org.by1337.bairdrop.observer.CustomEventListener;
+import org.by1337.bairdrop.observer.CustomEventListenerBuilder;
+import org.by1337.bairdrop.observer.event.CustomEvent;
+import org.by1337.bairdrop.observer.event.Event;
+import org.by1337.bairdrop.observer.requirement.Requirements;
+import org.by1337.bairdrop.observer.requirement.impl.RequirementNumericalCheck;
+import org.by1337.bairdrop.observer.requirement.impl.RequirementStringCheck;
+import org.by1337.api.util.NameKey;
+import org.junit.Assert;
 import org.junit.Test;
 
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
 
 public class Clazz {
-    @Test
-    public void run(){
 
+    @Test
+    public void run1() throws InvalidConfigurationException, IOException {
+     //   System.out.println(BMatch.match(String.format("match[%s]", "100 + 100")));
+
+//        YamlContext context = new YamlContext(new YamlConfiguration());
 //
-//        HashMap<String, Property<?>> propertyHashMap = new HashMap<>();
+//        context.set("test", Material.ACACIA_BOAT);
 //
-//        propertyHashMap.put("test", new PropertyBoolean(false, "test"));
-//        propertyHashMap.put("test1", new PropertyBoolean(false, "test1"));
-//        propertyHashMap.put("loc", new PropertyLocation(new BLocation(123, 10, 10, "world"), "location"));
-//        propertyHashMap.put("list", new PropertyListString(List.of("line 1", "line 2"), "list", List.of("123", "123")));
+//        String ser = ((YamlConfiguration) context.getHandle()).saveToString();
 //
+//        YamlConfiguration yaml = new YamlConfiguration();
+//        yaml.loadFromString(ser);
 //
-//        Gson gson = GsonFactory.create();
-//        System.out.println(gson.toJson(propertyHashMap));
+//        YamlContext context1 = new YamlContext(yaml);
 //
-//        Type empMapType = new TypeToken<HashMap<String, Property<?>>>() {
-//        }.getType();
+//        Material material = context1.getAsMaterial("test");
 //
-//        HashMap<String, Property<?>> propertyHashMap2 = gson.fromJson(gson.toJson(propertyHashMap), empMapType);
+//        System.out.println(material);
+//
+//        System.out.println(((YamlConfiguration) context1.getHandle()).saveToString());
     }
+
+    @Test
+    public void run() throws InvalidConfigurationException {
+
+        CustomEventListener listener = new CustomEventListenerBuilder()
+                .commands(List.of("cmd 1"))
+                .condition(null)
+                .customEvent(CustomEvent.START_EVENT)
+                .denyCommands(List.of("cmd 2"))
+                .description("description")
+                .nameKey(new NameKey("listener"))
+                .requirements(new Requirements(List.of(new RequirementStringCheck("qwerty == qwerty"), new RequirementNumericalCheck("100 == 100"))))
+                .build();
+        Assert.assertEquals(serialize(listener).toString(), listener.toString());
+    }
+
+    public Object serialize(Object o) throws InvalidConfigurationException {
+        YamlConfiguration yml = new YamlConfiguration();
+        YamlContext context = new YamlContext(yml);
+        context.set("test", o);
+        String ser = ((YamlConfiguration) context.getHandle()).saveToString();
+
+        YamlConfiguration yml1 = new YamlConfiguration();
+        yml1.loadFromString(ser);
+        YamlContext context1 = new YamlContext(yml1);
+        return context1.getAs("test", o.getClass());
+    }
+
+
 }
+

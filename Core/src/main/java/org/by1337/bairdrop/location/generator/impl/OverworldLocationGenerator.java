@@ -4,14 +4,10 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerTeleportEvent;
 import org.by1337.api.world.BlockPosition;
 import org.by1337.api.world.Vector2D;
 import org.by1337.bairdrop.location.generator.GeneratorSetting;
 import org.by1337.bairdrop.location.generator.LocationGenerator;
-import org.by1337.bairdrop.util.Message;
 
 public class OverworldLocationGenerator extends LocationGenerator {
     public OverworldLocationGenerator(GeneratorSetting setting, World world) {
@@ -23,7 +19,7 @@ public class OverworldLocationGenerator extends LocationGenerator {
         Chunk chunk = getRandomChunk();
 
         Vector2D vector2D = new Vector2D(8, 8);
-        int y = getHighestBlock(chunk, vector2D);
+        int y = getHighestBlock(chunk, (int) vector2D.x, (int) vector2D.z);
 
         if (y < setting.minY) return null;
 
@@ -38,13 +34,13 @@ public class OverworldLocationGenerator extends LocationGenerator {
 //        if (!isRegionEmpty(setting.regionRadiusCheck, block.getLocation()))
 //            return null; // todo
 
-        for (BlockPosition blockPosition : setting.hasBlock){
-            if (!hasBlock(chunk, blockPosition.add(pos))){
+        for (BlockPosition blockPosition : setting.hasBlock) {
+            if (!hasBlock(chunk, blockPosition.add(pos))) {
                 return null;
             }
         }
-        for (BlockPosition blockPosition : setting.hasNoBlock){
-            if (hasBlock(chunk, blockPosition.add(pos))){
+        for (BlockPosition blockPosition : setting.hasNoBlock) {
+            if (hasBlock(chunk, blockPosition.add(pos))) {
                 return null;
             }
         }

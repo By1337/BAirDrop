@@ -6,11 +6,11 @@ import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
-import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.airdrop.Airdrop;
 import org.by1337.bairdrop.airdrop.command.airdrop.CommandExecutor;
-import org.by1337.bairdrop.util.Message;
+import org.by1337.bairdrop.observer.event.Event;
+import org.by1337.bairdrop.util.OLDMessage;
 import org.by1337.api.command.Command;
 import org.by1337.api.command.CommandException;
 import org.jetbrains.annotations.NotNull;
@@ -25,12 +25,16 @@ public class NewBossBarCommand implements CommandExecutor {
         return "[NEW_BOSSBAR]";
     }
 
-    @Override
+    @Override // заглушка
+    public void execute(Event event, @NotNull String command) throws CommandException {
+        execute(event.getAirdrop(), event.getPlayer(), command);
+    }
+
     public void execute(@Nullable Airdrop airDrop, @Nullable Player player, @NotNull String command) {
         command = command.replace("[NEW_BOSSBAR]", "");
         int quoteCount = command.replaceAll("[^\"]", "").length();
         if (quoteCount % 2 != 0) {
-            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("boss-bar-format-error"), command));
+            OLDMessage.error(String.format(BAirDrop.getConfigMessage().getMessage("boss-bar-format-error"), command));
             return;
         } else {
             StringBuilder result = new StringBuilder();
@@ -48,8 +52,8 @@ public class NewBossBarCommand implements CommandExecutor {
         }
         String[] args = command.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
         if (args.length < 4) {
-            Message.error(BAirDrop.getConfigMessage().getMessage("boss-bar-few-args"));
-            Message.error(Arrays.toString(args));
+            OLDMessage.error(BAirDrop.getConfigMessage().getMessage("boss-bar-few-args"));
+            OLDMessage.error(Arrays.toString(args));
             return;
         }
         String title = null;
@@ -76,31 +80,31 @@ public class NewBossBarCommand implements CommandExecutor {
                 }
             }
         } catch (IllegalArgumentException e) {
-            Message.error(BAirDrop.getConfigMessage().getMessage("bar-error"));
-            Message.error(BAirDrop.getConfigMessage().getMessage("boss-bar-not-created"));
-            Message.error(Arrays.toString(args));
-            Message.error(e.getLocalizedMessage());
+            OLDMessage.error(BAirDrop.getConfigMessage().getMessage("bar-error"));
+            OLDMessage.error(BAirDrop.getConfigMessage().getMessage("boss-bar-not-created"));
+            OLDMessage.error(Arrays.toString(args));
+            OLDMessage.error(e.getLocalizedMessage());
             return;
         }
         if (title == null || name == null || barColor == null || barStyle == null) {
-            Message.error(BAirDrop.getConfigMessage().getMessage("boss-bar-not-created"));
-            Message.error(BAirDrop.getConfigMessage().getMessage("boss-bar-few-args"));
+            OLDMessage.error(BAirDrop.getConfigMessage().getMessage("boss-bar-not-created"));
+            OLDMessage.error(BAirDrop.getConfigMessage().getMessage("boss-bar-few-args"));
             return;
         }
-        BossBar bossBar = Bukkit.createBossBar(Message.messageBuilder(title), barColor, barStyle);
+        BossBar bossBar = Bukkit.createBossBar(OLDMessage.messageBuilder(title), barColor, barStyle);
         bossBarAddParam(bossBar, args, Objects.requireNonNull(player, "player is null! " + command));
-        if (Message.bossBars.containsKey(name)) {
-            Message.warning(String.format(BAirDrop.getConfigMessage().getMessage("boss-bar-already-created"), name));
-            Message.bossBars.get(name).removeAll();
+        if (OLDMessage.bossBars.containsKey(name)) {
+            OLDMessage.warning(String.format(BAirDrop.getConfigMessage().getMessage("boss-bar-already-created"), name));
+            OLDMessage.bossBars.get(name).removeAll();
         }
-        Message.bossBars.put(name, bossBar);
+        OLDMessage.bossBars.put(name, bossBar);
         return;
     }
     public void bossBarAddParam(BossBar bossBar, String[] args, @Nullable Player pl) {
         try {
             for (String key : args) {
                 if (key.contains("setTitle")) {
-                    bossBar.setTitle(Message.messageBuilder(key.replace("setTitle=", "").replace("\"", "")));
+                    bossBar.setTitle(OLDMessage.messageBuilder(key.replace("setTitle=", "").replace("\"", "")));
                     continue;
                 }
                 if (key.contains("BarColor")) {
@@ -124,14 +128,14 @@ public class NewBossBarCommand implements CommandExecutor {
                     if (pl != null)
                         bossBar.addPlayer(pl);
                     else
-                        Message.error(BAirDrop.getConfigMessage().getMessage("boss-bar-fail"));
+                        OLDMessage.error(BAirDrop.getConfigMessage().getMessage("boss-bar-fail"));
                     continue;
                 }
                 if (key.contains("removePlayer")) {
                     if (pl != null)
                         bossBar.removePlayer(pl);
                     else
-                        Message.error(BAirDrop.getConfigMessage().getMessage("boss-bar-fail2"));
+                        OLDMessage.error(BAirDrop.getConfigMessage().getMessage("boss-bar-fail2"));
                     continue;
                 }
                 if (key.contains("removeAll")) {
@@ -151,12 +155,12 @@ public class NewBossBarCommand implements CommandExecutor {
                     continue;
                 }
                 if (!key.contains("name="))
-                    Message.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-cmd-boss-bar"), key));
+                    OLDMessage.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-cmd-boss-bar"), key));
             }
         } catch (IllegalArgumentException e) {
-            Message.error(BAirDrop.getConfigMessage().getMessage("IllegalArgumentException-boss-bar"));
-            Message.error(BAirDrop.getConfigMessage().getMessage("IllegalArgumentException-boss-bar2"));
-            Message.error(e.getLocalizedMessage());
+            OLDMessage.error(BAirDrop.getConfigMessage().getMessage("IllegalArgumentException-boss-bar"));
+            OLDMessage.error(BAirDrop.getConfigMessage().getMessage("IllegalArgumentException-boss-bar2"));
+            OLDMessage.error(e.getLocalizedMessage());
         }
     }
 

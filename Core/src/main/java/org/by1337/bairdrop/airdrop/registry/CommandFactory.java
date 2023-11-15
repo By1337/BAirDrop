@@ -12,7 +12,7 @@ import org.by1337.api.command.requires.RequiresPermission;
 import org.by1337.bairdrop.lang.Resource;
 import org.by1337.bairdrop.location.GeneratorLoc;
 import org.by1337.bairdrop.summoner.SummonerItem;
-import org.by1337.bairdrop.util.Message;
+import org.by1337.bairdrop.util.OLDMessage;
 import org.by1337.api.chat.*;
 import org.by1337.api.chat.Component;
 import org.by1337.api.chat.hover.HoverEvent;
@@ -32,13 +32,14 @@ public class CommandFactory {
         return new Command("bairdrop")
                 .addSubCommand(new Command("test")
                         .executor(((sender, args) -> {
-                            BaseAirDrop baseAirDrop = new BaseAirDrop("test", new File(BAirDrop.getInstance().getDataFolder() + "/airdrops"));
-                            new BukkitRunnable() {
-                                @Override
-                                public void run() {
-                                    baseAirDrop.tick();
-                                }
-                            }.runTaskTimer(BAirDrop.getInstance(), 0, 20);
+                            BaseAirDrop.createNew("default");
+//                            BaseAirDrop baseAirDrop = new BaseAirDrop("test", new File(BAirDrop.getInstance().getDataFolder() + "/airdrops"));
+//                            new BukkitRunnable() {
+//                                @Override
+//                                public void run() {
+//                                    baseAirDrop.tick();
+//                                }
+//                            }.runTaskTimer(BAirDrop.getInstance(), 0, 20);
                         }))
                 )
                 .requires(new RequiresPermission("bair.usage"))
@@ -46,7 +47,7 @@ public class CommandFactory {
                 .aliases("air")
                 .addSubCommand(new Command("help")
                         .requires(new RequiresPermission("bair.usage"))
-                        .executor(((sender, args) -> Message.sendRawMsg(sender, lang.rawHelp.getString())))
+                        .executor(((sender, args) -> OLDMessage.sendRawMsg(sender, lang.rawHelp.getString())))
                 )
                 .addSubCommand(new Command("list")
                         .requires(new RequiresPermission("bair.list"))
@@ -59,16 +60,16 @@ public class CommandFactory {
                                         .clickEvent(new ClickEvent(ClickEventType.RUN_COMMAND, String.format("/bair menu %s", airDrop))));
                                 x++;
                             }
-                            Message.sendRawMsg(sender, componentBuilder);
+                            OLDMessage.sendRawMsg(sender, componentBuilder);
                         }))
                 )
                 .addSubCommand(new Command("compass")
-                        .requires(new RequiresPermission("bair.compass"))
-                        .addSubCommand(new Command("remove")
-                                .requires(new RequiresPermission("bair.compass.remove"))
-                                .argument(new ArgumentPlayer("target", new ArrayList<>(lang.paramPlayer.getList())))
-                                .argument(new ArgumentInteger("amount", new ArrayList<>(lang.paramCount.getList()), 1))
-                                .executor(((sender, args) -> {
+                                .requires(new RequiresPermission("bair.compass"))
+                                .addSubCommand(new Command("remove")
+                                                .requires(new RequiresPermission("bair.compass.remove"))
+                                                .argument(new ArgumentPlayer("target", new ArrayList<>(lang.paramPlayer.getList())))
+                                                .argument(new ArgumentInteger("amount", new ArrayList<>(lang.paramCount.getList()), 1))
+                                                .executor(((sender, args) -> {
 //                                    int removed = 0;
 //                                    int amount = (int) args.getOrDefault("amount", 1);
 //                                    Player player = (Player) args.getOrDefault("target", null);
@@ -90,14 +91,14 @@ public class CommandFactory {
 //                                            player.getInventory().setItem(slot, null);
 //                                        }
 //                                    }
-//                                    Message.sendMsg(sender, String.format(lang.removedItems.getString(), removed, player.getName()));
-                                }))
-                        )
-                        .addSubCommand(new Command("give")
-                                .requires(new RequiresPermission("bair.compass.give"))
-                                .argument(new ArgumentPlayer("target", new ArrayList<>(lang.paramPlayer.getList())))
-                                .argument(new ArgumentInteger("amount", new ArrayList<>(lang.paramCount.getList()), 1, 64))
-                                .executor(((sender, args) -> {
+//                                    OLDMessage.sendMsg(sender, String.format(lang.removedItems.getString(), removed, player.getName()));
+                                                }))
+                                )
+                                .addSubCommand(new Command("give")
+                                                .requires(new RequiresPermission("bair.compass.give"))
+                                                .argument(new ArgumentPlayer("target", new ArrayList<>(lang.paramPlayer.getList())))
+                                                .argument(new ArgumentInteger("amount", new ArrayList<>(lang.paramCount.getList()), 1, 64))
+                                                .executor(((sender, args) -> {
 //                                    int amount = (int) args.getOrDefault("amount", 1);
 //                                    Player player = (Player) args.getOrDefault("target", null);
 //
@@ -113,14 +114,14 @@ public class CommandFactory {
 //                                        player.getLocation().getWorld().dropItem(player.getLocation(), i);
 //                                    }
 //
-//                                    Message.sendMsg(sender, String.format(lang.gaveItems.getString(), amount, player.getName()));
-                                }))
-                        )
+//                                    OLDMessage.sendMsg(sender, String.format(lang.gaveItems.getString(), amount, player.getName()));
+                                                }))
+                                )
                 )
                 .addSubCommand(new Command("delete")
-                        .requires(new RequiresPermission("bair.delete"))
-                        .argument(new ArgumentSetList("air", airDrops.keySet().stream().toList()))
-                        .executor(((sender, args) -> {
+                                .requires(new RequiresPermission("bair.delete"))
+                                .argument(new ArgumentSetList("air", airDrops.keySet().stream().toList()))
+                                .executor(((sender, args) -> {
 
 //                            String airId = (String) CommandSyntaxError.ifNull(args.getOrDefault("air", null), lang.airIsNotSelected.getString());
 //
@@ -128,11 +129,11 @@ public class CommandFactory {
 //
 //                            airDrop.unload();
 //                            if (airDrop.delete()) {
-//                                Message.sendMsg(sender, lang.airDropDeleted.getString(), airId);
+//                                OLDMessage.sendMsg(sender, lang.airDropDeleted.getString(), airId);
 //                            } else {
-//                                Message.sendMsg(sender, lang.airDropDeletedFail.getString());
+//                                OLDMessage.sendMsg(sender, lang.airDropDeletedFail.getString());
 //                            }
-                        }))
+                                }))
                 )
                 .addSubCommand(new Command("summoner")
                         .requires(new RequiresPermission("bair.summoner"))
@@ -159,7 +160,7 @@ public class CommandFactory {
                                     for (ItemStack i : notGave) {
                                         player.getLocation().getWorld().dropItem(player.getLocation(), i);
                                     }
-                                    Message.sendMsg(sender, String.format(lang.gaveItems.getString(), amount, player.getName()));
+                                    OLDMessage.sendMsg(sender, String.format(lang.gaveItems.getString(), amount, player.getName()));
                                 })
                         )
 
@@ -169,15 +170,15 @@ public class CommandFactory {
                         .executor((sender, args) -> {
                             long x = System.currentTimeMillis();
                             BAirDrop.reload();
-                            Message.sendMsg(sender, lang.reloaded.getString(), (System.currentTimeMillis() - x));
+                            OLDMessage.sendMsg(sender, lang.reloaded.getString(), (System.currentTimeMillis() - x));
                         })
                 )
                 .addSubCommand(new Command("menu")
-                        //.aliases("m")
-                        .requires(new RequiresPermission("bair.menu"))
-                        .argument(new ArgumentSetList("air", airDrops.keySet().stream().toList()))
-                        .argument(new ArgumentPlayer("target", new ArrayList<>(lang.paramPlayer.getList())))
-                        .executor(((sender, args) -> {
+                                //.aliases("m")
+                                .requires(new RequiresPermission("bair.menu"))
+                                .argument(new ArgumentSetList("air", airDrops.keySet().stream().toList()))
+                                .argument(new ArgumentPlayer("target", new ArrayList<>(lang.paramPlayer.getList())))
+                                .executor(((sender, args) -> {
 //
 //                            String airId = (String) args.getOrDefault("air", null);
 //
@@ -201,39 +202,39 @@ public class CommandFactory {
 //                                airDrop.setEditAirMenu(em);
 //                                player.openInventory(em.getInventory());
 //                            }
-                        }))
+                                }))
                 )
                 .addSubCommand(new Command("create")
-                        .requires(new RequiresPermission("bair.create"))
-                        .argument(new ArgumentValidCharacters("name", lang.airId.getList()))
-                        .executor(((sender, args) -> { // todo
+                                .requires(new RequiresPermission("bair.create"))
+                                .argument(new ArgumentValidCharacters("name", lang.airId.getList()))
+                                .executor(((sender, args) -> { // todo
 //                            String airId = (String) args.getOrThrow("name", lang.airIsNotSelected.getString());
 //                            CommandSyntaxError.ifNotNull(airDrops.getOrDefault(airId, null), lang.airIsAlreadyExists.getString(), airId);
 //
 //                            airDrops.put(airId, new CAirDrop(airId));
-//                            Message.sendMsg(sender, lang.airCreated.getString(), airId);
-                        }))
+//                            OLDMessage.sendMsg(sender, lang.airCreated.getString(), airId);
+                                }))
                 )
                 .addSubCommand(new Command("start") // todo
-                        .requires(new RequiresPermission("bair.start"))
-                        .argument(new ArgumentSetList("air", airDrops.keySet().stream().toList()))
-                        .argument(new ArgumentPosition("posX", new ArrayList<>(List.of("~", "~ ~ ~")), ArgumentPosition.ArgumentPositionType.X))
-                        .argument(new ArgumentPosition("posY", new ArrayList<>(List.of("~", "~ ~")), ArgumentPosition.ArgumentPositionType.Y))
-                        .argument(new ArgumentPosition("posZ", new ArrayList<>(List.of("~")), ArgumentPosition.ArgumentPositionType.Z))
-                        .argument(new ArgumentWorld("world"))
-                        .argument(new ArgumentInteger("time", new ArrayList<>(lang.paramTimeToStart.getList())))
-                        .executor(((sender, args) -> {
+                                .requires(new RequiresPermission("bair.start"))
+                                .argument(new ArgumentSetList("air", airDrops.keySet().stream().toList()))
+                                .argument(new ArgumentPosition("posX", new ArrayList<>(List.of("~", "~ ~ ~")), ArgumentPosition.ArgumentPositionType.X))
+                                .argument(new ArgumentPosition("posY", new ArrayList<>(List.of("~", "~ ~")), ArgumentPosition.ArgumentPositionType.Y))
+                                .argument(new ArgumentPosition("posZ", new ArrayList<>(List.of("~")), ArgumentPosition.ArgumentPositionType.Z))
+                                .argument(new ArgumentWorld("world"))
+                                .argument(new ArgumentInteger("time", new ArrayList<>(lang.paramTimeToStart.getList())))
+                                .executor(((sender, args) -> {
 
-                            String airId = (String) args.getOrThrow("air", lang.airIsNotSelected.getString());
+                                    String airId = (String) args.getOrThrow("air", lang.airIsNotSelected.getString());
 
-                           // AirDrop airDrop = CommandSyntaxError.ifNull(airDrops.getOrDefault(airId, null), lang.airIsNotFound.getString(), airId);
+                                    // AirDrop airDrop = CommandSyntaxError.ifNull(airDrops.getOrDefault(airId, null), lang.airIsNotFound.getString(), airId);
 
 //                            if (airDrop.isAirDropStarted())
 //                                throw new CommandSyntaxError(lang.airIsAlreadyStarted.getString(), airId);
 
-                            double locX = Math.ceil((Double) args.getOrThrow("posX", lang.paramLocIsNotSelected.getString(), "x"));
-                            double locY = Math.ceil((Double) args.getOrThrow("posY", lang.paramLocIsNotSelected.getString(), "y"));
-                            double locZ = Math.ceil((Double) args.getOrThrow("posZ", lang.paramLocIsNotSelected.getString(), "z"));
+                                    double locX = Math.ceil((Double) args.getOrThrow("posX", lang.paramLocIsNotSelected.getString(), "x"));
+                                    double locY = Math.ceil((Double) args.getOrThrow("posY", lang.paramLocIsNotSelected.getString(), "y"));
+                                    double locZ = Math.ceil((Double) args.getOrThrow("posZ", lang.paramLocIsNotSelected.getString(), "z"));
 
 //                            World world = (World) args.getOrDefault("world", airDrop.getWorld());
 //
@@ -244,17 +245,17 @@ public class CommandFactory {
 //                            airDrop.setFutureLocation(location);
 //                            if (time == 0) {
 //                                airDrop.startCommand(sender);
-//                                Message.sendMsg(sender, lang.airStarted.getString(), airId);
+//                                OLDMessage.sendMsg(sender, lang.airStarted.getString(), airId);
 //                            } else {
 //                                airDrop.setTimeToStart(time);
-//                                Message.sendMsg(sender, lang.setAirTimeToStart.getString(), time, airId);
+//                                OLDMessage.sendMsg(sender, lang.setAirTimeToStart.getString(), time, airId);
 //                            }
-                        }))
+                                }))
                 )
                 .addSubCommand(new Command("stop")
-                        .requires(new RequiresPermission("bair.stop"))
-                        .argument(new ArgumentSetList("air", airDrops.keySet().stream().toList()))
-                        .executor(((sender, args) -> { // todo
+                                .requires(new RequiresPermission("bair.stop"))
+                                .argument(new ArgumentSetList("air", airDrops.keySet().stream().toList()))
+                                .executor(((sender, args) -> { // todo
 //
 //                            String airId = (String) args.getOrThrow("air", lang.airIsNotSelected.getString());
 //
@@ -262,19 +263,19 @@ public class CommandFactory {
 //
 //                            if (airDrop.isAirDropStarted()) {
 //                                airDrop.end();
-//                                Message.sendMsg(sender, lang.airIsStopped.getString(), airId);
+//                                OLDMessage.sendMsg(sender, lang.airIsStopped.getString(), airId);
 //                            } else {
-//                                Message.sendMsg(sender, lang.airIsNotStarted.getString(), airId);
+//                                OLDMessage.sendMsg(sender, lang.airIsNotStarted.getString(), airId);
 //                            }
 
-                        }))
+                                }))
                 )
                 .addSubCommand(new Command("clone")
-                        .requires(new RequiresPermission("bair.clone"))
-                        .argument(new ArgumentValidCharacters("newId", new ArrayList<>(lang.paramNewId.getList())))
-                        .argument(new ArgumentSetList("air", airDrops.keySet().stream().toList()))
-                        .argument(new ArgumentSetList("isTemp", new ArrayList<>(List.of("-temp"))))
-                        .executor(((sender, args) -> { // todo
+                                .requires(new RequiresPermission("bair.clone"))
+                                .argument(new ArgumentValidCharacters("newId", new ArrayList<>(lang.paramNewId.getList())))
+                                .argument(new ArgumentSetList("air", airDrops.keySet().stream().toList()))
+                                .argument(new ArgumentSetList("isTemp", new ArrayList<>(List.of("-temp"))))
+                                .executor(((sender, args) -> { // todo
 //                            boolean temp = args.getOrDefault("isTemp", "no").equals("-temp");
 //                            String newId = (String) args.getOrThrow("newId", lang.newIdIsNotSelected.getString());
 //                            String airId = (String) args.getOrThrow("air", lang.airIsNotSelected.getString());
@@ -292,15 +293,15 @@ public class CommandFactory {
 //                                air.save();
 //                            }
 //                            airDrops.put(air.getId(), air);
-//                            Message.sendMsg(sender, lang.airdropCreated.getString(), air.getId());
+//                            OLDMessage.sendMsg(sender, lang.airdropCreated.getString(), air.getId());
 
-                        }))
+                                }))
                 )
                 .addSubCommand(new Command("tp")
-                        .requires(new RequiresPermission("bair.tp"))
-                        .argument(new ArgumentSetList("air", airDrops.keySet().stream().toList()))
-                        .argument(new ArgumentPlayer("target", new ArrayList<>(lang.paramPlayer.getList())))
-                        .executor(((sender, args) -> { // todo
+                                .requires(new RequiresPermission("bair.tp"))
+                                .argument(new ArgumentSetList("air", airDrops.keySet().stream().toList()))
+                                .argument(new ArgumentPlayer("target", new ArrayList<>(lang.paramPlayer.getList())))
+                                .executor(((sender, args) -> { // todo
 //
 //                            String airId = (String) args.getOrThrow("air", lang.airIsNotSelected.getString());
 //
@@ -316,22 +317,22 @@ public class CommandFactory {
 //                            if (!airDrop.isAirDropStarted()) {
 //                                if (airDrop.getFutureLocation() != null) {
 //                                    player.teleport(airDrop.getFutureLocation());
-//                                    Message.sendMsg(sender, lang.airDropIsNotSpawned.getString());
+//                                    OLDMessage.sendMsg(sender, lang.airDropIsNotSpawned.getString());
 //                                    return;
 //                                }
-//                                Message.sendMsg(sender, lang.locIsNull.getString());
+//                                OLDMessage.sendMsg(sender, lang.locIsNull.getString());
 //                            } else {
 //                                player.teleport(airDrop.getAnyLoc());
-//                                Message.sendMsg(sender, lang.teleportedToAirdrop.getString(), airId);
+//                                OLDMessage.sendMsg(sender, lang.teleportedToAirdrop.getString(), airId);
 //                            }
 
-                        }))
+                                }))
                 )
                 .addSubCommand(new Command("listeners")
-                        .requires(new RequiresPermission("bair.listeners"))
-                        .argument(new ArgumentSetList("air", airDrops.keySet().stream().toList()))
-                        .argument(new ArgumentPlayer("target", new ArrayList<>(lang.paramPlayer.getList())))
-                        .executor(((sender, args) -> { // todo
+                                .requires(new RequiresPermission("bair.listeners"))
+                                .argument(new ArgumentSetList("air", airDrops.keySet().stream().toList()))
+                                .argument(new ArgumentPlayer("target", new ArrayList<>(lang.paramPlayer.getList())))
+                                .executor(((sender, args) -> { // todo
 //
 //                            String airId = (String) args.getOrThrow("air", lang.airIsNotSelected.getString());
 //
@@ -345,21 +346,21 @@ public class CommandFactory {
 //                                player = (Player) sender;
 //                            }
 
-                          //  ShowAllListeners sae = new ShowAllListeners(airDrop); // todo
-                          //  getServer().getPluginManager().registerEvents(sae, BAirDrop.getInstance());
-                          //  player.openInventory(sae.getInventory());
+                                    //  ShowAllListeners sae = new ShowAllListeners(airDrop); // todo
+                                    //  getServer().getPluginManager().registerEvents(sae, BAirDrop.getInstance());
+                                    //  player.openInventory(sae.getInventory());
 
 
-                        }))
+                                }))
                 )
                 .addSubCommand(new Command("generate")
-                        .requires(new RequiresPermission("bair.generate"))
-                        .addSubCommand(new Command("start")
-                                .requires(new RequiresPermission("bair.generate.start"))
-                                .argument(new ArgumentSetList("air", BAirDrop.airDrops.keySet().stream().toList()))
-                                .argument(new ArgumentInteger("timings", new ArrayList<>(lang.generatorSpeed.getList()), 1, Integer.MAX_VALUE / 20))
-                                .argument(new ArgumentInteger("count", new ArrayList<>(lang.paramCount.getList()), 1, Integer.MAX_VALUE / 20))
-                                .executor(((sender, args) -> { // todo
+                                .requires(new RequiresPermission("bair.generate"))
+                                .addSubCommand(new Command("start")
+                                                .requires(new RequiresPermission("bair.generate.start"))
+                                                .argument(new ArgumentSetList("air", BAirDrop.airDrops.keySet().stream().toList()))
+                                                .argument(new ArgumentInteger("timings", new ArrayList<>(lang.generatorSpeed.getList()), 1, Integer.MAX_VALUE / 20))
+                                                .argument(new ArgumentInteger("count", new ArrayList<>(lang.paramCount.getList()), 1, Integer.MAX_VALUE / 20))
+                                                .executor(((sender, args) -> { // todo
 //
 //                                    String airId = (String) args.getOrThrow("air", lang.airIsNotSelected.getString());
 //                                    AirDrop airDrop = CommandSyntaxError.ifNull(BAirDrop.airDrops.getOrDefault(airId, null), lang.airIsNotFound.getString(), airId);
@@ -368,17 +369,17 @@ public class CommandFactory {
 //                                    int count = (int) args.getOrDefault("count", 1);
 //
 //                                    GeneratorLoc.start(airDrop, timings, count, sender);
-                                }))
+                                                }))
 
-                        )
-                        .addSubCommand(new Command("stop")
-                                .requires(new RequiresPermission("bair.generate.stop"))
-                                .executor(((sender, args) -> {
-                                    GeneratorLoc.stop(sender);
-                                }))
-                        )
+                                )
+                                .addSubCommand(new Command("stop")
+                                        .requires(new RequiresPermission("bair.generate.stop"))
+                                        .executor(((sender, args) -> {
+                                            GeneratorLoc.stop(sender);
+                                        }))
+                                )
                 )
-                .executor(((sender, args) -> Message.sendRawMsg(sender, lang.rawHelp.getString())))
+                .executor(((sender, args) -> OLDMessage.sendRawMsg(sender, lang.rawHelp.getString())))
                 ;
 
 

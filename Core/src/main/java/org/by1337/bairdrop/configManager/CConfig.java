@@ -5,12 +5,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.util.Vector;
+import org.by1337.api.chat.util.LogLevel;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.ItemUtil.EnchantInfo;
 import org.by1337.bairdrop.ItemUtil.EnchantMaterial;
 import org.by1337.bairdrop.hologram.HologramManager;
 import org.by1337.bairdrop.lang.Lang;
-import org.by1337.bairdrop.listeners.Compass;
 import org.by1337.bairdrop.location.CGenLoc;
 import org.by1337.bairdrop.location.GenLoc;
 import org.by1337.bairdrop.observer.CustomListenerLoader;
@@ -28,18 +28,18 @@ import static org.by1337.bairdrop.effect.LoadEffects.LoadEffect;
 
 
 public class CConfig implements Config, ConfigMessage {
-    private FileConfiguration listeners;
-    private File fileListeners;
+//    private FileConfiguration listeners;
+//    private File fileListeners;
     private FileConfiguration effects;
     private File fileEffects;
     private FileConfiguration locations;
     private File fileLocations;
-    private FileConfiguration menu;
-    private File fileMenu;
+//    private FileConfiguration menu;
+//    private File fileMenu;
     private FileConfiguration schemConf;
     private File fileSchemConf;
-    private FileConfiguration generatorSettings;
-    private File fileGeneratorSettings;
+    //    private FileConfiguration generatorSettings;
+//    private File fileGeneratorSettings;
     private HashMap<String, File> Schematics = new HashMap<>();
     private HashMap<File, FileConfiguration> airDrops = new HashMap<>();
     private Lang lang;
@@ -48,22 +48,14 @@ public class CConfig implements Config, ConfigMessage {
 
     private CustomListenerLoader listenerLoader;
 
+    public CustomListenerLoader getListenerLoader() {
+        return listenerLoader;
+    }
+
     public void loadConfiguration() {
 
         HologramManager.loadHolograms();
 
-        fileMenu = new File(BAirDrop.getInstance().getDataFolder() + File.separator + "menu.yml");
-        if (!fileMenu.exists()) {
-            BAirDrop.getInstance().saveResource("menu.yml", true);
-        }
-        menu = YamlConfiguration.loadConfiguration(fileMenu);
-
-
-        fileGeneratorSettings = new File(BAirDrop.getInstance().getDataFolder() + File.separator + "generatorSettings.yml");
-        if (!fileGeneratorSettings.exists()) {
-            BAirDrop.getInstance().saveResource("generatorSettings.yml", true);
-        }
-        generatorSettings = YamlConfiguration.loadConfiguration(fileGeneratorSettings);
 
         File shemDir = new File(BAirDrop.getInstance().getDataFolder() + File.separator + "Schematics");
         if (!shemDir.exists()) {
@@ -80,7 +72,7 @@ public class CConfig implements Config, ConfigMessage {
         for (File shemFile : Arrays.stream(Objects.requireNonNull(shemDir.listFiles())).toList()) {
             if (shemFile.getAbsolutePath().equals(fileSchemConf.getAbsolutePath()))
                 continue;
-            Message.debug("load schematics" + shemFile.getAbsolutePath(), LogLevel.LOW);
+            BAirDrop.MESSAGE.debug("load schematics" + shemFile.getAbsolutePath(), LogLevel.LEVEL_2);
             Schematics.put(shemFile.getName(), shemFile);
         }
 
@@ -101,10 +93,10 @@ public class CConfig implements Config, ConfigMessage {
         loadLang();
 
         File dir = new File(BAirDrop.getInstance().getDataFolder() + File.separator + "airdrops");
-        if (!dir.exists()) {
-            dir.mkdir();
-            BAirDrop.getInstance().saveResource("airdrops" + File.separator + "default.yml", true);
-        }
+//        if (!dir.exists()) {
+//            dir.mkdir();
+//            BAirDrop.getInstance().saveResource("airdrops" + File.separator + "default.yml", true);
+//        }
         File dir2 = new File(BAirDrop.getInstance().getDataFolder() + File.separator + "scripts");//diamond.js
         if (!dir2.exists()) {
             dir2.mkdir();
@@ -113,26 +105,26 @@ public class CConfig implements Config, ConfigMessage {
         scripts.clear();
         for (File script : Arrays.stream(Objects.requireNonNull(dir2.listFiles())).toList()) {
             scripts.put(script.getName(), script);
-            Message.debug("load " + script.getName(), LogLevel.LOW);
+            OLDMessage.debug("load " + script.getName(), LogLevel.LEVEL_0);
         }
 
         for (File airFile : Arrays.stream(Objects.requireNonNull(dir.listFiles())).toList()) {
-            Message.debug("load " + airFile.getAbsolutePath(), LogLevel.LOW);
+            OLDMessage.debug("load " + airFile.getAbsolutePath(), LogLevel.LEVEL_0);
             FileConfiguration fc = YamlConfiguration.loadConfiguration(airFile);
             airDrops.put(airFile, fc);
         }
-        CustomListenerLoader.getCustomEventListeners().clear();
+        //CustomListenerLoader.getCustomEventListeners().clear();
         listenerLoader = new CustomListenerLoader();
-        listenerLoader.load();
-      //  loadListeners();
+        //  listenerLoader.load();
+        //  loadListeners();
         loadMenu();
         loadLocations();
         LoadEffect(effects);
         RegionManager.loadFlags();
         loadEnchant();
         summoner.LoadSummoner();
-       // BAirDrop.compass = new Compass();
-      //  BAirDrop.compass.loadItem();
+        // BAirDrop.compass = new Compass();
+        //  BAirDrop.compass.loadItem();
         if (BAirDrop.getInstance().getConfig().getBoolean("custom-crafts.enable"))
             loadCustomCraft();
         loaded = true;
@@ -142,10 +134,10 @@ public class CConfig implements Config, ConfigMessage {
 //        String file = BAirDrop.BAirDrop.getInstance().getConfig().getString("lang", "en");
 //        InputStream resourceStream = BAirDrop.getInstance().getResource("lang/" + file + ".json");
 //        if (resourceStream == null) {
-//            Message.error("file: " + "lang/" + file + ".json" + " not found!");
+//            OLDMessage.error("file: " + "lang/" + file + ".json" + " not found!");
 //            resourceStream = BAirDrop.getInstance().getResource("lang/en.json");
 //            if (resourceStream == null) {
-//                throw new IllegalStateException("Message file not found! Do you have the latest version of the plugin?");
+//                throw new IllegalStateException("OLDMessage file not found! Do you have the latest version of the plugin?");
 //            }
 //        }
 //        try (InputStreamReader reader = new InputStreamReader(resourceStream, StandardCharsets.UTF_8)) {
@@ -157,33 +149,33 @@ public class CConfig implements Config, ConfigMessage {
     }
 
     public void loadMenu() {
-        MenuItem.menuItemHashMap.clear();
-        for (String tag : menu.getConfigurationSection("main").getKeys(false)) {
-            try {
-                String name = Objects.requireNonNull(menu.getString("main." + tag + ".name"));
-                String material = Objects.requireNonNull(menu.getString("main." + tag + ".material"));
-                int slot = menu.getInt("main." + tag + ".slot");
-                List<String> lore = getListOrEmpty("main." + tag + ".lore", menu);
-                List<String> LEFT = getListOrEmpty("main." + tag + ".commands." + "LEFT-CLICK", menu);
-                List<String> SHIFT_LEFT = getListOrEmpty("main." + tag + ".commands." + "SHIFT_LEFT-CLICK", menu);
-                List<String> RIGHT = getListOrEmpty("main." + tag + ".commands." + "RIGHT-CLICK", menu);
-                List<String> SHIFT_RIGHT = getListOrEmpty("main." + tag + ".commands." + "SHIFT_RIGHT-CLICK", menu);
-                List<String> MIDDLE = getListOrEmpty("main." + tag + ".commands." + "MIDDLE-CLICK", menu);
-                List<String> DROP = getListOrEmpty("main." + tag + ".commands." + "DROP-CLICK", menu);
-                new MenuItem(tag, name, lore, slot, LEFT, SHIFT_LEFT, RIGHT, SHIFT_RIGHT, MIDDLE, DROP, material);
-            } catch (NullPointerException e) {
-                Message.error(String.format(getMessage("menu-error"), tag));
-
-            } catch (IllegalArgumentException e) {
-                Message.error(String.format(getMessage("menu-mat-error"), tag));
-            }
-        }
-
+//        MenuItem.menu ItemHashMap.clear();
+//        for (String tag : menu.getConfigurationSection("main").getKeys(false)) {
+//            try {
+//                String name = Objects.requireNonNull(menu.getString("main." + tag + ".name"));
+//                String material = Objects.requireNonNull(menu.getString("main." + tag + ".material"));
+//                int slot = menu.getInt("main." + tag + ".slot");
+//                List<String> lore = getListOrEmpty("main." + tag + ".lore", menu);
+//                List<String> LEFT = getListOrEmpty("main." + tag + ".commands." + "LEFT-CLICK", menu);
+//                List<String> SHIFT_LEFT = getListOrEmpty("main." + tag + ".commands." + "SHIFT_LEFT-CLICK", menu);
+//                List<String> RIGHT = getListOrEmpty("main." + tag + ".commands." + "RIGHT-CLICK", menu);
+//                List<String> SHIFT_RIGHT = getListOrEmpty("main." + tag + ".commands." + "SHIFT_RIGHT-CLICK", menu);
+//                List<String> MIDDLE = getListOrEmpty("main." + tag + ".commands." + "MIDDLE-CLICK", menu);
+//                List<String> DROP = getListOrEmpty("main." + tag + ".commands." + "DROP-CLICK", menu);
+//                new MenuItem(tag, name, lore, slot, LEFT, SHIFT_LEFT, RIGHT, SHIFT_RIGHT, MIDDLE, DROP, material);
+//            } catch (NullPointerException e) {
+//                OLDMessage.error(String.format(getMessage("menu-error"), tag));
+//
+//            } catch (IllegalArgumentException e) {
+//                OLDMessage.error(String.format(getMessage("menu-mat-error"), tag));
+//            }
+//        }
+//
     }
 
     public void loadCustomCraft() {
         if (BAirDrop.getInstance().getConfig().getConfigurationSection("custom-crafts.crafts") == null) {
-            Message.error(getMessage("craft-list-is-empty"));
+            OLDMessage.error(getMessage("craft-list-is-empty"));
             return;
         }
         main:
@@ -191,8 +183,8 @@ public class CConfig implements Config, ConfigMessage {
             try {
                 String summoner = Objects.requireNonNull(BAirDrop.getInstance().getConfig().getString(String.format("custom-crafts.crafts.%s.summoner", key)));
                 if (!BAirDrop.summoner.getItems().containsKey(summoner)) {
-                    Message.error(String.format(getMessage("craft-unknown-item"), summoner));
-                    Message.error(String.format(getMessage("craft-skip"), key));
+                    OLDMessage.error(String.format(getMessage("craft-unknown-item"), summoner));
+                    OLDMessage.error(String.format(getMessage("craft-skip"), key));
                     continue;
                 }
                 String top = Objects.requireNonNull(BAirDrop.getInstance().getConfig().getString(String.format("custom-crafts.crafts.%s.slots.top", key)));
@@ -201,30 +193,30 @@ public class CConfig implements Config, ConfigMessage {
                 List<String> call = BAirDrop.getInstance().getConfig().getStringList(String.format("custom-crafts.crafts.%s.call", key));
 
                 if (BAirDrop.getInstance().getConfig().getConfigurationSection(String.format("custom-crafts.crafts.%s.ingredients", key)) == null) {
-                    Message.error(getMessage("craft-ingredients-is-empty"));
+                    OLDMessage.error(getMessage("craft-ingredients-is-empty"));
                     continue;
                 }
                 HashMap<Character, Material> ingredients = new HashMap<>();
                 for (String ingred : BAirDrop.getInstance().getConfig().getConfigurationSection(String.format("custom-crafts.crafts.%s.ingredients", key)).getKeys(false)) {
                     if (ingred.length() > 1) {
-                        Message.error(ingred + " Может состоять только из одного символа!");
-                        Message.error(String.format(getMessage("craft-skip"), key));
+                        OLDMessage.error(ingred + " Может состоять только из одного символа!");
+                        OLDMessage.error(String.format(getMessage("craft-skip"), key));
                         continue main;
                     }
                     try {
                         ingredients.put(ingred.charAt(0), Material.valueOf(Objects.requireNonNull(BAirDrop.getInstance().getConfig().getString(String.format("custom-crafts.crafts.%s.ingredients.%s", key, ingred)))));
                     } catch (IllegalArgumentException e) {
-                        Message.error(BAirDrop.getInstance().getConfig().getString(String.format("custom-crafts.crafts.%s.ingredients.%s", key, ingred)) + " Неизвестный материал!");
-                        Message.error(String.format(getMessage("craft-skip"), key));
+                        OLDMessage.error(BAirDrop.getInstance().getConfig().getString(String.format("custom-crafts.crafts.%s.ingredients.%s", key, ingred)) + " Неизвестный материал!");
+                        OLDMessage.error(String.format(getMessage("craft-skip"), key));
                         continue main;
                     }
                 }
                 BAirDrop.crafts.put(key, new CustomCraft(key, summoner, call, ingredients, top, middle, bottom));
             } catch (NullPointerException e) {
-                Message.error(String.format(getMessage("craft-load-error"), key));
+                OLDMessage.error(String.format(getMessage("craft-load-error"), key));
                 e.printStackTrace();
             } catch (Exception e) {
-                Message.error(String.format(getMessage("craft-load-error"), key));
+                OLDMessage.error(String.format(getMessage("craft-load-error"), key));
                 e.printStackTrace();
             }
         }
@@ -262,13 +254,13 @@ public class CConfig implements Config, ConfigMessage {
                     }
                     Enchantment enchantment = Enchantment.getByKey(NamespacedKey.fromString(enchant));
                     if (enchantment == null) {
-                        Message.error("Неизвестный чар: " + enchant);
+                        OLDMessage.error("Неизвестный чар: " + enchant);
                         continue;
                     }
                     int chance = BAirDrop.getInstance().getConfig().getInt(String.format("auto-enchant.%s.%s.chance", id, enchant));
                     int minLevel = BAirDrop.getInstance().getConfig().getInt(String.format("auto-enchant.%s.%s.min-level", id, enchant));
                     int maxLevel = BAirDrop.getInstance().getConfig().getInt(String.format("auto-enchant.%s.%s.max-level", id, enchant));
-                    //Message.debug(enchant + " = chance:" + chance + ", minLevel:" + minLevel + ", maxLevel:" + maxLevel);
+                    //OLDMessage.debug(enchant + " = chance:" + chance + ", minLevel:" + minLevel + ", maxLevel:" + maxLevel);
                     enchantInfos.add(new EnchantInfo(chance, minLevel, maxLevel, enchantment));
                 } catch (NullPointerException e) {
                     e.printStackTrace();
@@ -329,7 +321,7 @@ public class CConfig implements Config, ConfigMessage {
         int z = locations.getInt(String.format("locations.%s.%s.%s.z", airId, world, uuid));
         World world1 = Bukkit.getWorld(world);
         if (world1 == null) {
-            Message.error(String.format(getMessage("gen-loc-world-is-null"), world));
+            OLDMessage.error(String.format(getMessage("gen-loc-world-is-null"), world));
             return false;
         }
         Location location = new Location(world1, x, y, z);
@@ -349,11 +341,11 @@ public class CConfig implements Config, ConfigMessage {
     }
 
     public FileConfiguration getListeners() {
-        return listeners;
+        throw new IllegalStateException();
     }
 
     public File getFileListeners() {
-        return fileListeners;
+        throw new IllegalStateException();
     }
 
     public FileConfiguration getEffects() {
@@ -373,11 +365,11 @@ public class CConfig implements Config, ConfigMessage {
     }
 
     public FileConfiguration getMenu() {
-        return menu;
+        throw new IllegalStateException();
     }
 
     public File getFileMenu() {
-        return fileMenu;
+        throw new IllegalStateException();
     }
 
     public File getFileSchemConf() {
@@ -385,7 +377,7 @@ public class CConfig implements Config, ConfigMessage {
     }
 
     public File getFileGeneratorSettings() {
-        return fileGeneratorSettings;
+        throw new IllegalStateException();
     }
 
     public HashMap<String, File> getSchematics() {
@@ -402,6 +394,6 @@ public class CConfig implements Config, ConfigMessage {
     }
 
     public FileConfiguration getGeneratorSettings() {
-        return generatorSettings;
+        throw new IllegalStateException();
     }
 }

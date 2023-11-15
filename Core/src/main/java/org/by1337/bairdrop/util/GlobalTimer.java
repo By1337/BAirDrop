@@ -1,11 +1,8 @@
 package org.by1337.bairdrop.util;
 
-import org.bukkit.Bukkit;
-import org.bukkit.scheduler.BukkitRunnable;
+import org.by1337.api.chat.util.LogLevel;
 import org.by1337.bairdrop.AirDrop;
-import org.by1337.bairdrop.AirDropUtils;
 import org.by1337.bairdrop.BAirDrop;
-import org.by1337.bairdrop.configManager.Config;
 
 @Deprecated
 public class GlobalTimer {
@@ -17,18 +14,18 @@ public class GlobalTimer {
     public GlobalTimer(int timeToStartCons) {
         this.timeToStartCons = timeToStartCons;
         this.timeToStart = timeToStartCons;
-        Message.debug(String.format(BAirDrop.getConfigMessage().getMessage("global-timer-to-start"), timeToStart), LogLevel.LOW);
+        OLDMessage.debug(String.format(BAirDrop.getConfigMessage().getMessage("global-timer-to-start"), timeToStart), LogLevel.LEVEL_0);
         run();
     }
 
     public void run() {
-//        Message.debug(BAirDrop.getConfigMessage().getMessage("global-timer-thread-start"), LogLevel.LOW);
+//        OLDMessage.debug(BAirDrop.getConfigMessage().getMessage("global-timer-thread-start"), LogLevel.LOW);
 //        new BukkitRunnable() {
 //            @Override
 //            public void run() {
 //                if (stop) {
 //                    cancel();
-//                    Message.debug(BAirDrop.getConfigMessage().getMessage("global-timer-thread-stop"), LogLevel.LOW);
+//                    OLDMessage.debug(BAirDrop.getConfigMessage().getMessage("global-timer-thread-stop"), LogLevel.LOW);
 //                    return;
 //                }
 //                if (air != null && !BAirDrop.airDrops.containsKey(air.getId())){
@@ -37,7 +34,7 @@ public class GlobalTimer {
 //                }
 //                if (timeToStart <= 0) {
 //                    if (air == null) {
-//                        Message.warning(BAirDrop.getConfigMessage().getMessage("global-timer-failed"));
+//                        OLDMessage.warning(BAirDrop.getConfigMessage().getMessage("global-timer-failed"));
 //                        return;
 //                    }
 //                    air.setTimeCountingEnabled(true);
@@ -50,7 +47,7 @@ public class GlobalTimer {
 //                    timeToStart--;
 //                }
 //                if (BAirDrop.airDrops.isEmpty()) {
-//                    Message.error(BAirDrop.getConfigMessage().getMessage("global-timer-failed2"));
+//                    OLDMessage.error(BAirDrop.getConfigMessage().getMessage("global-timer-failed2"));
 //                    timeToStart = timeToStartCons;
 //                    return;
 //                }
@@ -61,7 +58,7 @@ public class GlobalTimer {
 //                        air.setHideInCompleter(true);
 //                        air.addDec(String.format(BAirDrop.getConfigMessage().getMessage("dec-info"), "global timer"));
 //                        BAirDrop.airDrops.put(air.getId(), air);
-//                        Message.debug(String.format(BAirDrop.getConfigMessage().getMessage("global-timer"), air.getId()), LogLevel.LOW);
+//                        OLDMessage.debug(String.format(BAirDrop.getConfigMessage().getMessage("global-timer"), air.getId()), LogLevel.LOW);
 //                    }
 //                }
 //            }

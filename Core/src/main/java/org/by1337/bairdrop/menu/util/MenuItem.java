@@ -9,11 +9,10 @@ import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.ItemUtil.BaseHeadHook;
 
+import org.by1337.bairdrop.util.OLDMessage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-
-import org.by1337.bairdrop.util.Message;
 
 public class MenuItem {
     public static HashMap<String, MenuItem> menuItemHashMap = new HashMap<>();
@@ -51,14 +50,14 @@ public class MenuItem {
             else itemStack = new ItemStack(Material.valueOf(material));
         }catch (Exception e){
             itemStack = new ItemStack(Material.DIRT);
-            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-material"), material, tag));
+            OLDMessage.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-material"), material, tag));
         }
         ItemMeta im;
 
         im = ItemUtil.addLore(itemStack, airDrop, new ArrayList<>(lore));
         itemStack.setItemMeta(im);
 
-        im.setDisplayName(Message.messageBuilder(name));
+        im.setDisplayName(OLDMessage.messageBuilder(name));
         itemStack.setItemMeta(im);
 
         im = itemStack.getItemMeta();

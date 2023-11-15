@@ -26,7 +26,7 @@ public class JsScript implements Script{
             }
         }
         try {
-            return context.evaluateReader(scope, new InputStreamReader(new FileInputStream(BAirDrop.getiConfig().getScripts().get(scriptName)), StandardCharsets.UTF_8), "JavaScript", 1, null);
+            return context.evaluateReader(scope, new InputStreamReader(new FileInputStream(BAirDrop.getCfg().getScripts().get(scriptName)), StandardCharsets.UTF_8), "JavaScript", 1, null);
 
         } catch (Exception e) {
             e.printStackTrace();

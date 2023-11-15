@@ -1,7 +1,7 @@
 package org.by1337.bairdrop.ItemUtil;
 
 import org.bukkit.enchantments.Enchantment;
-import org.by1337.bairdrop.util.Message;
+import org.by1337.bairdrop.util.OLDMessage;
 
 public class EnchantInfo {
     private final int chance;
@@ -15,7 +15,7 @@ public class EnchantInfo {
         this.maxLevel = maxLevel;
         this.enchantment = enchantment;
         if(maxLevel < minLevel){
-            Message.error("max-level cannot be less than min-level." + enchantment);
+            OLDMessage.error("max-level cannot be less than min-level." + enchantment);
             maxLevel = minLevel+1;
         }
     }

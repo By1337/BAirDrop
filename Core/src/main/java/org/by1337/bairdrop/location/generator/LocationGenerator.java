@@ -13,9 +13,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.by1337.api.world.BlockPosition;
 import org.by1337.api.world.Vector2D;
-import org.by1337.bairdrop.AirDrop;
-import org.by1337.bairdrop.BAirDrop;
-import org.by1337.bairdrop.util.Message;
+import org.by1337.bairdrop.util.OLDMessage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -36,10 +34,8 @@ public abstract class LocationGenerator {
         int randomZ = (int) (setting.center.z + (int) ((Math.random() * 2 - 1) * setting.radius));
         return world.getChunkAt(randomX >> 4, randomZ >> 4);
     }
-    protected int getHighestBlock(Chunk chunk, Vector2D vector2D){
+    protected int getHighestBlock(Chunk chunk, int x, int z){
         boolean upBlockIsAir = false;
-        int x = (int) vector2D.x;
-        int z = (int) vector2D.z;
         for(int y = setting.maxY; y > setting.minY; y--){
             if(!chunk.getBlock(x, y, z).getType().isAir()){
                 if (!setting.whiteListBlocks.contains(chunk.getBlock(x, y, z).getType())) {
@@ -80,7 +76,7 @@ public abstract class LocationGenerator {
 
             return overlapping.isEmpty();
         } catch (Exception e) {
-            Message.error(e.getLocalizedMessage());
+            OLDMessage.error(e.getLocalizedMessage());
             return true;
         }
     }

@@ -10,6 +10,7 @@ import org.by1337.api.command.Command;
 import org.by1337.api.command.CommandException;
 import org.by1337.api.command.argument.ArgumentSetList;
 import org.by1337.api.command.argument.ArgumentString;
+import org.by1337.bairdrop.observer.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,22 +22,22 @@ public class SpawnHologramCommand implements CommandExecutor {
         return "[SPAWN_HOLOGRAM]";
     }
 
-    @Override
-    public void execute(@Nullable Airdrop airDrop, @Nullable Player player, @NotNull String command) throws CommandException {
-
-        Objects.requireNonNull(airDrop, String.format(AIRDROP_IS_NULL.getString(), command));
-        Objects.requireNonNull(airDrop.getProperty("location").getValue(), String.format(LOCATION_IS_NULL.getString(), command));
+    @Override // заглушка
+    public void execute(Event event, @NotNull String command) throws CommandException {
+        Airdrop airdrop = event.getAirdrop();
+        Objects.requireNonNull(airdrop, String.format(AIRDROP_IS_NULL.getString(), command));
+        Objects.requireNonNull(airdrop.getLocation(), String.format(LOCATION_IS_NULL.getString(), command));
 
         createCommand().executor(((sender, args) -> {
             String setting = (String) args.getOrThrow("setting", USAGE.getString(), usage());
             String name = (String) args.getOrThrow("name", USAGE.getString(), usage());
 
-            BLocation location = (BLocation) airDrop.getProperty("location").getValue();
-
-            HologramManager.createHologram(location.getLocation(), setting, name, new PlaceholderableDefault(airDrop));
+            HologramManager.createHologram(airdrop.getLocation(), setting, name, new PlaceholderableDefault(airdrop));
 
         })).process(null, parseCommand(command));
     }
+
+
 
     @Override
     public String usage() {

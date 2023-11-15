@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.logging.Level;
 
-public class BLib extends JavaPlugin   {
+public class BLib extends JavaPlugin {
     @Getter
     private static Plugin instance;
 
@@ -30,6 +30,7 @@ public class BLib extends JavaPlugin   {
     public void onLoad() {
         instance = this;
         org.by1337.api.BLib.setApi(new BApi());
+        setCommand();
     }
 
     @Override
@@ -46,10 +47,12 @@ public class BLib extends JavaPlugin   {
         getLogger().log(Level.INFO, String.format(Lang.getMessage("detect-version"), Version.VERSION.getVer()));
     }
 
+    private static Command command;
+
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull org.bukkit.command.Command command, @NotNull String label, @NotNull String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull org.bukkit.command.Command cmd, @NotNull String label, @NotNull String[] args) {
         try {
-            createCommand().process(sender, args);
+            command.process(sender, args);
             return true;
         } catch (CommandException e) {
             sender.sendMessage(e.getLocalizedMessage());
@@ -59,12 +62,12 @@ public class BLib extends JavaPlugin   {
 
     @Nullable
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull org.bukkit.command.Command command, @NotNull String alias, @NotNull String[] args) {
-        return createCommand().getTabCompleter(sender, args);
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull org.bukkit.command.Command cmd, @NotNull String alias, @NotNull String[] args) {
+        return command.getTabCompleter(sender, args);
     }
 
-    private Command createCommand() {
-        Command cmd = new Command("blib")
+    private void setCommand() {
+        command = new Command("blib")
                 .requires(new RequiresPermission("blib.use"))
                 .addSubCommand(new Command("reload")
                         .requires(new RequiresPermission("blib.reload"))
@@ -76,7 +79,7 @@ public class BLib extends JavaPlugin   {
                 .addSubCommand(new Command("language")
                         .aliases("lang")
                         .requires(new RequiresPermission("blib.lang"))
-                        .argument(new ArgumentSetList("language", Lang.LANGUAGES))
+                        .argument(new ArgumentSetList("language", () -> Lang.LANGUAGES))
                         .executor(((sender, args) -> {
                             String lang = (String) args.getOrThrow("language", Lang.getMessage("missing-argument"), "language");
                             Lang.loadTranslations(lang);
@@ -86,16 +89,14 @@ public class BLib extends JavaPlugin   {
                         }))
                 );
 
-        if (DEBUG){
-            cmd.addSubCommand(new Command("test")
+        if (DEBUG) {
+            command.addSubCommand(new Command("test")
                     .requires(new RequiresPermission("blib.tests"))
                     .addSubCommand(CommandTests.packetArmorStandTest())
                     .addSubCommand(CommandTests.sysInfo())
                     .addSubCommand(CommandTests.msgTest())
                     .addSubCommand(CommandTests.sleep())
-
             );
         }
-        return cmd;
     }
 }

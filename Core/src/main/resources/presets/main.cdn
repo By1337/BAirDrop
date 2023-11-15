@@ -1,0 +1,49 @@
+if ("{event-type} == unlock_event") {
+	[
+		"[SET_MATERIAL] AIR",
+		"[PROPERTY] set time-to-start {time-to-start-def}",
+	//	"[PROPERTY] reset location",
+		"[PROPERTY] set is-spawned false",
+		"[PROPERTY] set time-to-unlock {time-to-unlock-def}",
+		"[PROPERTY] set activated false",
+		"[PROPERTY] set opened false",
+		"[PROPERTY] set time-to-end {time-to-end-def}",
+		"[REMOVE_HOLOGRAM] test"
+	]
+
+}
+if ("{event-type} == unlock_event") {
+	["[PROPERTY] set opened true", "[SET_MATERIAL] {open-material}"]
+}
+if ("{event-type} == start_event") {
+	["[SET_MATERIAL] {closed-material}", "[PROPERTY] set is-spawned true", "[SPAWN_HOLOGRAM] default test"]
+}
+if ("{event-type} == timer") {
+	if ("{time-to-start} < 600 && {x} == ? && {y} == ? && {z} == ?") {
+		["[TRY_GEN_LOC]"]
+	}
+	if ("{time-to-start} > 0") {
+		["[PROPERTY] set time-to-start match[{time-to-start} - 1]"]
+	}
+	if ("{time-to-start} == 0") {
+		if ("{is-spawned} == false") {
+			["[CALL_EVENT] START_EVENT"]
+		} else if ("{time-to-unlock} > 0") {
+			if ("{start-countdown-after-click} == true") {
+				if ("{activated} == true") {
+					["[PROPERTY] set time-to-unlock match[{time-to-unlock} - 1]"]
+				}
+			} else {
+				["[PROPERTY] set time-to-unlock match[{time-to-unlock} - 1]"]
+			}
+		} else if ("{opened} == false") {
+			["[CALL_EVENT] UNLOCK_EVENT"]
+		} else if ("{time-to-end} > 0") {
+			if ("{time-stop-event-must-go} == true || {opened} == true") {
+				["[PROPERTY] set time-to-end match[{time-to-end} - 1]"]
+			}
+		} else {
+			["[CALL_EVENT] END_EVENT"]
+		}
+	}
+}

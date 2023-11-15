@@ -8,12 +8,9 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 
 import org.by1337.bairdrop.AirDrop;
-import org.by1337.bairdrop.AirDropUtils;
 import org.by1337.bairdrop.BAirDrop;
-import org.by1337.bairdrop.location.GeneratorUtils;
-import org.by1337.bairdrop.observer.CustomEvent;
-import org.by1337.bairdrop.location.CGenerator;
-import org.by1337.bairdrop.util.Message;
+import org.by1337.bairdrop.observer.event.CustomEvent;
+import org.by1337.bairdrop.util.OLDMessage;
 
 
 public class CSummonerItem implements SummonerItem {
@@ -75,51 +72,51 @@ public class CSummonerItem implements SummonerItem {
     public AirDrop getAirDrop(Location location, Player pl) {
         String key = summonerAirDropId;
 
-//        if (!Objects.equals(pl.getLocation().getWorld(), BAirDrop.airDrops.get(key).getWorld())) {
-//            Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("impossible-to-call"));
+//        if (!Objects.equals(pl.getLocation().getWorld(), BAirDrop.airDrops.get(nameKey).getWorld())) {
+//            OLDMessage.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("impossible-to-call"));
 //            pl.setCooldown(getItem().getType(), 40);
 //            return null;
 //        }
         if (minY != 0) {
             if (location.getY() < minY) {
-                Message.sendMsg(pl, String.format(BAirDrop.getConfigMessage().getMessage("summoner-min-y"), minY));
+                OLDMessage.sendMsg(pl, String.format(BAirDrop.getConfigMessage().getMessage("summoner-min-y"), minY));
                 return null;
             }
         }
         if (maxY != 0) {
             if (location.getY() > maxY) {
-                Message.sendMsg(pl, String.format(BAirDrop.getConfigMessage().getMessage("summoner-max-y"), maxY));
+                OLDMessage.sendMsg(pl, String.format(BAirDrop.getConfigMessage().getMessage("summoner-max-y"), maxY));
                 return null;
             }
         }
 
         if (isCheckUpBlocks()) {
             if (location.getY() != location.getWorld().getHighestBlockYAt(location)) {
-                Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("check-up-blocks-fail"));
+                OLDMessage.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("check-up-blocks-fail"));
                 pl.setCooldown(getItem().getType(), 40);
                 return null;
             }
         }
 
 //        AirDrop air;
-//        if (key.equals("RANDOM")) {
+//        if (nameKey.equals("RANDOM")) {
 //            if (isClone()) {
 //                air = AirDropUtils.getRandomCloneAir();
 //            } else {
 //                air = AirDropUtils.getRandomAir();
 //            }
 //        } else {
-//            air = BAirDrop.airDrops.getOrDefault(key, null);
+//            air = BAirDrop.airDrops.getOrDefault(nameKey, null);
 //        }
 //        if (air == null){
-//            Message.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-airdrop"), key + " (air is null!)"));
-//            Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("impossible-to-call"));
+//            OLDMessage.error(String.format(BAirDrop.getConfigMessage().getMessage("unknown-airdrop"), nameKey + " (air is null!)"));
+//            OLDMessage.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("impossible-to-call"));
 //            pl.setCooldown(getItem().getType(), 40);
 //            return null;
 //        }
 //        if (air.isAirDropStarted()){
-//            Message.error(BAirDrop.getConfigMessage().getMessage("summoner-error-it-airdrop-is-already-started") + "(airdrop: " + key + ")");
-//            Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("summoner-error-it-airdrop-is-already-started"));
+//            OLDMessage.error(BAirDrop.getConfigMessage().getMessage("summoner-error-it-airdrop-is-already-started") + "(airdrop: " + nameKey + ")");
+//            OLDMessage.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("summoner-error-it-airdrop-is-already-started"));
 //            pl.setCooldown(getItem().getType(), 40);
 //            return null;
 //        }
@@ -129,14 +126,14 @@ public class CSummonerItem implements SummonerItem {
 //
 //        if (isUsePlayerLocation() && !isIgnoreRegion()) {
 //            if (!GeneratorUtils.isRegionEmpty(air, location)) {
-//                Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("region-overlapping"));
+//                OLDMessage.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("region-overlapping"));
 //                pl.setCooldown(getItem().getType(), 40);
 //                return null;
 //            }
 //        }
 //        if (isFlatnessCheck()) {
 //            if (!new CGenerator().checkForEvenness(location.clone().add(0, 1, 0), air)) {
-//                Message.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("flatness-check-fail"));
+//                OLDMessage.sendMsg(pl, BAirDrop.getConfigMessage().getMessage("flatness-check-fail"));
 //                pl.setCooldown(getItem().getType(), 40);
 //                return null;
 //            }

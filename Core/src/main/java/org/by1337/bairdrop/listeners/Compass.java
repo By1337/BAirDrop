@@ -1,29 +1,6 @@
 package org.by1337.bairdrop.listeners;
 
-import org.bukkit.*;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.CompassMeta;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
-import org.by1337.bairdrop.AirDrop;
-import org.by1337.bairdrop.BAirDrop;
-import org.by1337.bairdrop.effect.util.RGBHelper;
-import org.by1337.bairdrop.util.Message;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
 
 public class Compass implements Listener {
 //    @NotNull
@@ -58,7 +35,7 @@ public class Compass implements Listener {
 //                }
 //            }
 //            if(airDrop == null){
-//                Message.sendMsg(pl, messageNotFound);
+//                OLDMessage.sendMsg(pl, messageNotFound);
 //                if(itemStack.getType() == Material.COMPASS){
 //                    CompassMeta compassMeta = (CompassMeta) itemStack.getItemMeta();
 //                    Location targetLocation = new Location(pl.getWorld(), 0, 0, 0);
@@ -68,7 +45,7 @@ public class Compass implements Listener {
 //                }
 //            }else {
 //                if(messageFound != null){
-//                    Message.sendMsg(pl, airDrop.replaceInternalPlaceholder(messageFound));
+//                    OLDMessage.sendMsg(pl, airDrop.replaceInternalPlaceholder(messageFound));
 //                }
 //                AirDrop finalCAirDrop = airDrop;
 //                if(itemStack.getType() == Material.COMPASS){
@@ -111,7 +88,7 @@ public class Compass implements Listener {
 //        Color color = RGBHelper.getColorWithRgb(Objects.requireNonNull(BAirDrop.getInstance().getConfig().getString("compass.particle-color")));
 //        itemStack = new ItemStack(Material.valueOf(mat));
 //        ItemMeta im = itemStack.getItemMeta();
-//        im.setDisplayName(Message.messageBuilder(name));
+//        im.setDisplayName(OLDMessage.messageBuilder(name));
 //        if (nbt != null) im.setCustomModelData(Integer.parseInt(nbt.replace("{CustomModelData:", "").replace("}", "")));
 //        this.messageNotFound = messageNotFound;
 //        this.messageFound = messageFound;
@@ -119,7 +96,7 @@ public class Compass implements Listener {
 //        this.size = size;
 //        this.maxDistance = lineMaxDistance;
 //        this.distanceBetweenPoints = particleStep;
-//        lore.replaceAll(Message::messageBuilder);
+//        lore.replaceAll(OLDMessage::messageBuilder);
 //        im.setLore(lore);
 //        im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //        im.addItemFlags(ItemFlag.HIDE_ENCHANTS);

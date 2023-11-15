@@ -50,32 +50,32 @@ public class PacketArmorStandImpl17 extends PacketLivingEntityImpl17 implements 
         this.entityData.define(DATA_RIGHT_LEG_POSE, DEFAULT_RIGHT_LEG_POSE);
     }
 
-    public void setSmall(boolean param0) {
-        this.entityData.set(DATA_CLIENT_FLAGS, this.setBit(this.entityData.get(DATA_CLIENT_FLAGS), 1, param0));
+    public void setSmall(boolean small) {
+        this.entityData.set(DATA_CLIENT_FLAGS, this.setBit(this.entityData.get(DATA_CLIENT_FLAGS), 1, small));
     }
 
     public boolean isSmall() {
         return (this.entityData.get(DATA_CLIENT_FLAGS) & 1) != 0;
     }
 
-    public void setShowArms(boolean param0) {
-        this.entityData.set(DATA_CLIENT_FLAGS, this.setBit(this.entityData.get(DATA_CLIENT_FLAGS), 4, param0));
+    public void setShowArms(boolean showArms) {
+        this.entityData.set(DATA_CLIENT_FLAGS, this.setBit(this.entityData.get(DATA_CLIENT_FLAGS), 4, showArms));
     }
 
     public boolean isShowArms() {
         return (this.entityData.get(DATA_CLIENT_FLAGS) & 4) != 0;
     }
 
-    public void setNoBasePlate(boolean param0) {
-        this.entityData.set(DATA_CLIENT_FLAGS, this.setBit(this.entityData.get(DATA_CLIENT_FLAGS), 8, param0));
+    public void setNoBasePlate(boolean noBasePlate) {
+        this.entityData.set(DATA_CLIENT_FLAGS, this.setBit(this.entityData.get(DATA_CLIENT_FLAGS), 8, noBasePlate));
     }
 
     public boolean isNoBasePlate() {
         return (this.entityData.get(DATA_CLIENT_FLAGS) & 8) != 0;
     }
 
-    public void setMarker(boolean param0) {
-        this.entityData.set(DATA_CLIENT_FLAGS, this.setBit(this.entityData.get(DATA_CLIENT_FLAGS), 16, param0));
+    public void setMarker(boolean marker) {
+        this.entityData.set(DATA_CLIENT_FLAGS, this.setBit(this.entityData.get(DATA_CLIENT_FLAGS), 16, marker));
     }
 
     public boolean isMarker() {

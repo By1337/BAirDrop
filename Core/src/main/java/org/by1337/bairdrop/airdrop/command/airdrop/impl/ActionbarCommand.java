@@ -1,10 +1,11 @@
 package org.by1337.bairdrop.airdrop.command.airdrop.impl;
 
 import org.bukkit.entity.Player;
-import org.by1337.bairdrop.AirDrop;
+import org.by1337.bairdrop.BAirDrop;
 import org.by1337.bairdrop.airdrop.Airdrop;
 import org.by1337.bairdrop.airdrop.command.airdrop.CommandExecutor;
-import org.by1337.bairdrop.util.Message;
+import org.by1337.bairdrop.observer.event.Event;
+import org.by1337.bairdrop.util.OLDMessage;
 import org.by1337.api.command.Command;
 import org.by1337.api.command.CommandException;
 import org.by1337.api.command.argument.ArgumentStrings;
@@ -19,9 +20,9 @@ public class ActionbarCommand implements CommandExecutor {
     }
 
 
-    public void execute(@Nullable Airdrop airDrop, @Nullable Player player, @NotNull String command) throws CommandException {
-        Objects.requireNonNull(player, String.format(PLAYER_IS_NULL.getString(), command));
-        createCommand().executor(((sender, args) -> Message.sendActionBar(player, (String) args.getOrThrow("message", USAGE.getString(), usage())))).process(null, parseCommand(command));
+    public void execute(Event event, @NotNull String command) throws CommandException {
+        Objects.requireNonNull(event.getPlayer(), String.format(PLAYER_IS_NULL.getString(), command));
+        createCommand().executor(((sender, args) -> BAirDrop.MESSAGE.sendActionBar(event.getPlayer(), (String) args.getOrThrow("message", USAGE.getString(), usage())))).process(null, parseCommand(command));
     }
 
 

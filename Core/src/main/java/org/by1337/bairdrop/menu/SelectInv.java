@@ -1,30 +1,6 @@
 package org.by1337.bairdrop.menu;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import org.by1337.bairdrop.AirDrop;
-import org.by1337.bairdrop.BAirDrop;
-import org.by1337.bairdrop.ItemUtil.BaseHeadHook;
-import org.by1337.bairdrop.ItemUtil.Items;
-import org.by1337.bairdrop.util.Message;
-
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
-
-import static org.bukkit.Bukkit.getServer;
 
 public class SelectInv implements Listener {
 //    private static SelectInv selectInv = null;
@@ -40,7 +16,7 @@ public class SelectInv implements Listener {
 //        selectInv = this;
 //        this.airDrop = airDrop;
 //        this.menu = menu;
-//        inv = Bukkit.createInventory(null, 54, Message.messageBuilder(BAirDrop.getConfigMessage().getMessage("inv-select")));
+//        inv = Bukkit.createInventory(null, 54, OLDMessage.messageBuilder(BAirDrop.getConfigMessage().getMessage("inv-select")));
 //        generate();
 //    }
 //
@@ -55,9 +31,9 @@ public class SelectInv implements Listener {
 //                else
 //                    itemStack = BaseHeadHook.getItem("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDNhOWEwNzFiNDI4M2M3NTYyNjg3NWM3YmFmZDBlZWYxM2IzZGZmNThhZDk2ODBhMTY1Mjg4YTcxNzFjNTYzNSJ9fX0=");
 //                ItemMeta im = itemStack.getItemMeta();
-//                im.setLore(List.of(Message.messageBuilder(BAirDrop.getConfigMessage().getMessage("edit-list")), Message.messageBuilder(String.format(BAirDrop.getConfigMessage().getMessage("list-size"), airDrop.getListItems().get(inv).size()))));
+//                im.setLore(List.of(OLDMessage.messageBuilder(BAirDrop.getConfigMessage().getMessage("edit-list")), OLDMessage.messageBuilder(String.format(BAirDrop.getConfigMessage().getMessage("list-size"), airDrop.getListItems().get(inv).size()))));
 //                im.getPersistentDataContainer().set(NamespacedKey.fromString("inv"), PersistentDataType.STRING, inv);
-//                im.setDisplayName(Message.messageBuilder("&7" + inv));
+//                im.setDisplayName(OLDMessage.messageBuilder("&7" + inv));
 //                itemStack.setItemMeta(im);
 //                this.inv.setItem(slot, itemStack);
 //                slot++;
@@ -65,7 +41,7 @@ public class SelectInv implements Listener {
 //        }
 //        ItemStack itemStack = BaseHeadHook.getItem("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWEyZDg5MWM2YWU5ZjZiYWEwNDBkNzM2YWI4NGQ0ODM0NGJiNmI3MGQ3ZjFhMjgwZGQxMmNiYWM0ZDc3NyJ9fX0=");
 //        ItemMeta im = itemStack.getItemMeta();
-//        im.setDisplayName(Message.messageBuilder(BAirDrop.getConfigMessage().getMessage("create-new-list")));
+//        im.setDisplayName(OLDMessage.messageBuilder(BAirDrop.getConfigMessage().getMessage("create-new-list")));
 //        im.getPersistentDataContainer().set(NamespacedKey.fromString("inv"), PersistentDataType.STRING, "add");
 //        itemStack.setItemMeta(im);
 //        this.inv.setItem(53, itemStack);

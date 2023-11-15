@@ -3,10 +3,10 @@ package org.by1337.bairdrop.airdrop.command.airdrop.impl;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.airdrop.Airdrop;
 import org.by1337.bairdrop.airdrop.command.airdrop.CommandExecutor;
-import org.by1337.bairdrop.util.Message;
+import org.by1337.bairdrop.observer.event.Event;
+import org.by1337.bairdrop.util.OLDMessage;
 import org.by1337.api.command.Command;
 import org.by1337.api.command.CommandException;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +20,11 @@ public class PlayerSetItemCommand implements CommandExecutor {
         return "[PLAYER-SET-ITEM-";
     }
 
-    @Override
+    @Override // заглушка
+    public void execute(Event event, @NotNull String command) throws CommandException {
+        execute(event.getAirdrop(), event.getPlayer(), command);
+    }
+
     public void execute(@Nullable Airdrop airDrop, @Nullable Player player, @NotNull String command) {
         Objects.requireNonNull(player, "player is null! " + command);
         try {
@@ -28,7 +32,7 @@ public class PlayerSetItemCommand implements CommandExecutor {
             Material material = Material.valueOf(command.split("=")[1].replace("]", ""));
             player.getInventory().setItem(slot, new ItemStack(material));
         } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
-            Message.error("[PLAYER-SET-ITEM-<slot>=<material>]" + command);
+            OLDMessage.error("[PLAYER-SET-ITEM-<slot>=<material>]" + command);
         }
 
     }

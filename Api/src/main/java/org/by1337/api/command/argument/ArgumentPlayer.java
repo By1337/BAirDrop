@@ -6,9 +6,11 @@ import org.bukkit.entity.Player;
 import org.by1337.api.command.CommandSyntaxError;
 import org.by1337.api.lang.Lang;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 /**
@@ -25,10 +27,12 @@ public class ArgumentPlayer extends Argument {
      */
     public ArgumentPlayer(String name) {
         super(name);
+        List<String> exx = new ArrayList<>();
         exx.add("@p");
         exx.add("@r");
         exx.add("@s");
         exx.addAll(List.of(Bukkit.getOnlinePlayers().stream().map(Player::getName).toArray(String[]::new)));
+        super.setExx(() -> exx);
     }
 
     /**
@@ -38,11 +42,17 @@ public class ArgumentPlayer extends Argument {
      * @param exx  A list of example values for the argument.
      */
     public ArgumentPlayer(String name, List<String> exx) {
+        super(name);
+        List<String> exxL = new ArrayList<>(exx);
+        exxL.add("@p");
+        exxL.add("@r");
+        exxL.add("@s");
+        exxL.addAll(List.of(Bukkit.getOnlinePlayers().stream().map(Player::getName).toArray(String[]::new)));
+        super.setExx(() -> exxL);
+    }
+
+    public ArgumentPlayer(String name, Supplier<List<String>> exx) {
         super(name, exx);
-        exx.add("@p");
-        exx.add("@r");
-        exx.add("@s");
-        exx.addAll(List.of(Bukkit.getOnlinePlayers().stream().map(Player::getName).toArray(String[]::new)));
     }
 
     /**

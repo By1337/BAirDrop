@@ -6,7 +6,9 @@
 
     <groupId>org.by1337</groupId>
     <artifactId>BAirDrop</artifactId>
-    <version>1.1.0</version>
+<!--  for release MAJOR.MINOR.PATCH -->
+<!--  for beta MAJOR.MINOR.PATCH-<alpha/beta/stable/pre-release>+<build> -->
+    <version>1.1.0-alpha+001</version>
     <packaging>jar</packaging>
 
     <name>BAirDrop</name>
@@ -17,6 +19,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <build>
+        <defaultGoal>clean package</defaultGoal>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -88,24 +91,27 @@
     </repositories>
 
     <dependencies>
-<!--        <dependency>-->
-<!--            <groupId>com.comphenix.protocol</groupId>-->
-<!--            <artifactId>ProtocolLib</artifactId>-->
-<!--            <version>5.0.0</version>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
-        <dependency>
-            <groupId>me.clip</groupId>
-            <artifactId>placeholderapi</artifactId>
-            <version>2.11.3</version>
-            <scope>provided</scope>
-        </dependency>
+        <!-- server -->
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
             <version>1.16.5-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.mojang</groupId>
+            <artifactId>authlib</artifactId>
+            <version>1.5.21</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- soft depend -->
+        <dependency>
+            <groupId>me.clip</groupId>
+            <artifactId>placeholderapi</artifactId>
+            <version>2.11.3</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- depend -->
         <dependency>
             <groupId>com.sk89q.worldguard</groupId>
             <artifactId>worldguard-bukkit</artifactId>
@@ -118,60 +124,33 @@
             <version>7.2.15</version>
             <scope>provided</scope>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.github.decentsoftware-eu</groupId>-->
-<!--            <artifactId>decentholograms</artifactId>-->
-<!--            <version>2.7.11</version>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
-        <dependency>
-            <groupId>com.mojang</groupId>
-            <artifactId>authlib</artifactId>
-            <version>1.5.21</version>
-            <scope>provided</scope>
-        </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.json</groupId>-->
-<!--            <artifactId>json</artifactId>-->
-<!--            <version>20230227</version>-->
-<!--        </dependency>-->
-        <dependency>
-            <groupId>org.mozilla</groupId>
-            <artifactId>rhino</artifactId>
-            <version>1.7.14</version>
-        </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.by1337</groupId>-->
-<!--            <artifactId>BLib</artifactId>-->
-<!--            <scope>provided</scope>-->
-<!--            <version>1.0</version>-->
-<!--        </dependency>-->
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.10.1</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.20</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>org.by1337</groupId>
             <artifactId>Api</artifactId>
             <version>1.0</version>
             <scope>provided</scope>
         </dependency>
-<!--        &lt;!&ndash;commands&ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>dev.jorel</groupId>-->
-<!--            <artifactId>commandapi-bukkit-core</artifactId>-->
-<!--            <version>9.1.0</version>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
-        <!--tests-->
+        <!-- scripts -->
+        <dependency>
+            <groupId>org.mozilla</groupId>
+            <artifactId>rhino</artifactId>
+            <version>1.7.14</version>
+        </dependency>
+        <!-- -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- util -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.20</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- tests -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

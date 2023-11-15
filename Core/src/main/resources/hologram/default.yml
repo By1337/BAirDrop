@@ -153,16 +153,6 @@ lines:
     - "&#FFFF00t&#0000FFe&#9400D3s&#0000FFt"
 
 
-
-#ilogo:
-#  change-interval: 50
-#  texts:
-#  - "&#FF0000t&#FFFF00e&#0000FFs&#9400D3t"
-#  - "&#FFFF00t&#FF0000e&#FFFF00s&#0000FFt"
-#  - "&#0000FFt&#FFFF00e&#FF0000s&#FFFF00t"
-#  - "&#9400D3t&#0000FFe&#FFFF00s&#FF0000t"
-#  - "&#0000FFt&#9400D3e&#0000FFs&#FFFF00t"
-#  - "&#FFFF00t&#0000FFe&#9400D3s&#0000FFt"
 #time-update: 5 # Частота обновления голограммы в тиках
 #line-spacing: 0.3 # Расстояние между линиями голограммы
 #radius: 20 # Радиус видимости голограммы

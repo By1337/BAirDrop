@@ -5,6 +5,7 @@ import org.by1337.api.command.CommandSyntaxError;
 import org.by1337.api.lang.Lang;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Represents a position argument for a command, which can be a numeric value or a relative position indicator.
@@ -31,6 +32,11 @@ public class ArgumentPosition extends Argument {
      * @param type The type of position argument (X, Y, or Z).
      */
     public ArgumentPosition(String name, List<String> exx, ArgumentPositionType type) {
+        super(name, () -> exx);
+        this.type = type;
+    }
+
+    public ArgumentPosition(String name, Supplier<List<String>> exx, ArgumentPositionType type) {
         super(name, exx);
         this.type = type;
     }

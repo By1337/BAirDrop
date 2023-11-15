@@ -5,6 +5,7 @@ import org.by1337.api.command.CommandSyntaxError;
 import org.by1337.api.lang.Lang;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 public class ArgumentFloat extends Argument{
     private float min = Float.MIN_VALUE;
@@ -15,19 +16,30 @@ public class ArgumentFloat extends Argument{
         super(name);
     }
 
-    public ArgumentFloat(String name, List<String> exx) {
+    public ArgumentFloat(String name, Supplier<List<String>> exx) {
         super(name, exx);
     }
+
+    public ArgumentFloat(String name, List<String> exx) {
+        super(name, () -> exx);
+    }
+
 
     public ArgumentFloat(String name, float min) {
         super(name);
         this.min = min;
     }
 
-    public ArgumentFloat(String name, List<String> exx, float min) {
+    public ArgumentFloat(String name, Supplier<List<String>> exx, float min) {
         super(name, exx);
         this.min = min;
     }
+
+    public ArgumentFloat(String name, List<String> exx, float min) {
+        super(name, () -> exx);
+        this.min = min;
+    }
+
 
     public ArgumentFloat(String name, float min, float max) {
         super(name);
@@ -35,8 +47,14 @@ public class ArgumentFloat extends Argument{
         this.max = max;
     }
 
-    public ArgumentFloat(String name, List<String> exx, float min, float max) {
+    public ArgumentFloat(String name, Supplier<List<String>> exx, float min, float max) {
         super(name, exx);
+        this.min = min;
+        this.max = max;
+    }
+
+    public ArgumentFloat(String name, List<String> exx, float min, float max) {
+        super(name, () -> exx);
         this.min = min;
         this.max = max;
     }

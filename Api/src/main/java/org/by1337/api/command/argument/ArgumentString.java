@@ -4,6 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.by1337.api.command.CommandSyntaxError;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 public class ArgumentString extends Argument {
     public ArgumentString(String name) {
@@ -11,6 +12,10 @@ public class ArgumentString extends Argument {
     }
 
     public ArgumentString(String name, List<String> exx) {
+        super(name, () -> exx);
+    }
+
+    public ArgumentString(String name, Supplier<List<String>> exx) {
         super(name, exx);
     }
 

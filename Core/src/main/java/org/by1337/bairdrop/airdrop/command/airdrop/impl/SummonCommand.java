@@ -12,6 +12,7 @@ import org.by1337.api.command.CommandException;
 import org.by1337.api.command.argument.ArgumentDouble;
 import org.by1337.api.command.argument.ArgumentSetList;
 import org.by1337.api.command.argument.ArgumentStrings;
+import org.by1337.bairdrop.observer.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +27,11 @@ public class SummonCommand implements CommandExecutor{
         return "[SUMMON]";
     }
 
-    @Override
+    @Override // заглушка
+    public void execute(Event event, @NotNull String command) throws CommandException {
+        execute(event.getAirdrop(), event.getPlayer(), command);
+    }
+
     public void execute(@Nullable Airdrop airDrop, @Nullable Player player, @NotNull String command) throws CommandException {
         Objects.requireNonNull(airDrop, String.format(AIRDROP_IS_NULL.getString(), command));
         Objects.requireNonNull(airDrop.getAnyLoc(), String.format(LOCATION_IS_NULL.getString(), command));

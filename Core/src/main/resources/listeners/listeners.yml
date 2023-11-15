@@ -1,0 +1,244 @@
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~EVENT LIST~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+# CLICK_CLOSE - click on a closed airdrop
+# CLICK_OPEN - click on an opened airdrop
+# TIMER - called every second
+# START_EVENT - when the airdrop spawns
+# END_EVENT - when the airdrop disappears
+# UNLOCK_EVENT - when the airdrop is unlocked
+# FIRST_OPEN - when someone opens the airdrop for the first time
+# SUMMONER - when someone summons the airdrop
+# ACTIVATE - when the airdrop is activated (triggered if start-countdown-after-click = true)
+# STOP_WHEN_EMPTY - called when the airdrop finishes due to depletion
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~CHECK LIST~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+# NUMERICAL_CHECK - numerical check. For example, input '{time-to-open} == 60'
+# LOGICAL_CHECK - logical check. For example, input '{airdrop-is-open}'
+# STRING_CHECK - string comparison. For example, input '{airdrop-is-open} == true'
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~INTERNAL PLACEHOLDERS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NUMERICAL~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+# {time-to-open} - time in seconds until opening
+# {time-to-start} - time in seconds until the airdrop appears
+# {time-to-end} - time in seconds until the airdrop finishes
+# == if the numbers are equal (10 == 10)
+# != if the numbers are not equal (10 != 9)
+# > if the first number is greater than the second (10 > 9)
+# < if the first number is less than the second (9 < 10)
+# >= if the first number is greater than or equal to the second (10 >= 10)
+# <= if the first number is less than or equal to the second (10 <= 10)
+# % remainder of division (10 % 10 == 0) 10 / 10 = 1.0, so the remainder is 0
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~LOGICAL~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+# {it-was-open} - Whether the airdrop was opened
+# {airdrop-is-open} - true if the airdrop is open
+# {airdrop-is-start} - true if the airdrop has spawned
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~STRING COMPARISON~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# == - if the strings are equal
+# != - if the strings are not equal
+# contains - if the string contains
+# !contains - if the string does not contain
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~COMMANDS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+# [MESSAGE] - Send a message to the player
+# [MESSAGE_ALL] - Send a message to all players
+# [TITLE] - Send a title to the player (text in the middle of the screen)
+# [TITLE_ALL] - Send a title to all players (text in the middle of the screen)
+# [ACTIONBAR] - Send an actionbar message to the player (text above the hotbar)
+# [ACTIONBAR_ALL] - Send an actionbar message to all players (text above the hotbar)
+# [CONSOLE] - Execute a command as the console
+# [PLAYER] - Execute a command as the player
+# [SOUND] - Play a sound to the player
+# [SOUND_ALL] - Play a sound to all players
+# [EFFECT_START-<NAME>-<generate id>] - Spawn an effect at the airdrop's location
+# [EFFECT_STOP-<id>] - Stop the effect
+# [EFFECT_STOP_ALL] - Stop all effects spawned by the airdrop
+# [SET_MATERIAL_<MATERIAL>] - Set the material of the airdrop
+# [SCHEMATICS_PASTE-<name>] - Paste a schematic
+# [SCHEMATICS_REMOVE] - Remove the schematic
+# [SET_TIME_START-<time>] - Set the time until start in seconds
+# [SET_TIME_UNLOCK-<time>] - Set the time until unlock in seconds
+# [SET_TIME_END-<time>] - Set the time until end in seconds
+# [SET_REGION] - Set the region
+# [SET_HOLO_TIME_TO_START] - Spawn a hologram where the airdrop appears
+# [CALL-<listener>] - Call a listener
+# [NEAR-PLAYERS=<radius>] iterate over all players within a radius. Used like [NEAR-PLAYERS=10] {CALL-test}
+# [RUN_JS=<jsname.js>] run a script
+# [NEW_BOSSBAR] - Create a boss bar
+# [BOSSBAR] - Modify a boss bar
+# [REMOVE_BOSSBAR] - Remove a boss bar
+# [ERROR] - Output an error to the console
+# [LOGGER] - Output a log to the console
+# [PLAYER-SET-ITEM-<slot>=<material>] - Set an item to the player's slot
+# [SUB_TITLE] - Subtitle
+# [SCHEDULER] - the listener will execute in a separate thread.
+# [ASYNC] - the listener will execute in a separate asynchronous thread.
+# [LATER-<time>] - the listener will execute with a delay in ticks.
+###
+# [LATER-<time>] - works only in combination with [SCHEDULER] or [ASYNC].
+# [SCHEDULER], [ASYNC], [LATER-<time>] - are executed before checking conditions and it doesn't matter where these commands are placed, whether at the end or at the beginning of all commands.
+######################################################################################
+
+listeners:
+
+  #TIMER#
+  alert-5:
+    description: '&fMessage about opening in 5 seconds'
+    event: 'TIMER'
+    requirement:
+      check-1:
+        type: 'NUMERICAL_CHECK'
+        input: '{time-to-open} == 5'
+    commands:
+      - '[MESSAGE_ALL] {air-name}&7 will open in 5 seconds'
+
+  alert-4:
+    description: '&fMessage about opening in 10 seconds'
+    event: 'TIMER'
+    requirement:
+      check-1:
+        type: 'NUMERICAL_CHECK'
+        input: '{time-to-open} == 10'
+    commands:
+      - '[MESSAGE_ALL] {air-name}&7 will open in 10 seconds'
+
+  anim:
+    description: '&fAnimation'  # Description
+    event: 'TIMER'  # Triggered every time the timer elapses
+    requirement: # Task execution conditions
+      check-1:
+        type: 'NUMERICAL_CHECK'  # Numerical check
+        input: '{time-to-open} % 2 == 0'  # Keep only even values
+      check-2:
+        type: 'LOGICAL_CHECK'  # Logical expression check
+        input: '{!airdrop-is-open}'  # Airdrop must not be open
+      check-3:
+        type: 'LOGICAL_CHECK'  # Logical expression check
+        input: '{airdrop-is-start}'  # Airdrop must be started
+    commands:
+      - '[SET_MATERIAL_LIME_WOOL]'  # Set material to Lime Wool
+    deny-commands: # If any of the requirements fails
+      - '[CALL-anim-2]'  # Call listener anim-2
+
+  alert-start:
+    description: '&fMessage about starting in 30 seconds'
+    event: 'TIMER'
+    requirement:
+      check-1:
+        type: 'NUMERICAL_CHECK'
+        input: '{time-to-start} == 30'
+    commands:
+      - '[MESSAGE_ALL] {air-name}&7 will appear in 30 seconds!'
+
+  #START_EVENT#
+  spawn-particle:
+    description: '&fSpawns particles'
+    event: 'START_EVENT'
+    requirement:
+      check-1:
+        type: 'STRING_CHECK'
+        input: '{use-player-location} == false'
+    commands:
+      - '[EFFECT_START-ef=3-ef_helix]'
+      - '[EFFECT_START-ef=6-ef_rnd]'
+    deny-commands:
+      - '[CALL-remove_summoner_block]'
+      - '[SET_MATERIAL_{material-locked}]'
+
+
+  alert:
+    description: '&fSends a message to everyone about the start of the airdrop'
+    event: 'START_EVENT'
+    commands:
+      - '[MESSAGE_ALL] {air-name}&7 has appeared! Coordinates: &6{x}&7,&6{y}&7,&6{z}'
+      - '[TITLE_ALL] {air-name}&7 has appeared!'
+      - '[SOUND_ALL] BLOCK_BEACON_POWER_SELECT'
+
+  #END_EVENT#
+  end:
+    description: '&fAirdrop completion'
+    event: 'END_EVENT'
+    requirement:
+      check-1:
+        type: 'STRING_CHECK'
+        input: '{use-player-location} == true'
+    commands:
+      - '[EFFECT_STOP_ALL]'
+      - '[MESSAGE_ALL] {air-name}&7 has ended!'
+      - '[CALL-remove_summoner_block]'
+    deny-commands:
+      - '[EFFECT_STOP_ALL]'
+      - '[MESSAGE_ALL] {air-name}&7 has ended!'
+
+  #Others#
+  alert-open:
+    description: '&fMessage about opening'
+    event: 'UNLOCK_EVENT'
+    commands:
+      - '[MESSAGE_ALL] {air-name}&7 is open!'
+
+  ACTIVATE:
+    description: '&fMessage about activating the airdrop%split%&fAlso triggers an effect'
+    event: 'ACTIVATE'
+    commands:
+      - '[MESSAGE_ALL] &7Player &6%player_name% &7has activated {air-name}'
+      - '[MESSAGE] {air-name} &aactivated!'
+      - '[EFFECT_START-ef=5=1-ef_circle]'
+      - '[SOUND_ALL] UI_TOAST_CHALLENGE_COMPLETE' #BLOCK_BARREL_CLOSE
+
+  spawn-summoner-alert:
+    description: '&aSends a message that a player has summoned the airdrop'
+    event: 'SUMMONER'
+    commands:
+      - '[MESSAGE_ALL] &7Player &6%player_name% &7has summoned {air-name}&7!'
+      - '[SET_TIME_START-31]' # Set time to start to 31 seconds
+
+
+  chest-closed:
+    description: '&fSends a message to the player that the airdrop is closed'
+    event: 'CLICK_CLOSE'
+    commands:
+      - '[MESSAGE] {air-name} &cis closed!'
+      - '[SOUND] BLOCK_BARREL_CLOSE' #BLOCK_BARREL_CLOSE
+
+  chest-open:
+    description: '&fPlays a sound to the player when clicking on the airdrop'
+    event: 'CLICK_OPEN'
+    commands:
+      - '[SOUND] BLOCK_BARREL_OPEN'
+
+
+  spawn-summoner:
+    description: '&aSpawns particles if the airdrop is summoned by a player'
+    event: 'SUMMONER'
+    requirement:
+      check-1:
+        type: 'STRING_CHECK'
+        input: '{use-player-location} == true'
+    commands:
+      - '[SET_MATERIAL_SOUL_CAMPFIRE]-offsets'
+      - '[SET_REGION]'
+      - '[EFFECT_START-ef=3-ef_helix]'
+      - '[EFFECT_START-ef=6-ef_rnd]'
+      - '[SET_HOLO_TIME_TO_START]-offsets'
+      - '[SOUND_ALL] UI_TOAST_CHALLENGE_COMPLETE'
+
+  anim-2:
+    description: '&fAnimation'  # Description
+    event: 'NONE'  # Non-triggered event
+    requirement: # Task execution conditions
+      check-1:
+        type: 'LOGICAL_CHECK'  # Logical expression check
+        input: '{!airdrop-is-open}'  # Airdrop must not be open
+      check-2:
+        type: 'LOGICAL_CHECK'  # Logical expression check
+        input: '{airdrop-is-start}'  # Airdrop must be started
+    commands:
+      - '[SET_MATERIAL_RED_WOOL]'  # Set material to Red Wool
+
+  remove_summoner_block:
+    description: '&fRemoves summoner_block'
+    event: 'NONE'
+    commands:
+      - '[SET_MATERIAL_AIR]-offsets'
+
+  steal:
+    description: '&fwhen the player use cheat steal chest'
+    event: 'PLAYER_STEAL'
+    commands:
+      - '[CONSOLE] kick %player_name% cheat'

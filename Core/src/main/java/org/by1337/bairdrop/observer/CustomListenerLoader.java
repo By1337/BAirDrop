@@ -1,155 +1,73 @@
 package org.by1337.bairdrop.observer;
 
-import lombok.Getter;
-import lombok.SneakyThrows;
-import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.by1337.api.configuration.YamlConfig;
 import org.by1337.bairdrop.BAirDrop;
-import org.by1337.bairdrop.lang.Resource;
-import org.by1337.bairdrop.migrator.command.CmdMigrator;
-import org.by1337.bairdrop.observer.observer.Observer;
-import org.by1337.bairdrop.observer.requirement.Requirement;
-import org.by1337.bairdrop.observer.requirement.Requirements;
-import org.by1337.bairdrop.observer.requirement.impl.RequirementNumericalCheck;
-import org.by1337.bairdrop.observer.requirement.impl.RequirementStringCheck;
-import org.by1337.bairdrop.util.Message;
-import org.by1337.api.command.CommandException;
+import org.by1337.bairdrop.observer.event.Event;
+import org.by1337.api.util.NameKey;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
+/**
+ * The CustomListenerLoader class is responsible for loading and managing custom event listeners.
+ * It scans a directory for listener configuration files, loads them, and adds them to a HashMap for easy access.
+ */
 public class CustomListenerLoader {
 
-    private static final Resource listenersIsEmpty = new Resource("listeners.warning.list-listeners-is-empty"); //todo добавить в файл с языком
-    @Getter
-    private static HashMap<NamespacedKey, Observer> customEventListeners = new HashMap<>();
+    private List<ListenersFile> listeners = new ArrayList<>();
 
-    private FileConfiguration listeners;
-    private File fileListeners;
 
+    /**
+     * Constructs a new CustomListenerLoader. It initializes the directory for listener configurations and loads listeners.
+     */
     public CustomListenerLoader() {
-        fileListeners = new File(BAirDrop.getInstance().getDataFolder() + File.separator + "listeners.yml");
-        if (!fileListeners.exists()) {
-            BAirDrop.getInstance().saveResource("listeners.yml", true);
+        File dir = new File(BAirDrop.getInstance().getDataFolder() + File.separator + "listeners");
+        if (!dir.exists()) {
+            dir.mkdir();
         }
-        listeners = YamlConfiguration.loadConfiguration(fileListeners);
+        listeners = loadListeners(dir);
     }
 
     /**
-     * TODO: На данный момент невозможно провести проверку слушателей из-за наличия плейсхолдеров и отсутствия возможности удостовериться,
-     * TODO: что, например, {x} действительно заменяется на число. В настоящее время отсутствуют конкретные идеи о том, как это исправить, и, возможно, это придется удалить.
+     * Recursively loads listener configuration files from the given directory and returns a list of ListenersFile objects.
+     *
+     * @param dir The directory to scan for listener configuration files.
+     * @return A list of ListenersFile objects representing loaded listener configurations.
      */
-    private void validateListeners() {
-        if(true){
-            return;
-        }
-        for (NamespacedKey key : new ArrayList<>(customEventListeners.keySet())) {
-            try {
-                customEventListeners.get(key).validateCommands();
-            } catch (CommandException e) {
-                Message.error(e.getLocalizedMessage());
-                Message.error("listener %s could not be loaded", key);
-                customEventListeners.remove(key);
-            }
-        }
-        Message.logger("loaded %s listeners!", customEventListeners.size());
-    }
-
-    private void update() {
-        for (String key : listeners.getConfigurationSection("listeners").getKeys(false)) {
-            List<String> oldCommands = listeners.getStringList(String.format("%s.%s.commands", "listeners", key));
-            List<String> oldDenyCommands = listeners.getStringList(String.format("%s.%s.deny-commands", "listeners", key));
-
-            List<String> commands = new ArrayList<>();
-            List<String> denyCommands = new ArrayList<>();
-
-            for (String cmd : oldCommands) {
-                commands.add(CmdMigrator.adapt(cmd));
-            }
-
-            for (String cmd : oldDenyCommands) {
-                denyCommands.add(CmdMigrator.adapt(cmd));
-            }
-            listeners.set(String.format("%s.%s.commands", "listeners", key), commands);
-            listeners.set(String.format("%s.%s.deny-commands", "listeners", key), denyCommands);
-
-        }
-        listeners.set("version", 1);
-
-        try {
-            listeners.save(fileListeners);
-        } catch (IOException e) {
-            Message.error(e.getLocalizedMessage());
-        }
-    }
-
-    public void load() {
-        int version = listeners.getInt("version", 0);
-        if (listeners.getConfigurationSection("listeners") == null) {
-            Message.warning(listenersIsEmpty.getString());
-            return;
-        }
-        if (version == 0) {
-            update();
-        }
-        for (String key : listeners.getConfigurationSection("listeners").getKeys(false)) {
-            try {
-                String event = Objects.requireNonNull(listeners.getString(String.format("%s.%s.event", "listeners", key)), String.format("тип ивента не указан!: %s", key));
-                List<String> commands = listeners.getStringList(String.format("%s.%s.commands", "listeners", key));
-                List<String> denyCommands = listeners.getStringList(String.format("%s.%s.deny-commands", "listeners", key));
-                String description = Objects.requireNonNull(listeners.getString(String.format("%s.%s.description", "listeners", key)), String.format("Описание слушателя не указано! %s", key));
-
-                CustomEvent customEvent = CustomEvent.getByKey(NamespacedKey.fromString(event.toLowerCase()));
-                if (customEvent == null) {
-                    Message.error("Незарегистрированный ивент! %s", event);
-                    continue;
+    private List<ListenersFile> loadListeners(File dir) {
+        List<ListenersFile> list = new ArrayList<>();
+        for (File file : dir.listFiles()) {
+            if (file.isDirectory()) {
+                list.addAll(loadListeners(file));
+            } else if (file.getName().endsWith(".yml")) {
+                try {
+                    list.add(new ListenersFile(new YamlConfig(file)));
+                } catch (IOException | InvalidConfigurationException e) {
+                    BAirDrop.MESSAGE.error("failed to load listeners! ", e);
                 }
-
-                List<Requirement> requirementsList = new ArrayList<>();
-                if (listeners.getConfigurationSection(String.format("%s.%s.requirement", "listeners", key)) != null) {
-                    for (String checkId : listeners.getConfigurationSection(String.format("%s.%s.requirement", "listeners", key)).getKeys(false)) {
-                        String type = Objects.requireNonNull(
-                                listeners.getString(String.format("%s.%s.requirement.%s.type", "listeners", key, checkId)),
-                                String.format("Тип проверки не указан! Проверка %s в %s", checkId, key)
-                        );
-                        String input = Objects.requireNonNull(
-                                listeners.getString(String.format("%s.%s.requirement.%s.input", "listeners", key, checkId)),
-                                String.format("Условия проверки не указано! Проверка %s в %s", checkId, key)
-                        );
-                        requirementsList.add(
-                                switch (type) {
-                                    case "STRING_CHECK", "str" -> new RequirementStringCheck(input);
-                                    case "NUMERICAL_CHECK", "num" -> new RequirementNumericalCheck(input);
-                                    default ->
-                                            throw new IllegalArgumentException(String.format("Неизвестный тип проверки! '%s' Проверка %s в %s", type, checkId, key));
-                                }
-                        );
-                    }
-                }
-                Requirements requirements = new Requirements();
-                requirements.set(requirementsList);
-
-                CustomEventListener customEventListener = new CustomEventListener.CustomEventListenerBuilder()
-                        .customEvent(customEvent)
-                        .commands(commands.toArray(new String[0]))
-                        .denyCommands(denyCommands.toArray(new String[0]))
-                        .description(description)
-                        .requirements(requirements)
-                        .key(NamespacedKey.fromString(key.toLowerCase()))
-                        .build();
-
-                customEventListeners.put(NamespacedKey.fromString(key.toLowerCase()), customEventListener);
-            } catch (NullPointerException | IllegalArgumentException e) {
-                Message.error("Ошибка при загрузке слушателя! %s", e.getLocalizedMessage());
             }
-
         }
-        validateListeners();
+        return list;
     }
 
+
+    /**
+     * Updates a custom event listener with the given key using the provided event.
+     *
+     * @param key   The key associated with the custom event listener to update.
+     * @param event The event to use for the update.
+     * @throws IllegalArgumentException if no listener is found for the given key.
+     */
+    public void update(@NotNull NameKey key, Event event) {
+        for (ListenersFile listener : listeners) {
+            listener.update(key, event);
+        }
+    }
+
+    public List<ListenersFile> getListeners() {
+        return listeners;
+    }
 }
