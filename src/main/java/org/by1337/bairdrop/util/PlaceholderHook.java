@@ -28,6 +28,47 @@ public class PlaceholderHook extends me.clip.placeholderapi.expansion.Placeholde
 
     @Override
     public String onRequest(OfflinePlayer player, String params) {// %bairdrop_test% = test %bairdrop_time_to_open_<air id>%
+        if (params.contains("is_start_")) { //%bairdrop_is_start_<air id>%
+            String[] args = params.split("_");
+            if(args.length != 3) {
+                return "error";
+            }
+            AirDrop airDrop = BAirDrop.airDrops.getOrDefault(args[2], null);
+            if(airDrop == null) {
+                return "error";
+            }
+            return "" + airDrop.isAirDropStarted();
+        }
+        if (params.contains("is_locked_")) { //%bairdrop_is_locked_<air id>%
+            String[] args = params.split("_");
+            if(args.length != 3) {
+                return "error";
+            }
+            AirDrop airDrop = BAirDrop.airDrops.getOrDefault(args[2], null);
+            if(airDrop == null) {
+                return "error";
+            }
+            if(!airDrop.isAirDropStarted()) {
+                return BAirDrop.getConfigMessage().getMessage("air-no-respawn")
+                        .replace("{id}", airDrop.getId());
+            }
+            return "" + airDrop.isAirDropLocked();
+        }
+        if (params.contains("is_activated_")) { //%bairdrop_is_activated_<air id>%
+            String[] args = params.split("_");
+            if(args.length != 3) {
+                return "error";
+            }
+            AirDrop airDrop = BAirDrop.airDrops.getOrDefault(args[2], null);
+            if(airDrop == null) {
+                return "error";
+            }
+            if(!airDrop.isAirDropStarted()) {
+                return BAirDrop.getConfigMessage().getMessage("air-no-respawn")
+                        .replace("{id}", airDrop.getId());
+            }
+            return "" + airDrop.isActivated();
+        }
         if (params.contains("time_to_open_")) { //%bairdrop_time_to_open_<air id>%
             String[] args = params.split("_");
             if (args.length != 4) return "error";
@@ -82,6 +123,13 @@ public class PlaceholderHook extends me.clip.placeholderapi.expansion.Placeholde
             AirDrop airDrop = BAirDrop.airDrops.getOrDefault(args[4], null);
             if (airDrop == null) return "error";
             return  AirManager.getFormat(airDrop.getTimeToStart());
+        }
+        if (params.contains("time_to_start_new_format_")) { //%bairdrop_time_to_start_new_format_<air_id>%
+            String[] args = params.split("_");
+            if (args.length != 5) return "error";
+            AirDrop airDrop = BAirDrop.airDrops.getOrDefault(args[4], null);
+            if (airDrop == null) return "error";
+            return  AirManager.formatTime(airDrop.getTimeToStart());
         }
         if (params.contains("time_to_start_")) { //%bairdrop_time_to_start_<air_id>%
             String[] args = params.split("_");

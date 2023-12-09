@@ -25,6 +25,27 @@ public class AirManager {
         int sec = Sec % 60;
         return String.format("%02d:%02d:%02d", hour, min, sec);
     }
+    public static String formatTime(int time) {
+        int days = time / 86400;
+        int hours = time % 86400 / 3600;
+        int minutes = time % 3600 / 60;
+        int seconds = time % 60;
+        StringBuilder builder = new StringBuilder();
+        if (days > 0) {
+            builder.append(BAirDrop.getConfigMessage().getMessage("new-time-format.days").replace("%size%", "" + days)).append(" ");
+        }
+        if (hours > 0) {
+            builder.append(BAirDrop.getConfigMessage().getMessage("new-time-format.hours").replace("%size%", "" + hours)).append(" ");
+        }
+        if (minutes > 0) {
+            builder.append(BAirDrop.getConfigMessage().getMessage("new-time-format.minutes").replace("%size%", "" + minutes)).append(" ");
+        }
+        if (seconds > 0) {
+            builder.append(BAirDrop.getConfigMessage().getMessage("new-time-format.seconds").replace("%size%", "" + seconds)).append(" ");
+        }
+        String format = builder.toString().trim().isEmpty() ? BAirDrop.getConfigMessage().getMessage("new-time-format.now") : builder.toString().trim();
+        return Message.messageBuilder(format);
+    }
     public static int getTimeToNextAirdrop() {
         int time = -1;
         for (AirDrop airDrop : BAirDrop.airDrops.values()) {
