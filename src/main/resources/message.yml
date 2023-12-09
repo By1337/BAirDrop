@@ -1,5 +1,6 @@
 air-loaded: '&aAirdrop {id} loaded!'
 inv-edit: '&7Editing items for Airdrop {id}'
+air-no-respawn: '&cno spawn' # {id} - airdrop`s id omg
 slot-more: 'There are {size} items in slot {slot} of Airdrop {id}!'
 item-error: '&cNo items in slot {slot}!'
 item-null: '&cItem in slot {slot} is null! It was skipped!'
@@ -10,6 +11,12 @@ click-to-deactivate: '&cClick to deactivate'
 click-to-teleport: '&aRight-click to teleport'
 click-to-edit: '&aClick to edit items in the Airdrop'
 click-to-chance: '&aClick to edit item spawn chances'
+new-time-format:
+  days: '&c%size% &fd.'
+  seconds: '&c%size% &fs.'
+  minutes: '&c%size% &fm.'
+  hours: '&c%size% &fh.'
+  now: '&cnow'
 edit-lore:
   - '&aRight-click +1%'
   - '&aSHIFT+Right-click +10%'
