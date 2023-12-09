@@ -1,5 +1,6 @@
 air-loaded: '&aАирдроп {id} загружен!'
 inv-edit: '&7Редактирование предметов для аирдропа {id}'
+air-no-respawn: '&cНе заспавнен' # {id} - airdrop`s id omg
 slot-more: 'В слоте {slot} аирдропа {id} находятся {size} предметов!'
 item-error: '&cВ слоте {slot} нет предметов!'
 item-null: '&cПредмет в слоте {slot} нулевой! Он был скипнут!'
@@ -10,6 +11,12 @@ click-to-deactivate: '&cНажмите, чтобы деактивировать'
 click-to-teleport: '&aПКМ чтобы телепортироваться'
 click-to-edit: '&aНажмите, чтобы редактировать предметы в аирдропе'
 click-to-chance: '&aНажмите, чтобы редактировать шансы появления предметов'
+new-time-format:
+  days: '&c%size% &fдн.'
+  seconds: '&c%size% &fсек.'
+  minutes: '&c%size% &fмин.'
+  hours: '&c%size% &fчас.'
+  now: '&cсейчас'
 edit-lore:
   - '&aПКМ +1%'
   - '&aSHIFT+ПКМ +10%'
