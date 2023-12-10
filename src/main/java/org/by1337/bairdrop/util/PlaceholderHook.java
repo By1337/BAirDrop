@@ -85,6 +85,15 @@ public class PlaceholderHook extends me.clip.placeholderapi.expansion.Placeholde
                 time += BAirDrop.globalTimer.getAir().getTimeToStart();
             return time + "";
         }
+        if (params.equals("time_start_new_format")) { //%bairdrop_time_start_new_format%
+            if (BAirDrop.globalTimer == null)
+                return AirManager.formatTime(AirManager.getTimeToNextAirdrop());
+            int time = 0;
+            time += BAirDrop.globalTimer.getTimeToStart();
+            if (BAirDrop.globalTimer.getAir() != null)
+                time += BAirDrop.globalTimer.getAir().getTimeToStart();
+            return AirManager.formatTime(time);
+        }
         if (params.equals("time_start_format")) { //%bairdrop_time_start_format%
             if (BAirDrop.globalTimer == null)
                 return AirManager.getFormat(AirManager.getTimeToNextAirdrop());
@@ -126,9 +135,13 @@ public class PlaceholderHook extends me.clip.placeholderapi.expansion.Placeholde
         }
         if (params.contains("time_to_start_new_format_")) { //%bairdrop_time_to_start_new_format_<air_id>%
             String[] args = params.split("_");
-            if (args.length != 5) return "error";
-            AirDrop airDrop = BAirDrop.airDrops.getOrDefault(args[4], null);
-            if (airDrop == null) return "error";
+            if (args.length != 6) {
+                return "error1";
+            }
+            AirDrop airDrop = BAirDrop.airDrops.getOrDefault(args[5], null);
+            if (airDrop == null) {
+                return "error2";
+            }
             return  AirManager.formatTime(airDrop.getTimeToStart());
         }
         if (params.contains("time_to_start_")) { //%bairdrop_time_to_start_<air_id>%
