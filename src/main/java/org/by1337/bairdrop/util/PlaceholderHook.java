@@ -1,6 +1,7 @@
 package org.by1337.bairdrop.util;
 
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.by1337.bairdrop.AirDrop;
 import org.by1337.bairdrop.BAirDrop;
 import org.jetbrains.annotations.NotNull;
@@ -54,6 +55,47 @@ public class PlaceholderHook extends me.clip.placeholderapi.expansion.Placeholde
             }
             return "" + airDrop.isAirDropLocked();
         }
+        if (params.contains("world_")) { //%bairdrop_is_world_<air id>%
+            String[] args = params.split("_");
+            if(args.length != 2) {
+                return "error";
+            }
+            AirDrop airDrop = BAirDrop.airDrops.getOrDefault(args[1], null);
+            if(airDrop == null) {
+                return "error";
+            }
+            if(!airDrop.isAirDropStarted()) {
+                return BAirDrop.getConfigMessage().getMessage("air-no-respawn")
+                        .replace("{id}", airDrop.getId());
+            }
+            String world = airDrop.getWorld().getName();
+            switch (world) {
+                case "world":
+                    return "" + BAirDrop.getConfigMessage().getMessage("NORMAL");
+                case "world_the_end":
+                    return "" + BAirDrop.getConfigMessage().getMessage("THE_END");
+                case "world_nether":
+                    return "" + BAirDrop.getConfigMessage().getMessage("NETHER");
+                default:
+                return "" + BAirDrop.getConfigMessage().getMessage("CUSTOM");
+            }
+        }
+        if (params.equals("near")) { //%bairdrop_near%
+            if (player == null) return "";
+            AirDrop airDrop = null;
+            int dist = 0;
+            for (AirDrop air : BAirDrop.airDrops.values()) {
+                if (!air.isAirDropStarted()) continue;
+                if (!air.getAnyLoc().getWorld().equals(player.getPlayer().getWorld())) continue;
+                if (dist > player.getPlayer().getLocation().distance(air.getAirDropLocation()) || airDrop == null) {
+                    dist = (int) player.getPlayer().getLocation().distance(air.getAirDropLocation());
+                    airDrop = air;
+                }
+            }
+            if (airDrop == null)
+                return BAirDrop.getConfigMessage().getMessage("air-near-none");
+            return Message.messageBuilder(airDrop.replaceInternalPlaceholder(BAirDrop.getConfigMessage().getMessage("air-near").replace("{dist}", dist + "")));
+        }
         if (params.contains("is_activated_")) { //%bairdrop_is_activated_<air id>%
             String[] args = params.split("_");
             if(args.length != 3) {
@@ -102,22 +144,6 @@ public class PlaceholderHook extends me.clip.placeholderapi.expansion.Placeholde
             if (BAirDrop.globalTimer.getAir() != null)
                 time += BAirDrop.globalTimer.getAir().getTimeToStart();
             return AirManager.getFormat(time);
-        }
-        if (params.equals("near")) { //%bairdrop_near%
-            if (player == null) return "";
-            AirDrop airDrop = null;
-            int dist = 0;
-            for (AirDrop air : BAirDrop.airDrops.values()) {
-                if (!air.isAirDropStarted()) continue;
-                if (!air.getAnyLoc().getWorld().equals(player.getPlayer().getWorld())) continue;
-                if (dist > player.getPlayer().getLocation().distance(air.getAirDropLocation()) || airDrop == null) {
-                    dist = (int) player.getPlayer().getLocation().distance(air.getAirDropLocation());
-                    airDrop = air;
-                }
-            }
-            if (airDrop == null)
-                return BAirDrop.getConfigMessage().getMessage("air-near-none");
-            return Message.messageBuilder(airDrop.replaceInternalPlaceholder(BAirDrop.getConfigMessage().getMessage("air-near").replace("{dist}", dist + "")));
         }
         if (params.contains("time_to_end_format_")) { //%bairdrop_time_to_end_format_<air id>%
             String[] args = params.split("_");
