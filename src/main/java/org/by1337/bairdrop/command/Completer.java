@@ -26,6 +26,9 @@ public class Completer implements TabCompleter {
                     list.add(airDrop.getId());
             }
             if (args.length == 2 && args[0].equals("js")) return BAirDrop.getiConfig().getScripts().values().stream().map(File::getName).collect(Collectors.toList());
+            if (args.length == 3 && args[0].equals("start") ) return List.of(String.valueOf(pl.getLocation().getBlockX()));
+            if (args.length == 4 && args[0].equals("start") ) return List.of(String.valueOf(pl.getLocation().getBlockY()));
+            if (args.length == 5 && args[0].equals("start") ) return List.of(String.valueOf(pl.getLocation().getBlockZ()));
             if (args.length == 2 && !args[0].equals("get") && !args[0].equals("compass")) return list;
             if (args.length == 1 ) {
                 return List.of("menu", "start", "stop", "tp", "listeners", "generate", "reload", "clone", "get", "delete", "create", "compass", "js", "help");
