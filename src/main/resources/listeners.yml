@@ -36,6 +36,7 @@
 # !contains - if the string does not contain
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~COMMANDS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 # [MESSAGE] - Send a message to the player
+# [CENTER-MESSAGE] - Send a message centered on a player
 # [MESSAGE_ALL] - Send a message to all players
 # [TITLE] - Send a title to the player (text in the middle of the screen)
 # [TITLE_ALL] - Send a title to all players (text in the middle of the screen)
@@ -193,6 +194,7 @@ listeners:
     event: 'CLICK_CLOSE'
     commands:
       - '[MESSAGE] {air-name} &cis closed!'
+      - '[CENTER-MESSAGE] {air-name} &cis closed!'
       - '[SOUND] BLOCK_BARREL_CLOSE' #BLOCK_BARREL_CLOSE
 
   chest-open:

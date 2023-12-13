@@ -53,6 +53,7 @@ import static org.by1337.bairdrop.BAirDrop.getInstance;
 public class ExecuteCommands {
     private static List<String> ignoreCommands = new ArrayList<>();
     public static HashMap<String, EasyBossBar> easyBossBarHashMap = new HashMap<>();
+    public int width = 80;
 
     public static boolean hasIgnoreCommand(String command) {
         return ignoreCommands.contains(command);
@@ -769,6 +770,11 @@ public class ExecuteCommands {
         }
         if (command.contains("[MESSAGE]")) {
             Message.sendMsg(pl, command.replace("[MESSAGE] ", ""));
+            return true;
+        }
+        if(command.contains("[CENTER-MESSAGE]")) {
+            Message.centeringText(pl, command
+                    .replace("[CENTER-MESSAGE] ", ""));
             return true;
         }
         if (command.contains("[TITLE]")) {

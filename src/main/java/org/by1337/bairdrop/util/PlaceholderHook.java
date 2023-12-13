@@ -152,6 +152,13 @@ public class PlaceholderHook extends me.clip.placeholderapi.expansion.Placeholde
             if (airDrop == null) return "error";
             return AirManager.getFormat(airDrop.getTimeStop());
         }
+        if (params.contains("time_to_end_new_format_")) { //%bairdrop_time_to_end_new_format_<air id>%
+            String[] args = params.split("_");
+            if (args.length != 6) return "error";
+            AirDrop airDrop = BAirDrop.airDrops.getOrDefault(args[5], null);
+            if (airDrop == null) return "error";
+            return AirManager.formatTime(airDrop.getTimeStop());
+        }
         if (params.contains("time_to_start_format_")) { //%bairdrop_time_to_start_format_<air_id>%
             String[] args = params.split("_");
             if (args.length != 5) return "error";

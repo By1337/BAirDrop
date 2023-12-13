@@ -2,6 +2,7 @@ package org.by1337.bairdrop.util;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.ChatColor;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.boss.BossBar;
@@ -24,11 +25,49 @@ public class Message {
     private static final String AUTHOR = "&#a612cb&lB&#9a17d2&ly&#8d1bd9&l1&#8120e1&l3&#7424e8&l3&#6829ef&l7";
     private static final String prefixPlugin = "&#a600f4[&#a70bf5B&#a815f6A&#a920f7i&#aa2bf8r&#aa35f8d&#ab40f9r&#ac4bfao&#ad55fbp&#ae60fc]";
     private static final Pattern RAW_HEX_REGEX = Pattern.compile("&(#[a-f0-9]{6})", Pattern.CASE_INSENSITIVE);
+    private final static int CENTER_PX = 80; // 154
 
     /**
      * Boss bars created with the [NEW_BOSSBAR] command
      */
     public static HashMap<String, BossBar> bossBars = new HashMap<>();
+
+    public static void centeringText(Player pl, String msg) {
+        if(msg == null || msg.equals("")) pl.sendMessage("");
+            msg = Message.messageBuilder(msg);
+
+            int msgPxSize = 0;
+            boolean prevCode = false;
+            boolean isBold = false;
+
+            for(char c : msg.toCharArray()) {
+                if (c == '§') {
+                    prevCode = true;
+                    continue;
+                } else if (prevCode = true) {
+                    prevCode = false;
+                    if (c == 'l' || c == 'L') {
+                        isBold = true;
+                        continue;
+                    } else isBold = false;
+                } else {
+                    DefaultFontInfo defaultFontInfo = DefaultFontInfo.getDefaultFontInfo(c);
+                    msgPxSize += isBold ? defaultFontInfo.getBoldLength() : defaultFontInfo.getLength();
+                    msgPxSize++;
+                }
+            }
+
+        int halvedMessageSize = msgPxSize / 2;
+        int toCompensate = CENTER_PX - halvedMessageSize;
+        int spaceLength = DefaultFontInfo.SPACE.getLength() + 1;
+        int compensated = 0;
+        StringBuilder sb = new StringBuilder();
+        while(compensated < toCompensate){
+            sb.append(" ");
+            compensated += spaceLength;
+        }
+        Message.sendMsg(pl, Message.messageBuilder(sb.toString() + msg));
+    }
 
     /**
      * Sends a message to the player if they are not null, otherwise logs it to the console
