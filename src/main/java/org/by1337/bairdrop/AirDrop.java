@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -16,6 +17,7 @@ import org.by1337.bairdrop.effect.IEffect;
 import org.by1337.bairdrop.menu.AddingItems;
 import org.by1337.bairdrop.menu.EditAirMenu;
 import org.by1337.bairdrop.ItemUtil.Items;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -26,9 +28,12 @@ public interface AirDrop extends Observable {
     /**
      * Launches the airdrop and generates locations for it in a separate thread.
      *
-     * @param player Sends the location generation process log.
+     * @param commandSender Sends the location generation process log.
      */
 
+    void startCommand(@NotNull CommandSender commandSender);
+
+    @Deprecated
     void startCommand(@Nullable Player player);
 
     /**
@@ -54,6 +59,9 @@ public interface AirDrop extends Observable {
      * Stops the airdrop.
      *
      */
+    void end();
+
+    @Deprecated(forRemoval = true)
     void End();
 
     /**

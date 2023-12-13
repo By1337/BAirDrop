@@ -4,6 +4,7 @@ import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import org.bukkit.*;
 import org.bukkit.block.data.type.RespawnAnchor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -309,7 +310,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
                             EditAirMenu.getInventory().clear();
                         }
                         if (isAirDropStarted())
-                            End();
+                            end();
                         if (clone) {
                             notifyObservers(CustomEvent.UNLOAD, null);
                             airDrops.remove(id);
@@ -355,7 +356,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
                     }
 
                     if (timeStop <= 0) {
-                        End();
+                        end();
                         updateEditAirMenu("stats");
 
                     } else if (!airDropLocked || timeStopEventMustGo && airDropStarted) {
@@ -374,7 +375,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
                         if (stop) {
                             stopWhenEmpty_event = true;
                             notifyObservers(CustomEvent.STOP_WHEN_EMPTY, null);
-                            End();
+                            end();
                         }
                     }
                     if (airDropStarted) {
@@ -395,7 +396,12 @@ public class CAirDrop implements AirDrop, StateSerializable {
     private BukkitTask bukkitTaskStart = null;
 
     @Override
+    @Deprecated
     public void startCommand(@Nullable Player player) {
+        startCommand(player == null ? Bukkit.getConsoleSender() : player);
+    }
+
+    public void startCommand(@NotNull CommandSender player) {
         if (bukkitTaskStart != null && !bukkitTaskStart.isCancelled()) {
             bukkitTaskStart.cancel();
         }
@@ -406,11 +412,11 @@ public class CAirDrop implements AirDrop, StateSerializable {
             public void run() {
                 locationSearch();
                 if (airDropLocation != null) {
-                    Message.sendMsg(player, "&aStarted");
+                    BAirDrop.getMessage().sendMsg(player, "&aStarted");
                     start();
                     cancel();
                 } else
-                    Message.sendMsg(player, "&cFail start: " + x);
+                    BAirDrop.getMessage().sendMsg(player, "&cFail start: " + x);
                 x++;
             }
         }.runTaskTimer(BAirDrop.getInstance(), 1L, 10L);
@@ -486,7 +492,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
         if (airDropLocation == null) {
             if (staticLocation == null) {
                 Message.error(BAirDrop.getConfigMessage().getMessage("loc-is-null"));
-                End();
+                end();
                 return;
             } else airDropLocation = staticLocation.clone();
 
@@ -626,7 +632,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
     }
 
     @Override
-    public void End() {
+    public void end() {
         AirDropEndEvent airDropEndEvent = new AirDropEndEvent(this);
         Bukkit.getServer().getPluginManager().callEvent(airDropEndEvent);
         if (airDropEndEvent.isCancelled())
@@ -662,6 +668,11 @@ public class CAirDrop implements AirDrop, StateSerializable {
             antiSteal.unregister();
             antiSteal = null;
         }
+    }
+
+    @Override
+    public void End() {
+        end();
     }
 
     private BukkitTask bukkitTask = null;
@@ -1227,7 +1238,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
     @Override
     public void unload() {
         if (airDropStarted) {
-            End();
+            end();
         }
         notifyObservers(CustomEvent.UNLOAD, null);
         airDrops.remove(getId());
