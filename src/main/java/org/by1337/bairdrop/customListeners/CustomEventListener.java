@@ -39,7 +39,7 @@ public class CustomEventListener implements Observer {
     }
 
     @Override
-    public void update(@Nullable Player pl, @Nullable AirDrop airDrop, CustomEvent customEvent, boolean ignoreEvent) {
+    public void update(@Nullable Player pl, @NotNull AirDrop airDrop, CustomEvent customEvent, boolean ignoreEvent) {
         if (!customEvent.equals(this.customEvent) && !ignoreEvent)
             return;
         if (Arrays.stream(commands).toList().contains("[SCHEDULER]") || Arrays.stream(denyCommands).toList().contains("[SCHEDULER]")) {

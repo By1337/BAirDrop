@@ -78,12 +78,6 @@ public record CustomEvent(NamespacedKey key) implements Keyed {
     public static final CustomEvent NONE = registerEvent(new CustomEvent(NamespacedKey.fromString("none")));
 
     /**
-     * when someone crafts an item
-     * Player not null, AirDrop null
-     */
-    public static final CustomEvent CRAFT_ITEM = registerEvent(new CustomEvent(NamespacedKey.fromString("craft_item")));
-
-    /**
      * when the airdrop is unloaded
      * Player null, AirDrop not null
      */
@@ -99,11 +93,6 @@ public record CustomEvent(NamespacedKey key) implements Keyed {
      * Player null, AirDrop not null
      */
     public static CustomEvent PLAYER_STEAL = registerEvent(new CustomEvent(NamespacedKey.fromString("player_steal")));
-    /**
-     * when airdrop deserialize
-     * Player null, AirDrop not null
-     */
-    public static CustomEvent DESERIALIZE = registerEvent(new CustomEvent(NamespacedKey.fromString("deserialize")));
 
     /**
      * @param key NamespacedKey of the event

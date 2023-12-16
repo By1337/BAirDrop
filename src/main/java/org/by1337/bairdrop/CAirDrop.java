@@ -5,7 +5,6 @@ import com.sk89q.worldedit.WorldEdit;
 import org.bukkit.*;
 import org.bukkit.block.data.type.RespawnAnchor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.HumanEntity;
@@ -32,9 +31,6 @@ import org.by1337.bairdrop.customListeners.CustomEvent;
 import org.by1337.bairdrop.customListeners.observer.Observer;
 import org.by1337.bairdrop.effect.EffectFactory;
 import org.by1337.bairdrop.effect.IEffect;
-import org.by1337.bairdrop.serializable.EffectDeserialize;
-import org.by1337.bairdrop.serializable.EffectSerializable;
-import org.by1337.bairdrop.serializable.StateSerializable;
 import org.by1337.bairdrop.util.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,7 +47,7 @@ import static org.by1337.bairdrop.BAirDrop.*;
 import org.by1337.bairdrop.util.Message;
 import org.by1337.bairdrop.menu.EditAirMenu;
 
-public class CAirDrop implements AirDrop, StateSerializable {
+public class CAirDrop implements AirDrop {
     private String inventoryTitle;
     private String displayName;
     private int inventorySize;
@@ -128,7 +124,7 @@ public class CAirDrop implements AirDrop, StateSerializable {
             superName = id;
 
             InvalidCharactersChecker invalidCharactersChecker = new InvalidCharacters();
-            String invalidChars = invalidCharactersChecker.getInvalidCharacters(id);
+            String invalidChars = invalidCharactersChecker.getInvalidCharacters0(id);
 
             if (!invalidChars.isEmpty()) {
                 Message.error(String.format("Недопустимые символы: %s", invalidChars));
@@ -1282,146 +1278,6 @@ public class CAirDrop implements AirDrop, StateSerializable {
             } else {
                 Message.warning("unknown observer: " + listener);
             }
-        }
-    }
-
-    @Override
-    public void stateSerialize() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("version", 1);
-        map.put("timeToStart", timeToStart);
-        map.put("timeToOpen", timeToOpen);
-        map.put("timeStop", timeStop);
-
-        map.put("airDropLocked", airDropLocked);
-        map.put("wasOpened", wasOpened);
-        map.put("airDropStarted", airDropStarted);
-        map.put("activated", activated);
-
-        map.put("airDropLocation", airDropLocation);
-
-        for (int x = 0; x < inventory.getSize(); x++) {
-            ItemStack itemStack = inventory.getItem(x);
-            if (itemStack == null) continue;
-            map.put("item-" + x, itemStack);
-        }
-
-     //   List<Object> effects = new ArrayList<>();
-
-        Map<String, Object> effects = new HashMap<>();
-
-        for (String key : loadedEffect.keySet()) {
-
-            IEffect effect = loadedEffect.get(key);
-            if (!effect.isUsed()) continue;
-            if (effect instanceof EffectSerializable effectSerializable) {
-                effects.put(key, effectSerializable.serialize());
-            }
-        }
-        map.put("effects", effects);
-//        Map<String, Object> mm = new HashMap<>();
-//        for (String key : map.keySet()){
-//            mm.put(key, map.get(key));
-//        }
-     //   mm.put("oke", new ArrayList<>(effects));
-//        mm.put("item", new ItemStack(Material.CREEPER_HEAD));
-//        map.put("okeeeey", mm);
-        fileConfiguration.set("state", map);
-    }
-
-    public static final int STATE_VERSION = 1;
-
-    @Override
-    public void stateDeserialize() {
-        try {
-            if (fileConfiguration.getConfigurationSection("state") == null) return;
-            Map<String, Object> map = fileConfiguration.getConfigurationSection("state").getValues(false);
-
-            int version = (int) map.get("version");
-            if (version < STATE_VERSION) {
-                Message.error("&cУстарелые данные! Невозможно загрузить состояние аирдропа");
-                return;
-            }
-            int S_timeToStart = (int) map.get("timeToStart");
-            int S_timeToOpen = (int) map.get("timeToOpen");
-            int S_timeStop = (int) map.get("timeStop");
-
-            boolean S_airDropLocked = (boolean) map.get("airDropLocked");
-            boolean S_wasOpened = (boolean) map.get("wasOpened");
-            boolean S_airDropStarted = (boolean) map.get("airDropStarted");
-            boolean S_activated = (boolean) map.get("activated");
-
-            Location S_airDropLocation = (Location) map.get("airDropLocation");
-
-
-            for (String key : map.keySet()) {
-                if (key.contains("item-")) {
-                    ItemStack itemStack = (ItemStack) map.get(key);
-                    inventory.setItem(Integer.parseInt(key.replace("item-", "")), itemStack);
-                }
-            }
-            timeToStart = S_timeToStart;
-            timeToOpen = S_timeToOpen;
-            timeStop = S_timeStop;
-
-            wasOpened = S_wasOpened;
-            activated = S_activated;
-            if (S_airDropLocation != null) {
-                airDropLocation = S_airDropLocation;
-                if (S_airDropStarted) {
-
-                    RegionManager.setRegion(this);
-                    timeToStart = 0;
-                    futureLocation = null;
-                    stopWhenEmpty_event = false;
-
-
-                    airDropLocation.getBlock().setType(materialLocked);
-                    if (materialLocked == Material.RESPAWN_ANCHOR) {
-                        RespawnAnchor ra = (RespawnAnchor) airDropLocation.getBlock().getBlockData();
-                        ra.setCharges(4);
-                        airDropLocation.getBlock().setBlockData(ra);
-                    }
-
-
-                    airDropStarted = true;
-                    updateEditAirMenu("stats");
-                    if (BAirDrop.getInstance().getConfig().getBoolean("anti-steal.enable")) {
-                        if (antiSteal != null) antiSteal.unregister();
-                        antiSteal = new AntiSteal(this);
-                    }
-
-                    if (!S_airDropLocked) {
-                        airDropLocked = false;
-                        timeToOpen = 0;
-
-                        airDropLocation.getBlock().setType(materialUnlocked);
-                        if (materialUnlocked == Material.RESPAWN_ANCHOR) {
-                            RespawnAnchor ra = (RespawnAnchor) airDropLocation.getBlock().getBlockData();
-                            ra.setCharges(4);
-                            airDropLocation.getBlock().setBlockData(ra);
-                        }
-
-
-                        List<String> lines = new ArrayList<>(airHoloOpen);
-                        lines.replaceAll(this::replaceInternalPlaceholder);
-                        BAirDrop.hologram.createOrUpdateHologram(lines, airDropLocation.clone().add(holoOffsets), id);
-                    }
-                }
-                Map<String, Object> effects = ((ConfigurationSection) map.get("effects")).getValues(false);
-                for (String key : effects.keySet()) {
-                    Map<String, Object> ef = ((ConfigurationSection) effects.get(key)).getValues(false);
-                    IEffect effect = EffectDeserialize.deserialize(ef);
-                    if (effect == null){
-                        Message.error(key + " Не получилось десериализовать эффект");
-                        continue;
-                    }
-                    loadedEffect.put(key, effect);
-                }
-            }
-            notifyObservers(CustomEvent.DESERIALIZE, null);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

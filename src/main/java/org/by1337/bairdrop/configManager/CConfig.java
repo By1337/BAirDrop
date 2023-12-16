@@ -140,8 +140,6 @@ public class CConfig implements Config, ConfigMessage {
         summoner.LoadSummoner();
         BAirDrop.compass = new Compass();
         BAirDrop.compass.loadItem();
-        if (getInstance().getConfig().getBoolean("custom-crafts.enable"))
-            loadCustomCraft();
         loaded = true;
     }
 
@@ -168,55 +166,6 @@ public class CConfig implements Config, ConfigMessage {
             }
         }
 
-    }
-
-    public void loadCustomCraft() {
-        if (getInstance().getConfig().getConfigurationSection("custom-crafts.crafts") == null) {
-            Message.error(getMessage("craft-list-is-empty"));
-            return;
-        }
-        main:
-        for (String key : getInstance().getConfig().getConfigurationSection("custom-crafts.crafts").getKeys(false)) {
-            try {
-                String summoner = Objects.requireNonNull(getInstance().getConfig().getString(String.format("custom-crafts.crafts.%s.summoner", key)));
-                if (!BAirDrop.summoner.getItems().containsKey(summoner)) {
-                    Message.error(String.format(getMessage("craft-unknown-item"), summoner));
-                    Message.error(String.format(getMessage("craft-skip"), key));
-                    continue;
-                }
-                String top = Objects.requireNonNull(getInstance().getConfig().getString(String.format("custom-crafts.crafts.%s.slots.top", key)));
-                String middle = Objects.requireNonNull(getInstance().getConfig().getString(String.format("custom-crafts.crafts.%s.slots.middle", key)));
-                String bottom = Objects.requireNonNull(getInstance().getConfig().getString(String.format("custom-crafts.crafts.%s.slots.bottom", key)));
-                List<String> call = getInstance().getConfig().getStringList(String.format("custom-crafts.crafts.%s.call", key));
-
-                if (getInstance().getConfig().getConfigurationSection(String.format("custom-crafts.crafts.%s.ingredients", key)) == null) {
-                    Message.error(getMessage("craft-ingredients-is-empty"));
-                    continue;
-                }
-                HashMap<Character, Material> ingredients = new HashMap<>();
-                for (String ingred : getInstance().getConfig().getConfigurationSection(String.format("custom-crafts.crafts.%s.ingredients", key)).getKeys(false)) {
-                    if (ingred.length() > 1) {
-                        Message.error(ingred + " Может состоять только из одного символа!");
-                        Message.error(String.format(getMessage("craft-skip"), key));
-                        continue main;
-                    }
-                    try {
-                        ingredients.put(ingred.charAt(0), Material.valueOf(Objects.requireNonNull(getInstance().getConfig().getString(String.format("custom-crafts.crafts.%s.ingredients.%s", key, ingred)))));
-                    } catch (IllegalArgumentException e) {
-                        Message.error(getInstance().getConfig().getString(String.format("custom-crafts.crafts.%s.ingredients.%s", key, ingred)) + " Неизвестный материал!");
-                        Message.error(String.format(getMessage("craft-skip"), key));
-                        continue main;
-                    }
-                }
-                BAirDrop.crafts.put(key, new CustomCraft(key, summoner, call, ingredients, top, middle, bottom));
-            } catch (NullPointerException e) {
-                Message.error(String.format(getMessage("craft-load-error"), key));
-                e.printStackTrace();
-            } catch (Exception e) {
-                Message.error(String.format(getMessage("craft-load-error"), key));
-                e.printStackTrace();
-            }
-        }
     }
 
     public void loadListeners() {

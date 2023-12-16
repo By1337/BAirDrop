@@ -13,7 +13,6 @@ import org.by1337.bairdrop.configManager.ConfigMessage;
 import org.by1337.bairdrop.configManager.Config;
 import org.by1337.bairdrop.hologram.*;
 import org.by1337.bairdrop.listeners.Compass;
-import org.by1337.bairdrop.listeners.CraftItem;
 import org.by1337.bairdrop.listeners.InteractListener;
 import org.by1337.bairdrop.locationGenerator.CGenLoc;
 import org.by1337.bairdrop.locationGenerator.GeneratorLoc;
@@ -22,9 +21,6 @@ import org.by1337.bairdrop.worldGuardHook.RegionManager;
 import org.by1337.bairdrop.command.Commands;
 import org.by1337.bairdrop.customListeners.CustomEvent;
 import org.by1337.bairdrop.customListeners.observer.Observer;
-import org.by1337.bairdrop.effect.effectImpl.*;
-import org.by1337.bairdrop.serializable.EffectDeserialize;
-import org.by1337.bairdrop.serializable.StateSerializable;
 import org.by1337.bairdrop.util.*;
 import org.by1337.bairdrop.util.Message;
 
@@ -40,7 +36,6 @@ public final class BAirDrop extends JavaPlugin {
 
     public static Summoner summoner = new Summoner();
     public static GlobalTimer globalTimer;
-    public static HashMap<String, CustomCraft> crafts = new HashMap<>();
     public static Compass compass;
     public static LogLevel logLevel;
     public static IHologram hologram;
@@ -62,14 +57,6 @@ public final class BAirDrop extends JavaPlugin {
     @Override
     public void onEnable() {
         ConfigurationSerialization.registerClass(CGenLoc.class);
-
-        EffectDeserialize.register(Circle.class);
-        EffectDeserialize.register(ExpandingCircle.class);
-        EffectDeserialize.register(FireworkEffect.class);
-        EffectDeserialize.register(Helix.class);
-        EffectDeserialize.register(RandomParticle.class);
-        EffectDeserialize.register(Torus.class);
-        EffectDeserialize.register(WrithingHelix.class);
 
         config = new CConfig();
 
@@ -99,7 +86,6 @@ public final class BAirDrop extends JavaPlugin {
 
         Bukkit.getServer().getPluginManager().registerEvents(new InteractListener(), getInstance());
         getServer().getPluginManager().registerEvents(summoner, getInstance());
-        getServer().getPluginManager().registerEvents(new CraftItem(), BAirDrop.getInstance());
         getServer().getPluginManager().registerEvents(compass, BAirDrop.getInstance());
 
 
@@ -116,11 +102,6 @@ public final class BAirDrop extends JavaPlugin {
         for (File file : getiConfig().getAirDrops().keySet()) {
             AirDrop airDrop = new CAirDrop(getiConfig().getAirDrops().get(file), file);
             airDrops.put(getiConfig().getAirDrops().get(file).getString("air-id"), airDrop);
-            if(instance.getConfig().getBoolean("state-serializable")){
-                StateSerializable stateSerializable = (StateSerializable) airDrop;
-                stateSerializable.stateDeserialize();
-            }
-
         }
 
         List<String> ids = new ArrayList<>(airDrops.keySet());
@@ -174,8 +155,6 @@ public final class BAirDrop extends JavaPlugin {
             return;
         long x = System.currentTimeMillis();
         for (AirDrop airDrop : airDrops.values()) {
-            if (instance.getConfig().getBoolean("state-serializable") && airDrop instanceof StateSerializable stateSerializable) stateSerializable.stateSerialize();
-
             if (airDrop.isAirDropStarted())
                 airDrop.end();
             if (airDrop.isClone())
@@ -187,7 +166,6 @@ public final class BAirDrop extends JavaPlugin {
             RegionManager.removeRegion(airDrop);
         }
         GeneratorLoc.save();
-        CustomCraft.unloadCrafts();
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)
             new PlaceholderHook().unregister();
@@ -210,7 +188,6 @@ public final class BAirDrop extends JavaPlugin {
             airDrop.schematicsUndo();
             RegionManager.removeRegion(airDrop);
         }
-        CustomCraft.unloadCrafts();
         getiConfig().getSchematics().clear();
         airDrops.clear();
         customEventListeners.clear();

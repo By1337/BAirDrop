@@ -9,7 +9,6 @@ import java.util.List;
 public interface Config {
     void loadConfiguration();
     void loadMenu();
-    void loadCustomCraft();
     void loadListeners();
     void loadEnchant();
     String getMessage(String path);
