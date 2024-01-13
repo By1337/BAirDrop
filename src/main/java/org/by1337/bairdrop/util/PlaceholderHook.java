@@ -55,7 +55,7 @@ public class PlaceholderHook extends me.clip.placeholderapi.expansion.Placeholde
             }
             return "" + airDrop.isAirDropLocked();
         }
-        if (params.contains("world_")) { //%bairdrop_is_world_<air id>%
+        if (params.contains("world_")) { //%bairdrop_world_<air id>%
             String[] args = params.split("_");
             if(args.length != 2) {
                 return "error";
