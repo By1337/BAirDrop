@@ -825,7 +825,7 @@ public class ExecuteCommands {
         for (String str : commands) {
             if (str.equalsIgnoreCase("[!airdropstarted]")) {
                 if (airDrop.isAirDropStarted())
-                    airDrop.end();
+                    airDrop.End();
                 else airDrop.startCommand(pl);
                 continue;
             }

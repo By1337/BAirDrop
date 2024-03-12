@@ -25,7 +25,6 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class Compass implements Listener {
-    public static final NamespacedKey COMPASS_TAG = NamespacedKey.fromString("compass_bairdrop");
     public static ItemStack item = null;
     private double maxDistance = 10;
     private double size = 3;
@@ -40,7 +39,7 @@ public class Compass implements Listener {
             Player pl = e.getPlayer();
             ItemStack itemStack = e.getPlayer().getInventory().getItemInMainHand();
             if(itemStack.getItemMeta() == null) return;
-            boolean isCompass = itemStack.getItemMeta().getPersistentDataContainer().has(COMPASS_TAG, PersistentDataType.STRING);
+            boolean isCompass = itemStack.getItemMeta().getPersistentDataContainer().has(NamespacedKey.fromString("compass_bairdrop"), PersistentDataType.STRING);
             if(!isCompass) return;
             if(cd.getOrDefault(pl.getUniqueId(), 0L) - System.currentTimeMillis() > 0)
                 return;

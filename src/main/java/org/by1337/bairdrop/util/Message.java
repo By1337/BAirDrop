@@ -18,7 +18,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.by1337.bairdrop.BAirDrop;
 import org.jetbrains.annotations.Nullable;
 
-@Deprecated
+
 public class Message {
     private static final ConsoleCommandSender SENDER = Bukkit.getConsoleSender();
     private static final String AUTHOR = "&#a612cb&lB&#9a17d2&ly&#8d1bd9&l1&#8120e1&l3&#7424e8&l3&#6829ef&l7";

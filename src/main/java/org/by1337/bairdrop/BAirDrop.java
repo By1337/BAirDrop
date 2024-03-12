@@ -20,6 +20,7 @@ import org.by1337.bairdrop.locationGenerator.GeneratorLoc;
 import org.by1337.bairdrop.summoner.Summoner;
 import org.by1337.bairdrop.worldGuardHook.RegionManager;
 import org.by1337.bairdrop.command.Commands;
+import org.by1337.bairdrop.command.Completer;
 import org.by1337.bairdrop.customListeners.CustomEvent;
 import org.by1337.bairdrop.customListeners.observer.Observer;
 import org.by1337.bairdrop.effect.effectImpl.*;
@@ -48,16 +49,12 @@ public final class BAirDrop extends JavaPlugin {
     private static ConfigMessage configMessage;
     private static BAirDrop instance;
 
-    private static org.by1337.api.chat.util.Message message;
-
     private static ProtocolManager protocolManager = null;
 
     @Override
     public void onLoad() {
         instance = this;
-        message = new org.by1337.api.chat.util.Message(getLogger());
     }
-
 
     @Override
     public void onEnable() {
@@ -82,7 +79,7 @@ public final class BAirDrop extends JavaPlugin {
             String lvl = getInstance().getConfig().getString("log-level", "LOW");
             logLevel = LogLevel.valueOf(lvl);
         } catch (IllegalArgumentException e) {
-            message.error(e);
+            Message.error(e.getLocalizedMessage());
             logLevel = LogLevel.LOW;
         }
 
@@ -93,10 +90,8 @@ public final class BAirDrop extends JavaPlugin {
         if (this.getConfig().getBoolean("use-metrics"))
             new Metrics(getInstance(), 17870);
 
-        Commands commands = new Commands();
-        Objects.requireNonNull(getInstance().getCommand("bairdrop")).setExecutor(commands);
-        Objects.requireNonNull(getInstance().getCommand("bairdrop")).setTabCompleter(commands);
-
+        Objects.requireNonNull(getInstance().getCommand("bairdrop")).setExecutor(new Commands());
+        Objects.requireNonNull(getInstance().getCommand("bairdrop")).setTabCompleter(new Completer());
         Bukkit.getServer().getPluginManager().registerEvents(new InteractListener(), getInstance());
         getServer().getPluginManager().registerEvents(summoner, getInstance());
         getServer().getPluginManager().registerEvents(new CraftItem(), BAirDrop.getInstance());
@@ -110,7 +105,7 @@ public final class BAirDrop extends JavaPlugin {
             hologram = new ProtocolHoloManager();
         } else {
             hologram = new EmptyHologram();
-            message.error(getConfigMessage().getMessage("depend-not-found"));
+            Message.error(getConfigMessage().getMessage("depend-not-found"));
         }
 
         for (File file : getiConfig().getAirDrops().keySet()) {
@@ -148,13 +143,10 @@ public final class BAirDrop extends JavaPlugin {
         ExecuteCommands.registerIgnoreCommand("[ASYNC]");
         ExecuteCommands.registerIgnoreCommand("[LATER-");
 
-        message.logger(String.format(getConfigMessage().getMessage("start-time"), System.currentTimeMillis() - x));
+        Message.logger(String.format(getConfigMessage().getMessage("start-time"), System.currentTimeMillis() - x));
 
     }
 
-    public static org.by1337.api.chat.util.Message getMessage() {
-        return message;
-    }
 
     public static Config getiConfig() {
         return config;
@@ -177,9 +169,9 @@ public final class BAirDrop extends JavaPlugin {
             if (instance.getConfig().getBoolean("state-serializable") && airDrop instanceof StateSerializable stateSerializable) stateSerializable.stateSerialize();
 
             if (airDrop.isAirDropStarted())
-                airDrop.end();
+                airDrop.End();
             if (airDrop.isClone())
-                airDrop.end();
+                airDrop.End();
             airDrop.notifyObservers(CustomEvent.UNLOAD, null);
             BAirDrop.hologram.remove(airDrop.getId());
             airDrop.save();
@@ -191,7 +183,7 @@ public final class BAirDrop extends JavaPlugin {
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)
             new PlaceholderHook().unregister();
-        message.logger(String.format(getConfigMessage().getMessage("off-time"), System.currentTimeMillis() - x));
+        Message.logger(String.format(getConfigMessage().getMessage("off-time"), System.currentTimeMillis() - x));
 
     }
 
@@ -201,9 +193,9 @@ public final class BAirDrop extends JavaPlugin {
     public static void reload() {
         for (AirDrop airDrop : airDrops.values()) {
             if (airDrop.isAirDropStarted())
-                airDrop.end();
+                airDrop.End();
             if (airDrop.isClone())
-                airDrop.end();
+                airDrop.End();
             airDrop.notifyObservers(CustomEvent.UNLOAD, null);
             BAirDrop.hologram.remove(airDrop.getId());
             airDrop.setCanceled(true);
